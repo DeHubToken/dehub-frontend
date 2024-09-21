@@ -35,7 +35,6 @@ export async function voteOnNFT(params: {
 }) {
   const { account, streamTokenId, vote, sig, timestamp } = params;
   if (!account) return { success: false, error: "Please connect your wallet." };
-  revalidatePath(`/stream/${streamTokenId}`);
   return voteNFT({
     account,
     streamTokenId,

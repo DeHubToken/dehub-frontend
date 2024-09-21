@@ -34,12 +34,11 @@ function ActionPanel(props: { nft: NFT; tokenId: number }) {
       </p>
       <div className="mt-3 flex h-auto w-full flex-col items-start justify-start gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
         <div className="relative flex w-full flex-wrap items-center gap-4 pr-20 sm:size-auto sm:pr-0">
-          <LikeButton vote tokenId={tokenId}>
+          <LikeButton vote tokenId={tokenId} votes={nft?.totalVotes?.for || 0}>
             <ThumbsUp className="size-5" />
-            {nft?.totalVotes?.for || 0}
           </LikeButton>
-          <LikeButton vote={false} tokenId={tokenId}>
-            <ThumbsDown className="size-5" /> {nft?.totalVotes?.against || 0}
+          <LikeButton vote={false} tokenId={tokenId} votes={nft?.totalVotes?.against || 0}>
+            <ThumbsDown className="size-5" />
           </LikeButton>
           <PPVModal nft={nft} />
           <TipModal tokenId={tokenId} to={nft.minter} />
