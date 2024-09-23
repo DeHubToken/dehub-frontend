@@ -708,7 +708,7 @@ export function UploadForm(props: Props) {
 
           <div className="flex h-auto w-full flex-col items-start justify-start gap-8 rounded-2xl p-5 sm:p-10">
             <div className="relative flex h-auto w-full items-start justify-start 2xl:items-center">
-              <p className="min-w-[150px] text-lg lg:min-w-[15%]">Lock Content</p>
+              <p className="min-w-[150px] text-lg font-semibold lg:min-w-[15%]">Lock Content</p>
               <div className="flex size-auto flex-wrap items-center justify-start gap-6">
                 <Controller
                   name="lockContent"

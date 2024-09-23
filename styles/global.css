@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -80,14 +79,10 @@
   }
 }
 
-@font-face {
-  font-family: "Tanker";
-  src:
-    url("/fonts/tanker.woff2") format("woff2"),
-    url("/fonts/tanker.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+::after,
+::before,
+body {
+  font-family: "Exo", sans-serif;
 }
 
 ::-webkit-scrollbar {

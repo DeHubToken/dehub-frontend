@@ -38,13 +38,13 @@ export function FeedItem(props: Props) {
         </Link>
 
         {nft?.streamInfo?.isAddBounty && (
-          <div className="from-theme-orange-500 to-theme-orange-300 absolute -left-16 top-12 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-gradient-to-r px-10 py-0.5 text-center text-xs text-white shadow-default">
+          <div className="bg-classic-magenta absolute -left-16 top-12 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 px-10 py-0.5 text-center text-xs text-white shadow-default">
             <span>
               Watch2Earn: {formatNumber(nft.streamInfo.addBountyAmount)}{" "}
               {nft.streamInfo.addBountyTokenSymbol}
             </span>
             <Image
-              src="/icons/tokens/BJ.png"
+              src="/icons/tokens/DHB.png"
               alt="BJ"
               width={20}
               height={20}
@@ -54,12 +54,12 @@ export function FeedItem(props: Props) {
         )}
 
         {nft?.streamInfo?.isPayPerView && (
-          <div className="absolute -right-20 top-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-blue-500 px-12 py-0.5 text-center text-xs text-white">
+          <div className="absolute -right-20 top-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-classic-blue px-12 py-0.5 text-center text-xs text-white">
             <span>
               PPV: {nft.streamInfo.payPerViewAmount || 0} {nft.streamInfo.payPerViewTokenSymbol}
             </span>
             <Image
-              src="/icons/tokens/BJ.png"
+              src="/icons/tokens/DHB.png"
               alt="BJ"
               width={20}
               height={20}
@@ -69,12 +69,12 @@ export function FeedItem(props: Props) {
         )}
 
         {nft?.streamInfo?.isLockContent && (
-          <div className="absolute -right-20 bottom-8 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-red-500 px-12 py-0.5 text-center text-xs text-white">
+          <div className="absolute -right-20 bottom-8 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-classic-violet px-12 py-0.5 text-center text-xs text-white">
             <span>
               Lock: {nft.streamInfo.lockContentAmount || 0} {nft.streamInfo.lockContentTokenSymbol}
             </span>
             <Image
-              src="/icons/tokens/BJ.png"
+              src="/icons/tokens/DHB.png"
               alt="BJ"
               width={20}
               height={20}
@@ -107,10 +107,16 @@ export function FeedItem(props: Props) {
             {formatDistance(new Date(nft.createdAt), new Date(), { addSuffix: true })}
           </span>
           <div className="flex h-auto items-center justify-end gap-2">
-            <Button variant="secondary" size="sm" className="gap-1 rounded-full text-[11px]">
+            <Button
+              size="sm"
+              className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+            >
               <HeartFilledIcon className="size-3" /> {nft.totalVotes?.for || nft.likes || 0}
             </Button>
-            <Button variant="secondary" size="sm" className="gap-1 rounded-full text-[11px]">
+            <Button
+              size="sm"
+              className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+            >
               <EyeOpenIcon className="size-3" />
               {nft.views || 0}
             </Button>

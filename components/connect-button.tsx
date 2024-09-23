@@ -113,7 +113,7 @@ function WalletButton(props: RenderProps) {
                 className="h-10 gap-2 px-6"
                 onClick={openConnectModal}
               >
-                <Wallet className="scale-125 text-gray-400 dark:text-white" /> Connect
+                <Wallet className="scale-125 text-white" /> Connect
               </Button>
             );
           } else {

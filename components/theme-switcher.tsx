@@ -11,7 +11,7 @@ export function ThemeSwitcher() {
     return (
       <button
         onClick={() => setTheme("light")}
-        className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft text-theme-background dark:text-theme-background rounded-full p-2"
+        className="rounded-full bg-theme-mine-shaft-dark p-3 text-theme-background dark:bg-theme-mine-shaft dark:text-theme-background"
       >
         <MoonIcon className="dark:text-theme-titan-white" />
       </button>
@@ -21,7 +21,7 @@ export function ThemeSwitcher() {
   return (
     <button
       onClick={() => setTheme("dark")}
-      className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft text-theme-background dark:text-theme-background rounded-full p-2"
+      className="rounded-full bg-theme-mine-shaft-dark p-3 text-theme-background dark:bg-theme-mine-shaft dark:text-theme-background"
     >
       <SunIcon className="text-gray-600" />
     </button>

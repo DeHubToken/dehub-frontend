@@ -31,9 +31,6 @@ export function Navbar() {
         </Link>
 
         <div className="flex size-auto items-center justify-end gap-2 md:gap-6">
-          <div className="size-auto items-center justify-start">
-            <NavLinks />
-          </div>
           <SearchModal />
           <ConnectButton label="Connect" />
           <HambMenu />

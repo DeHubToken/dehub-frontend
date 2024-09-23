@@ -109,7 +109,7 @@ function StreamInfo(props: { nft: NFT }) {
         <p className="text-sm">
           <span className="font-semibold">Description :</span> {nft.description}
         </p>
-        <p className="text-sm text-orange-400">
+        <p className="text-classic-magenta text-sm">
           <span className="font-semibold">Categories :</span> #{nft.category.join("  #")}
         </p>
       </div>
