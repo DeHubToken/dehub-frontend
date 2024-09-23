@@ -35,7 +35,7 @@ export function SearchBox(props: { category?: string; type?: string; range?: str
   };
 
   return (
-    <form className="relative hidden w-full max-w-[39%] flex-[39%] md:block" action={action}>
+    <form className="relative hidden w-full md:block" action={action}>
       <input
         type="text"
         name="search"

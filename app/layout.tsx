@@ -16,6 +16,8 @@ import { Toaster as Toast } from "@/components/ui/toaster";
 
 import { AvatarWalletProvider } from "@/contexts/avatar-wallet";
 
+import { FeedProvider } from "./components/feed-provider";
+
 /* ------------------------------------------------------------------------------------------ */
 
 export const metadata: Metadata = {
@@ -58,7 +60,7 @@ type Props = { children: React.ReactNode };
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <body className="overflow-x-hidden bg-theme-background font-nunito text-theme-mine-shaft dark:bg-theme-background dark:text-theme-titan-white">
+      <body className="font-nunito overflow-x-hidden bg-theme-background text-theme-mine-shaft dark:bg-theme-background dark:text-theme-titan-white">
         <Toaster />
         <Toast />
         <ProgressBar />
@@ -71,7 +73,9 @@ export default function RootLayout({ children }: Props) {
           <Providers>
             <AvatarWalletProvider>
               {/* WebSocketProvider */}
-              <Layout>{children}</Layout>
+              <FeedProvider>
+                <Layout>{children}</Layout>
+              </FeedProvider>
               {/* <OnlyDesktop /> */}
             </AvatarWalletProvider>
           </Providers>
