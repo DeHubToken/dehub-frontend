@@ -28,7 +28,7 @@ function ActionPanel(props: { nft: NFT; tokenId: number }) {
     <div className="mt-3 h-auto w-full">
       <p className="text-sm">
         Uploaded by{" "}
-        <Link href={`/${nft.mintername || nft.minter}`} className="text-orange-400">
+        <Link href={`/${nft.mintername || nft.minter}`} className="text-classic-purple">
           <span>{nft.minterDisplayName || nft.mintername}</span>
         </Link>
       </p>
@@ -109,7 +109,7 @@ function StreamInfo(props: { nft: NFT }) {
         <p className="text-sm">
           <span className="font-semibold">Description :</span> {nft.description}
         </p>
-        <p className="text-classic-magenta text-sm">
+        <p className="text-sm">
           <span className="font-semibold">Categories :</span> #{nft.category.join("  #")}
         </p>
       </div>
