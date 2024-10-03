@@ -168,7 +168,7 @@ function WalletButton(props: RenderProps) {
                   onClick={openAccountModal}
                   variant="gradientOne"
                   size="lg"
-                  className="hidden h-10 gap-2 overflow-hidden px-0 md:flex"
+                  className="hidden h-10 w-max gap-2 overflow-hidden px-0 md:flex"
                 >
                   <div className="bg-theme-orange-500 grid size-full place-items-center px-4">
                     {account.displayBalance ? account.displayBalance : ""}
