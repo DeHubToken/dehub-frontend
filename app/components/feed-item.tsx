@@ -6,6 +6,7 @@ import Link from "next/link";
 import { EyeOpenIcon, HeartFilledIcon } from "@radix-ui/react-icons";
 import { formatDistance } from "date-fns";
 
+import { PreviewVideo } from "@/components/preview-video";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
@@ -15,7 +16,7 @@ import { createAvatarName } from "@/libs/utils";
 import { formatNumber } from "@/web3/utils/format";
 import { getAvatarUrl } from "@/web3/utils/url";
 
-import { ImageWithLoader } from "./nft-image";
+import { LikeButton } from "../stream/[id]/components/stream-actions";
 
 type Props = {
   nft: any;
@@ -34,11 +35,11 @@ export function FeedItem(props: Props) {
           href={`/stream/${nft.tokenId}`}
           className="next__link size-full overflow-hidden rounded-2xl"
         >
-          <ImageWithLoader url={nft.imageUrl} name={nft.name} />
+          <PreviewVideo nft={nft} />
         </Link>
 
         {nft?.streamInfo?.isAddBounty && (
-          <div className="bg-classic-magenta absolute -left-16 top-12 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 px-10 py-0.5 text-center text-xs text-white shadow-default">
+          <div className="absolute -left-16 top-12 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-classic-magenta px-10 py-0.5 text-center text-xs text-white shadow-default">
             <span>
               Watch2Earn: {formatNumber(nft.streamInfo.addBountyAmount)}{" "}
               {nft.streamInfo.addBountyTokenSymbol}
@@ -107,12 +108,15 @@ export function FeedItem(props: Props) {
             {formatDistance(new Date(nft.createdAt), new Date(), { addSuffix: true })}
           </span>
           <div className="flex h-auto items-center justify-end gap-2">
-            <Button
-              size="sm"
+            <LikeButton
               className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+              vote
+              tokenId={nft.tokenId}
+              votes={nft.totalVotes?.for || 0}
+              size="sm"
             >
-              <HeartFilledIcon className="size-3" /> {nft.totalVotes?.for || nft.likes || 0}
-            </Button>
+              <HeartFilledIcon className="size-3 fill-red-400" />
+            </LikeButton>
             <Button
               size="sm"
               className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
