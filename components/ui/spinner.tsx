@@ -20,7 +20,7 @@ export function Spinner(props: Props) {
         cx="12"
         cy="12"
         r="10"
-        stroke={cn("#F26419", trackProps?.stroke)}
+        stroke={cn("#860C93", trackProps?.stroke)}
         strokeWidth="4"
       />
       <path
