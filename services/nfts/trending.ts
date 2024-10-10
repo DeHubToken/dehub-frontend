@@ -33,6 +33,8 @@ export type GetNFTsResult = {
   minter: string;
   minterAvatarUrl: string;
   minterDisplayName: string;
+  isHidden: Boolean;
+  isLiked: Boolean;
   mintername: string;
   name: string;
   status: string;

@@ -9,14 +9,11 @@ import { useAtomValue } from "jotai";
 import { toast } from "sonner";
 
 import { Video } from "@/components/video";
-
 import { useActiveWeb3React } from "@/hooks/web3-connect";
-
 import { getStreamStatus, isOwner, isTranscoding } from "@/web3/utils/validators";
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { userAtom } from "@/stores";
-
 import { ErrMsgEn, streamInfoKeys } from "@/configs";
 
 /* ----------------------------------------------------------------------------------------------- */
@@ -35,7 +32,6 @@ export function StreamVideoProvider(props: { nft: NFT }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<Player | null>(null);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showControl, setShowControl] = useState(false);
   const [error, setError] = useState(false);
   const [sig, setSig] = useState("");
@@ -45,6 +41,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
   const { library, account, chainId } = useActiveWeb3React();
   const isTranscodingVideo = isTranscoding(nft);
   const streamStatus = getStreamStatus(nft, user, chainId);
+
   const [url, setUrl] = useState(
     `${nft.videoUrl}?sig=${sig}&timestamp=${timestamp}&account=${account?.toLowerCase()}&chainId=${chainId}`
   );
@@ -58,7 +55,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
       ? true
       : false;
 
-  // Below useEffect is used to check if video is loaded or not.
+  // Effect to check if video is loaded or not
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.onloadedmetadata = () => setLoading(false);
@@ -66,10 +63,9 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     setUrl(
       `${nft.videoUrl}?sig=${sig}&timestamp=${timestamp}&account=${account?.toLowerCase()}&chainId=${chainId}`
     );
-    // if (sig && timestamp && sig !== "" && timestamp !== "") setLoading(false);
   }, [account, chainId, nft.videoUrl, sig, timestamp]);
 
-  // Below useEffect is used to check if video is free or not.
+  // Effect to check if video is free or locked
   useEffect(() => {
     async function createUrl() {
       if (isFreeStream || isOwner(nft, account || "")) {
@@ -77,12 +73,17 @@ export function StreamVideoProvider(props: { nft: NFT }) {
         return;
       }
 
-      if (!account) return toast.error(ErrMsgEn.wallet.connect_to_stream);
+      if (!account) {
+        toast.error(ErrMsgEn.wallet.connect_to_stream);
+        return;
+      }
 
-      if (streamStatus?.streamStatus?.isLockedWithLockContent)
-        return toast.error(
+      if (streamStatus?.streamStatus?.isLockedWithLockContent) {
+        toast.error(
           `This video is locked content with ${streamStatus?.lockTokenWithLockContent?.symbol}.`
         );
+        return;
+      }
 
       if (streamStatus?.streamStatus?.isLockedWithPPV) {
         if (
@@ -91,17 +92,20 @@ export function StreamVideoProvider(props: { nft: NFT }) {
             ?.includes(chainId as unknown as string)
         ) {
           toast.error(`Please switch to supported chain for this PPV stream`);
+          return;
         }
       }
 
       const result = await getSignInfo(library, account);
-
-      if (result.sig.trim().length === 0 || result.timestamp === "0") setShowControl(false);
-      else {
-        setSig(result.sig);
-        setTimestamp(result.timestamp);
-        setShowControl(true);
+      
+      if (!result.sig || result.timestamp === "0") {
+        setShowControl(false);
+        return;
       }
+
+      setSig(result.sig);
+      setTimestamp(result.timestamp);
+      setShowControl(true);
     }
 
     createUrl();
@@ -120,16 +124,11 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     streamStatus?.streamStatus?.isLockedWithPPV
   ]);
 
-  if (
-    nft.videoUrl &&
-    !isTranscodingVideo &&
-    !streamStatus?.streamStatus?.isLockedWithLockContent &&
-    !streamStatus?.streamStatus?.isLockedWithPPV
-  ) {
+  if (nft.videoUrl && !isTranscodingVideo && !streamStatus?.streamStatus?.isLockedWithLockContent && !streamStatus?.streamStatus?.isLockedWithPPV) {
     return (
       <div className="relative h-auto w-full overflow-hidden rounded-2xl">
         {loading && <StreamVideoSkeleton />}
-        <Video
+       <Video
           options={{
             sources: [{ src: url, type: "video/mp4" }]
           }}
@@ -147,18 +146,12 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     );
   }
 
-  if (
-    streamStatus?.streamStatus?.isLockedWithLockContent ||
-    streamStatus?.streamStatus?.isLockedWithPPV ||
-    error
-  ) {
+  if (streamStatus?.streamStatus?.isLockedWithLockContent || streamStatus?.streamStatus?.isLockedWithPPV || error) {
     return (
       <div className="flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl p-3">
         <p>
           {streamStatus?.streamStatus?.isLockedWithLockContent
-            ? `Please hold at least
-                ${nft.streamInfo?.[streamInfoKeys.lockContentAmount]}
-                ${nft.streamInfo?.[streamInfoKeys.lockContentTokenSymbol]} to unlock.`
+            ? `Please hold at least ${nft.streamInfo?.[streamInfoKeys.lockContentAmount]} ${nft.streamInfo?.[streamInfoKeys.lockContentTokenSymbol]} to unlock.`
             : streamStatus?.streamStatus?.isLockedWithPPV
               ? `Unlock PPV stream with ${nft.streamInfo?.[streamInfoKeys.payPerViewAmount]}  ${nft.streamInfo?.[streamInfoKeys.payPerViewTokenSymbol]}`
               : `Error, please report by sending link to tech@dehub.net`}
@@ -187,20 +180,3 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     </div>
   );
 }
-
-/*
-1. Check for transcoding status. If it is on then show message. This can be achive on server side.
-2. Check for stream is free or not. This can be achive on server side.
-    1. If stream is free, then render FreeStreamVidoe component.
-3. Check for stream is locked with lock content or not. This can be achive on server side.
-    1. If stream is locked with lock content, then render LockContent component.
-4. Check for stream is locked with PPV or not. This can be achive on server side.
-    1. If stream is locked with PPV, then render PPV component.
-5. If all above condition is false, which is never possible. Then render Error component.
-
-
-----
-VideoComponent - Base states
-- 1. Loading state
-- 2. URL state
-*/

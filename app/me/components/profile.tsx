@@ -19,7 +19,6 @@ type Props = { user: User };
 
 export async function Profile(props: Props) {
   const { user } = props;
-
   const res = await getNFTs({
     minter: user.address,
     unit: 40
@@ -36,7 +35,7 @@ export async function Profile(props: Props) {
       <Avatar name={user.username || user.displayName || ""} url={user.avatarImageUrl} />
       <UserInfo user={user} />
       <ImageCropperModal />
-      <UserUploads nfts={res.success ? res.data.result : []} />
+      <UserUploads nfts={res.success ? res.data.result : []} isOwner={true} />
     </div>
   );
 }

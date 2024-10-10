@@ -1,7 +1,7 @@
 export const env = {
   apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
   currentNetwork: process.env.NEXT_PUBLIC_NETWORK_ID,
-  isDevMode: process.env.NODE_ENV === "development",
+  isDevMode: process.env.NEXT_PUBLIC_DEV === "ON",
   infuraKey: process.env.NEXT_PUBLIC_INFURA_KEY,
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
   projectName: process.env.NEXT_PUBLIC_PROJECT_NAME,
@@ -148,7 +148,7 @@ export enum ChainId {
 
 export const MULTICALL2_ADDRESSES: { [chainId: number]: string } = {
   [ChainId.ARBITRUM_MAINNET]: "0x4d3Ed23bAc3e92847582B3e1d60dcdAFcF9fA56D",
-  [ChainId.BSC_TESTNET]: "0x2d1b117011aA4B3BE4d181f16bFc9fe371B6d479"
+  [ChainId.BSC_TESTNET]: "0x80d0d36d9E3Cb0Bd4561beB1d9d1cC8e1a33F5b1",
 };
 
 export const BJ_ADDRESSESS: { [chainId: number]: string } = {
@@ -171,7 +171,7 @@ export const defaultWatchTimeForPPV = 2 * 60 * 60;
 export const devFee = 0.1;
 export const publicChatChannelId = "public_chn_prod_1";
 export const limitTip = 1_000_000_000;
-export const expireSignTime = process.env.REACT_APP_DEV ? 60 * 60 * 2 : 60 * 60 * 24; // 2 hours
+export const expireSignTime = process.env.NEXT_PUBLIC_DEV ? 60 * 60 * 2 : 60 * 60 * 24; // 2 hours
 
 export const ErrMsgEn = {
   lockContent: {},
@@ -183,7 +183,7 @@ export const ErrMsgEn = {
   }
 };
 
-export const socketUrl = process.env.REACT_APP_SOCKET_URL;
+export const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 export const badges = [
   {

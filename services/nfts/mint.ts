@@ -14,3 +14,18 @@ export async function minNft(data: FormData) {
     body: data
   });
 }
+export async function updateNftVisibility(data: any) {
+  console.log(data);
+  
+  return api<{
+    id: string;
+    isHidden: boolean;
+  }>("/token_visibility", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json' // Specify the content type
+    },
+    body: JSON.stringify(data)
+  });
+}
+
