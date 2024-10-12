@@ -123,7 +123,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     streamStatus?.streamStatus?.isLockedWithLockContent,
     streamStatus?.streamStatus?.isLockedWithPPV
   ]);
-
+  console.log(nft, "fff")
   if (nft.videoUrl && !isTranscodingVideo && !streamStatus?.streamStatus?.isLockedWithLockContent && !streamStatus?.streamStatus?.isLockedWithPPV) {
     return (
       <div className="relative h-auto w-full overflow-hidden rounded-2xl">

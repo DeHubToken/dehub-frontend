@@ -118,6 +118,7 @@
 
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+    const [uploadStatus, setUploadStatus] = useState<{progress: number | string, message: string }>({progress:0, message:"Starting Upload"})
 
     const streamCollectionContract = useStreamCollectionContract();
     const streamController = useStreamControllerContract();
@@ -344,8 +345,6 @@
       }
       setUploading(false);
     };
-
-
     const handleMint = async (data: Form) => {
       if (uploading) return;
     
@@ -354,6 +353,7 @@
       async function _upload() {
         if (!account) {
           toast.error("Please connect your wallet");
+          setUploading(false);
           return;
         }
     
@@ -363,10 +363,11 @@
           const formData = new FormData();
           formData.append("name", data.title);
           formData.append("description", data.description);
-          data.streamInfo &&
+          if (data.streamInfo) {
             formData.append("streamInfo", JSON.stringify(filteredStreamInfo(data.streamInfo)));
-          videoFile && formData.append("files", videoFile);
-          thumbnailFile && formData.append("files", thumbnailFile);
+          }
+          if (videoFile) formData.append("files", videoFile);
+          if (thumbnailFile) formData.append("files", thumbnailFile);
           formData.append(
             "category",
             data.category?.length > 0 ? JSON.stringify(data.category.map((e) => e)) : ""
@@ -375,41 +376,27 @@
           formData.append("sig", sigData.sig);
           formData.append("chainId", chainId.toString());
           formData.append("timestamp", sigData.timestamp);
-    
-          const res = await minNft(formData);
-          if (!res.success) {
-            setUploading(false);
-            throw new Error(res.error);
+
+          const callbackfunc = (prop:any) => {
+            console.log("prop",prop)
+            setUploadStatus(prop)
           }
     
-          const result = res.data;
-          
-          if (result.error) {
+          const response: any = await minNft(formData, callbackfunc);
+    
+          if (!response.success) {
             setUploading(false);
-            throw new Error(result.msg || "NFT mint has failed!");
+            throw new Error('Failed to start minting process');
           }
     
-          const tokenId = result.createdTokenId; // Extract the tokenId from the response
+          // The response data stream handling is now done within the apiStream function
+          const result = response.data;
+          if (result?.error) {
+            setUploading(false);
+            throw new Error(result?.msg || "NFT mint has failed!");
+          }
     
-          // Start listening for server-sent events (SSE) for transcoding progress
-          const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transcode-progress/${tokenId}`);
-    
-          eventSource.onmessage = (event) => {
-            const progressData = JSON.parse(event.data);
-            if (progressData.progress) {
-              toast.message(`Transcoding: ${Math.round(progressData.progress)}%`, {
-                duration: 1000,
-              });
-            }
-            if (progressData.status === 'completed') {
-              toast.success('Transcoding completed');
-              eventSource.close();
-            } else if (progressData.status === 'failed') {
-              toast.error('Transcoding failed');
-              eventSource.close();
-            }
-          };
-    
+          // Handle the minting with bounty if applicable
           if (data.streamInfo?.[streamInfoKeys.isAddBounty]) {
             try {
               const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
@@ -419,7 +406,7 @@
     
               const tx = await mintWithBounty(
                 streamController,
-                tokenId,
+                result.createdTokenId,
                 result.timestamp,
                 result.v,
                 result.r,
@@ -429,34 +416,35 @@
                 firstXViewer,
                 firstXComment
               );
+    
               if (tx?.hash) {
                 addTransaction({ hash: tx.hash, description: "Mint With Bounty", confirmations: 3 });
               }
+    
               await tx.wait(1);
-    
               form.reset();
-    
               await invalidateUpload();
               setUploading(false);
               return;
             } catch (err) {
               setUploading(false);
-              throw new Error("NFT mint has failed!");
+              throw new Error("NFT mint with bounty has failed!");
             }
           }
     
+          // Handle minting without bounty if no bounty is specified
           if (streamCollectionContract) {
             const tx = await streamCollectionContract.mint(
-              tokenId,
+              result.createdTokenId,
               result.timestamp,
               result.v,
               result.r,
               result.s,
               [],
               1000,
-              `${tokenId}.json`
+              `${result.createdTokenId}.json`
             );
-    
+            setUploadStatus({progress: 70, message: "Approved Transaction"})
             if (tx?.hash) {
               addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
             }
@@ -464,32 +452,36 @@
             await tx.wait(1);
             form.reset();
           }
-    
+          
           await invalidateUpload();
-          router.push(`/stream/${tokenId}`);
-        } catch (err) {
+          setUploadStatus({progress: 100, message: "Upload Complete"})
+
+          router.push(`/stream/${result.createdTokenId}`);
+        } catch (err: any) {
           console.log(err);
           if (err instanceof Error) {
             if (err.message.includes("user rejected transaction")) {
               setUploading(false);
               throw new Error("User rejected transaction");
             }
-    
             setUploading(false);
             throw new Error(err.message);
           }
-    
           setUploading(false);
           throw new Error("Upload failed");
         }
       }
     
-      toast.promise(_upload(), {
-        loading: "Uploading...",
-        success: () => "Upload confirmed",
-        error: (err) => err.message,
-      });
-    };
+      toast.promise(
+        _upload(),
+        {
+          loading: `${uploadStatus?.progress} ${uploadStatus?.message}`,
+          success: () => "Upload confirmed",
+          error: (err:any) => err.message,
+        }
+      );
+    }
+    
     
 
     const handleOnUploadAndMint = async (data: Form) => {
@@ -748,8 +740,8 @@
                           <SelectValue placeholder="Token" />
                         </SelectTrigger>
                         <SelectContent>
-                          {tokens.map((token) => (
-                            <SelectItem key={token.label} value={token.value}>
+                          {tokens.map((token, i) => (
+                            <SelectItem key={i} value={token.value}>
                               <div className="flex items-center justify-center gap-2">
                                 <Avatar className="size-8">
                                   <AvatarFallback>{createAvatarName(token.label)}</AvatarFallback>
@@ -778,8 +770,8 @@
                         </SelectTrigger>
                         <SelectContent>
                           {networksForAToken.length === 0 && <p>No networks available</p>}
-                          {networksForAToken.map((token) => (
-                            <SelectItem key={token.label} value={token.value}>
+                          {networksForAToken.map((token, i) => (
+                            <SelectItem key={i} value={token.value}>
                               {token.label}
                             </SelectItem>
                           ))}
@@ -864,8 +856,8 @@
                           <SelectValue placeholder="Network" />
                         </SelectTrigger>
                         <SelectContent>
-                          {networksForPPVToken.map((token) => (
-                            <SelectItem key={token.id} value={token.value}>
+                          {networksForPPVToken.map((token, i) => (
+                            <SelectItem key={i} value={token.value}>
                               {token.label}
                             </SelectItem>
                           ))}
@@ -985,18 +977,27 @@
               </div>
 
               <Button
-                className="h-auto w-full rounded-md py-4 text-2xl sm:text-4xl"
+                className="relative h-auto w-full rounded-md py-4 text-2xl sm:text-4xl overflow-hidden"
                 size="lg"
                 variant="gradientOne"
                 disabled={uploading}
                 onClick={form.handleSubmit(handleOnUploadAndMint)}
               >
-                {!uploading && "Upload Post / Mint NFT"}
-                {uploading && (
-                  <>
-                    Uploading...
-                    <Spinner className="ml-1 size-10" />
-                  </>
+                {!uploading ? (
+                  "Upload Post / Mint NFT"
+                ) : (
+                  <div className="relative flex items-center justify-center w-full h-full">
+                    {/* Background progress bar */}
+                    <div
+                      className="absolute inset-0 bg-blue-500 transition-all duration-300 ease-in-out"
+                      style={{ width: `${uploadStatus.progress}%` }}
+                    ></div>
+
+                    {/* Text progress indicator */}
+                    <span className="relative z-10 text-white">
+                      Uploading... {uploadStatus.progress}%
+                    </span>
+                  </div>
                 )}
               </Button>
             </div>
