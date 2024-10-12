@@ -118,7 +118,7 @@
 
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-    const [uploadStatus, setUploadStatus] = useState<{progress: number | string, message: string }>({progress:0, message:"Starting Upload"})
+    const [uploadStatus, setUploadStatus] = useState<{progress: number | string, message: string }>({progress:0, message:"Uploading..."})
 
     const streamCollectionContract = useStreamCollectionContract();
     const streamController = useStreamControllerContract();
@@ -448,11 +448,12 @@
             if (tx?.hash) {
               addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
             }
-    
+            setUploadStatus({progress: 75, message: "Approved Transaction"})
             await tx.wait(1);
+            setUploadStatus({progress: 85, message: "Approved Transaction"})
             form.reset();
           }
-          
+          setUploadStatus({progress: 95, message: "Valdating Upload"})
           await invalidateUpload();
           setUploadStatus({progress: 100, message: "Upload Complete"})
 
@@ -475,7 +476,7 @@
       toast.promise(
         _upload(),
         {
-          loading: `${uploadStatus?.progress} ${uploadStatus?.message}`,
+          loading: `${uploadStatus?.message}`,
           success: () => "Upload confirmed",
           error: (err:any) => err.message,
         }
@@ -989,13 +990,13 @@
                   <div className="relative flex items-center justify-center w-full h-full">
                     {/* Background progress bar */}
                     <div
-                      className="absolute inset-0 bg-blue-500 transition-all duration-300 ease-in-out"
+                      className="absolute inset-0 bg-blue-500 transition-all duration-1000 ease-in-out"
                       style={{ width: `${uploadStatus.progress}%` }}
                     ></div>
 
                     {/* Text progress indicator */}
                     <span className="relative z-10 text-white">
-                      Uploading... {uploadStatus.progress}%
+                      {uploadStatus.message}
                     </span>
                   </div>
                 )}
