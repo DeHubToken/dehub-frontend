@@ -8,6 +8,7 @@ export interface User {
   displayName?: string;
   email?: string;
   avatarImageUrl?: string;
+  isLiked?: boolean;
   coverImageUrl?: string;
   aboutMe?: string;
   facebookLink?: string;

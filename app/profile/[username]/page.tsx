@@ -1,13 +1,12 @@
 import "server-only";
 
 import type { Metadata } from "next";
-
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
 import { getAccount } from "@/services/user";
-
 import { getImageUrl } from "@/web3/utils/url";
+import { safeParseCookie } from "@/libs/cookies";
 
 import { Profile } from "./components/profile";
 
@@ -19,38 +18,66 @@ type Props = {
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { username } = props.params;
-  const res = await getAccount(username);
-  if (!res.success) {
-    return notFound();
-  }
-  return {
-    title: "DeHub | " + res.data.result.username,
-    description: res.data.result.aboutMe || "No description provided.",
-    keywords: res.data.result.username,
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true
-      }
-    },
+
+  // Fetch the user cookie
+  const cookie = cookies();
+  const userCookie = cookie.get("user_information");
+  const user = safeParseCookie<{ address: string }>(userCookie?.value);
+
+  // Default metadata setup
+  let metadata: Metadata = {
+    title: "User Profile - Dehub",
+    description: "Check out the user profile on Dehub.",
     openGraph: {
-      type: "profile",
-      description: res.data.result.aboutMe || "No description provided.",
-      username: res.data.result.username,
-      title: res.data.result.username,
-      locale: "en_US",
+      title: "User Profile - Dehub",
+      description: "View user details and their collections on Dehub.",
+      url: "https://dehub.io/profile",
+      siteName: "Dehub",
       images: [
         {
-          url: getImageUrl(res.data.result.avatarImageUrl || "/images/default-avatar.png"),
+          url: "https://dehub.io/default-avatar.png",
           width: 800,
           height: 600,
-          alt: res.data.result.username
-        }
-      ]
-    }
+          alt: "Dehub User Profile",
+        },
+      ],
+      locale: "en_US",
+      type: "website",
+    },
   };
+
+  // Fetch account data based on the username
+  const res = await getAccount(username);
+  if (!res.success) {
+    return metadata; // Return default metadata if the user account isn't found
+  }
+
+  const userData = res.data.result;
+  const imageSrc = getImageUrl(userData.avatarImageUrl || "/images/default-avatar.png", 256, 256);
+
+  // Update metadata based on the fetched user data
+  metadata = {
+    title: `${userData.username || userData.displayName} - Profile on Dehub.io`,
+    description: userData.aboutMe || `Explore the profile of ${userData.username || userData.displayName} on Dehub.io.`,
+    openGraph: {
+      title: `${userData.username || userData.displayName} - Profile on Dehub`,
+      description: `View ${userData.username || userData.displayName}'s profile and collections on Dehub.`,
+      url: `https://dehub.io/profile/${userData.username}`,
+      siteName: "Dehub",
+      images: [
+        {
+          url: imageSrc,
+          width: 800,
+          height: 600,
+          alt: `${userData.username || userData.displayName}'s Avatar`,
+        },
+      ],
+      locale: "en_US",
+      type: "profile",
+    },
+  };
+
+  return metadata;
 }
 
 export default async function Page(props: Props) {
@@ -73,9 +100,9 @@ export default async function Page(props: Props) {
   }
 
   const cookie = cookies();
-  const loggedInuserInformation = cookie.get("user_information");
-  if (loggedInuserInformation?.value) {
-    const userInformation = JSON.parse(loggedInuserInformation.value) as { address: string };
+  const loggedInUserInformation = cookie.get("user_information");
+  if (loggedInUserInformation?.value) {
+    const userInformation = JSON.parse(loggedInUserInformation.value) as { address: string };
     if (userInformation.address?.toLowerCase() === res.data.result.address?.toLowerCase()) {
       return redirect("/me");
     }

@@ -33,9 +33,9 @@ export async function RecentPanel() {
         )}
 
         {response.data.result.length > 0 &&
-          response.data.result.map((item) => (
+          response.data.result.map((item, i) => (
             <Link
-              key={item.tokenId}
+              key={i}
               href={`/stream/${item.tokenId}`}
               className="flex h-auto w-full items-center justify-between overflow-hidden rounded-2xl bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark"
             >

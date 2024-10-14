@@ -16,15 +16,36 @@ import { createAvatarName } from "@/libs/utils";
 import { formatNumber } from "@/web3/utils/format";
 import { getAvatarUrl } from "@/web3/utils/url";
 
+import { ImageWithLoader } from "./nft-image";
+import { CiMenuKebab } from "react-icons/ci";
+import { useState } from "react";
+import { updateNftVisibility } from "@/services/nfts/mint";
+
 import { LikeButton } from "../stream/[id]/components/stream-actions";
+
 
 type Props = {
   nft: any;
+  isOwner?: Boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export function FeedItem(props: Props) {
-  const { nft, ...rest } = props;
+  const { nft, isOwner, ...rest } = props;
+  const [isOpen, setIsOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState<boolean>(nft.isHidden)
 
+  const updateVisibility = async(id:string) => {
+    try{
+      const res = await updateNftVisibility({id: nft.tokenId, isHidden: !isHidden})
+      setIsHidden((prev:boolean) => !prev)
+    }catch(e){
+      throw new Error("NFT visibility update has failed!");
+    }
+  }
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
   return (
     <div
       {...rest}
@@ -35,7 +56,11 @@ export function FeedItem(props: Props) {
           href={`/stream/${nft.tokenId}`}
           className="next__link size-full overflow-hidden rounded-2xl"
         >
+
+          <ImageWithLoader isHidden={isHidden} url={nft.imageUrl} name={nft.name} />
+
           <PreviewVideo nft={nft} />
+
         </Link>
 
         {nft?.streamInfo?.isAddBounty && (
@@ -94,12 +119,26 @@ export function FeedItem(props: Props) {
                 <AvatarImage src={getAvatarUrl(nft.minterAvatarUrl)} />
               </Avatar>
             </Link>
-
-            <div className="flex size-auto flex-col items-start justify-start">
-              <p className="text-[11px] font-bold">{truncate(nft.name, 26)}</p>
-              <Link href={`/${nft.mintername || nft.minter}`} className="text-[11px]">
-                {truncate(nft.minterDisplayName || nft.mintername || nft.minter, 26)}
-              </Link>
+            
+            <div className="flex w-full justify-between items-center">
+              <div className="flex size-auto flex-col items-start justify-start">
+                <p className="text-[11px] font-bold">{truncate(nft.name, 26)}</p>
+                <Link href={`/${nft.mintername || nft.minter}`} className="text-[11px]">
+                  {truncate(nft.minterDisplayName || nft.mintername || nft.minter, 26)} 
+                </Link>
+              </div>
+              {isOwner ?  <div className="">
+                <div className="p-2" onClick={toggleDropdown}>
+                  <CiMenuKebab />
+                </div>
+                {isOpen && (
+                  <div className="absolute z-50 right-0 mt-2 w-48 bg-black rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                    <div className="py-1 z-50">
+                      <div onClick={()=> updateVisibility(nft.id)} className="block px-4 py-2 text-sm text-gray-100">Change Visibility</div>
+                    </div>
+                  </div>
+                )}
+              </div>: <></>}
             </div>
           </div>
         </div>

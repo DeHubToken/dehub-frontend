@@ -30,6 +30,8 @@ export type NFT = {
   minterDisplayName: string;
   minterStaked: number;
   mintername: string;
+  isHidden: boolean;
+  isLiked: boolean;
   name: string;
   status: string;
   tokenId: number;
@@ -55,8 +57,8 @@ export type NFT = {
   streamInfo: Record<string, string>;
 };
 
-export async function getNFT(tokenId: number) {
-  const res = await api<{ result: NFT }>(`/nft_info/${tokenId}`, {
+export async function getNFT(tokenId: number, address: string) {
+  const res = await api<{ result: NFT }>(`/nft_info/${tokenId}?address=${address}`, {
     cache: "force-cache",
     next: {
       tags: [`nft_info_${tokenId}`],

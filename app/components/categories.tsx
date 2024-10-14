@@ -67,8 +67,8 @@ async function CategoriesLoader(props: Props) {
               All
             </CategoryButton>
           </CarouselItem>
-          {categories.map((item) => (
-            <CarouselItem key={item} className="basis-auto">
+          {categories.map((item, index) => (
+            <CarouselItem key={index} className="basis-auto">
               <CategoryButton
                 url={`/${objectToGetParams({ category: item, type, title, range })}`}
                 isActive={isActive(item)}

@@ -21,6 +21,8 @@ import { Share } from "./share";
 import { LikeButton } from "./stream-actions";
 import { StreamVideoProvider, StreamVideoSkeleton } from "./stream-video-provider";
 import { TipModal } from "./tip-modal";
+import { cookies } from "next/headers";
+import { safeParseCookie } from "@/libs/cookies";
 
 function ActionPanel(props: { nft: NFT; tokenId: number }) {
   const { nft, tokenId } = props;
@@ -102,10 +104,10 @@ function StreamInfo(props: { nft: NFT }) {
           </p>
         </div>
         <h1 className="text-2xl font-medium">{nft.name}</h1>
-        <p className="text-sm">
+        {/* <p className="text-sm">
           <span className="font-semibold">Duration :</span> {secondToMinute(nft?.videoDuration)}{" "}
           minutes
-        </p>
+        </p> */}
         <p className="text-sm">
           <span className="font-semibold">Description :</span> {nft.description}
         </p>
@@ -124,7 +126,10 @@ function StreamInfo(props: { nft: NFT }) {
 
 export async function Stream(props: { tokenId: number }) {
   const { tokenId } = props;
-  const response = await getNFT(tokenId);
+  const cookie = cookies();
+  const userCookie = cookie.get("user_information");
+  const user = safeParseCookie<{ address: string }>(userCookie?.value);
+  const response = await getNFT(tokenId, user?.address as string);
 
   if (!response.success) {
     return (
@@ -152,14 +157,17 @@ export async function Stream(props: { tokenId: number }) {
 }
 
 async function StreamVideo(props: { tokenId: number }) {
+  const cookie = cookies();
+  const userCookie = cookie.get("user_information");
+  const user = safeParseCookie<{ address: string }>(userCookie?.value);
   const { tokenId } = props;
-  const response = await getNFT(tokenId);
+  const response = await getNFT(tokenId, user?.address as string);
 
   if (!response.success) {
     return null;
   }
-
-  const nft = response.data.result;
+  console.log(response.data)
+  const nft = response.data.result
 
   // Checking for transcoding status
   const isTranscodingVideo = nft?.transcodingStatus === "on";

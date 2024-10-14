@@ -6,10 +6,11 @@ import { FeedItem } from "./feed-item";
 
 type Props = {
   nfts: any;
+  isOwner?: Boolean;
 };
 
 export function UserUploads(props: Props) {
-  const { nfts } = props;
+  const { nfts, isOwner } = props;
   return (
     <div className="mt-12 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
       <div className="h-auto w-full">
@@ -20,7 +21,7 @@ export function UserUploads(props: Props) {
         <div className="mt-10 h-auto w-full">
           <div className="flex h-auto w-full flex-wrap items-stretch justify-start gap-6">
             {nfts.map((nft: any, index: number) => (
-              <FeedItem nft={nft} key={nft.tokenId + "--" + index} />
+              <FeedItem nft={nft} key={nft.tokenId + "--" + index} isOwner={isOwner} />
             ))}
 
             {nfts.length === 0 && (
