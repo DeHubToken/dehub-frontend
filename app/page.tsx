@@ -31,27 +31,19 @@ export default async function Page(props: Props) {
   return (
     <main className="flex h-auto min-h-screen w-full items-start justify-between">
       <div className="h-auto min-h-screen w-full px-6 py-20 md:max-w-[75%] md:flex-[0_0_75%]">
-        <FeedProvider>
-          <Categories
-            title={type.toUpperCase()}
-            category={category}
-            range={range}
-            type={type}
-            q={q}
-          />
+        <Categories
+          title={type.toUpperCase()}
+          category={category}
+          range={range}
+          type={type}
+          q={q}
+        />
 
-          <div className="mt-8 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
-            <Suspense key={key} fallback={<FeedLoader range={range} />}>
-              <Feed
-                title={type.toUpperCase()}
-                category={category}
-                range={range}
-                type={type}
-                q={q}
-              />
-            </Suspense>
-          </div>
-        </FeedProvider>
+        <div className="mt-8 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
+          <Suspense key={key} fallback={<FeedLoader range={range} />}>
+            <Feed title={type.toUpperCase()} category={category} range={range} type={type} q={q} />
+          </Suspense>
+        </div>
       </div>
 
       <Suspense fallback={<LeaderboardSkeleton />}>

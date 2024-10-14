@@ -6,6 +6,7 @@ import Link from "next/link";
 import { EyeOpenIcon, HeartFilledIcon } from "@radix-ui/react-icons";
 import { formatDistance } from "date-fns";
 
+import { PreviewVideo } from "@/components/preview-video";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
@@ -19,6 +20,9 @@ import { ImageWithLoader } from "./nft-image";
 import { CiMenuKebab } from "react-icons/ci";
 import { useState } from "react";
 import { updateNftVisibility } from "@/services/nfts/mint";
+
+import { LikeButton } from "../stream/[id]/components/stream-actions";
+
 
 type Props = {
   nft: any;
@@ -52,17 +56,21 @@ export function FeedItem(props: Props) {
           href={`/stream/${nft.tokenId}`}
           className="next__link size-full overflow-hidden rounded-2xl"
         >
+
           <ImageWithLoader isHidden={isHidden} url={nft.imageUrl} name={nft.name} />
+
+          <PreviewVideo nft={nft} />
+
         </Link>
 
         {nft?.streamInfo?.isAddBounty && (
-          <div className="from-theme-orange-500 to-theme-orange-300 absolute -left-16 top-12 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-gradient-to-r px-10 py-0.5 text-center text-xs text-white shadow-default">
+          <div className="absolute -left-16 top-12 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-classic-magenta px-10 py-0.5 text-center text-xs text-white shadow-default">
             <span>
               Watch2Earn: {formatNumber(nft.streamInfo.addBountyAmount)}{" "}
               {nft.streamInfo.addBountyTokenSymbol}
             </span>
             <Image
-              src="/icons/tokens/BJ.png"
+              src="/icons/tokens/DHB.png"
               alt="BJ"
               width={20}
               height={20}
@@ -72,12 +80,12 @@ export function FeedItem(props: Props) {
         )}
 
         {nft?.streamInfo?.isPayPerView && (
-          <div className="absolute -right-20 top-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-blue-500 px-12 py-0.5 text-center text-xs text-white">
+          <div className="absolute -right-20 top-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-classic-blue px-12 py-0.5 text-center text-xs text-white">
             <span>
               PPV: {nft.streamInfo.payPerViewAmount || 0} {nft.streamInfo.payPerViewTokenSymbol}
             </span>
             <Image
-              src="/icons/tokens/BJ.png"
+              src="/icons/tokens/DHB.png"
               alt="BJ"
               width={20}
               height={20}
@@ -87,12 +95,12 @@ export function FeedItem(props: Props) {
         )}
 
         {nft?.streamInfo?.isLockContent && (
-          <div className="absolute -right-20 bottom-8 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-red-500 px-12 py-0.5 text-center text-xs text-white">
+          <div className="absolute -right-20 bottom-8 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-classic-violet px-12 py-0.5 text-center text-xs text-white">
             <span>
               Lock: {nft.streamInfo.lockContentAmount || 0} {nft.streamInfo.lockContentTokenSymbol}
             </span>
             <Image
-              src="/icons/tokens/BJ.png"
+              src="/icons/tokens/DHB.png"
               alt="BJ"
               width={20}
               height={20}
@@ -139,10 +147,19 @@ export function FeedItem(props: Props) {
             {formatDistance(new Date(nft.createdAt), new Date(), { addSuffix: true })}
           </span>
           <div className="flex h-auto items-center justify-end gap-2">
-            <Button variant="secondary" size="sm" className="gap-1 rounded-full text-[11px]">
-              <HeartFilledIcon className="size-3" /> {nft.totalVotes?.for || nft.likes || 0}
-            </Button>
-            <Button variant="secondary" size="sm" className="gap-1 rounded-full text-[11px]">
+            <LikeButton
+              className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+              vote
+              tokenId={nft.tokenId}
+              votes={nft.totalVotes?.for || 0}
+              size="sm"
+            >
+              <HeartFilledIcon className="size-3 fill-red-400" />
+            </LikeButton>
+            <Button
+              size="sm"
+              className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+            >
               <EyeOpenIcon className="size-3" />
               {nft.views || 0}
             </Button>

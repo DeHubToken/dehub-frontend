@@ -16,7 +16,6 @@ import objectToGetParams from "@/libs/utils";
 import { getCategories } from "@/services/categories";
 
 import { CategoryButton } from "./category-button";
-import { SearchBox } from "./search-box";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -34,13 +33,6 @@ export async function Categories(props: Props) {
       <Suspense fallback={<CategoriesSkeleton />}>
         <CategoriesLoader {...props} />
       </Suspense>
-      <SearchBox
-        key={props.q}
-        category={props.category}
-        type={props.type}
-        range={props.range}
-        q={props.q}
-      />
     </div>
   );
 }
@@ -58,7 +50,7 @@ async function CategoriesLoader(props: Props) {
   const categories = categoriesRes.data;
 
   return (
-    <div className="h-auto w-full md:max-w-[60%] md:flex-[60%]">
+    <div className="h-auto w-full">
       <Carousel
         opts={{
           dragFree: true

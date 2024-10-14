@@ -22,7 +22,7 @@ const buttonVariants = cva(
           "text-theme-mine-shaft dark:text-theme-titan-white hover:bg-theme-mine-shaft-dark dark:hover:bg-theme-mine-shaft hover:text-theme-titan-white",
         link: "text-theme-mine-shaft underline-offset-4 hover:underline",
         gradientOne:
-          "bg-gradient-to-r from-blue-500 to-blue-300 shadow-default hover:from-theme-orange-200 hover:to-theme-orange-500 rounded-full"
+          "bg-gradient-to-r from-classic-magenta to-classic-violet shadow-default hover:from-classic-violet hover:to-classic-magenta rounded-full text-white"
       },
       size: {
         default: "h-10 px-4 py-2",

@@ -8,18 +8,19 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
+import { cn } from "@/libs/utils";
+
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { voteOnNFT } from "../actions";
 
-type LikeButtonProps = {
-  children: React.ReactNode;
-};
+type LikeButtonProps = React.ComponentProps<typeof Button>;
 
 export function LikeButton(
   props: LikeButtonProps & { tokenId: number; vote: boolean; votes: number }
 ) {
-  const { children, tokenId, vote, votes } = props;
+  const { children, tokenId, vote, votes, ...rest } = props;
+  console.log(votes);
   const { account, library } = useActiveWeb3React();
   const [total, setTotal] = useState(votes);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -63,7 +64,12 @@ export function LikeButton(
   }
 
   return (
-    <Button onClick={onVote} className="gap-2 rounded-full" disabled={status === "loading"}>
+    <Button
+      {...rest}
+      onClick={onVote}
+      className={cn("gap-2 rounded-full", rest.className)}
+      disabled={status === "loading"}
+    >
       {children}
       {total}
       {status === "loading" && (

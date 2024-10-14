@@ -7,9 +7,9 @@ import merge from "lodash/merge";
 
 const rainbowMyTheme = merge(darkTheme(), {
   colors: {
-    accentColor: "#F26419",
+    accentColor: "#860C93",
     accentColorForeground: "#cadadd",
-    connectButtonBackground: "#F26419",
+    connectButtonBackground: "#860C93",
     connectButtonText: "#cadadd"
   },
   radii: {

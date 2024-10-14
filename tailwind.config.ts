@@ -34,18 +34,15 @@ const config = {
       }
     },
     fontFamily: {
-      archivo: ["Archivo", "sans-serif"],
-      tanker: ["Tanker", "sans-serif"],
-      nunito: ["Nunito", "sans-serif"]
+      exo: ["Exo", "sans-serif"]
     },
     extend: {
       colors: {
         classic: {
-          pink: "#FF0080",
-          blue: "#0070F3",
-          cyan: "#50E3C2",
-          orange: "#F5A623",
-          violet: "#7928CA"
+          violet: "#2E064D",
+          magenta: "#860C93",
+          purple: "#8955AA",
+          blue: "#45BFD6"
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

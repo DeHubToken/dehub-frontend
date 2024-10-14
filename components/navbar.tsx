@@ -2,13 +2,12 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 
-import { SearchModal } from "@/app/components/search-box";
+import { SearchBox, SearchModal } from "@/app/components/search-box";
 
 import { HambMenu } from "@/components/hamb-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { Logo } from "./logo";
-import { NavLinks } from "./nav-links";
 import { ThemeSwitcher } from "./theme-switcher";
 
 /* ----------------------------------------------------------------------------------------------- */
@@ -30,10 +29,8 @@ export function Navbar() {
           <Logo />
         </Link>
 
-        <div className="flex size-auto items-center justify-end gap-2 md:gap-6">
-          <div className="size-auto items-center justify-start">
-            <NavLinks />
-          </div>
+        <div className="flex flex-[0_0_60%] items-center justify-end gap-2 md:gap-6">
+          <SearchBox />
           <SearchModal />
           <ConnectButton label="Connect" />
           <HambMenu />
