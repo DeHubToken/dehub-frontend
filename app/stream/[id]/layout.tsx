@@ -1,15 +1,20 @@
+import { safeParseCookie } from "@/libs/cookies";
 import { getNFT } from "@/services/nfts";
 import { getImageUrl } from "@/web3/utils/url";
 import { Metadata } from "next";
+import { cookies } from "next/headers";
 
 type Props = {
   children: React.ReactNode;
-  params: { id: string };
+  params: { id: string};
 };
 
 // Function to dynamically generate metadata based on NFT data
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tokenId = Number(params.id);
+  const cookie = cookies();
+  const userCookie = cookie.get("user_information");
+  const user = safeParseCookie<{ address: string }>(userCookie?.value);
 
   // Validate the tokenId
   if (isNaN(tokenId)) {
@@ -20,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   // Fetch NFT data
-  const response:any = await getNFT(tokenId);
+  const response:any = await getNFT(tokenId, user?.address as string);
   if (!response) {
     return {
       title: "NFT Not Found - Dehub",
