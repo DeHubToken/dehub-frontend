@@ -59,7 +59,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// Layout component that applies the metadata and renders the page
 export default function StreamInfoLayout({ children }: Props) {
   return (
     <main className="relative h-auto w-full">
