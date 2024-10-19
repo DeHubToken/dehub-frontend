@@ -20,9 +20,11 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 import { cn } from "@/libs/utils";
 
 import { supportedTokens } from "@/configs";
+import UserSearchModal from "@/app/components/UserSearchModal";
 
 export default function TokensList() {
   const { chainId } = useActiveWeb3React();
+
   const avaialbleTokens = useMemo(
     () => supportedTokens.filter((token) => token.chainId === chainId),
     [chainId]
@@ -81,6 +83,7 @@ export default function TokensList() {
 
 function BJ(props: { iconUrl: string; label: string; tokenBalance: number }) {
   const { iconUrl, label, tokenBalance } = props;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [toggle, setToggle] = useState(false);
 
@@ -139,6 +142,23 @@ function BJ(props: { iconUrl: string; label: string; tokenBalance: number }) {
               Bridge
             </a>
           </Button>
+          <Button
+            variant="ghost"
+            className="h-7 rounded-full bg-theme-mine-shaft-dark px-4 text-xs dark:bg-theme-mine-shaft-dark dark:hover:bg-theme-mine-shaft-dark/70"
+            asChild
+            onClick={() => setIsModalOpen(true)}
+          >
+            <p>Transfer</p>
+         </Button>
+      
+
+
+      {/* User Search Modal */}
+      {isModalOpen && (
+        <UserSearchModal
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
         </motion.div>
       )}
     </motion.li>

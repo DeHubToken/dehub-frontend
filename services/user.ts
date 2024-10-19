@@ -27,6 +27,7 @@ export async function getStakingAmount(account: string | undefined) {
     const stakedAmount = await stakingContract.userTotalStakedAmount(account);
     if (stakedAmount.toString() === "0") return 0;
     return parseFloat(ethers.utils.formatUnits(stakedAmount, 18));
+    
   } catch (e) {
     return 0;
   }
@@ -51,6 +52,26 @@ export async function getAccount(usernameOrAddress: string) {
   }
   return response;
 }
+
+export async function usersSearch(searchParam: string) {
+  const url = `/users_search?searchParam=${encodeURIComponent(searchParam)}`;
+  const response = await api<{ result: User[] }>(url);
+
+  if (response.success) {
+    return {
+      ...response,
+      data: {
+        ...response.data,
+        result: response.data.result.map(user => ({
+          ...user,
+          // Optionally include additional processing here if needed
+        })),
+      },
+    };
+  }
+  return response;
+}
+
 
 export async function updateProfile(data: FormData) {
   const url = "/update_profile";

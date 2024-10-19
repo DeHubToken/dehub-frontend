@@ -9,6 +9,7 @@ type SearchParams = {
   search?: string;
   range?: string | number;
   category?: string | null;
+  address?: string
 };
 
 export type GetNFTsResult = {
@@ -65,13 +66,14 @@ export async function getNFTs(params?: SearchParams) {
         search: params.search,
         unit: 50,
         range: params.range,
-        category: params.category
+        category: params.category,
+        address: params.address
       })
     );
     const url = `/search_nfts${query}`;
     const res = await api<{ result: GetNFTsResult[] }>(url, {
       method: "GET",
-      next: { revalidate: 2 * 60, tags: ["nfts"] }
+      // next: { revalidate: 2 * 60, tags: ["nfts"] }
     });
     return res;
   }
@@ -80,7 +82,7 @@ export async function getNFTs(params?: SearchParams) {
   const url = `/search_nfts${query}`;
   const res = await api<{ result: GetNFTsResult[] }>(url, {
     method: "GET",
-    next: { revalidate: 2 * 60, tags: ["nfts"] }
+    // next: { revalidate: 2 * 60, tags: ["nfts"] }
   });
   return res;
 }

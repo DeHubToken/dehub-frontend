@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { Contract } from "ethers";
+import type { BigNumber, Contract } from "ethers";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
@@ -77,4 +77,48 @@ export const useStreamControllerContract = () => {
 export const useMulticallContract = () => {
   const { account, chainId } = useActiveWeb3React();
   return useContract(!!account && !!chainId ? MULTICALL2_ADDRESSES : undefined, MULTICALL_ABI);
+};
+
+export const useTransferTokens = () => {
+  const { account } = useActiveWeb3React();
+  const contract = useBJTokenContract();
+  
+  // Get the ERC20 contract for a specific token
+  const transferBJTokens = useCallback(async (recipient: string, amount: BigNumber) => {
+    
+    if (!contract || !account) {
+      throw new Error("Contract not found or account not connected");
+    }
+
+    try {
+      // Convert amount to a BigNumber if necessary (depends on your implementation)
+      console.log(recipient, amount)
+      const tx = await contract.transfer(recipient, amount);
+      await tx.wait(); // Wait for the transaction to be confirmed
+      return tx; // Return the transaction receipt
+    } catch (error:any) {
+      console.error("Token transfer failed", error);
+      throw new Error("Token transfer failed: " + error.message);
+    }
+  }, [account]);
+
+  const transferERC20Tokens = useCallback(async (tokenAddress:string, recipient: string, amount: BigNumber) => {
+    const contract = useERC20Contract(tokenAddress);
+    
+    if (!contract || !account) {
+      throw new Error("Contract not found or account not connected");
+    }
+
+    try {
+      // Convert amount to a BigNumber if necessary (depends on your implementation)
+      const tx = await contract.transfer( recipient, amount);
+      await tx.wait(); // Wait for the transaction to be confirmed
+      return tx; // Return the transaction receipt
+    } catch (error:any) {
+      console.error("Token transfer failed", error);
+      throw new Error("Token transfer failed: " + error.message);
+    }
+  }, [account]);
+
+  return {transferBJTokens, transferERC20Tokens};
 };

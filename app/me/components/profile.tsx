@@ -21,7 +21,8 @@ export async function Profile(props: Props) {
   const { user } = props;
   const res = await getNFTs({
     minter: user.address,
-    unit: 40
+    unit: 40,
+    address: user?.address
   });
 
   return (

@@ -18,13 +18,14 @@ type Props = {
   range?: string;
   type: string;
   q?: string;
+  address?: string;
 };
 
 const containerClass =
   "flex h-auto w-full flex-wrap items-stretch justify-start gap-5 xl:gap-x-[1.25%] xl:gap-y-4 3xl:gap-3";
 
 export function FeedsContainer(props: Props) {
-  const { data: initialData, isSearch, category, range, type, q } = props;
+  const { data: initialData, isSearch, category, range, type, q, address } = props;
 
   const [data, setData] = useState(initialData);
   const [page, setPage] = useState(1);
@@ -32,14 +33,16 @@ export function FeedsContainer(props: Props) {
   const { isPending } = useFeedProvider("FeedsList");
 
   async function fetchMore() {
+   
     const res = await getNFTs({
       sortMode: type,
       unit: q ? 50 : 20,
       category: category === "All" ? null : category,
       range,
       search: q,
-      page: page + 1
-    });
+      page: page + 1,
+      address: address
+    })
 
     if (!res.success) {
       setHasMore(false);

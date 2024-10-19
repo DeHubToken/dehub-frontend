@@ -7,11 +7,16 @@ import { truncate } from "@/libs/strings";
 import { getNFTs } from "@/services/nfts/trending";
 
 import { getImageUrl } from "@/web3/utils/url";
+import { safeParseCookie } from "@/libs/cookies";
+import { cookies } from "next/headers";
 
 /* ================================================================================================= */
 
 export async function RecentPanel() {
-  const response = await getNFTs({ sortMode: "new" });
+  const cookie = cookies();
+  const userCookie = cookie.get("user_information");
+  const user = safeParseCookie<{ address: string }>(userCookie?.value);
+  const response = await getNFTs({ sortMode: "new", address: user?.address });
 
   if (!response.success) {
     return (

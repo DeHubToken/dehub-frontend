@@ -6,6 +6,8 @@ import { getNFTs } from "@/services/nfts/trending";
 
 import { FeedsContainer } from "./feeds-container";
 import { FeedRangeFilter } from "./filters";
+import { cookies } from "next/headers";
+import { safeParseCookie } from "@/libs/cookies";
 
 type FeedProps = {
   title: string;
@@ -17,13 +19,17 @@ type FeedProps = {
 
 export async function Feed(props: FeedProps) {
   const { category, range, type, q } = props;
+  const cookie = cookies();
+  const userCookie = cookie.get("user_information");
+  const user = safeParseCookie<{ address: string }>(userCookie?.value);
 
   const res = await getNFTs({
     sortMode: type,
     unit: q ? 50 : 20,
     category: category === "All" ? null : category,
     range,
-    search: q
+    search: q,
+    address: user?.address
   });
 
   if (!res.success) {
@@ -45,6 +51,7 @@ export async function Feed(props: FeedProps) {
 
       <div className="mt-10 h-auto w-full">
         <FeedsContainer
+          address={user?.address}
           isSearch={q ? true : false}
           data={res.data.result}
           type={type}
