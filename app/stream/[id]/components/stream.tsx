@@ -111,14 +111,16 @@ function StreamInfo(props: { nft: NFT }) {
         <p className="text-sm">
           <span className="font-semibold">Description :</span> {nft.description}
         </p>
-        <p className="text-sm">
+        <div className="w-full">
           <span className="font-semibold">Categories :</span>{" "}
-          {nft.category.map((i) => (
-            <Link key={i} href={`/?category=${i}&type=trends`} className="mr-1">
-              <span className="cursor-pointer">#{i}</span>
-            </Link>
-          ))}
-        </p>
+          <div className="flex flex-wrap items-center gap-1">
+            {nft.category.map((i) => (
+              <Link key={i} href={`/?category=${i}&type=trends`} className="mr-1">
+                <span className="cursor-pointer">#{i}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 "use client";
 
-import HoverVideoPlayer from "react-hover-video-player";
+import type { NFT } from "@/services/nfts";
 
-import { NFT } from "@/services/nfts";
+import HoverVideoPlayer from "react-hover-video-player";
 
 import { Spinner } from "./ui/spinner";
 
