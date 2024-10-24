@@ -1,6 +1,6 @@
-import { FeedRangeFilter } from "./filters";
+import { StreamRangeFilter } from "./filters";
 
-export function FeedSkeleton() {
+export function StreamSkeleton() {
   return (
     <div className="flex h-auto w-full max-w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark sm:max-w-[300px] lg:max-w-[300px] xl:max-w-[31.95%] 2xl:max-w-[24%] 3xl:max-w-[290px]">
       <div className="shimmer relative h-[225px] w-full rounded-2xl bg-gray-300 dark:bg-theme-mine-shaft-dark/50 sm:h-[175px] 3xl:h-[190px]">
@@ -29,20 +29,20 @@ export function FeedSkeleton() {
   );
 }
 
-export function FeedLoader(props: { range?: string }) {
+export function StreamLoader(props: { range?: string }) {
   const { range } = props;
   return (
     <div className="h-auto w-full">
       <div className="flex h-auto w-full items-center justify-between">
         <h1 className="font-tanker text-5xl">Trending</h1>
         <div className="flex size-auto items-center justify-center gap-4">
-          <FeedRangeFilter range={range} disabled />
+          <StreamRangeFilter range={range} disabled />
         </div>
       </div>
       <div className="mt-10 h-auto w-full">
         <div className="flex h-auto w-full flex-wrap items-stretch justify-start gap-5 xl:gap-x-[1.25%] xl:gap-y-4 3xl:gap-3">
           {Array.from({ length: 8 }).map((_, index) => (
-            <FeedSkeleton key={index} />
+            <StreamSkeleton key={index} />
           ))}
         </div>
       </div>

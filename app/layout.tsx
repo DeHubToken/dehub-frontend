@@ -16,7 +16,7 @@ import { Toaster as Toast } from "@/components/ui/toaster";
 
 import { AvatarWalletProvider } from "@/contexts/avatar-wallet";
 
-import { FeedProvider } from "./components/feed-provider";
+import { StreamProvider } from "./components/stream-provider";
 
 /* ------------------------------------------------------------------------------------------ */
 
@@ -73,9 +73,9 @@ export default function RootLayout({ children }: Props) {
           <Providers>
             <AvatarWalletProvider>
               {/* WebSocketProvider */}
-              <FeedProvider>
+              <StreamProvider>
                 <Layout>{children}</Layout>
-              </FeedProvider>
+              </StreamProvider>
               {/* <OnlyDesktop /> */}
             </AvatarWalletProvider>
           </Providers>

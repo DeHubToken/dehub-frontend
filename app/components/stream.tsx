@@ -1,13 +1,15 @@
 import "server-only";
 
+import { cookies } from "next/headers";
+
 import { Error } from "@/components/error.server";
+
+import { safeParseCookie } from "@/libs/cookies";
 
 import { getNFTs } from "@/services/nfts/trending";
 
-import { FeedsContainer } from "./feeds-container";
-import { FeedRangeFilter } from "./filters";
-import { cookies } from "next/headers";
-import { safeParseCookie } from "@/libs/cookies";
+import { StreamRangeFilter } from "./filters";
+import { StreamsContainer } from "./streams-container";
 
 type FeedProps = {
   title: string;
@@ -17,7 +19,7 @@ type FeedProps = {
   q?: string;
 };
 
-export async function Feed(props: FeedProps) {
+export async function Stream(props: FeedProps) {
   const { category, range, type, q } = props;
   const cookie = cookies();
   const userCookie = cookie.get("user_information");
@@ -45,12 +47,12 @@ export async function Feed(props: FeedProps) {
       <div className="flex h-auto w-full items-center justify-between">
         <Title title={props.type} />
         <div className="flex size-auto items-center justify-center gap-4">
-          <FeedRangeFilter range={range} />
+          <StreamRangeFilter range={range} />
         </div>
       </div>
 
       <div className="mt-10 h-auto w-full">
-        <FeedsContainer
+        <StreamsContainer
           address={user?.address}
           isSearch={q ? true : false}
           data={res.data.result}

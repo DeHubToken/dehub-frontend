@@ -4,10 +4,10 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { Categories } from "./components/categories";
-import { Feed } from "./components/feed";
-import { FeedProvider } from "./components/feed-provider";
-import { FeedLoader } from "./components/feed-skeleton";
+import { FeedList } from "./components/feed-list";
 import { Leaderboard, LeaderboardSkeleton } from "./components/leaderborad";
+import { Stream } from "./components/stream";
+import { StreamLoader } from "./components/stream-skeleton";
 
 type Props = {
   params: null;
@@ -40,8 +40,17 @@ export default async function Page(props: Props) {
         />
 
         <div className="mt-8 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
-          <Suspense key={key} fallback={<FeedLoader range={range} />}>
-            <Feed title={type.toUpperCase()} category={category} range={range} type={type} q={q} />
+          <Suspense key={key} fallback={<StreamLoader range={range} />}>
+            {type === "feed" && <FeedList />}
+            {type !== "feed" && (
+              <Stream
+                title={type.toUpperCase()}
+                category={category}
+                range={range}
+                type={type}
+                q={q}
+              />
+            )}
           </Suspense>
         </div>
       </div>

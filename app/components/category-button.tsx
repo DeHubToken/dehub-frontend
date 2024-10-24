@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
 
-import { useFeedProvider } from "./feed-provider";
+import { useStreamProvider } from "./stream-provider";
 
 type Props = {
   url: string;
@@ -17,7 +17,7 @@ export function CategoryButton(props: Props) {
   const { url, isActive, children } = props;
 
   const [isActived, setIsActived] = useOptimistic(isActive);
-  const { startTransition } = useFeedProvider("CategoryButton");
+  const { startTransition } = useStreamProvider("CategoryButton");
   const router = useRouter();
 
   function pushUrl() {

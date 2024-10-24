@@ -11,9 +11,9 @@ type State = {
   startTransition: TransitionStartFunction;
 };
 
-const [Provider, useFeedProvider] = createContext<State>("FeedProvider");
+const [Provider, useStreamProvider] = createContext<State>("StreamProvider");
 
-export function FeedProvider(props: { children: React.ReactNode }) {
+export function StreamProvider(props: { children: React.ReactNode }) {
   const [isPending, startTransition] = useTransition();
   return (
     <Provider isPending={isPending} startTransition={startTransition}>
@@ -22,4 +22,4 @@ export function FeedProvider(props: { children: React.ReactNode }) {
   );
 }
 
-export { useFeedProvider };
+export { useStreamProvider };

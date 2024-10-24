@@ -18,7 +18,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
 import { search } from "./action";
-import { useFeedProvider } from "./feed-provider";
+import { useStreamProvider } from "./stream-provider";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -26,7 +26,7 @@ export function SearchBox(props: { category?: string; type?: string; range?: str
   const { category, type = "search", range, q } = props;
 
   const [text, setText] = useState(q || "");
-  const { startTransition, isPending } = useFeedProvider("SearchBox");
+  const { startTransition, isPending } = useStreamProvider("SearchBox");
 
   const action: () => void = () => {
     startTransition(() => {

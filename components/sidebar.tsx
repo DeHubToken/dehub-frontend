@@ -33,6 +33,7 @@ import { cn } from "@/libs/utils";
 
 import { getLeaderborard } from "@/services/nfts/leaderborad";
 
+import { Feed } from "./icons/feed";
 import NotificationModal from "./modals/notification-modal";
 
 type Props = React.HTMLAttributes<HTMLDivElement>;
@@ -52,6 +53,13 @@ const links = [
     name: "Profile",
     icon: <Profile />,
     url: () => "/me",
+    external: false
+  },
+  {
+    id: "feed",
+    name: "Feed",
+    icon: <Feed />,
+    url: () => "/?type=feed",
     external: false
   },
   {
@@ -256,7 +264,7 @@ export function Sidebar(props: Props) {
               <Separator className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft" />
             </DialogHeader>
             {!leaderBoard.success && (
-              <div className="text-center font-tanker text-4xl tracking-wide">
+              <div className="font-tanker text-center text-4xl tracking-wide">
                 Error Fetching Leaderboard
               </div>
             )}

@@ -7,9 +7,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 import { getNFTs } from "@/services/nfts/trending";
 
-import { FeedItem } from "./feed-item";
-import { useFeedProvider } from "./feed-provider";
-import { FeedSkeleton } from "./feed-skeleton";
+import { StreamItem } from "./stream-item";
+import { useStreamProvider } from "./stream-provider";
+import { StreamSkeleton } from "./stream-skeleton";
 
 type Props = {
   isSearch: boolean;
@@ -24,16 +24,15 @@ type Props = {
 const containerClass =
   "flex h-auto w-full flex-wrap items-stretch justify-start gap-5 xl:gap-x-[1.25%] xl:gap-y-4 3xl:gap-3";
 
-export function FeedsContainer(props: Props) {
+export function StreamsContainer(props: Props) {
   const { data: initialData, isSearch, category, range, type, q, address } = props;
 
   const [data, setData] = useState(initialData);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const { isPending } = useFeedProvider("FeedsList");
+  const { isPending } = useStreamProvider("FeedsList");
 
   async function fetchMore() {
-   
     const res = await getNFTs({
       sortMode: type,
       unit: q ? 50 : 20,
@@ -42,7 +41,7 @@ export function FeedsContainer(props: Props) {
       search: q,
       page: page + 1,
       address: address
-    })
+    });
 
     if (!res.success) {
       setHasMore(false);
@@ -77,7 +76,7 @@ export function FeedsContainer(props: Props) {
 
       {!isSearch &&
         data?.map((nft, index) => (
-          <FeedItem
+          <StreamItem
             nft={nft}
             key={nft.tokenId + "--" + index}
             data-is-last={index === data.length - 1}
@@ -105,7 +104,7 @@ function Skeleton(props: { total?: number }) {
   return (
     <div className={containerClass}>
       {Array.from({ length: total }).map((_, index) => (
-        <FeedSkeleton key={index} />
+        <StreamSkeleton key={index} />
       ))}
     </div>
   );

@@ -13,6 +13,7 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { useFollow } from "../hooks/use-follow";
 import { useUnFollow } from "../hooks/use-unfollow";
+import { SubscriptionModal } from "./subscription-modal";
 
 type Props = {
   user: User;
@@ -50,15 +51,7 @@ export function ProfileAction(props: Props) {
 
   return (
     <div className="flex size-auto max-w-screen-xs flex-wrap items-start justify-start gap-4">
-      <Button
-        variant="gradientOne"
-        size="sratch"
-        className="gap-2 py-5"
-        onClick={() => toast("Coming Soon!")}
-      >
-        <CirclePlus className="size-5" /> Subscribe
-      </Button>
-
+      <SubscriptionModal />
       <TipModal tokenId={0} to={user.address!} />
 
       {isFollowing && <UnfollowButton user={user} />}

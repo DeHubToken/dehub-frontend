@@ -2,7 +2,7 @@
 
 import "server-only";
 
-import { FeedItem } from "./feed-item";
+import { StreamItem } from "./stream-item";
 
 type Props = {
   nfts: any;
@@ -21,7 +21,7 @@ export function UserUploads(props: Props) {
         <div className="mt-10 h-auto w-full">
           <div className="flex h-auto w-full flex-wrap items-stretch justify-start gap-6">
             {nfts.map((nft: any, index: number) => (
-              <FeedItem nft={nft} key={nft.tokenId + "--" + index} isOwner={isOwner} />
+              <StreamItem nft={nft} key={nft.tokenId + "--" + index} isOwner={isOwner} />
             ))}
 
             {nfts.length === 0 && (

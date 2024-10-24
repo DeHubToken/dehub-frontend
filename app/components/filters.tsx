@@ -11,16 +11,16 @@ import {
   SelectValue
 } from "@/components/ui/select";
 
-import { useFeedProvider } from "./feed-provider";
+import { useStreamProvider } from "./stream-provider";
 
 type Props = React.ComponentProps<typeof Select> & {
   range?: string;
 };
 
-export function FeedRangeFilter(props: Props) {
+export function StreamRangeFilter(props: Props) {
   const { range, ...rest } = props;
 
-  const { startTransition } = useFeedProvider("FeedRangeFilter");
+  const { startTransition } = useStreamProvider("StreamRangeFilter");
   const router = useRouter();
   const searchParams = useSearchParams().toString();
 
@@ -41,7 +41,7 @@ export function FeedRangeFilter(props: Props) {
 
   return (
     <Select defaultValue={range} onValueChange={onValueChange} {...rest}>
-      <SelectTrigger className="text-theme-mine-shaft dark:text-theme-titan-white w-36 rounded-full">
+      <SelectTrigger className="w-36 rounded-full text-theme-mine-shaft dark:text-theme-titan-white">
         <SelectValue placeholder="Filter" />
       </SelectTrigger>
       <SelectContent
