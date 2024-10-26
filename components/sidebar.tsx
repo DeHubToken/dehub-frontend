@@ -5,6 +5,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { MessageSquareText } from "lucide-react";
 
 import { leaderboardColumns } from "@/app/components/leaderboard-modal";
 
@@ -80,6 +81,12 @@ const links = [
       return `/?${qs}`;
     },
     external: false
+  },
+  {
+    id: "messages",
+    name: "Messages",
+    icon: <MessageSquareText className="size-4" />,
+    url: () => "/messages"
   },
   {
     id: "bounty",
