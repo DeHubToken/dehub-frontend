@@ -9,6 +9,8 @@ import { Leaderboard, LeaderboardSkeleton } from "./components/leaderborad";
 import { Stream } from "./components/stream";
 import { StreamLoader } from "./components/stream-skeleton";
 
+/* ----------------------------------------------------------------------------------------------- */
+
 type Props = {
   params: null;
   searchParams: {

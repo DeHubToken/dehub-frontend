@@ -20,6 +20,35 @@ import { StreamProvider } from "./components/stream-provider";
 
 /* ------------------------------------------------------------------------------------------ */
 
+type Props = { children: React.ReactNode };
+
+export default function RootLayout({ children }: Props) {
+  return (
+    <html lang="en">
+      <body className="font-nunito overflow-x-hidden bg-theme-background text-theme-mine-shaft dark:bg-theme-background dark:text-theme-titan-white">
+        <Toaster />
+        <Toast />
+        <ProgressBar />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Providers>
+            <AvatarWalletProvider>
+              <StreamProvider>
+                <Layout>{children}</Layout>
+              </StreamProvider>
+            </AvatarWalletProvider>
+          </Providers>
+        </ThemeProvider>
+        <TailwindIndicator />
+      </body>
+    </html>
+  );
+}
+
 export const metadata: Metadata = {
   title: "DeHub - The Decentralised Entertainment Hub",
   description: "The decentralised entertainment hub, watch, shop &amp; play on-chain today.",
@@ -54,34 +83,3 @@ export const metadata: Metadata = {
     ]
   }
 };
-
-type Props = { children: React.ReactNode };
-
-export default function RootLayout({ children }: Props) {
-  return (
-    <html lang="en">
-      <body className="font-nunito overflow-x-hidden bg-theme-background text-theme-mine-shaft dark:bg-theme-background dark:text-theme-titan-white">
-        <Toaster />
-        <Toast />
-        <ProgressBar />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Providers>
-            <AvatarWalletProvider>
-              {/* WebSocketProvider */}
-              <StreamProvider>
-                <Layout>{children}</Layout>
-              </StreamProvider>
-              {/* <OnlyDesktop /> */}
-            </AvatarWalletProvider>
-          </Providers>
-        </ThemeProvider>
-        <TailwindIndicator />
-      </body>
-    </html>
-  );
-}
