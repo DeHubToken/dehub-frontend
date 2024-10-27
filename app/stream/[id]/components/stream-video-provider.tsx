@@ -14,7 +14,7 @@ import { getStreamStatus, isOwner, isTranscoding } from "@/web3/utils/validators
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { userAtom } from "@/stores";
-import { ErrMsgEn, streamInfoKeys } from "@/configs";
+import { env, ErrMsgEn, streamInfoKeys } from "@/configs";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -42,9 +42,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
   const isTranscodingVideo = isTranscoding(nft);
   const streamStatus = getStreamStatus(nft, user, chainId);
 
-  const [url, setUrl] = useState(
-    `${nft.videoUrl}?sig=${sig}&timestamp=${timestamp}&account=${account?.toLowerCase()}&chainId=${chainId}`
-  );
+  
 
   const isFreeStream =
     !nft?.streamInfo ||
@@ -60,9 +58,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     if (videoRef.current) {
       videoRef.current.onloadedmetadata = () => setLoading(false);
     }
-    setUrl(
-      `${nft.videoUrl}?sig=${sig}&timestamp=${timestamp}&account=${account?.toLowerCase()}&chainId=${chainId}`
-    );
+    
   }, [account, chainId, nft.videoUrl, sig, timestamp]);
 
   // Effect to check if video is free or locked
@@ -130,7 +126,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
         {loading && <StreamVideoSkeleton />}
        <Video
           options={{
-            sources: [{ src: url, type: "video/mp4" }]
+            sources: [{ src: `${env.cdnBaseUrl}videos/${nft.tokenId}.mp4`, type: "video/mp4" }]
           }}
           onReady={(player) => {
             playerRef.current = player;
@@ -160,22 +156,10 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     );
   }
 
-  if (isTranscodingVideo) {
-    return (
-      <div className="flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl p-3">
-        <p>
-          This stream is transcoding to the correct file type, please wait. Use MP4 files for
-          optimal upload experience in future.
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl p-3">
       <p>
-        This stream is transcoding to the correct file type, please wait. Use MP4 files for optimal
-        upload experience in future.
+        Something went wrong
       </p>
     </div>
   );

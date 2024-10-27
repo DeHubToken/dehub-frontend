@@ -8,7 +8,7 @@ export function getImageUrl(url: string, width?: number, height?: number) {
     return url + q;
   }
   try {
-    return new URL(env.apiBaseUrl!).origin + "/" + url + q;
+    return env.cdnBaseUrl + url + q;
   } catch (err) {
     return url + q;
   }
@@ -16,5 +16,5 @@ export function getImageUrl(url: string, width?: number, height?: number) {
 
 export function getAvatarUrl(url: string) {
   if (!url) return "/images/default-avatar.png";
-  return new URL(env.apiBaseUrl!).origin + "/" + url;
+  return env.cdnBaseUrl + url;
 }

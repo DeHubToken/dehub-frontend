@@ -118,7 +118,6 @@
 
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-    const [uploadStatus, setUploadStatus] = useState<{progress: number | string, message: string }>({progress:0, message:"Uploading..."})
 
     const streamCollectionContract = useStreamCollectionContract();
     const streamController = useStreamControllerContract();
@@ -345,143 +344,136 @@
       }
       setUploading(false);
     };
-    const handleMint = async (data: Form) => {
-      if (uploading) return;
-    
-      setUploading(true);
-    
-      async function _upload() {
-        if (!account) {
-          toast.error("Please connect your wallet");
-          setUploading(false);
-          return;
-        }
-    
-        try {
-          const sigData = await getSignInfo(library, account);
-    
-          const formData = new FormData();
-          formData.append("name", data.title);
-          formData.append("description", data.description);
-          if (data.streamInfo) {
-            formData.append("streamInfo", JSON.stringify(filteredStreamInfo(data.streamInfo)));
-          }
-          if (videoFile) formData.append("files", videoFile);
-          if (thumbnailFile) formData.append("files", thumbnailFile);
-          formData.append(
-            "category",
-            data.category?.length > 0 ? JSON.stringify(data.category.map((e) => e)) : ""
-          );
-          formData.append("address", account.toLowerCase());
-          formData.append("sig", sigData.sig);
-          formData.append("chainId", chainId.toString());
-          formData.append("timestamp", sigData.timestamp);
+   
+  const handleMint = async (data: Form) => {
+    if (uploading) return;
 
-          const callbackfunc = (prop:any) => {
-            console.log("prop",prop)
-            setUploadStatus(prop)
-          }
-    
-          const response: any = await minNft(formData, callbackfunc);
-    
-          if (!response.success) {
-            setUploading(false);
-            throw new Error('Failed to start minting process');
-          }
-    
-          // The response data stream handling is now done within the apiStream function
-          const result = response.data;
-          if (result?.error) {
-            setUploading(false);
-            throw new Error(result?.msg || "NFT mint has failed!");
-          }
-    
-          // Handle the minting with bounty if applicable
-          if (data.streamInfo?.[streamInfoKeys.isAddBounty]) {
-            try {
-              const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
-              const bountyToken = supportedTokens.find(
-                (e) => e.symbol === tokenSymbol && e.chainId === chainId
-              );
-    
-              const tx = await mintWithBounty(
-                streamController,
-                result.createdTokenId,
-                result.timestamp,
-                result.v,
-                result.r,
-                result.s,
-                bountyToken,
-                bountyAmount,
-                firstXViewer,
-                firstXComment
-              );
-    
-              if (tx?.hash) {
-                addTransaction({ hash: tx.hash, description: "Mint With Bounty", confirmations: 3 });
-              }
-    
-              await tx.wait(1);
-              form.reset();
-              await invalidateUpload();
-              setUploading(false);
-              return;
-            } catch (err) {
-              setUploading(false);
-              throw new Error("NFT mint with bounty has failed!");
-            }
-          }
-    
-          // Handle minting without bounty if no bounty is specified
-          if (streamCollectionContract) {
-            const tx = await streamCollectionContract.mint(
+    setUploading(true);
+
+    async function _upload() {
+      if (!account) {
+        toast.error("Please connect your wallet");
+        return;
+      }
+
+      try {
+        const sigData = await getSignInfo(library, account);
+
+        const formData = new FormData();
+        formData.append("name", data.title);
+        formData.append("description", data.description);
+        data.streamInfo &&
+          formData.append("streamInfo", JSON.stringify(filteredStreamInfo(data.streamInfo)));
+        videoFile && formData.append("files", videoFile);
+        thumbnailFile && formData.append("files", thumbnailFile);
+        formData.append(
+          "category",
+          data.category?.length > 0 ? JSON.stringify(data.category.map((e) => e)) : ""
+        );
+        formData.append("address", account.toLowerCase());
+        formData.append("sig", sigData.sig);
+        formData.append("chainId", chainId.toString());
+        formData.append("timestamp", sigData.timestamp);
+
+        const res = await minNft(formData);
+        if (!res.success) {
+          setUploading(false);
+          throw new Error(res.error);
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const result: any = res.data;
+
+        if (result.error) {
+          setUploading(false);
+          throw new Error(result.error_msg || "NFT mint has failed!");
+        }
+
+        if (data.streamInfo?.[streamInfoKeys.isAddBounty]) {
+          try {
+            const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
+            const bountyToken = supportedTokens.find(
+              (e) => e.symbol === tokenSymbol && e.chainId === chainId
+            );
+
+            // Call mint with bountry
+            const tx = await mintWithBounty(
+              // library,
+              streamController,
               result.createdTokenId,
               result.timestamp,
               result.v,
               result.r,
               result.s,
-              [],
-              1000,
-              `${result.createdTokenId}.json`
+              bountyToken,
+              bountyAmount,
+              firstXViewer,
+              firstXComment
             );
-            setUploadStatus({progress: 70, message: "Approved Transaction"})
             if (tx?.hash) {
-              addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
+              addTransaction({ hash: tx.hash, description: "Mint With Bounty", confirmations: 3 });
             }
-            setUploadStatus({progress: 75, message: "Approved Transaction"})
             await tx.wait(1);
-            setUploadStatus({progress: 85, message: "Approved Transaction"})
-            form.reset();
-          }
-          setUploadStatus({progress: 95, message: "Valdating Upload"})
-          await invalidateUpload();
-          setUploadStatus({progress: 100, message: "Upload Complete"})
 
-          router.push(`/stream/${result.createdTokenId}`);
-        } catch (err: any) {
-          console.log(err);
-          if (err instanceof Error) {
-            if (err.message.includes("user rejected transaction")) {
-              setUploading(false);
-              throw new Error("User rejected transaction");
-            }
+            form.reset();
+
+            // if (!resultFromModal) {
+            //   setUploading(false);
+            //   throw new Error("NFT mint has failed!");
+            // }
+
+            await invalidateUpload();
             setUploading(false);
-            throw new Error(err.message);
+            return;
+          } catch (err) {
+            throw new Error("NFT mint has failed!");
           }
+        }
+
+        if (streamCollectionContract) {
+          const tx = await streamCollectionContract.mint(
+            result.createdTokenId,
+            result.timestamp,
+            result.v,
+            result.r,
+            result.s,
+            [],
+            1000,
+            `${result.createdTokenId}.json`
+          );
+
+          if (tx?.hash) {
+            addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
+          }
+
+          await tx.wait(1);
+          form.reset();
+        }
+
+        await invalidateUpload();
+        router.push(`/stream/${result.createdTokenId}`);
+      } catch (err) {
+        if (err instanceof Error) {
+          if (err.message.includes("user rejected transaction")) {
+            setUploading(false);
+            throw new Error("User rejected transaction");
+          }
+
           setUploading(false);
-          throw new Error("Upload failed");
+          throw new Error(err.message);
         }
+
+        setUploading(false);
+        throw new Error("Upload failed");
       }
-    
-      toast.promise(
-        _upload(),
-        {
-          loading: `${uploadStatus?.message}`,
-          success: () => "Upload confirmed",
-          error: (err:any) => err.message,
-        }
-      );
     }
+
+    toast.promise(_upload(), {
+      loading: "Uploading...",
+      success: () => "Upload confirmed",
+      error: (err) => err.message
+    });
+  };
+
     
     
 
@@ -988,15 +980,8 @@
                   "Upload Post / Mint NFT"
                 ) : (
                   <div className="relative flex items-center justify-center w-full h-full">
-                    {/* Background progress bar */}
-                    <div
-                      className="absolute inset-0 bg-blue-500 transition-all duration-1000 ease-in-out"
-                      style={{ width: `${uploadStatus.progress}%` }}
-                    ></div>
-
-                    {/* Text progress indicator */}
                     <span className="relative z-10 text-white">
-                      {uploadStatus.message}
+                      uploading...
                     </span>
                   </div>
                 )}

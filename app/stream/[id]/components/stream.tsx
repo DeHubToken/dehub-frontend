@@ -6,7 +6,8 @@ import { ThumbsDown, ThumbsUp } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-import { secondToMinute } from "@/libs/date-time";
+import TranscodingVideo from "./transcode-state";
+
 
 import { getNFT } from "@/services/nfts";
 
@@ -149,7 +150,7 @@ export async function Stream(props: { tokenId: number }) {
   return (
     <div className="h-auto min-h-screen w-full px-4 py-20 xl:max-w-[75%] xl:flex-[0_0_75%]">
       <Suspense fallback={<StreamVideoSkeleton />}>
-        <StreamVideo tokenId={tokenId} />
+      <StreamVideo tokenId={tokenId} address={user?.address as string} />
       </Suspense>
       <ActionPanel nft={nft} tokenId={tokenId} />
       <StreamInfo nft={nft} />
@@ -158,23 +159,20 @@ export async function Stream(props: { tokenId: number }) {
   );
 }
 
-async function StreamVideo(props: { tokenId: number }) {
-  const cookie = cookies();
-  const userCookie = cookie.get("user_information");
-  const user = safeParseCookie<{ address: string }>(userCookie?.value);
+async function StreamVideo(props: { tokenId: number; address: string }) {
   const { tokenId } = props;
-  const response = await getNFT(tokenId, user?.address as string);
+  const response = await getNFT(tokenId, props.address);
 
   if (!response.success) {
     return null;
   }
-  console.log(response.data)
-  const nft = response.data.result
+
+  const nft = response.data.result;
 
   // Checking for transcoding status
   const isTranscodingVideo = nft?.transcodingStatus === "on";
   if (isTranscodingVideo) {
-    return <TranscodingVideo />;
+    return <TranscodingVideo tokenId={nft.tokenId.toString()} />;
   }
 
   // Is free stream
@@ -195,13 +193,3 @@ async function StreamVideo(props: { tokenId: number }) {
   return <StreamVideoProvider nft={nft} />;
 }
 
-function TranscodingVideo() {
-  return (
-    <div className="flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl p-3">
-      <p>
-        This stream is transcoding to the correct file type, please wait. Use MP4 files for optimal
-        upload experience in future.
-      </p>
-    </div>
-  );
-}

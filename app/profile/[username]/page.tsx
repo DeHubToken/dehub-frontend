@@ -19,11 +19,6 @@ type Props = {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { username } = props.params;
 
-  // Fetch the user cookie
-  const cookie = cookies();
-  const userCookie = cookie.get("user_information");
-  const user = safeParseCookie<{ address: string }>(userCookie?.value);
-
   // Default metadata setup
   let metadata: Metadata = {
     title: "User Profile - Dehub",

@@ -55,7 +55,14 @@ export function StreamItem(props: Props) {
           href={`/stream/${nft.tokenId}`}
           className="next__link size-full overflow-hidden rounded-2xl"
         >
-          <ImageWithLoader isHidden={isHidden} url={nft.imageUrl} name={nft.name} />
+          <ImageWithLoader
+            isHidden={isHidden}
+            url={nft.imageUrl}
+            name={nft.name}
+            transcodingStatus={nft.transcodingStatus}
+            status={nft.status}
+            tokenId={nft.tokenId}
+          />
 
           <PreviewVideo nft={nft} />
         </Link>
