@@ -25,7 +25,7 @@ export function Navbar() {
   return (
     <nav className="fixed left-0 top-0 z-20 h-auto w-full bg-theme-background shadow-custom dark:bg-theme-background">
       <div className="container flex max-w-[90%] items-center justify-between py-5 md:max-w-[95%] md:py-4">
-        <Link href="/" className="w-32">
+        <Link href="/" className="w-24 sm:w-32">
           <Logo />
         </Link>
 

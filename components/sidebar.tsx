@@ -5,7 +5,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { MessageSquareText } from "lucide-react";
+import { MessageSquareText, NotepadText } from "lucide-react";
 
 import { leaderboardColumns } from "@/app/components/leaderboard-modal";
 
@@ -67,6 +67,12 @@ const links = [
     name: "Messages",
     icon: <MessageSquareText className="size-4" />,
     url: () => "/messages"
+  },
+  {
+    id: "plans",
+    name: "My Plans",
+    icon: <NotepadText className="size-4" />,
+    url: () => "/plans"
   },
   {
     id: "feed",

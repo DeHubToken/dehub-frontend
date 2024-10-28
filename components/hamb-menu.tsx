@@ -5,7 +5,7 @@ import type { LeaderboradResponse } from "@/services/nfts/leaderborad";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ArrowRight, Menu, MessageSquareText } from "lucide-react";
+import { ArrowRight, Menu, MessageSquareText, NotepadText } from "lucide-react";
 
 import { LeaderBoardModal } from "@/app/components/leaderboard-modal";
 
@@ -62,6 +62,13 @@ const links = [
     name: "Messages",
     icon: <MessageSquareText className="size-4" />,
     url: () => "/messages",
+    isLink: true
+  },
+  {
+    id: "plans",
+    name: "My Plans",
+    icon: <NotepadText className="size-4" />,
+    url: () => "/plans",
     isLink: true
   },
   {
