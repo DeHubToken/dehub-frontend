@@ -20,7 +20,7 @@ export function LikeButton(
   props: LikeButtonProps & { tokenId: number; vote: boolean; votes: number }
 ) {
   const { children, tokenId, vote, votes, ...rest } = props;
-  console.log(votes);
+ 
   const { account, library } = useActiveWeb3React();
   const [total, setTotal] = useState(votes);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");

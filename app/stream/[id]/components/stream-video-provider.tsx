@@ -47,8 +47,8 @@ export function StreamVideoProvider(props: { nft: NFT }) {
   const isFreeStream =
     !nft?.streamInfo ||
     !(
-      nft?.streamInfo?.[streamInfoKeys.isLockContent] ||
-      nft?.streamInfo?.[streamInfoKeys.isPayPerView]
+      nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
+      nft?.streamInfo?.[streamInfoKeys?.isPayPerView]
     )
       ? true
       : false;
@@ -147,9 +147,9 @@ export function StreamVideoProvider(props: { nft: NFT }) {
       <div className="flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl p-3">
         <p>
           {streamStatus?.streamStatus?.isLockedWithLockContent
-            ? `Please hold at least ${nft.streamInfo?.[streamInfoKeys.lockContentAmount]} ${nft.streamInfo?.[streamInfoKeys.lockContentTokenSymbol]} to unlock.`
+            ? `Please hold at least ${nft.streamInfo?.[streamInfoKeys?.lockContentAmount]} ${nft.streamInfo?.[streamInfoKeys?.lockContentTokenSymbol]} to unlock.`
             : streamStatus?.streamStatus?.isLockedWithPPV
-              ? `Unlock PPV stream with ${nft.streamInfo?.[streamInfoKeys.payPerViewAmount]}  ${nft.streamInfo?.[streamInfoKeys.payPerViewTokenSymbol]}`
+              ? `Unlock PPV stream with ${nft.streamInfo?.[streamInfoKeys?.payPerViewAmount]}  ${nft.streamInfo?.[streamInfoKeys?.payPerViewTokenSymbol]}`
               : `Error, please report by sending link to tech@dehub.net`}
         </p>
       </div>

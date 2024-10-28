@@ -59,11 +59,11 @@ export type NFT = {
 
 export async function getNFT(tokenId: number, address: string) {
   const res = await api<{ result: NFT }>(`/nft_info/${tokenId}?address=${address}`, {
-    // cache: "force-cache",
-    // next: {
-    //   tags: [`nft_info_${tokenId}`],
-    //   revalidate: 300
-    // }
+    cache: "force-cache",
+    next: {
+      tags: [`nft_info_${tokenId}`],
+      revalidate: 300
+    }
   });
   return res;
 }

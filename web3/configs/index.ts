@@ -214,5 +214,5 @@ const MAIN_NETWORKS = {
 };
 export const SUPPORTED_NETWORKS = env.isDevMode ? TEST_NETWORKS : MAIN_NETWORKS;
 export const extraRpcUrls = (chainId:any) => {
-  return chainId === ChainId.BSC_MAINNET ? process.env.REACT_APP_BSC_NODE : undefined;
+  return chainId === ChainId.BSC_MAINNET ? process.env.NEXT_PUBLIC_BSC_NODE : undefined;
 };
