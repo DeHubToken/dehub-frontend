@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { MessageSquareText, Plus } from "lucide-react";
 
-import { Game, Home, Profile, Shop, Stream } from "@/components/icons";
+import { Home, Profile, Stream } from "@/components/icons";
 import { Sidebar } from "@/components/sidebar";
 import { Button } from "@/components/ui/button";
 
@@ -29,15 +30,15 @@ const links: {
   },
   {
     id: 3,
-    name: "Game",
-    url: "/soon",
-    icon: <Game />
+    name: "Upload",
+    url: "/upload",
+    icon: <Plus className="size-4" />
   },
   {
     id: 4,
-    name: "Shop",
-    url: "/soon",
-    icon: <Shop />
+    name: "Messages",
+    url: "/messages",
+    icon: <MessageSquareText className="size-4" />
   },
   {
     id: 5,

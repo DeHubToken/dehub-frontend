@@ -5,7 +5,7 @@ import type { LeaderboradResponse } from "@/services/nfts/leaderborad";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ArrowRight, Menu } from "lucide-react";
+import { ArrowRight, Menu, MessageSquareText } from "lucide-react";
 
 import { LeaderBoardModal } from "@/app/components/leaderboard-modal";
 
@@ -29,6 +29,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 
 import { getLeaderborard } from "@/services/nfts/leaderborad";
 
+import { Feed } from "./icons/feed";
 import { NotificationMobileModal } from "./modals/notification-modal";
 
 type LinkBase = {
@@ -45,9 +46,30 @@ type Link = LinkWithoutComponent | LinkWithComponent;
 
 const links = [
   {
+    id: "profile",
+    name: "Profile",
+    icon: <Profile />,
+    url: "/me",
+    isLink: true
+  },
+  {
     id: "notifications",
     name: "Notifications",
     icon: <Notification />
+  },
+  {
+    id: "messages",
+    name: "Messages",
+    icon: <MessageSquareText className="size-4" />,
+    url: () => "/messages",
+    isLink: true
+  },
+  {
+    id: "feed",
+    name: "Feed",
+    icon: <Feed />,
+    url: () => "/?type=feed",
+    isLink: true
   },
   {
     id: "ppv",
@@ -86,13 +108,6 @@ const links = [
       const qs = query.toString();
       return `/?${qs}`;
     },
-    isLink: true
-  },
-  {
-    id: "profile",
-    name: "Profile",
-    icon: <Profile />,
-    url: "/me",
     isLink: true
   },
   {
@@ -191,13 +206,13 @@ export function HambMenu() {
       >
         <div
           className={
-            "relative h-screen w-full max-w-[70%] overflow-hidden py-10 transition-all duration-500 ease-in-out " +
+            "relative h-screen w-full max-w-[70%] overflow-hidden transition-all duration-500 ease-in-out " +
             (isOpen
               ? "translate-x-0 bg-theme-background dark:bg-theme-mine-shaft-dark"
               : "translate-x-full")
           }
         >
-          <div className="h-screen w-full overflow-y-scroll">
+          <div className="h-screen w-full overflow-y-scroll py-10">
             <div className="flex size-full flex-col items-start justify-start">
               {links.map((link) => {
                 if (link.id === "notifications") {
@@ -233,6 +248,7 @@ export function HambMenu() {
                 );
               })}
             </div>
+            <div className="py-28"></div>
           </div>
 
           <div

@@ -100,7 +100,7 @@ const NotificationModal = (props: { className?: string }) => {
           <Separator className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark" />
         </DialogHeader>
         {error && (
-          <div className="text-center font-tanker text-4xl tracking-wide">
+          <div className="font-tanker text-center text-4xl tracking-wide">
             Error Fetching Notifications
           </div>
         )}
@@ -208,7 +208,7 @@ export const NotificationMobileModal = (props: { className?: string }) => {
           <Separator className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark" />
         </DialogHeader>
         {error && (
-          <div className="text-center font-tanker text-4xl tracking-wide">
+          <div className="font-tanker text-center text-4xl tracking-wide">
             Error Fetching Notifications
           </div>
         )}

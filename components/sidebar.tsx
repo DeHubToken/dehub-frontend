@@ -57,17 +57,23 @@ const links = [
     external: false
   },
   {
+    id: "notifications",
+    name: "Notifications",
+    icon: <Notification />,
+    component: <NotificationModal />
+  },
+  {
+    id: "messages",
+    name: "Messages",
+    icon: <MessageSquareText className="size-4" />,
+    url: () => "/messages"
+  },
+  {
     id: "feed",
     name: "Feed",
     icon: <Feed />,
     url: () => "/?type=feed",
     external: false
-  },
-  {
-    id: "notifications",
-    name: "Notifications",
-    icon: <Notification />,
-    component: <NotificationModal />
   },
   {
     id: "ppv",
@@ -81,12 +87,6 @@ const links = [
       return `/?${qs}`;
     },
     external: false
-  },
-  {
-    id: "messages",
-    name: "Messages",
-    icon: <MessageSquareText className="size-4" />,
-    url: () => "/messages"
   },
   {
     id: "bounty",
