@@ -59,11 +59,11 @@ function ActionPanel(props: { nft: NFT; tokenId: number }) {
           {nft.lockedBounty && (
             <p className="text-sm">
               <span className="font-semibold">Total Bounty :</span>{" "}
-              {nft.lockedBounty
-                ? nft.lockedBounty.viewer +
-                  nft.lockedBounty.commentor +
+              {nft?.lockedBounty
+                ? nft?.lockedBounty?.viewer +
+                  nft?.lockedBounty?.commentor +
                   " " +
-                  nft.streamInfo[streamInfoKeys.addBountyTokenSymbol]
+                  nft?.streamInfo[streamInfoKeys?.addBountyTokenSymbol]
                 : 0}
             </p>
           )}
@@ -115,7 +115,7 @@ function StreamInfo(props: { nft: NFT }) {
         <div className="w-full">
           <span className="font-semibold">Categories :</span>{" "}
           <div className="flex flex-wrap items-center gap-1">
-            {nft.category.map((i) => (
+            {nft?.category?.map((i) => (
               <Link key={i} href={`/?category=${i}&type=trends`} className="mr-1">
                 <span className="cursor-pointer">#{i}</span>
               </Link>
@@ -177,11 +177,11 @@ async function StreamVideo(props: { tokenId: number; address: string }) {
 
   // Is free stream
   let isFreeStream = false;
-  if (!nft.streamInfo) isFreeStream = true;
+  if (!nft?.streamInfo) isFreeStream = true;
   if (
     nft.streamInfo &&
-    !nft.streamInfo[streamInfoKeys.isLockContent] &&
-    !nft.streamInfo[streamInfoKeys.isPayPerView]
+    !nft?.streamInfo[streamInfoKeys?.isLockContent] &&
+    !nft?.streamInfo[streamInfoKeys?.isPayPerView]
   ) {
     isFreeStream = true;
   }

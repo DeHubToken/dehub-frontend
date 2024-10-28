@@ -21,8 +21,8 @@ const providers = [publicProvider(), infuraProvider({ apiKey: process.env.NEXT_P
 export const { chains, publicClient, webSocketPublicClient } = env.isDevMode
   ? configureChains([bscTestnet, goerli], providers)
   : configureChains([bsc, mainnet, polygon], providers);
-const projectId = process.env.REACT_APP_PROJECT_ID || "YOUR_PROJECT_ID";
-const appName = process.env.REACT_APP_PROJECT_NAME || "YOUR_PROJECT_NAME";
+const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "YOUR_PROJECT_ID";
+const appName = process.env.NEXT_PUBLIC_PROJECT_NAME || "YOUR_PROJECT_NAME";
 
 const connectors = connectorsForWallets([
   {
