@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { MessageSquareText } from "lucide-react";
 
-import { Game, Home, Profile, Shop, Stream } from "@/components/icons";
+import { Home, Plus, Profile, Stream } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 
 const links: {
@@ -24,15 +25,15 @@ const links: {
   },
   {
     id: 3,
-    name: "Game",
-    url: "/soon",
-    icon: <Game />
+    name: "Upload",
+    url: "/upload",
+    icon: <Plus />
   },
   {
     id: 4,
-    name: "Shop",
-    url: "/soon",
-    icon: <Shop />
+    name: "Messages",
+    url: "/messages",
+    icon: <MessageSquareText />
   },
   {
     id: 5,

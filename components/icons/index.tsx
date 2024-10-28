@@ -11,6 +11,7 @@ import LeaderBoard from "@/components/icons/leaderboard";
 import Learn from "@/components/icons/learn";
 import New from "@/components/icons/new";
 import Notification from "@/components/icons/notification";
+import Plus from "@/components/icons/plus";
 import PPV from "@/components/icons/ppv";
 import Profile from "@/components/icons/profile";
 import Search from "@/components/icons/search";
@@ -43,5 +44,6 @@ export {
   Search,
   ChevronDown,
   Star,
-  Notification
+  Notification,
+  Plus
 };
