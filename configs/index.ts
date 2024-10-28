@@ -1,6 +1,6 @@
 export const env = {
   apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-  cdnBaseUrl: process.env.NEXT_PUBLIC_CDN_BASE_URL || "https://blocjerkcdn.nyc3.digitaloceanspaces.com/",
+  cdnBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
   currentNetwork: process.env.NEXT_PUBLIC_NETWORK_ID,
   isDevMode: process.env.NEXT_PUBLIC_DEV === "ON",
   infuraKey: process.env.NEXT_PUBLIC_INFURA_KEY,

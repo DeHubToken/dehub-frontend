@@ -13,7 +13,7 @@ export function getImageUrl(url: string, width?: number, height?: number) {
   }
   
   try {
-    return env.cdnBaseUrl + fileName + q; // Use the extracted filename
+    return env.cdnBaseUrl +"images/" + fileName + q; // Use the extracted filename
   } catch (err) {
     return url + q; // Fallback to the original URL
   }

@@ -1,6 +1,5 @@
 import { ChainId, env } from "@/configs";
 
-
 // Will be sent soon(Useless by the way)
 export const VAULT_CONTRACT_ADDRESSES = {
   [ChainId.ARBITRUM_MAINNET]: "0x067CAFf787075D666f38512DE0E35AC7B49b7266",
