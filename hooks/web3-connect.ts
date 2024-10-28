@@ -17,7 +17,7 @@ import { useEthersProvider, useEthersSigner } from "./wagmi-ethers";
 import { env } from "@/configs";
 import { rainbowWeb3AuthConnector, rainbowWeb3AuthTwitterConnector } from "@/web3/connectors/rainbow-web3-auth-connector";
 
-const providers = [publicProvider(), infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY })] as any;
+const providers = [publicProvider(), infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY as string })] as any;
 export const { chains, publicClient, webSocketPublicClient } = env.isDevMode
   ? configureChains([bscTestnet, goerli], providers)
   : configureChains([bsc, mainnet, polygon], providers);
@@ -33,7 +33,7 @@ const connectors = connectorsForWallets([
       trustWallet({ projectId, chains }),
       rainbowWallet({ projectId, chains }),
       coinbaseWallet({ appName, chains }),
-      rainbowWeb3AuthConnector({ chains }),
+      rainbowWeb3AuthConnector({ chains }) as any,
       rainbowWeb3AuthTwitterConnector({ chains }),
     ],
   },
