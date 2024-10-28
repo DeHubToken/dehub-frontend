@@ -1,12 +1,12 @@
-import type { TSupportedTokens } from "@/configs";
 
 import { supportedNetworks } from "@/web3/configs";
+import { AnyAaaaRecord } from "dns";
 
-export const getDistinctTokens = (tokens: TSupportedTokens, chainId: number | undefined) => {
-  const result: TSupportedTokens = [];
-  tokens.forEach((e) => {
+export const getDistinctTokens = (tokens: any, chainId: number | undefined) => {
+  const result: any = [];
+  tokens.forEach((e:any) => {
     if (
-      !result.find((token) => token.symbol === e.symbol) &&
+      !result.find((token:any) => token.symbol === e.symbol) &&
       (chainId ? e.chainId === chainId : true)
     )
       result.push(e);
@@ -14,9 +14,9 @@ export const getDistinctTokens = (tokens: TSupportedTokens, chainId: number | un
   return result;
 };
 
-export const getNetworksForToken = (tokenSymbol: string, tokenList: TSupportedTokens) => {
+export const getNetworksForToken = (tokenSymbol: string, tokenList: any) => {
   const chainIds: number[] = [];
-  tokenList.forEach((e) => {
+  tokenList.forEach((e:any) => {
     if (tokenSymbol === e.symbol) chainIds.push(e.chainId);
   });
   return supportedNetworks.filter((e) => chainIds.includes(e.chainId));

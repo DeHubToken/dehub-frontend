@@ -5,12 +5,12 @@ import { STAKING_CONTRACT_ADDRESSES } from "@/web3/configs";
 import { getContractForChain } from "@/web3/utils/contract";
 import { multicallRead } from "@/web3/utils/multicall";
 
-import { BJ_ADDRESSESS, ChainId, MULTICALL2_ADDRESSES, supportedTokens } from "@/configs";
+import { ChainId, DHB_ADDRESSESS, MULTICALL2_ADDRESSES, supportedTokens } from "@/configs";
 
 export async function erc20Balance(
   account: string,
   provider: ethers.providers.Provider,
-  tokenAddress = BJ_ADDRESSESS[ChainId.BSC_TESTNET]
+  tokenAddress = DHB_ADDRESSESS[ChainId.BSC_TESTNET]
 ) {
   const contract = new Contract(tokenAddress, ERC20Abi, provider);
   try {
@@ -28,7 +28,7 @@ export async function getBalanceOfDHB(
   provider: ethers.providers.Provider,
   chainId = ChainId.BSC_TESTNET
 ) {
-  const balance = await erc20Balance(account, provider, BJ_ADDRESSESS[chainId]);
+  const balance = await erc20Balance(account, provider, DHB_ADDRESSESS[chainId]);
   return balance;
 }
 
@@ -78,7 +78,6 @@ export async function getStakedForAccounts(accountArray: AccountArray) {
   try {
     const staked = await multicallRead(
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       multicallContract,
       calldataList
     );

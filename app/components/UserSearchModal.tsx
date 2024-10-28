@@ -3,7 +3,7 @@
 import { FC, useEffect, useState } from "react";
 import { ethers } from "ethers";
 
-import { useTransferTokens } from "@/hooks/use-web3";
+// import { useTransferTokens } from "@/hooks/use-web3";
 
 import { usersSearch } from "@/services/user";
 
@@ -30,7 +30,7 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
   const [transferAmount, setTransferAmount] = useState("");
   const [recipientAddress, setRecipientAddress] = useState("");
   const [txHash, setTxHash] = useState<string | null>(null);
-  const { transferBJTokens } = useTransferTokens();
+  // const { transferBJTokens } = useTransferTokens();
 
   // Function to handle user search
   const handleSearch = async (query: string) => {
@@ -63,18 +63,18 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
   };
 
   // Function to handle transferring $bj tokens to another user
-  const handleTransfer = async () => {
-    try {
-      const tx = await transferBJTokens(
-        recipientAddress,
-        ethers.utils.parseUnits(transferAmount, 18)
-      );
-      setTxHash(tx.hash);
-      console.log("Transfer successful!", tx);
-    } catch (error) {
-      console.error("Error transferring $bj tokens:", error);
-    }
-  };
+  // const handleTransfer = async () => {
+  //   try {
+  //     const tx = await transferBJTokens(
+  //       recipientAddress,
+  //       ethers.utils.parseUnits(transferAmount, 18)
+  //     );
+  //     setTxHash(tx.hash);
+  //     console.log("Transfer successful!", tx);
+  //   } catch (error) {
+  //     console.error("Error transferring $bj tokens:", error);
+  //   }
+  // };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
@@ -131,12 +131,12 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
         </ul>
 
         {/* Transfer button */}
-        <button
+        {/* <button
           onClick={handleTransfer}
           className="mt-4 w-full rounded-lg bg-gray-600 py-2 text-white transition hover:bg-gray-500"
         >
           Transfer
-        </button>
+        </button> */}
 
         {txHash && <p className="mt-2 text-green-400">Transaction Hash: {txHash}</p>}
       </div>
