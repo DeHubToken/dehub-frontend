@@ -17,7 +17,7 @@ import { useEthersProvider, useEthersSigner } from "./wagmi-ethers";
 import { env } from "@/configs";
 import { rainbowWeb3AuthConnector, rainbowWeb3AuthTwitterConnector } from "@/web3/connectors/rainbow-web3-auth-connector";
 
-const providers = [publicProvider(), infuraProvider({ apiKey: process.env.NEXT__PUBLIC_INFURA_KEY })] as any;
+const providers = [publicProvider(), infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY })] as any;
 export const { chains, publicClient, webSocketPublicClient } = env.isDevMode
   ? configureChains([bscTestnet, goerli], providers)
   : configureChains([bsc, mainnet, polygon], providers);
