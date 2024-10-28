@@ -21,7 +21,7 @@ const getChainConfig = (chains:any) => {
 
 const createWeb3AuthNoModal = (chainConfig:any) => {
   return new Web3AuthNoModal({
-    clientId: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
+    clientId: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID as string,
     chainConfig,
     web3AuthNetwork: "cyan",
     enableLogging: true,

@@ -1,4 +1,4 @@
-import type { UseActiveWeb3ReactReturn } from "@/hooks/web3-connect";
+import type { useActiveWeb3React } from "@/hooks/web3-connect";
 import type { ApiResponse } from "@/libs/api";
 import type { User } from "@/stores";
 
@@ -104,7 +104,7 @@ export async function commentOnNFT(params: {
 
 export async function follow(params: {
   account: string;
-  library: UseActiveWeb3ReactReturn["library"];
+  library: any
   to: string;
 }): Promise<ApiResponse<{ result: unknown }>> {
   const { account, library, to } = params;
@@ -128,7 +128,7 @@ export async function follow(params: {
 
 export async function unFollow(params: {
   account: string;
-  library: UseActiveWeb3ReactReturn["library"];
+  library: any
   to: string;
 }): Promise<ApiResponse<{ result: unknown }>> {
   const { account, library, to } = params;
@@ -150,7 +150,7 @@ export async function unFollow(params: {
   }
 }
 
-type LibraryType = UseActiveWeb3ReactReturn["library"];
+type LibraryType = any
 
 export type TLeaderboard = {
   read: boolean;
@@ -183,7 +183,7 @@ export async function getNotifications(params: {
 
 export async function requestMarkAsRead(params: {
   account: `0x${string}` | undefined | string;
-  library: UseActiveWeb3ReactReturn["library"];
+  library: any
   id: number | string;
 }): Promise<ApiResponse<{ result: unknown }>> {
   const { account, library, id } = params;
