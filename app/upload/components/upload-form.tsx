@@ -185,7 +185,7 @@
     const amount = form.watch("lockContentAmount");
 
     const tokens = getDistinctTokens(supportedTokensForLockContent, undefined);
-    const token = tokens.find((t) => t.value === selectedToken);
+    const token = tokens.find((t:any) => t.value === selectedToken);
     const networksForAToken = token
       ? getNetworksForToken(token.symbol, supportedTokensForLockContent)
       : supportedNetworks;
@@ -195,7 +195,7 @@
     const ppvAmount = form.watch("ppvAmount");
     const ppvNetwork = form.watch("payPerViewNetwork");
     const payPerViewTokens = getDistinctTokens(supportedTokensForPPV, undefined);
-    const networkForPPVToken = payPerViewTokens.find((t) => t.value === selectedPPVToken);
+    const networkForPPVToken = payPerViewTokens.find((t:any) => t.value === selectedPPVToken);
     const networksForPPVToken = networkForPPVToken
       ? getNetworksForToken(networkForPPVToken.symbol, supportedTokensForPPV)
       : supportedNetworks;
@@ -330,7 +330,6 @@
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [bountyAmount, chainId, firstXComment, firstXViewer, isBounty, supportedTokensForChain]);
-
     const onApproveClick = async () => {
       setUploading(true);
       const txHash = await approveToken(
@@ -344,150 +343,147 @@
       }
       setUploading(false);
     };
-   
-  const handleMint = async (data: Form) => {
-    if (uploading) return;
-
-    setUploading(true);
-
-    async function _upload() {
-      if (!account) {
-        toast.error("Please connect your wallet");
-        return;
-      }
-
-      try {
-        const sigData = await getSignInfo(library, account);
-
-        const formData = new FormData();
-        formData.append("name", data.title);
-        formData.append("description", data.description);
-        data.streamInfo &&
-          formData.append("streamInfo", JSON.stringify(filteredStreamInfo(data.streamInfo)));
-        videoFile && formData.append("files", videoFile);
-        thumbnailFile && formData.append("files", thumbnailFile);
-        formData.append(
-          "category",
-          data.category?.length > 0 ? JSON.stringify(data.category.map((e) => e)) : ""
-        );
-        formData.append("address", account.toLowerCase());
-        formData.append("sig", sigData.sig);
-        formData.append("chainId", chainId.toString());
-        formData.append("timestamp", sigData.timestamp);
-
-        const res = await minNft(formData);
-        if (!res.success) {
-          setUploading(false);
-          throw new Error(res.error);
+  
+    const handleMint = async (data: Form) => {
+      if (uploading) return;
+  
+      setUploading(true);
+  
+      async function _upload() {
+        if (!account) {
+          toast.error("Please connect your wallet");
+          return;
         }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result: any = res.data;
-
-        if (result.error) {
-          setUploading(false);
-          throw new Error(result.error_msg || "NFT mint has failed!");
-        }
-
-        if (data.streamInfo?.[streamInfoKeys.isAddBounty]) {
-          try {
-            const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
-            const bountyToken = supportedTokens.find(
-              (e) => e.symbol === tokenSymbol && e.chainId === chainId
-            );
-
-            // Call mint with bountry
-            const tx = await mintWithBounty(
-              // library,
-              streamController,
+  
+        try {
+          const sigData = await getSignInfo(library, account);
+  
+          const formData = new FormData();
+          formData.append("name", data.title);
+          formData.append("description", data.description);
+          data.streamInfo &&
+            formData.append("streamInfo", JSON.stringify(filteredStreamInfo(data.streamInfo)));
+          videoFile && formData.append("files", videoFile);
+          thumbnailFile && formData.append("files", thumbnailFile);
+          formData.append(
+            "category",
+            data.category?.length > 0 ? JSON.stringify(data.category.map((e) => e)) : ""
+          );
+          formData.append("address", account.toLowerCase());
+          formData.append("sig", sigData.sig);
+          formData.append("chainId", chainId.toString());
+          formData.append("timestamp", sigData.timestamp);
+  
+          const res = await minNft(formData);
+          if (!res.success) {
+            setUploading(false);
+            throw new Error(res.error);
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const result: any = res.data;
+  
+          if (result.error) {
+            setUploading(false);
+            throw new Error(result.error_msg || "NFT mint has failed!");
+          }
+  
+          if (data.streamInfo?.[streamInfoKeys.isAddBounty]) {
+            try {
+              const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
+              const bountyToken = supportedTokens.find(
+                (e) => e.symbol === tokenSymbol && e.chainId === chainId
+              );
+  
+              // Call mint with bountry
+              const tx = await mintWithBounty(
+                // library,
+                streamController,
+                result.createdTokenId,
+                result.timestamp,
+                result.v,
+                result.r,
+                result.s,
+                bountyToken,
+                bountyAmount,
+                firstXViewer,
+                firstXComment
+              );
+              if (tx?.hash) {
+                addTransaction({ hash: tx.hash, description: "Mint With Bounty", confirmations: 3 });
+              }
+              await tx.wait(1);
+  
+              form.reset();
+  
+              // if (!resultFromModal) {
+              //   setUploading(false);
+              //   throw new Error("NFT mint has failed!");
+              // }
+  
+              await invalidateUpload();
+              setUploading(false);
+              return;
+            } catch (err) {
+              throw new Error("NFT mint has failed!");
+            }
+          }
+  
+          if (streamCollectionContract) {
+            const tx = await streamCollectionContract.mint(
               result.createdTokenId,
               result.timestamp,
               result.v,
               result.r,
               result.s,
-              bountyToken,
-              bountyAmount,
-              firstXViewer,
-              firstXComment
+              [],
+              1000,
+              `${result.createdTokenId}.json`
             );
+  
             if (tx?.hash) {
-              addTransaction({ hash: tx.hash, description: "Mint With Bounty", confirmations: 3 });
+              addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
             }
+  
             await tx.wait(1);
-
             form.reset();
-
-            // if (!resultFromModal) {
-            //   setUploading(false);
-            //   throw new Error("NFT mint has failed!");
-            // }
-
-            await invalidateUpload();
+          }
+  
+          await invalidateUpload();
+          router.push(`/stream/${result.createdTokenId}`);
+        } catch (err) {
+          if (err instanceof Error) {
+            if (err.message.includes("user rejected transaction")) {
+              setUploading(false);
+              throw new Error("User rejected transaction");
+            }
+  
             setUploading(false);
-            return;
-          } catch (err) {
-            throw new Error("NFT mint has failed!");
+            throw new Error(err.message);
           }
-        }
-
-        if (streamCollectionContract) {
-          const tx = await streamCollectionContract.mint(
-            result.createdTokenId,
-            result.timestamp,
-            result.v,
-            result.r,
-            result.s,
-            [],
-            1000,
-            `${result.createdTokenId}.json`
-          );
-
-          if (tx?.hash) {
-            addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
-          }
-
-          await tx.wait(1);
-          form.reset();
-        }
-
-        await invalidateUpload();
-        router.push(`/stream/${result.createdTokenId}`);
-      } catch (err) {
-        if (err instanceof Error) {
-          if (err.message.includes("user rejected transaction")) {
-            setUploading(false);
-            throw new Error("User rejected transaction");
-          }
-
+  
           setUploading(false);
-          throw new Error(err.message);
+          throw new Error("Upload failed");
         }
-
-        setUploading(false);
-        throw new Error("Upload failed");
       }
-    }
-
-    toast.promise(_upload(), {
-      loading: "Uploading...",
-      success: () => "Upload confirmed",
-      error: (err) => err.message
-    });
-  };
-
-    
-    
-
+  
+      toast.promise(_upload(), {
+        loading: "Uploading...",
+        success: () => "Upload confirmed",
+        error: (err) => err.message
+      });
+    };
+  
     const handleOnUploadAndMint = async (data: Form) => {
       if (!account) {
         toast.error("Please connect your wallet");
         return;
       }
-
+  
       if (!user) {
         toast.error("Please connect your wallet");
         return;
       }
-
+  
       const isValid = isValidDataForMinting(
         data.title,
         data.description,
@@ -495,12 +491,12 @@
         user.result,
         tokenBalances.tokenBalances
       );
-
+  
       if (isValid.isError) {
         toast.error(isValid.error);
         return;
       }
-
+  
       if (isBounty) {
         const addBountyTotalAmount = getTotalBountyAmount(data.streamInfo, true);
         if (data.streamInfo) {
@@ -512,7 +508,7 @@
         }
         return;
       }
-
+  
       const description = `Are you sure the details are correct and you wish to proceed? NFT uploads can't be edited and it's on chain forever`;
       setModalDescription(description);
       setShowConfirmationModal(true);
@@ -733,7 +729,7 @@
                           <SelectValue placeholder="Token" />
                         </SelectTrigger>
                         <SelectContent>
-                          {tokens.map((token, i) => (
+                          {tokens.map((token:any, i:number) => (
                             <SelectItem key={i} value={token.value}>
                               <div className="flex items-center justify-center gap-2">
                                 <Avatar className="size-8">
@@ -826,7 +822,7 @@
                           <SelectValue placeholder="Token" />
                         </SelectTrigger>
                         <SelectContent>
-                          {payPerViewTokens.map((token) => (
+                          {payPerViewTokens.map((token:any) => (
                             <SelectItem key={token.symbol} value={token.value}>
                               {token.label}
                             </SelectItem>
