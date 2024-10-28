@@ -1,71 +1,62 @@
-"use client";
-
-import type { TChains } from "@/hooks/web3-connect";
-import type { OpenloginAdapterOptions } from "@web3auth/openlogin-adapter";
-
 import { CHAIN_NAMESPACES } from "@web3auth/base";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
-
-import { env } from "@/configs";
-
-/* ================================================================================================= */
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import { OpenloginAdapter, OpenloginAdapterOptions } from "@web3auth/openlogin-adapter";
 
 const name = "Google";
-const iconUrl = "/icons/google.svg";
+const iconUrl = "/assets/icons/google.svg";
 
-const getChainConfig = (chains: TChains) => ({
-  chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0x" + chains[0].id.toString(16),
-  // This is the public RPC we have added, please pass on your own endpoint while creating an app
-  rpcTarget: chains[0].rpcUrls.default.http[0],
-  displayName: chains[0].name,
-  tickerName: chains[0].nativeCurrency?.name,
-  ticker: chains[0].nativeCurrency?.symbol,
-  blockExplorer: chains[0].blockExplorers?.default.url
-});
-
-type ChainConfig = ReturnType<typeof getChainConfig>;
-
-const createWeb3AuthNoModal = (chainConfig: ChainConfig) =>
-  new Web3AuthNoModal({
-    clientId: env.clientId!,
-    chainConfig,
-    web3AuthNetwork: "sapphire_mainnet",
-    enableLogging: true
-  });
-
-const adapterSettings: OpenloginAdapterOptions["adapterSettings"] = {
-  network: "sapphire_mainnet",
-  uxMode: "popup",
-  whiteLabel: {
-    appName: "DeHub",
-    defaultLanguage: "en",
-    mode: "dark"
-  }
+const getChainConfig = chains => {
+  return {
+    chainNamespace: CHAIN_NAMESPACES.EIP155,
+    chainId: "0x" + chains[0].id.toString(16),
+    rpcTarget: chains[0].rpcUrls.default.http[0], // This is the public RPC we have added, please pass on your own endpoint while creating an app
+    displayName: chains[0].name,
+    tickerName: chains[0].nativeCurrency?.name,
+    ticker: chains[0].nativeCurrency?.symbol,
+    blockExplorer: chains[0].blockExplorers?.default.url, //[0],
+  };
 };
 
-export const rainbowWeb3AuthConnector = ({ chains }: { chains: TChains }) => {
+const createWeb3AuthNoModal = chainConfig => {
+  return new Web3AuthNoModal({
+    clientId: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
+    chainConfig,
+    web3AuthNetwork: "cyan",
+    enableLogging: true,
+  });
+};
+
+const adapterSettings: OpenloginAdapterOptions["adapterSettings"] = {
+  network: "cyan",
+  uxMode: "popup",
+  whiteLabel: {
+    appName: "Dehub",
+    defaultLanguage: "en",
+    mode: "dark",
+  },
+};
+
+export const rainbowWeb3AuthConnector = ({ chains }) => {
   const chainConfig = getChainConfig(chains);
   const web3AuthInstance = createWeb3AuthNoModal(chainConfig);
-  const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
+  const privateKeyProvider: any = new EthereumPrivateKeyProvider({ config: { chainConfig } });
   const openloginAdapterInstance = new OpenloginAdapter({
     adapterSettings,
-    privateKeyProvider
+    privateKeyProvider,
   });
 
   web3AuthInstance.configureAdapter(openloginAdapterInstance);
 
   const connector = new Web3AuthConnector({
-    chains,
+    chains: chains,
     options: {
       web3AuthInstance,
       loginParams: {
-        loginProvider: "google"
-      }
-    }
+        loginProvider: "google",
+      },
+    },
   });
 
   return {
@@ -73,40 +64,41 @@ export const rainbowWeb3AuthConnector = ({ chains }: { chains: TChains }) => {
     name,
     iconUrl,
     iconBackground: "#fff",
-    createConnector: () => ({ connector })
+    createConnector: () => {
+      return { connector };
+    },
   };
 };
 
-export const rainbowWeb3AuthTwitterConnector = ({ chains }: { chains: TChains }) => {
+export const rainbowWeb3AuthTwitterConnector = ({ chains }) => {
   // Create Web3Auth Instance
   const chainConfig = getChainConfig(chains);
   const web3AuthInstance = createWeb3AuthNoModal(chainConfig);
 
   // Add openlogin adapter for customizations
   const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
-
   const openloginAdapterInstance = new OpenloginAdapter({
     privateKeyProvider,
-    adapterSettings
+    adapterSettings,
   });
-
   web3AuthInstance.configureAdapter(openloginAdapterInstance);
-
   const connector = new Web3AuthConnector({
-    chains,
+    chains: chains,
     options: {
       web3AuthInstance,
       loginParams: {
-        loginProvider: "twitter"
-      }
-    }
+        loginProvider: "twitter",
+      },
+    },
   });
 
   return {
     id: "web3auth-twitter",
     name: "Twitter",
-    iconUrl: "/icons/x.png",
+    iconUrl: "/assets/icons/x.png",
     iconBackground: "#ffffff00",
-    createConnector: () => ({ connector })
+    createConnector: () => {
+      return { connector };
+    },
   };
 };

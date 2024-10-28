@@ -1,49 +1,28 @@
-"use client";
+import { useAccount, useChainId, useConnect, useDisconnect, useWalletClient } from "wagmi";
 
-import type { ChainProviderFn } from "wagmi";
-
-import { useMemo } from "react";
-import { connectorsForWallets } from "@rainbow-me/rainbowkit";
-import {
-  coinbaseWallet,
-  metaMaskWallet,
-  rainbowWallet,
-  trustWallet,
-  walletConnectWallet
-} from "@rainbow-me/rainbowkit/wallets";
-import {
-  configureChains,
-  createConfig,
-  useAccount,
-  useChainId,
-  useConnect,
-  useDisconnect,
-  useWalletClient
-} from "wagmi";
-import { arbitrum, bscTestnet } from "wagmi/chains";
-import { infuraProvider } from "wagmi/providers/infura";
+import { configureChains, createConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
-
-import { useEthersProvider, useEthersSigner } from "@/hooks/wagmi-ethers";
-
 import {
-  rainbowWeb3AuthConnector,
-  rainbowWeb3AuthTwitterConnector
-} from "@/web3/connectors/rainbow-web3-auth-connector";
-
+  rainbowWallet,
+  walletConnectWallet,
+  metaMaskWallet,
+  trustWallet,
+  coinbaseWallet,
+} from "@rainbow-me/rainbowkit/wallets";
+import { connectorsForWallets } from "@rainbow-me/rainbowkit";
+import { mainnet, polygon, bsc, bscTestnet, goerli } from "wagmi/chains";
+import { infuraProvider } from "wagmi/providers/infura";
+import { useMemo } from "react";
+import { useEthersProvider, useEthersSigner } from "./wagmi-ethers";
 import { env } from "@/configs";
+import { rainbowWeb3AuthConnector, rainbowWeb3AuthTwitterConnector } from "@/web3/connectors/rainbow-web3-auth-connector";
 
-/* ================================================================================================= */
-
-const providers = [publicProvider(), infuraProvider({ apiKey: env.infuraKey! })];
-
+const providers = [publicProvider(), infuraProvider({ apiKey: process.env.NEXT__PUBLIC_INFURA_KEY })] as any;
 export const { chains, publicClient, webSocketPublicClient } = env.isDevMode
-  ? configureChains([bscTestnet], providers as unknown as ChainProviderFn<typeof bscTestnet>[])
-  : configureChains([arbitrum], providers as unknown as ChainProviderFn<typeof arbitrum>[]);
-export type TChains = typeof chains;
-
-const projectId = env.projectId!;
-const appName = env.projectName!;
+  ? configureChains([bscTestnet, goerli], providers)
+  : configureChains([bsc, mainnet, polygon], providers);
+const projectId = process.env.REACT_APP_PROJECT_ID || "YOUR_PROJECT_ID";
+const appName = process.env.REACT_APP_PROJECT_NAME || "YOUR_PROJECT_NAME";
 
 const connectors = connectorsForWallets([
   {
@@ -54,44 +33,38 @@ const connectors = connectorsForWallets([
       trustWallet({ projectId, chains }),
       rainbowWallet({ projectId, chains }),
       coinbaseWallet({ appName, chains }),
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       rainbowWeb3AuthConnector({ chains }),
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      rainbowWeb3AuthTwitterConnector({ chains })
-    ]
-  }
+      rainbowWeb3AuthTwitterConnector({ chains }),
+    ],
+  },
 ]);
 
 export const wagmiConfig = createConfig({
   autoConnect: true,
   connectors,
   publicClient,
-  webSocketPublicClient
+  webSocketPublicClient,
 });
 
 export function useActiveWeb3React() {
   const { address: account } = useAccount();
   const { error } = useWalletClient();
-  const singer = useEthersSigner();
+  const signer = useEthersSigner();
   const provider = useEthersProvider();
+
   const chainId = useChainId();
   const { connect: activate, isSuccess: active } = useConnect();
-  const { disconnect: deactive } = useDisconnect();
+  const { disconnect: deactivate } = useDisconnect();
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    return {
       account,
-      library: singer ?? provider,
+      library: signer ?? provider,
       chainId,
       activate,
       active,
-      deactive,
-      error
-    }),
-    [account, singer, provider, chainId, activate, active, deactive, error]
-  );
+      deactivate,
+      error: error as any,
+    };
+  }, [account, activate, active, chainId, deactivate, error, provider, signer]);
 }
-
-export type UseActiveWeb3ReactReturn = ReturnType<typeof useActiveWeb3React>;
