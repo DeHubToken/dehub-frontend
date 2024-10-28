@@ -7,7 +7,7 @@ import { OpenloginAdapter, OpenloginAdapterOptions } from "@web3auth/openlogin-a
 const name = "Google";
 const iconUrl = "/assets/icons/google.svg";
 
-const getChainConfig = chains => {
+const getChainConfig = (chains:any) => {
   return {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
     chainId: "0x" + chains[0].id.toString(16),
@@ -19,7 +19,7 @@ const getChainConfig = chains => {
   };
 };
 
-const createWeb3AuthNoModal = chainConfig => {
+const createWeb3AuthNoModal = (chainConfig:any) => {
   return new Web3AuthNoModal({
     clientId: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
     chainConfig,
@@ -38,7 +38,7 @@ const adapterSettings: OpenloginAdapterOptions["adapterSettings"] = {
   },
 };
 
-export const rainbowWeb3AuthConnector = ({ chains }) => {
+export const rainbowWeb3AuthConnector = ({ chains }:any) => {
   const chainConfig = getChainConfig(chains);
   const web3AuthInstance = createWeb3AuthNoModal(chainConfig);
   const privateKeyProvider: any = new EthereumPrivateKeyProvider({ config: { chainConfig } });
@@ -70,7 +70,7 @@ export const rainbowWeb3AuthConnector = ({ chains }) => {
   };
 };
 
-export const rainbowWeb3AuthTwitterConnector = ({ chains }) => {
+export const rainbowWeb3AuthTwitterConnector = ({ chains }:any) => {
   // Create Web3Auth Instance
   const chainConfig = getChainConfig(chains);
   const web3AuthInstance = createWeb3AuthNoModal(chainConfig);
