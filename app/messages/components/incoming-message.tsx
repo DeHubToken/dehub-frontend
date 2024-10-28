@@ -18,7 +18,7 @@ export function IncomingMessage(props: { message: TMessage["messages"][0] }) {
             <AvatarImage className="object-cover" src={message.avatar} alt={message.author} />
           </Avatar>
           <div className="rounded-r-[20px] rounded-tl-[20px] px-4 py-3 dark:bg-theme-mine-shaft-dark">
-            <p className="text-sm text-gray-200">{message.message}</p>
+            <p className="text-sm dark:text-gray-200">{message.message}</p>
           </div>
         </div>
       </div>

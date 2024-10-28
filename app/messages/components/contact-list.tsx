@@ -38,8 +38,8 @@ export function ContactList(props: ContactListProps) {
           <div
             key={message.id}
             className={cn(
-              "relative flex cursor-pointer items-center gap-2 rounded-lg p-3 transition-colors duration-300 hover:dark:bg-theme-mine-shaft",
-              selectedMessageId === message.id && "dark:bg-theme-mine-shaft"
+              "relative flex cursor-pointer items-center gap-2 rounded-lg p-3 transition-colors duration-300 hover:bg-gray-200 hover:dark:bg-theme-mine-shaft",
+              selectedMessageId === message.id && "bg-gray-200 dark:bg-theme-mine-shaft"
             )}
             onClick={() => {
               setSelectedMessageId(message.id);

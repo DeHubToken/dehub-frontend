@@ -25,7 +25,7 @@ export function MobileContactList(props: MobileContactListProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <button className="flex size-8 flex-col items-center justify-center rounded-full p-2 dark:bg-theme-mine-shaft-dark">
+        <button className="flex size-8 flex-col items-center justify-center rounded-full bg-gray-100 p-2 dark:bg-theme-mine-shaft-dark lg:hidden">
           <MessageCircle className="size-8 text-gray-400" />
         </button>
       </SheetTrigger>

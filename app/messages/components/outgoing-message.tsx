@@ -14,7 +14,7 @@ export function OutgoingMessage(props: { message: TMessage["messages"][0] }) {
         <span className="pr-4 text-xs text-gray-400">{dayjs(message.date).fromNow()}</span>
         <div className="flex items-end gap-3">
           <div className="rounded-l-[20px] rounded-tr-[20px] px-4 py-3 dark:bg-theme-mine-shaft-dark">
-            <p className="text-sm text-gray-200">{message.message}</p>
+            <p className="text-sm dark:text-gray-200">{message.message}</p>
           </div>
           <Avatar className="size-8">
             <AvatarFallback>{createAvatarName(message.author)}</AvatarFallback>

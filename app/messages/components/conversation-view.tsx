@@ -28,8 +28,8 @@ export function ConversationView() {
       <div className="w-full">
         <div className="flex w-full justify-between">
           <div className="flex w-full items-center gap-2">
-            <div className="size-10 rounded-full dark:bg-gray-500" />
-            <div className="h-3 w-36 rounded-full dark:bg-gray-500" />
+            <div className="shimmer size-10 rounded-full bg-gray-300 dark:bg-gray-500" />
+            <div className="shimmer h-3 w-36 rounded-full bg-gray-300 dark:bg-gray-500" />
           </div>
         </div>
 
@@ -38,13 +38,13 @@ export function ConversationView() {
             <div key={index} className="mb-4 w-full">
               <div className={cn("flex w-full", index % 2 === 0 ? "justify-end" : "justify-start")}>
                 <div className="flex max-w-96 flex-col items-end gap-1">
-                  <span className="shimmer h-2 w-28 rounded-full dark:bg-gray-500" />
+                  <span className="shimmer h-2 w-28 rounded-full bg-gray-300 dark:bg-gray-500" />
                   <div className="flex items-end gap-3">
                     {index % 2 === 0 && (
-                      <div className="shimmer h-28 w-96 rounded-l-[20px] rounded-tr-[20px] px-4 py-3 dark:bg-gray-500" />
+                      <div className="shimmer h-28 w-96 rounded-l-[20px] rounded-tr-[20px] bg-gray-300 px-4 py-3 dark:bg-gray-500" />
                     )}
                     {index % 2 !== 0 && (
-                      <div className="shimmer h-28 w-96 rounded-r-[20px] rounded-tl-[20px] px-4 py-3 dark:bg-gray-500" />
+                      <div className="shimmer h-28 w-96 rounded-r-[20px] rounded-tl-[20px] bg-gray-300 px-4 py-3 dark:bg-gray-500" />
                     )}
                   </div>
                 </div>
