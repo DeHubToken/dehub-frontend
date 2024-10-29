@@ -184,21 +184,21 @@ export function UploadForm(props: Props) {
   const network = form.watch("network");
   const amount = form.watch("lockContentAmount");
 
-    const tokens = getDistinctTokens(supportedTokensForLockContent, undefined);
-    const token = tokens.find((t:any) => t.value === selectedToken);
-    const networksForAToken = token
-      ? getNetworksForToken(token.symbol, supportedTokensForLockContent)
-      : supportedNetworks;
+  const tokens = getDistinctTokens(supportedTokensForLockContent, undefined);
+  const token = tokens.find((t: any) => t.value === selectedToken);
+  const networksForAToken = token
+    ? getNetworksForToken(token.symbol, supportedTokensForLockContent)
+    : supportedNetworks;
 
-    const isPayPerView = form.watch("payPerView");
-    const selectedPPVToken = form.watch("chain");
-    const ppvAmount = form.watch("ppvAmount");
-    const ppvNetwork = form.watch("payPerViewNetwork");
-    const payPerViewTokens = getDistinctTokens(supportedTokensForPPV, undefined);
-    const networkForPPVToken = payPerViewTokens.find((t:any) => t.value === selectedPPVToken);
-    const networksForPPVToken = networkForPPVToken
-      ? getNetworksForToken(networkForPPVToken.symbol, supportedTokensForPPV)
-      : supportedNetworks;
+  const isPayPerView = form.watch("payPerView");
+  const selectedPPVToken = form.watch("chain");
+  const ppvAmount = form.watch("ppvAmount");
+  const ppvNetwork = form.watch("payPerViewNetwork");
+  const payPerViewTokens = getDistinctTokens(supportedTokensForPPV, undefined);
+  const networkForPPVToken = payPerViewTokens.find((t: any) => t.value === selectedPPVToken);
+  const networksForPPVToken = networkForPPVToken
+    ? getNetworksForToken(networkForPPVToken.symbol, supportedTokensForPPV)
+    : supportedNetworks;
 
   const isBounty = form.watch("bounty");
   const firstXViewer = form.watch("bountyFirstXViewer");
@@ -307,219 +307,219 @@ export function UploadForm(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount, isPayPerView, network, networkForPPVToken?.symbol, networksForPPVToken]);
 
-    // Bounty
-    useEffect(() => {
-      const streamInfo = form.getValues("streamInfo");
-      const bounty = { [streamInfoKeys.isAddBounty]: isBounty };
-      const chain = supportedTokensForChain.find((t) => t.value === selectedBountyChain);
-      const bountyToken = { [streamInfoKeys.addBountyTokenSymbol]: chain?.symbol || "" };
-      const bountyChainIds = {
-        [streamInfoKeys.addBountyChainId]: chainId
-      };
-      const bountyFirstXViewer = { [streamInfoKeys.addBountyFirstXViewers]: firstXViewer || 0 };
-      const bountyFirstXComment = { [streamInfoKeys.addBountyFirstXComments]: firstXComment || 0 };
-      const amount = { [streamInfoKeys.addBountyAmount]: bountyAmount || 0 };
-      form.setValue("streamInfo", {
-        ...streamInfo,
-        ...bounty,
-        ...bountyToken,
-        ...bountyChainIds,
-        ...bountyFirstXViewer,
-        ...bountyFirstXComment,
-        ...amount
-      });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [bountyAmount, chainId, firstXComment, firstXViewer, isBounty, supportedTokensForChain]);
-    const onApproveClick = async () => {
-      setUploading(true);
-      const txHash = await approveToken(
-        bountyTokenContract,
-        library,
-        streamControllerContractAddress
-      );
-      if (txHash) {
-        addTransaction({ hash: txHash as string, description: "Approve", confirmations: 3 });
-        setIsApproved(true);
-      }
-      setUploading(false);
+  // Bounty
+  useEffect(() => {
+    const streamInfo = form.getValues("streamInfo");
+    const bounty = { [streamInfoKeys.isAddBounty]: isBounty };
+    const chain = supportedTokensForChain.find((t) => t.value === selectedBountyChain);
+    const bountyToken = { [streamInfoKeys.addBountyTokenSymbol]: chain?.symbol || "" };
+    const bountyChainIds = {
+      [streamInfoKeys.addBountyChainId]: chainId
     };
-  
-    const handleMint = async (data: Form) => {
-      if (uploading) return;
-  
-      setUploading(true);
-  
-      async function _upload() {
-        if (!account) {
-          toast.error("Please connect your wallet");
-          return;
+    const bountyFirstXViewer = { [streamInfoKeys.addBountyFirstXViewers]: firstXViewer || 0 };
+    const bountyFirstXComment = { [streamInfoKeys.addBountyFirstXComments]: firstXComment || 0 };
+    const amount = { [streamInfoKeys.addBountyAmount]: bountyAmount || 0 };
+    form.setValue("streamInfo", {
+      ...streamInfo,
+      ...bounty,
+      ...bountyToken,
+      ...bountyChainIds,
+      ...bountyFirstXViewer,
+      ...bountyFirstXComment,
+      ...amount
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bountyAmount, chainId, firstXComment, firstXViewer, isBounty, supportedTokensForChain]);
+  const onApproveClick = async () => {
+    setUploading(true);
+    const txHash = await approveToken(
+      bountyTokenContract,
+      library,
+      streamControllerContractAddress
+    );
+    if (txHash) {
+      addTransaction({ hash: txHash as string, description: "Approve", confirmations: 3 });
+      setIsApproved(true);
+    }
+    setUploading(false);
+  };
+
+  const handleMint = async (data: Form) => {
+    if (uploading) return;
+
+    setUploading(true);
+
+    async function _upload() {
+      if (!account) {
+        toast.error("Please connect your wallet");
+        return;
+      }
+
+      try {
+        const sigData = await getSignInfo(library, account);
+
+        const formData = new FormData();
+        formData.append("name", data.title);
+        formData.append("description", data.description);
+        data.streamInfo &&
+          formData.append("streamInfo", JSON.stringify(filteredStreamInfo(data.streamInfo)));
+        videoFile && formData.append("files", videoFile);
+        thumbnailFile && formData.append("files", thumbnailFile);
+        formData.append(
+          "category",
+          data.category?.length > 0 ? JSON.stringify(data.category.map((e) => e)) : ""
+        );
+        formData.append("address", account.toLowerCase());
+        formData.append("sig", sigData.sig);
+        formData.append("chainId", chainId.toString());
+        formData.append("timestamp", sigData.timestamp);
+
+        const res = await minNft(formData);
+        if (!res.success) {
+          setUploading(false);
+          throw new Error(res.error);
         }
-  
-        try {
-          const sigData = await getSignInfo(library, account);
-  
-          const formData = new FormData();
-          formData.append("name", data.title);
-          formData.append("description", data.description);
-          data.streamInfo &&
-            formData.append("streamInfo", JSON.stringify(filteredStreamInfo(data.streamInfo)));
-          videoFile && formData.append("files", videoFile);
-          thumbnailFile && formData.append("files", thumbnailFile);
-          formData.append(
-            "category",
-            data.category?.length > 0 ? JSON.stringify(data.category.map((e) => e)) : ""
-          );
-          formData.append("address", account.toLowerCase());
-          formData.append("sig", sigData.sig);
-          formData.append("chainId", chainId.toString());
-          formData.append("timestamp", sigData.timestamp);
-  
-          const res = await minNft(formData);
-          if (!res.success) {
-            setUploading(false);
-            throw new Error(res.error);
-          }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const result: any = res.data;
-  
-          if (result.error) {
-            setUploading(false);
-            throw new Error(result.error_msg || "NFT mint has failed!");
-          }
-  
-          if (data.streamInfo?.[streamInfoKeys.isAddBounty]) {
-            try {
-              const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
-              const bountyToken = supportedTokens.find(
-                (e) => e.symbol === tokenSymbol && e.chainId === chainId
-              );
-  
-              // Call mint with bountry
-              const tx = await mintWithBounty(
-                // library,
-                streamController,
-                result.createdTokenId,
-                result.timestamp,
-                result.v,
-                result.r,
-                result.s,
-                bountyToken,
-                bountyAmount,
-                firstXViewer,
-                firstXComment
-              );
-              if (tx?.hash) {
-                addTransaction({ hash: tx.hash, description: "Mint With Bounty", confirmations: 3 });
-              }
-              await tx.wait(1);
-  
-              form.reset();
-  
-              // if (!resultFromModal) {
-              //   setUploading(false);
-              //   throw new Error("NFT mint has failed!");
-              // }
-  
-              await invalidateUpload();
-              setUploading(false);
-              return;
-            } catch (err) {
-              throw new Error("NFT mint has failed!");
-            }
-          }
-  
-          if (streamCollectionContract) {
-            const tx = await streamCollectionContract.mint(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const result: any = res.data;
+
+        if (result.error) {
+          setUploading(false);
+          throw new Error(result.error_msg || "NFT mint has failed!");
+        }
+
+        if (data.streamInfo?.[streamInfoKeys.isAddBounty]) {
+          try {
+            const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
+            const bountyToken = supportedTokens.find(
+              (e) => e.symbol === tokenSymbol && e.chainId === chainId
+            );
+
+            // Call mint with bountry
+            const tx = await mintWithBounty(
+              // library,
+              streamController,
               result.createdTokenId,
               result.timestamp,
               result.v,
               result.r,
               result.s,
-              [],
-              1000,
-              `${result.createdTokenId}.json`
+              bountyToken,
+              bountyAmount,
+              firstXViewer,
+              firstXComment
             );
-  
             if (tx?.hash) {
-              addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
+              addTransaction({ hash: tx.hash, description: "Mint With Bounty", confirmations: 3 });
             }
-  
             await tx.wait(1);
+
             form.reset();
-          }
-  
-          await invalidateUpload();
-          router.push(`/stream/${result.createdTokenId}`);
-        } catch (err) {
-          if (err instanceof Error) {
-            if (err.message.includes("user rejected transaction")) {
-              setUploading(false);
-              throw new Error("User rejected transaction");
-            }
-  
+
+            // if (!resultFromModal) {
+            //   setUploading(false);
+            //   throw new Error("NFT mint has failed!");
+            // }
+
+            await invalidateUpload();
             setUploading(false);
-            throw new Error(err.message);
+            return;
+          } catch (err) {
+            throw new Error("NFT mint has failed!");
           }
-  
+        }
+
+        if (streamCollectionContract) {
+          const tx = await streamCollectionContract.mint(
+            result.createdTokenId,
+            result.timestamp,
+            result.v,
+            result.r,
+            result.s,
+            [],
+            1000,
+            `${result.createdTokenId}.json`
+          );
+
+          if (tx?.hash) {
+            addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
+          }
+
+          await tx.wait(1);
+          form.reset();
+        }
+
+        await invalidateUpload();
+        router.push(`/stream/${result.createdTokenId}`);
+      } catch (err) {
+        if (err instanceof Error) {
+          if (err.message.includes("user rejected transaction")) {
+            setUploading(false);
+            throw new Error("User rejected transaction");
+          }
+
           setUploading(false);
-          throw new Error("Upload failed");
+          throw new Error(err.message);
         }
+
+        setUploading(false);
+        throw new Error("Upload failed");
       }
-  
-      toast.promise(_upload(), {
-        loading: "Uploading...",
-        success: () => "Upload confirmed",
-        error: (err) => err.message
-      });
-    };
-  
-    const handleOnUploadAndMint = async (data: Form) => {
-      if (!account) {
-        toast.error("Please connect your wallet");
-        return;
+    }
+
+    toast.promise(_upload(), {
+      loading: "Uploading...",
+      success: () => "Upload confirmed",
+      error: (err) => err.message
+    });
+  };
+
+  const handleOnUploadAndMint = async (data: Form) => {
+    if (!account) {
+      toast.error("Please connect your wallet");
+      return;
+    }
+
+    if (!user) {
+      toast.error("Please connect your wallet");
+      return;
+    }
+
+    const isValid = isValidDataForMinting(
+      data.title,
+      data.description,
+      data.streamInfo || {},
+      user.result,
+      tokenBalances.tokenBalances
+    );
+
+    if (isValid.isError) {
+      toast.error(isValid.error);
+      return;
+    }
+
+    if (isBounty) {
+      const addBountyTotalAmount = getTotalBountyAmount(data.streamInfo, true);
+      if (data.streamInfo) {
+        const description = `Are you sure you want to spend ${addBountyTotalAmount} ${
+          data.streamInfo[streamInfoKeys.addBountyTokenSymbol]
+        } on this Bounty Upload?`;
+        setModalDescription(description);
+        setShowConfirmationModal(true);
       }
-  
-      if (!user) {
-        toast.error("Please connect your wallet");
-        return;
-      }
-  
-      const isValid = isValidDataForMinting(
-        data.title,
-        data.description,
-        data.streamInfo || {},
-        user.result,
-        tokenBalances.tokenBalances
-      );
-  
-      if (isValid.isError) {
-        toast.error(isValid.error);
-        return;
-      }
-  
-      if (isBounty) {
-        const addBountyTotalAmount = getTotalBountyAmount(data.streamInfo, true);
-        if (data.streamInfo) {
-          const description = `Are you sure you want to spend ${addBountyTotalAmount} ${
-            data.streamInfo[streamInfoKeys.addBountyTokenSymbol]
-          } on this Bounty Upload?`;
-          setModalDescription(description);
-          setShowConfirmationModal(true);
-        }
-        return;
-      }
-  
-      const description = `Are you sure the details are correct and you wish to proceed? NFT uploads can't be edited and it's on chain forever`;
-      setModalDescription(description);
-      setShowConfirmationModal(true);
-    };
+      return;
+    }
+
+    const description = `Are you sure the details are correct and you wish to proceed? NFT uploads can't be edited and it's on chain forever`;
+    setModalDescription(description);
+    setShowConfirmationModal(true);
+  };
 
   return (
     <main className="h-auto min-h-screen w-full">
       <Form {...form}>
-        <div className="flex h-auto w-full flex-col items-start justify-start gap-10 px-4 py-28">
-          <div className="flex h-auto w-full flex-wrap items-stretch justify-between gap-10 lg:gap-0">
-            <div className="h-auto w-full max-w-full flex-[0_0_100%] space-y-6 rounded-2xl border border-gray-300/25 p-10  lg:max-w-[49%] lg:flex-[0_0_49%]">
+        <div className="flex h-auto w-full flex-col items-start justify-start gap-6 px-4 py-28 sm:gap-10">
+          <div className="flex h-auto w-full flex-wrap items-stretch justify-between gap-6 lg:gap-0">
+            <div className="h-auto w-full max-w-full flex-[0_0_100%] space-y-6 rounded-2xl border border-gray-300/25 px-6 pb-6 pt-10 sm:p-10 lg:max-w-[49%] lg:flex-[0_0_49%]">
               <h1 className="text-3xl">Video info</h1>
               <FormField
                 name="title"
@@ -587,9 +587,9 @@ export function UploadForm(props: Props) {
                 />
               </div>
 
-              <div className="flex h-auto w-full items-center justify-start gap-2">
-                <p className="min-w-[20%] text-lg leading-none">
-                  Cover <br /> Image
+              <div className="flex h-auto w-full flex-col flex-wrap items-center justify-start gap-4 sm:flex-row sm:gap-2">
+                <p className="min-w-full text-lg leading-none sm:min-w-[20%]">
+                  Cover <br className="hidden sm:block" /> Image
                 </p>
 
                 <div className="h-auto w-full">
@@ -647,7 +647,7 @@ export function UploadForm(props: Props) {
               </div>
             </div>
 
-            <div className="flex h-auto w-full max-w-full flex-[0_0_100%] flex-col items-start justify-start gap-6 rounded-2xl border border-gray-300/25 p-10  lg:max-w-[49%] lg:flex-[0_0_49%]">
+            <div className="flex h-auto w-full max-w-full flex-[0_0_100%] flex-col items-start justify-start gap-6 rounded-2xl border border-gray-300/25 px-6 pb-6 pt-10 sm:p-10  lg:max-w-[49%] lg:flex-[0_0_49%]">
               <div className="flex w-full items-center justify-between">
                 <h1 className="text-3xl">UPLOAD PREVIEW</h1>
                 {videoFile && (
@@ -704,7 +704,7 @@ export function UploadForm(props: Props) {
             </div>
           </div>
 
-          <div className="flex h-auto w-full flex-col items-start justify-start gap-8 rounded-2xl border border-gray-300/25  p-5 sm:p-10">
+          <div className="flex h-auto w-full flex-col items-start justify-start gap-8 rounded-2xl border border-gray-300/25 px-6 pb-6 pt-10 sm:p-10">
             <div className="relative flex h-auto w-full items-start justify-start 2xl:items-center">
               <p className="min-w-[150px] text-lg lg:min-w-[15%]">Lock Content</p>
               <div className="flex size-auto flex-wrap items-center justify-start gap-6">
@@ -716,34 +716,34 @@ export function UploadForm(props: Props) {
                   )}
                 />
 
-                  <Controller
-                    name="token"
-                    control={form.control}
-                    render={({ field }) => (
-                      <Select
-                        disabled={!isLockedContent}
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger className="h-10 w-[150px] rounded-full border-2 bg-transparent px-4 text-sm">
-                          <SelectValue placeholder="Token" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {tokens.map((token:any, i:number) => (
-                            <SelectItem key={i} value={token.value}>
-                              <div className="flex items-center justify-center gap-2">
-                                <Avatar className="size-8">
-                                  <AvatarFallback>{createAvatarName(token.label)}</AvatarFallback>
-                                  <AvatarImage src={token.iconUrl} alt={token.label} />
-                                </Avatar>
-                                {token.label}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
+                <Controller
+                  name="token"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Select
+                      disabled={!isLockedContent}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="h-10 w-[150px] rounded-full border-2 bg-transparent px-4 text-sm">
+                        <SelectValue placeholder="Token" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {tokens.map((token: any, i: number) => (
+                          <SelectItem key={i} value={token.value}>
+                            <div className="flex items-center justify-center gap-2">
+                              <Avatar className="size-8">
+                                <AvatarFallback>{createAvatarName(token.label)}</AvatarFallback>
+                                <AvatarImage src={token.iconUrl} alt={token.label} />
+                              </Avatar>
+                              {token.label}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
 
                 <Controller
                   name="network"
@@ -809,28 +809,28 @@ export function UploadForm(props: Props) {
                   )}
                 />
 
-                  <Controller
-                    name="chain"
-                    control={form.control}
-                    render={({ field }) => (
-                      <Select
-                        disabled={!isPayPerView}
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger className="h-10 w-[150px] rounded-full border-2 bg-transparent px-4 text-sm">
-                          <SelectValue placeholder="Token" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {payPerViewTokens.map((token:any) => (
-                            <SelectItem key={token.symbol} value={token.value}>
-                              {token.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
+                <Controller
+                  name="chain"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Select
+                      disabled={!isPayPerView}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="h-10 w-[150px] rounded-full border-2 bg-transparent px-4 text-sm">
+                        <SelectValue placeholder="Token" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {payPerViewTokens.map((token: any) => (
+                          <SelectItem key={token.symbol} value={token.value}>
+                            {token.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
 
                 <Controller
                   name="payPerViewNetwork"
