@@ -214,7 +214,7 @@ export function Sidebar(props: Props) {
 
           if (link.url) {
             // profile
-            if (link.id === "profile") {
+            if (link.id === "profile" || link.id === "messages" || link.id === "plans") {
               if (!account) return null;
               return (
                 <SidebarLinkButton
