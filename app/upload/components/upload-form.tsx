@@ -824,7 +824,13 @@ export function UploadForm(props: Props) {
                       <SelectContent>
                         {payPerViewTokens.map((token: any) => (
                           <SelectItem key={token.symbol} value={token.value}>
-                            {token.label}
+                            <div className="flex items-center gap-2">
+                              <Avatar className="size-8">
+                                <AvatarFallback>{createAvatarName(token.label)}</AvatarFallback>
+                                <AvatarImage src={token.iconUrl} alt={token.label} />
+                              </Avatar>
+                              {token.label}
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -907,7 +913,13 @@ export function UploadForm(props: Props) {
                       <SelectContent>
                         {supportedTokensForChain.map((token) => (
                           <SelectItem key={token.chainId} value={token.value}>
-                            {token.label}
+                            <div className="flex items-center gap-2">
+                              <Avatar className="size-8">
+                                <AvatarFallback>{createAvatarName(token.label)}</AvatarFallback>
+                                <AvatarImage src={token.iconUrl} alt={token.label} />
+                              </Avatar>
+                              {token.label}
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>

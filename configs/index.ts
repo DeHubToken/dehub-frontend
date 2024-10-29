@@ -18,9 +18,9 @@ export const env = {
   bscNode: process.env.NEXT_PUBLIC_BSC_NODE,
   pubNubKey: process.env.NEXT_PUBLIC_PUBNUB_KEY,
   pubNubSubKey: process.env.NEXT_PUBLIC_PUBNUB_SUB_KEY
-}
+};
 
-export const isDevMode = env.isDevMode
+export const isDevMode = env.isDevMode;
 
 export enum ChainId {
   MAINNET = 1,
@@ -35,7 +35,7 @@ export enum ChainId {
   FANTOM_MAINNET = 250,
   AVALANCHE_MAINNET = 43114,
   OKEX_MAINNET = 66,
-  POLYGON_MAINNET = 137,
+  POLYGON_MAINNET = 137
 }
 
 export const streamInfoKeys = {
@@ -54,7 +54,7 @@ export const streamInfoKeys = {
   addBountyFirstXViewers: "addBountyFirstXViewers",
   addBountyFirstXComments: "addBountyFirstXComments",
   addBountyAmount: "addBountyAmount",
-  addBountyChainId: "addBountyChainId",
+  addBountyChainId: "addBountyChainId"
 };
 
 export const userProfileKeys = {
@@ -75,7 +75,7 @@ export const userProfileKeys = {
   custom2: "custom2",
   custom3: "custom3",
   custom4: "custom4",
-  custom5: "custom5",
+  custom5: "custom5"
 };
 
 export const defaultTokenId = 2;
@@ -89,8 +89,8 @@ const devTokens = [
     customAbbreviation: "dhb",
     chainId: 97,
     address: "0x06EdA7889330031a8417f46e4C771C628c0b6418",
-    iconUrl: "/icons/DHB.png",  // Update to relevant image URL if needed
-    decimals: 18,
+    iconUrl: "/icons/DHB.png", // Update to relevant image URL if needed
+    decimals: 18
   },
   {
     value: "dhb",
@@ -99,8 +99,8 @@ const devTokens = [
     customAbbreviation: "dhb",
     chainId: 5,
     address: "0x0F0fBE6FB65AaCE87D84f599924f6524b4F8d858",
-    iconUrl: "/icons/DHB.png",  // Update to relevant image URL if needed
-    decimals: 18,
+    iconUrl: "/icons/DHB.png", // Update to relevant image URL if needed
+    decimals: 18
   },
   {
     value: "busd",
@@ -110,7 +110,7 @@ const devTokens = [
     chainId: 97,
     address: "0x53D4A05DF7caAf3302184B774855EcBe2a50bD3E",
     iconUrl: "https://cryptologos.cc/logos/binance-usd-busd-logo.png?v=024",
-    decimals: 18,
+    decimals: 18
   },
   {
     value: "usdc",
@@ -120,8 +120,8 @@ const devTokens = [
     chainId: 97,
     address: "0x4131fd3F1206d48A89410EE610BF1949934e0a72",
     iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
-    decimals: 18,
-  },
+    decimals: 18
+  }
 ];
 
 const productionTokens = [
@@ -132,9 +132,9 @@ const productionTokens = [
     customAbbreviation: "dhb",
     chainId: 1,
     address: "0x99BB69Ee1BbFC7706C3ebb79b21C5B698fe58EC0",
-    iconUrl: "/icons/DHB.png",  // Update to relevant image URL if needed
+    iconUrl: "/icons/DHB.png", // Update to relevant image URL if needed
     mintBlockNumber: 16428469,
-    decimals: 18,
+    decimals: 18
   },
   {
     value: "dhb",
@@ -143,9 +143,9 @@ const productionTokens = [
     customAbbreviation: "dhb",
     chainId: 56,
     address: "0x680D3113caf77B61b510f332D5Ef4cf5b41A761D",
-    iconUrl: "/icons/DHB.png",  // Update to relevant image URL if needed
+    iconUrl: "/icons/DHB.png", // Update to relevant image URL if needed
     mintBlockNumber: 24867920,
-    decimals: 18,
+    decimals: 18
   },
   {
     value: "dhb",
@@ -154,9 +154,9 @@ const productionTokens = [
     customAbbreviation: "dhb",
     chainId: 137,
     address: "0x6051e59eb50BB568415B6C476Fbd394EEF83834D",
-    iconUrl: "/icons/DHB.png",  // Update to relevant image URL if needed
+    iconUrl: "/icons/DHB.png", // Update to relevant image URL if needed
     mintBlockNumber: 38197541,
-    decimals: 18,
+    decimals: 18
   },
   {
     value: "usdc",
@@ -166,7 +166,7 @@ const productionTokens = [
     chainId: 1,
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
-    decimals: 6,
+    decimals: 6
   },
   {
     value: "usdc",
@@ -176,7 +176,7 @@ const productionTokens = [
     chainId: 56,
     address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
     iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
-    decimals: 18,
+    decimals: 18
   },
   {
     value: "usdc",
@@ -186,7 +186,7 @@ const productionTokens = [
     chainId: 137,
     address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
     iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
-    decimals: 6,
+    decimals: 6
   },
   {
     value: "usdt",
@@ -196,7 +196,7 @@ const productionTokens = [
     chainId: 1,
     address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
     iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=024",
-    decimals: 18,
+    decimals: 18
   },
   {
     value: "usdt",
@@ -206,7 +206,7 @@ const productionTokens = [
     chainId: 56,
     address: "0x55d398326f99059ff775485246999027b3197955",
     iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=024",
-    decimals: 18,
+    decimals: 18
   },
   {
     value: "usdt",
@@ -216,7 +216,7 @@ const productionTokens = [
     chainId: 137,
     address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
     iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=024",
-    decimals: 18,
+    decimals: 18
   },
   {
     value: "doge",
@@ -226,7 +226,7 @@ const productionTokens = [
     chainId: 56,
     address: "0xbA2aE424d960c26247Dd6c32edC70B295c744C43",
     iconUrl: "https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=024",
-    decimals: 8,
+    decimals: 8
   },
   {
     value: "floki",
@@ -236,7 +236,7 @@ const productionTokens = [
     chainId: 1,
     address: "0xcf0c122c6b73ff809c693db761e7baebe62b6a2e",
     iconUrl: "https://cryptologos.cc/logos/floki-inu-floki-logo.png?v=024",
-    decimals: 9,
+    decimals: 9
   },
   {
     value: "floki",
@@ -246,14 +246,13 @@ const productionTokens = [
     chainId: 56,
     address: "0xfb5b838b6cfeedc2873ab27866079ac55363d37e",
     iconUrl: "https://cryptologos.cc/logos/floki-inu-floki-logo.png?v=024",
-    decimals: 9,
-  },
+    decimals: 9
+  }
 ];
-
 
 export const supportedTokens = isDevMode ? devTokens : productionTokens;
 
-export const supportedTokensForLockContent = supportedTokens.filter(e => e.symbol === "DHB");
+export const supportedTokensForLockContent = supportedTokens.filter((e) => e.symbol === "DHB");
 export const supportedTokensForPPV = supportedTokens;
 export const supportedTokensForAddBounty = supportedTokens;
 
@@ -275,8 +274,8 @@ export const ErrMsgEn = {
   bountyContent: {},
   wallet: {
     connect_to_stream: "Connect wallet to stream",
-    connect_to_wallet_to_deposit: "Connect wallet to deposit",
-  },
+    connect_to_wallet_to_deposit: "Connect wallet to deposit"
+  }
 };
 
 export const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
@@ -284,60 +283,58 @@ export const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
 export const badges = [
   {
     name: "Crab",
-    amount: 10_000,
+    amount: 10_000
   },
   {
     name: "Lobster",
-    amount: 25_000,
+    amount: 25_000
   },
   {
     name: "Piranha",
-    amount: 50_000,
+    amount: 50_000
   },
   {
     name: "Tortoise",
-    amount: 100_000,
+    amount: 100_000
   },
   {
     name: "Cobra",
-    amount: 250_000,
+    amount: 250_000
   },
   {
     name: "Octopus",
-    amount: 500_000,
+    amount: 500_000
   },
   {
     name: "Crocodite",
-    amount: 1_000_000,
+    amount: 1_000_000
   },
   {
     name: "Dolphin",
-    amount: 2_000_000,
+    amount: 2_000_000
   },
   {
     name: "Tiger Shark",
-    amount: 3_000_000,
+    amount: 3_000_000
   },
   {
     name: "Killer Whale",
-    amount: 5_000_000,
+    amount: 5_000_000
   },
   {
     name: "Great White Shark",
-    amount: 10_000_000,
+    amount: 10_000_000
   },
   {
     name: "Blue Whale",
-    amount: 20_000_000,
+    amount: 20_000_000
   },
   {
     name: "Meglodon",
-    amount: 50_000_000,
-  },
+    amount: 50_000_000
+  }
 ];
 export const MAX_CATEGORY_COUNT = 3;
-
-
 
 export const MULTICALL2_ADDRESSES: { [chainId: number]: string } = {
   [ChainId.MAINNET]: "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696",
@@ -350,7 +347,7 @@ export const MULTICALL2_ADDRESSES: { [chainId: number]: string } = {
   [ChainId.FANTOM_MAINNET]: "0xbb804a896E1A6962837c0813a5F89fDb771d808f",
   [ChainId.AVALANCHE_MAINNET]: "0x84514BeaaF8f9a4cbe25A9C5a7EBdd16B4FE7154",
   [ChainId.OKEX_MAINNET]: "0xdf4CDd4b8F1790f62a91Bcc4cb793159c641B1bd",
-  [ChainId.POLYGON_MAINNET]: "0x275617327c958bD06b5D6b871E7f491D76113dd8",
+  [ChainId.POLYGON_MAINNET]: "0x275617327c958bD06b5D6b871E7f491D76113dd8"
 };
 
 export const DHB_ADDRESSESS: { [chainId: number]: string } = {
@@ -364,5 +361,5 @@ export const DHB_ADDRESSESS: { [chainId: number]: string } = {
   [ChainId.FANTOM_MAINNET]: "0xbb804a896E1A6962837c0813a5F89fDb771d808f",
   [ChainId.AVALANCHE_MAINNET]: "0x84514BeaaF8f9a4cbe25A9C5a7EBdd16B4FE7154",
   [ChainId.OKEX_MAINNET]: "0xdf4CDd4b8F1790f62a91Bcc4cb793159c641B1bd",
-  [ChainId.POLYGON_MAINNET]: "0x6051e59eb50BB568415B6C476Fbd394EEF83834D",
+  [ChainId.POLYGON_MAINNET]: "0x6051e59eb50BB568415B6C476Fbd394EEF83834D"
 };

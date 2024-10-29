@@ -31,6 +31,14 @@ const nextConfig = bundleAnalyzer({
         destination: "/profile/:username"
       }
     ];
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**"
+      }
+    ]
   }
 });
 
