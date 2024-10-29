@@ -52,12 +52,12 @@ export const leaderboardColumns: ColumnDef<LeaderboradResponse["result"]["byWall
           <div className="flex h-auto w-full items-center justify-start gap-2">
             <Avatar className="size-10 rounded-full object-cover">
               <AvatarFallback>
-                {createAvatarName(user.userDisplayName || user.username || "User")}
+                {createAvatarName(user.userDisplayName || user?.username || "User")}
               </AvatarFallback>
               <AvatarImage src={getAvatarUrl(user.avatarUrl || "")} />
             </Avatar>
-            <Link href={`/${user.username || user.account}`}>
-              {truncate(user.username || user.userDisplayName || user.account, 14)}
+            <Link href={`/${user?.username || user.account}`}>
+              {truncate(user?.username || user.userDisplayName || user.account, 14)}
             </Link>
           </div>
         );

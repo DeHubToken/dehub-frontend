@@ -50,7 +50,7 @@ export function UserNameModal() {
       formData.append("address", account);
       formData.append("sig", sign.sig);
       formData.append("timestamp", sign.timestamp);
-      formData.append("username", data.username);
+      formData.append("username", data?.username);
       const res = await updateProfile(formData);
       if (!res.success) {
         toast.error(res.error);
@@ -84,8 +84,8 @@ export function UserNameModal() {
         <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-1">
             <Input placeholder="username" {...form.register("username")} />
-            {form.formState.errors.username && (
-              <span className="text-red-500">{form.formState.errors.username.message}</span>
+            {form.formState.errors?.username && (
+              <span className="text-red-500">{form.formState.errors?.username.message}</span>
             )}
           </div>
           <Button variant="gradientOne" type="submit" disabled={status === "loading"}>

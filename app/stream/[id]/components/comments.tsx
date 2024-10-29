@@ -180,23 +180,23 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
         {nft.comments.map((comment) => (
           <div key={comment.id} className="flex h-auto w-full items-start justify-start gap-4 p-5">
             <Link
-              href={`/${comment.writor.username || comment.address}`}
+              href={`/${comment.writor?.username || comment.address}`}
               className="size-12 overflow-hidden rounded-full"
             >
               <Avatar>
                 <AvatarFallback className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark">
-                  {createAvatarName(comment.writor.username).toUpperCase()}
+                  {createAvatarName(comment.writor?.username).toUpperCase()}
                 </AvatarFallback>
                 <AvatarImage
                   src={comment.writor.avatarUrl}
-                  alt={comment.writor.username}
+                  alt={comment.writor?.username}
                   className="size-full object-cover"
                 />
               </Avatar>
             </Link>
             <div className="flex h-auto w-full flex-col items-start justify-start gap-2">
               <p className="flex items-center gap-2 text-sm font-medium">
-                {comment.writor.username || comment.address}
+                {comment.writor?.username || comment.address}
                 <span>{new Date(comment.updatedAt).toDateString()}</span>
               </p>
               <p
@@ -217,19 +217,19 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
                       className="flex h-auto w-full items-start justify-start gap-4 rounded-2xl bg-theme-mine-shaft-dark p-5 dark:bg-theme-mine-shaft-dark"
                     >
                       <Link
-                        href={`/${reply.writor.username || reply.address}`}
+                        href={`/${reply.writor?.username || reply.address}`}
                         className="size-12 overflow-hidden rounded-full"
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={reply.writor.avatarUrl}
-                          alt={reply.writor.username}
+                          alt={reply.writor?.username}
                           className="size-full object-cover"
                         />
                       </Link>
                       <div className="flex h-auto w-full flex-col items-start justify-start gap-2">
                         <p className="flex items-center gap-2 text-sm font-medium">
-                          {reply.writor.username || reply.address}
+                          {reply.writor?.username || reply.address}
                           <span>{new Date(reply.updatedAt).toDateString()}</span>
                         </p>
                         <p

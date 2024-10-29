@@ -117,11 +117,11 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
             >
               <div className="flex gap-2">
                 <div className="w-[20%]">
-                  {/* <Avatar name={user.username || user.displayName || ""}  url={user.avatarImageUrl} /> */}
+                  {/* <Avatar name={user?.username || user.displayName || ""}  url={user.avatarImageUrl} /> */}
                   <img src={getAvatarUrl(user.avatarImageUrl)} />
                 </div>
                 <div className="w-[80%]">
-                  <div>{user.username}</div>
+                  <div>{user?.username}</div>
                   <div className="text-gray">{truncateAddress(user.address)}</div>
                 </div>
               </div>

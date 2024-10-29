@@ -18,7 +18,7 @@ export function UsernameBox(props: Props) {
   return (
     <div className="size-auto space-y-2">
       <div className="flex size-auto items-center justify-start gap-6">
-        <h1 className="text-2xl font-semibold">{user.displayName || user.username || "No name"}</h1>
+        <h1 className="text-2xl font-semibold">{user.displayName || user?.username || "No name"}</h1>
         <Image src="/star.svg" alt="verified" width={20} height={20} className="size-8" />
       </div>
       <p className="text-sm">{user.address}</p>

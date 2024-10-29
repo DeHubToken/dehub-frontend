@@ -22,8 +22,8 @@ function InformationPanel(props: Props) {
         <div className="size-auto space-y-2">
           <div className="flex size-auto items-start justify-start gap-4 sm:items-center sm:gap-6">
             <h1 className="w-3/5 text-2xl font-semibold sm:w-auto">
-              {user.displayName || user.username || "No name"}{" "}
-              {user.displayName && <span className="text-sm">({user.username})</span>}
+              {user.displayName || user?.username || "No name"}{" "}
+              {user.displayName && <span className="text-sm">({user?.username})</span>}
             </h1>
             <Image src="/star.svg" alt="verified" width={20} height={20} className="size-8" />
           </div>

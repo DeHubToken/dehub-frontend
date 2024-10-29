@@ -40,7 +40,7 @@ export type TProfile = z.infer<typeof ZProfile>;
 
 export function buildProfileFormData(data: TProfile) {
   const formData = new FormData();
-  formData.append("username", data.username);
+  formData.append("username", data?.username);
   formData.append("displayName", data.fullName);
   formData.append("aboutMe", data.about || "");
   formData.append("email", data.email || "");
@@ -56,7 +56,7 @@ export function buildProfileFormData(data: TProfile) {
 
 export function getFormDefaultValue(user: User): TProfile {
   return {
-    username: user.username || "",
+    username: user?.username || "",
     fullName: user.displayName || "",
     email: user.email || "",
     facebook: user.facebookLink || "",

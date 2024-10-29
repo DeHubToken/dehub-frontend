@@ -33,7 +33,7 @@ export async function Profile(props: Props) {
       </div>
 
       <SocialLinks user={user} />
-      <Avatar name={user.username || user.displayName || ""} url={user.avatarImageUrl} />
+      <Avatar name={user?.username || user.displayName || ""} url={user.avatarImageUrl} />
       <UserInfo user={user} />
       <ImageCropperModal />
       <UserUploads nfts={res.success ? res.data.result : []} isOwner={true} />

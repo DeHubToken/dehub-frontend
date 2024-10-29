@@ -51,19 +51,19 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   // Update metadata based on the fetched user data
   metadata = {
-    title: `${userData.username || userData.displayName} - Profile on Dehub.io`,
-    description: userData.aboutMe || `Explore the profile of ${userData.username || userData.displayName} on Dehub.io.`,
+    title: `${userData?.username || userData.displayName} - Profile on Dehub.io`,
+    description: userData.aboutMe || `Explore the profile of ${userData?.username || userData.displayName} on Dehub.io.`,
     openGraph: {
-      title: `${userData.username || userData.displayName} - Profile on Dehub`,
-      description: `View ${userData.username || userData.displayName}'s profile and collections on Dehub.`,
-      url: `https://dehub.io/profile/${userData.username}`,
+      title: `${userData?.username || userData.displayName} - Profile on Dehub`,
+      description: `View ${userData?.username || userData.displayName}'s profile and collections on Dehub.`,
+      url: `https://dehub.io/profile/${userData?.username}`,
       siteName: "Dehub",
       images: [
         {
           url: imageSrc,
           width: 800,
           height: 600,
-          alt: `${userData.username || userData.displayName}'s Avatar`,
+          alt: `${userData?.username || userData.displayName}'s Avatar`,
         },
       ],
       locale: "en_US",
@@ -82,7 +82,7 @@ export default async function Page(props: Props) {
     return <div>{res.error}</div>;
   }
 
-  if (res.success && !res.data.result.username) {
+  if (res.success && !res.data.result?.username) {
     return (
       <div className="grid h-screen w-full place-items-center">
         <h1 className="text-center text-3xl font-black leading-normal md:text-5xl">

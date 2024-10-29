@@ -56,19 +56,19 @@ export async function Leaderboard() {
               >
                 <div className="flex size-auto items-center justify-start gap-4">
                   <p className="w-4 text-sm font-medium">{index + 1}</p>
-                  <Link href={`/${user.username || user.account}`}>
+                  <Link href={`/${user?.username || user.account}`}>
                     <div className="flex cursor-pointer items-center gap-2">
                       <Avatar className="size-7 rounded-full object-cover">
                         <AvatarFallback className="bg-gray-800">
                           {createAvatarName(
-                            user.username || user.userDisplayName || user.account || "User",
+                            user?.username || user.userDisplayName || user.account || "User",
                             "x"
                           )}
                         </AvatarFallback>
                         <AvatarImage src={getAvatarUrl(user.avatarUrl || "")} />
                       </Avatar>
                       <p className="text-sm font-medium">
-                        {truncate(user.username || user.userDisplayName || user.account, 10)}
+                        {truncate(user?.username || user.userDisplayName || user.account, 10)}
                       </p>
                     </div>
                   </Link>

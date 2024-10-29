@@ -38,8 +38,8 @@ export function AccountInformationForm(props: Props) {
           className="h-12 rounded-full p-4 text-sm"
           {...form.register("username")}
         />
-        {form.formState.errors.username && (
-          <p className="text-sm text-red-500">{form.formState.errors.username.message}</p>
+        {form.formState.errors?.username && (
+          <p className="text-sm text-red-500">{form.formState.errors?.username.message}</p>
         )}
         <Input
           type="text"

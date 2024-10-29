@@ -43,19 +43,19 @@ export async function generateMetadata(): Promise<Metadata> {
       const imageSrc = getAvatarUrl(userData.avatarImageUrl || "");
 
       userMetadata = {
-        title: `${userData.username || userData.displayName} - Profile on Dehub.io`,
-        description: `Explore the profile of ${userData.username || userData.displayName} on Dehub.io.`,
+        title: `${userData?.username || userData.displayName} - Profile on Dehub.io`,
+        description: `Explore the profile of ${userData?.username || userData.displayName} on Dehub.io.`,
         openGraph: {
-          title: `${userData.username || userData.displayName} - Profile on Dehub`,
-          description: `View ${userData.username}'s profile and collections on Dehub.`,
-          url: `https://dehub.io/profile/${userData.username}`,
+          title: `${userData?.username || userData.displayName} - Profile on Dehub`,
+          description: `View ${userData?.username}'s profile and collections on Dehub.`,
+          url: `https://dehub.io/profile/${userData?.username}`,
           siteName: "Dehub",
           images: [
             {
               url: imageSrc || "https://dehub.io/default-avatar.png",
               width: 800,
               height: 600,
-              alt: `${userData.username || userData.displayName}'s Avatar`,
+              alt: `${userData?.username || userData.displayName}'s Avatar`,
             },
           ],
           locale: "en_US",

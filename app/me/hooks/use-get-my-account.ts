@@ -19,7 +19,7 @@ export function useGetMyAccount() {
     if (data.result?.address === account.toLowerCase()) {
       setIsOwner(true);
     } else {
-      router.push(`/${data.result.username}`);
+      router.push(`/${data.result?.username}`);
     }
   }, [account, data, router]);
 

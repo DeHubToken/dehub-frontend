@@ -87,7 +87,7 @@ function WalletButton(props: RenderProps) {
   }, [account, chain, connected, user]);
 
   useEffect(() => {
-    if (connected && user && !user.result.username) {
+    if (connected && user && !user.result?.username) {
       setIsUsernameSet(false);
     }
   }, [connected, setIsUsernameSet, user]);
@@ -190,7 +190,7 @@ function WalletButton(props: RenderProps) {
                       className="size-6 rounded-full"
                     />
                   )}
-                  <span className="pr-6">{user ? user.result.username : account.displayName}</span>
+                  <span className="pr-6">{user ? user.result?.username : account.displayName}</span>
                 </Button>
               </>
             ) : (

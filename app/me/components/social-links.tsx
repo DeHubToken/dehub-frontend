@@ -28,7 +28,7 @@ export function SocialLinks(props: Props) {
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";
 
   const copyUrl = () => {
-    navigator.clipboard.writeText(`https://dehub.io/profile/${user.username}`);
+    navigator.clipboard.writeText(`https://dehub.io/profile/${user?.username}`);
     toast.success("Copied URL");
   };
 
