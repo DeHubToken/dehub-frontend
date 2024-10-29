@@ -6,7 +6,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { LazyImage } from "@/components/image";
 import { Button } from "@/components/ui/button";
 
-import { getCoverUrl, getImageUrl } from "@/web3/utils/url";
+import { getCoverUrl } from "@/web3/utils/url";
 
 import { croppedBannerAtom, initiateCroppingBannerAtom } from "@/stores/atoms/profile";
 

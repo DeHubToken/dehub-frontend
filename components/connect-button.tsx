@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useUser } from "@/hooks/use-user";
 
-import { getImageUrl } from "@/web3/utils/url";
+import { getAvatarUrl, getImageUrl } from "@/web3/utils/url";
 
 import { isUsernameSetAtom } from "@/stores";
 
@@ -177,7 +177,7 @@ function WalletButton(props: RenderProps) {
                     <img
                       src={
                         user.result.avatarImageUrl
-                          ? getImageUrl(user.result.avatarImageUrl, 254, 254)
+                          ? getAvatarUrl(user.result.avatarImageUrl)
                           : "/images/avatar.png"
                       }
                       alt="avatar"

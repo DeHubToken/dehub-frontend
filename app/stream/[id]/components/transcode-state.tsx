@@ -19,7 +19,7 @@ export default function TranscodingVideo(props: { tokenId: string }) {
     return () => {
       socket.off(props.tokenId);
     };
-  }, [props.tokenId, socket])
+  }, [])
   
   return (
     <div className="shimmer relative flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl bg-gray-800 p-3">

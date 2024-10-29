@@ -2,11 +2,10 @@ import "server-only";
 
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import { getAccount } from "@/services/user";
-import { getImageUrl } from "@/web3/utils/url";
-import { safeParseCookie } from "@/libs/cookies";
+import { getAvatarUrl } from "@/web3/utils/url";
 
 import { Profile } from "./components/profile";
 
@@ -48,7 +47,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 
   const userData = res.data.result;
-  const imageSrc = getImageUrl(userData.avatarImageUrl || "/images/default-avatar.png", 256, 256);
+  const imageSrc = getAvatarUrl(userData.avatarImageUrl || "/images/default-avatar.png");
 
   // Update metadata based on the fetched user data
   metadata = {

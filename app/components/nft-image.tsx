@@ -33,7 +33,7 @@ export function ImageWithLoader(props: {
     return () => {
       socket.off(props.tokenId);
     };
-  }, [props.tokenId]);
+  }, []);
 
   return (
     <div className="relative h-full overflow-hidden">
