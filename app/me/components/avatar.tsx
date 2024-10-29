@@ -8,7 +8,7 @@ import { Avatar as _Avatar, AvatarFallback, AvatarImage } from "@/components/ui/
 
 import { createAvatarName } from "@/libs/utils";
 
-import { getImageUrl } from "@/web3/utils/url";
+import { getAvatarUrl } from "@/web3/utils/url";
 
 import {
   croppedAvatarAtom,
@@ -47,7 +47,7 @@ export function Avatar(props: Props) {
   const croppedAvatar = useAtomValue(croppedAvatarAtom);
   const profileMode = useAtomValue(profileModeAtom);
 
-  const imageSrc = croppedAvatar || getImageUrl(url || "", 256, 256);
+  const imageSrc = croppedAvatar || getAvatarUrl(url || "");
 
   return (
     <_Avatar className="relative z-[2] -mt-36 ml-8 size-32 sm:-mt-44 sm:ml-12 sm:size-44">

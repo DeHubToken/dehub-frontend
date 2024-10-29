@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { createAvatarName } from "@/libs/utils";
 
-import { getImageUrl } from "@/web3/utils/url";
+import { getAvatarUrl, getCoverUrl } from "@/web3/utils/url";
 
 type Props = {
   user: User;
@@ -42,7 +42,7 @@ export function Banner(props: Props) {
     <div className="relative h-auto w-full">
       <Avatar className="relative h-auto max-h-[200px] min-h-[200px] w-full overflow-hidden rounded-3xl sm:max-h-[300px] sm:min-h-[300px]">
         <AvatarImageWithLoader
-          src={getImageUrl(user.coverImageUrl || "") || ""}
+          src={getCoverUrl(user.coverImageUrl || "") || ""}
           alt={user.username}
           className="size-full max-h-[300px] min-h-[300px] object-cover"
         />
@@ -59,7 +59,7 @@ export function UserAvater(props: Props) {
   return (
     <Avatar className="relative z-[2] -mt-36 ml-8 size-32 sm:-mt-44 sm:ml-12 sm:size-44">
       <AvatarImageWithLoader
-        src={getImageUrl(user.avatarImageUrl || "", 256, 256) || ""}
+        src={getAvatarUrl(user.avatarImageUrl || "") || ""}
         alt={user.username}
       />
       <AvatarFallback className="border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">

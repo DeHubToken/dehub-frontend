@@ -6,7 +6,7 @@ import { io } from "socket.io-client";
 import { socketUrl } from "@/configs";
 
 export default function TranscodingVideo(props: { tokenId: string }) {
-  const socket = io(socketUrl);
+  const socket = io(socketUrl)
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState("uploading started");
 

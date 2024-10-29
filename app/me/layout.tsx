@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { Metadata } from "next";
 import { safeParseCookie } from "@/libs/cookies";
 import { getAccount } from "@/services/user";
-import { getImageUrl } from "@/web3/utils/url";
+import { getAvatarUrl } from "@/web3/utils/url";
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookie = cookies();
@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
     if (res.success) {
       const userData = res.data.result;
-      const imageSrc = getImageUrl(userData.avatarImageUrl || "", 256, 256);
+      const imageSrc = getAvatarUrl(userData.avatarImageUrl || "");
 
       userMetadata = {
         title: `${userData.username || userData.displayName} - Profile on Dehub.io`,

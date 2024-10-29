@@ -45,7 +45,7 @@ export function TipModal(props: Props) {
 
   const { library, account, chainId } = useActiveWeb3React();
   const multicallContract = useContract(MULTICALL2_ADDRESSES, MULTICALL_ABI);
-  const token: any = supportedTokens.find((e) => e.symbol === "BJ");
+  const token: any = supportedTokens.find((e) => e.symbol === "DHB");
   const [tokenBalance, setTokenBalance] = useState<any>(undefined);
   const [isApproved, setIsApproved] = useState(false);
   const [isRunningTx, setIsRunningTx] = useState(false);

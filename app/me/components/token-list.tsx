@@ -45,7 +45,7 @@ export default function TokensList() {
       <div className="h-48 w-full overflow-y-scroll rounded-3xl bg-gray-200 dark:bg-theme-mine-shaft">
         <ul className="h-auto w-full space-y-4 p-4">
           {avaialbleTokens.map((token, index) => {
-            if (token.symbol === "BJ") {
+            if (token.symbol === "DHB") {
               return (
                 <BJ
                   key={token.chainId + "-" + index}
@@ -62,7 +62,7 @@ export default function TokensList() {
                 className="flex h-auto w-full items-center justify-between"
               >
                 <div className="flex size-auto items-center justify-start gap-2">
-                  <Image
+                  <img
                     src={token.iconUrl}
                     alt={token.label}
                     width={200}
@@ -102,7 +102,7 @@ function BJ(props: { iconUrl: string; label: string; tokenBalance: number }) {
     >
       <div className="flex h-auto w-full items-center justify-between">
         <div className="flex size-auto items-center justify-start gap-2">
-          <Image
+          <img
             src={iconUrl}
             alt={label}
             width={200}

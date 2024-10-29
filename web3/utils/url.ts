@@ -26,3 +26,11 @@ export function getAvatarUrl(url: string) {
 
   return `${env.cdnBaseUrl}avatars/${fileName}`;
 }
+
+export function getCoverUrl(url: string) {
+  if (!url) return "/images/default-avatar.png";
+
+  const fileName = url.split('/').pop(); 
+
+  return `${env.cdnBaseUrl}covers/${fileName}`;
+}

@@ -6,7 +6,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { LazyImage } from "@/components/image";
 import { Button } from "@/components/ui/button";
 
-import { getImageUrl } from "@/web3/utils/url";
+import { getCoverUrl, getImageUrl } from "@/web3/utils/url";
 
 import { croppedBannerAtom, initiateCroppingBannerAtom } from "@/stores/atoms/profile";
 
@@ -87,7 +87,7 @@ function UploadBanner() {
 
 export function Banner(props: Props) {
   const { url } = props;
-  const fullUrl = url ? getImageUrl(url) : "";
+  const fullUrl = url ? getCoverUrl(url) : "";
 
   const croppedBanner = useAtomValue(croppedBannerAtom);
 

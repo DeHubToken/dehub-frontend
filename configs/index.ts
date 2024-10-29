@@ -89,7 +89,7 @@ const devTokens = [
     customAbbreviation: "dhb",
     chainId: 97,
     address: "0x06EdA7889330031a8417f46e4C771C628c0b6418",
-    iconUrl: "/assets/icons/tokens/DHB.png",
+    iconUrl: "/icons/DHB.png",  // Update to relevant image URL if needed
     decimals: 18,
   },
   {
@@ -99,7 +99,7 @@ const devTokens = [
     customAbbreviation: "dhb",
     chainId: 5,
     address: "0x0F0fBE6FB65AaCE87D84f599924f6524b4F8d858",
-    iconUrl: "/assets/icons/tokens/DHB.png",
+    iconUrl: "/icons/DHB.png",  // Update to relevant image URL if needed
     decimals: 18,
   },
   {
@@ -109,7 +109,7 @@ const devTokens = [
     customAbbreviation: "busd",
     chainId: 97,
     address: "0x53D4A05DF7caAf3302184B774855EcBe2a50bD3E",
-    iconUrl: "/assets/icons/tokens/BUSD.png",
+    iconUrl: "https://cryptologos.cc/logos/binance-usd-busd-logo.png?v=024",
     decimals: 18,
   },
   {
@@ -119,10 +119,11 @@ const devTokens = [
     customAbbreviation: "usdc",
     chainId: 97,
     address: "0x4131fd3F1206d48A89410EE610BF1949934e0a72",
-    iconUrl: "/assets/icons/tokens/USDC.png",
+    iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
     decimals: 18,
   },
 ];
+
 const productionTokens = [
   {
     value: "dhb",
@@ -131,7 +132,7 @@ const productionTokens = [
     customAbbreviation: "dhb",
     chainId: 1,
     address: "0x99BB69Ee1BbFC7706C3ebb79b21C5B698fe58EC0",
-    iconUrl: "/assets/icons/tokens/DHB.png",
+    iconUrl: "/icons/DHB.png",  // Update to relevant image URL if needed
     mintBlockNumber: 16428469,
     decimals: 18,
   },
@@ -142,7 +143,7 @@ const productionTokens = [
     customAbbreviation: "dhb",
     chainId: 56,
     address: "0x680D3113caf77B61b510f332D5Ef4cf5b41A761D",
-    iconUrl: "/assets/icons/tokens/DHB.png",
+    iconUrl: "/icons/DHB.png",  // Update to relevant image URL if needed
     mintBlockNumber: 24867920,
     decimals: 18,
   },
@@ -153,7 +154,7 @@ const productionTokens = [
     customAbbreviation: "dhb",
     chainId: 137,
     address: "0x6051e59eb50BB568415B6C476Fbd394EEF83834D",
-    iconUrl: "/assets/icons/tokens/DHB.png",
+    iconUrl: "/icons/DHB.png",  // Update to relevant image URL if needed
     mintBlockNumber: 38197541,
     decimals: 18,
   },
@@ -164,7 +165,7 @@ const productionTokens = [
     customAbbreviation: "usdc",
     chainId: 1,
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    iconUrl: "/assets/icons/tokens/USDC.png",
+    iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
     decimals: 6,
   },
   {
@@ -174,7 +175,7 @@ const productionTokens = [
     customAbbreviation: "usdc",
     chainId: 56,
     address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
-    iconUrl: "/assets/icons/tokens/USDC.png",
+    iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
     decimals: 18,
   },
   {
@@ -184,7 +185,7 @@ const productionTokens = [
     customAbbreviation: "usdc",
     chainId: 137,
     address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-    iconUrl: "/assets/icons/tokens/USDC.png",
+    iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
     decimals: 6,
   },
   {
@@ -194,7 +195,7 @@ const productionTokens = [
     customAbbreviation: "usdt",
     chainId: 1,
     address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-    iconUrl: "/assets/icons/tokens/USDT.png",
+    iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=024",
     decimals: 18,
   },
   {
@@ -204,7 +205,7 @@ const productionTokens = [
     customAbbreviation: "usdt",
     chainId: 56,
     address: "0x55d398326f99059ff775485246999027b3197955",
-    iconUrl: "/assets/icons/tokens/USDT.png",
+    iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=024",
     decimals: 18,
   },
   {
@@ -214,7 +215,7 @@ const productionTokens = [
     customAbbreviation: "usdt",
     chainId: 137,
     address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
-    iconUrl: "/assets/icons/tokens/USDT.png",
+    iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=024",
     decimals: 18,
   },
   {
@@ -224,29 +225,9 @@ const productionTokens = [
     customAbbreviation: "doge",
     chainId: 56,
     address: "0xbA2aE424d960c26247Dd6c32edC70B295c744C43",
-    iconUrl: "https://tokens.pancakeswap.finance/images/0xbA2aE424d960c26247Dd6c32edC70B295c744C43.png",
+    iconUrl: "https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=024",
     decimals: 8,
   },
-  //  {
-  //     value: 'shib',
-  //     label: 'SHIB',
-  //     symbol: 'SHIB',
-  //     customAbbreviation: 'shib',
-  //     chainId: 1,
-  //     address: '0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce',
-  //     iconUrl: 'https://assets.coingecko.com/coins/images/11939/thumb/shiba.png?1622619446',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     value: 'pepe',
-  //     label: 'PEPE',
-  //     symbol: 'PEPE',
-  //     customAbbreviation: 'pepe',
-  //     chainId: 1,
-  //     address: '0x6982508145454ce325ddbe47a25d4ec3d2311933',
-  //     iconUrl: 'https://assets.coingecko.com/coins/images/29850/small/pepe-token.jpeg?1682922725',
-  //     decimals: 18,
-  //   },
   {
     value: "floki",
     label: "FLOKI",
@@ -254,7 +235,7 @@ const productionTokens = [
     customAbbreviation: "floki",
     chainId: 1,
     address: "0xcf0c122c6b73ff809c693db761e7baebe62b6a2e",
-    iconUrl: "/assets/icons/tokens/FLOKI.png",
+    iconUrl: "https://cryptologos.cc/logos/floki-inu-floki-logo.png?v=024",
     decimals: 9,
   },
   {
@@ -264,11 +245,11 @@ const productionTokens = [
     customAbbreviation: "floki",
     chainId: 56,
     address: "0xfb5b838b6cfeedc2873ab27866079ac55363d37e",
-    // iconUrl: 'https://assets.coingecko.com/coins/images/16746/small/PNG_image.png?1643184642',
-    iconUrl: "/assets/icons/tokens/FLOKI.png",
+    iconUrl: "https://cryptologos.cc/logos/floki-inu-floki-logo.png?v=024",
     decimals: 9,
   },
 ];
+
 
 export const supportedTokens = isDevMode ? devTokens : productionTokens;
 
