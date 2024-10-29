@@ -60,7 +60,7 @@ const links = [
     id: "notifications",
     name: "Notifications",
     icon: <Notification />,
-    component: <NotificationModal />
+    component: <NotificationModal key="_notification_modal_cf1gy" />
   },
   {
     id: "messages",
@@ -223,7 +223,6 @@ export function Sidebar(props: Props) {
                   onClick={() => handleClick(link)}
                 >
                   <Link
-                    key={link.id}
                     href={link.url(searchParams.toString())}
                     target={link.external ? "_blank" : "_self"}
                     className="relative"
@@ -242,7 +241,6 @@ export function Sidebar(props: Props) {
                 onClick={() => handleClick(link)}
               >
                 <Link
-                  key={link.id}
                   href={link.url(searchParams.toString())}
                   target={link.external ? "_blank" : "_self"}
                   className="relative"
