@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Minus, Plus } from "lucide-react";
 import { FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
 
@@ -194,30 +195,54 @@ function BenefitList() {
   );
 }
 
-const pound = (
+const DHB = (
   <div className="flex items-center gap-4">
-    <Pound className="size-8 sm:size-10" />
-    <span className="text-lg">GBP</span>
+    <Image src="/icons/tokens/dhb.png" width={24} height={24} alt="dhb" className="size-10" />
+    <span className="text-lg">DHB</span>
   </div>
 );
 
-const bj = (
+const USDT = (
   <div className="flex items-center gap-4">
-    <BJ className="size-8 sm:size-10" />
-    <span className="text-lg">BJ</span>
+    <Image src="/icons/tokens/usdt.png" width={24} height={24} alt="usdt" className="size-10" />
+    <span className="text-lg">USDT</span>
+  </div>
+);
+
+const USDC = (
+  <div className="flex items-center gap-4">
+    <Image src="/icons/tokens/usdc.png" width={24} height={24} alt="usdc" className="size-10" />
+    <span className="text-lg">USDC</span>
+  </div>
+);
+
+const ETH = (
+  <div className="flex items-center gap-4">
+    <div className="grid size-10 place-items-center rounded-full bg-white/5">
+      <Image
+        src="/icons/tokens/eth.png"
+        width={24}
+        height={24}
+        alt="eth"
+        className="size-full p-2"
+      />
+    </div>
+    <span className="text-lg">ETH</span>
   </div>
 );
 
 function CurrencySelect() {
-  const [value, setValue] = useState("GBP");
+  const [value, setValue] = useState("DHB");
   return (
     <Select value={value} onValueChange={setValue}>
       <SelectTrigger className="h-full w-full min-w-32 rounded-none bg-transparent dark:bg-transparent">
-        <SelectValue placeholder={pound} />
+        <SelectValue placeholder={DHB} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="GBP">{pound}</SelectItem>
-        <SelectItem value="BJ">{bj}</SelectItem>
+        <SelectItem value="DHB">{DHB}</SelectItem>
+        <SelectItem value="USDT">{USDT}</SelectItem>
+        <SelectItem value="USDC">{USDC}</SelectItem>
+        <SelectItem value="ETH">{ETH}</SelectItem>
       </SelectContent>
     </Select>
   );
