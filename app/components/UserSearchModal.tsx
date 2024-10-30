@@ -78,6 +78,9 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
         if (tx) addTransaction({ hash: tx, description: "Transfer", confirmations: 3 });
         console.log("Transfer successful!", tx)
         setTransfering(false)
+        setIsModalOpen(false)
+        setSearchQuery("")
+        setRecipientAddress("")
         return;
       } catch (error:any) {
         setTransfering(false)
