@@ -1,7 +1,7 @@
-import { api, apiStream } from "@/libs/api";
+import { api } from "@/libs/api";
 
-export async function minNft(data: FormData, callBack?:any) {
-  return apiStream<{
+export async function minNft(data: FormData) {
+  return api<{
     r: string;
     s: string;
     v: number;
@@ -12,14 +12,9 @@ export async function minNft(data: FormData, callBack?:any) {
   }>("/user_mint", {
     method: "POST",
     body: data,
-    headers: {
-      Accept: 'text/event-stream',
-    },
-  }, callBack);
+  });
 }
 export async function updateNftVisibility(data: any) {
-  console.log(data);
-  
   return api<{
     id: string;
     isHidden: boolean;

@@ -382,12 +382,12 @@ export function UploadForm(props: Props) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result: any = res.data;
 
-        if (result.error) {
+        if (result?.error) {
           setUploading(false);
-          throw new Error(result.error_msg || "NFT mint has failed!");
+          throw new Error(result?.error_msg || "NFT mint has failed!");
         }
 
-        if (data.streamInfo?.[streamInfoKeys.isAddBounty]) {
+        if (data.streamInfo?.[streamInfoKeys?.isAddBounty]) {
           try {
             const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
             const bountyToken = supportedTokens.find(
@@ -427,8 +427,9 @@ export function UploadForm(props: Props) {
             throw new Error("NFT mint has failed!");
           }
         }
-
+        console.log("r", result.r, res)
         if (streamCollectionContract) {
+          console.log("here though")
           const tx = await streamCollectionContract.mint(
             result.createdTokenId,
             result.timestamp,
@@ -438,7 +439,8 @@ export function UploadForm(props: Props) {
             [],
             1000,
             `${result.createdTokenId}.json`
-          );
+          )
+          console.log("here though 2", tx)
 
           if (tx?.hash) {
             addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
