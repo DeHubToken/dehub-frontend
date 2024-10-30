@@ -8,6 +8,7 @@ import { useTransferTokens } from "@/hooks/use-web3";
 import { usersSearch } from "@/services/user";
 
 import { getAvatarUrl } from "@/web3/utils/url";
+import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 
 interface UserSearchModalProps {
   setIsModalOpen: (isOpen: boolean) => void;
@@ -31,7 +32,7 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
   const [recipientAddress, setRecipientAddress] = useState("");
   const [txHash, setTxHash] = useState<string | null>(null);
   const { transferDHBTokens } = useTransferTokens();
-
+  const addTransaction = useAddRecentTransaction()
   // Function to handle user search
   const handleSearch = async (query: string) => {
     console.log(query);
@@ -67,13 +68,14 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
       const tx = await transferDHBTokens(
         recipientAddress,
         ethers.utils.parseUnits(transferAmount, 18)
-      );
-      setTxHash(tx.hash);
+      )
+      console.log(tx)
+      if (tx) addTransaction({ hash: tx, description: "Transfer", confirmations: 3 });
       console.log("Transfer successful!", tx);
     } catch (error) {
       console.error("Error transferring $bj tokens:", error);
     }
-  };
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
@@ -86,7 +88,7 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
           &times; {/* Close Cross */}
         </button>
 
-        <h3 className="mb-4 text-xl font-semibold text-white">Transfer $bj Tokens</h3>
+        <h3 className="mb-4 text-xl font-semibold text-white">Transfer DHB Tokens</h3>
         <input
           type="number"
           placeholder="Amount to transfer"

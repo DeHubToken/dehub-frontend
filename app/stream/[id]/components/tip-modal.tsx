@@ -22,7 +22,6 @@ import { Input } from "@/components/ui/input";
 import { useContract, useERC20Contract, useStreamControllerContract } from "@/hooks/use-web3";
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
-import { sendFundsEvent } from "@/services/events/send-funds";
 
 import MULTICALL_ABI from "@/web3/abis/multicall.json";
 import { STREAM_CONTROLLER_CONTRACT_ADDRESSES } from "@/web3/configs";
