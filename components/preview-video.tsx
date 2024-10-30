@@ -12,11 +12,7 @@ type Props = {
 
 export function PreviewVideo(props: Props) {
   const { nft } = props;
-  const url =
-    nft?.videoUrl?.substr(0, 4) === "http"
-      ? nft.videoUrl
-      : `${new URL(process.env.NEXT_PUBLIC_API_BASE_URL!).origin}/${nft.videoUrl}`;
-
+  const url = `${process.env.NEXT_PUBLIC_CDN_BASE_URL}videos/${nft.tokenId}.mp4`
   return (
     <HoverVideoPlayer
       videoSrc={url}
