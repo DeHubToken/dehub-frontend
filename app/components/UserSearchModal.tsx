@@ -9,6 +9,7 @@ import { usersSearch } from "@/services/user";
 
 import { getAvatarUrl } from "@/web3/utils/url";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
+import { toast } from "sonner";
 
 interface UserSearchModalProps {
   setIsModalOpen: (isOpen: boolean) => void;
@@ -31,6 +32,7 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
   const [transferAmount, setTransferAmount] = useState("");
   const [recipientAddress, setRecipientAddress] = useState("");
   const [txHash, setTxHash] = useState<string | null>(null);
+  const [transfering, setTransfering] = useState<boolean>(false)
   const { transferDHBTokens } = useTransferTokens();
   const addTransaction = useAddRecentTransaction()
   // Function to handle user search
@@ -64,19 +66,34 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
   };
 
   const handleTransfer = async () => {
-    try {
-      const tx = await transferDHBTokens(
-        recipientAddress,
-        ethers.utils.parseUnits(transferAmount, 18)
-      )
-      console.log(tx)
-      if (tx) addTransaction({ hash: tx, description: "Transfer", confirmations: 3 });
-      console.log("Transfer successful!", tx);
-    } catch (error) {
-      console.error("Error transferring $bj tokens:", error);
+    if(transfering) return
+    setTransfering(true)
+    async function _transfer(){
+      try {
+        const tx = await transferDHBTokens(
+          recipientAddress,
+          ethers.utils.parseUnits(transferAmount, 18)
+        )
+        
+        if (tx) addTransaction({ hash: tx, description: "Transfer", confirmations: 3 });
+        console.log("Transfer successful!", tx)
+        setTransfering(false)
+        return;
+      } catch (error:any) {
+        setTransfering(false)
+        console.log(error)
+        throw new Error(`Error transferring $dhb tokens: Do you have sufficient balance?`);
+      }
     }
-  }
 
+
+    toast.promise(_transfer(), {
+      loading: "Transfering...",
+      success: () => "Transfer Confirmed",
+      error: (err) => err.message
+    })
+
+  }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
       <div className="shadow-lg relative w-96 rounded-lg bg-gray-800 p-6">
@@ -134,9 +151,10 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
         {/* Transfer button */}
         <button
           onClick={handleTransfer}
+          disabled={transfering}
           className="mt-4 w-full rounded-lg bg-gray-600 py-2 text-white transition hover:bg-gray-500"
         >
-          Transfer
+          {transfering ? "processing Transfer..." :"Transfer"}
         </button>
 
         {txHash && <p className="mt-2 text-green-400">Transaction Hash: {txHash}</p>}

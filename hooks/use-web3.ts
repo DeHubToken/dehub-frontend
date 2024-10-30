@@ -73,7 +73,7 @@ export const useMulticallContract = () => {
   return useContract(!!account && !!chainId ? MULTICALL2_ADDRESSES : undefined, MULTICALL_ABI, true);
 };
 
-export const useTransferTokens = () => {
+export const useTransferTokens:any = () => {
   const { account, library } = useActiveWeb3React();
   const contract = useDHBTokenContract();
 
