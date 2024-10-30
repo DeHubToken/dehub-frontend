@@ -24,6 +24,7 @@ import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { postComment } from "../actions";
 import { TipModal } from "./tip-modal";
+import { getAvatarUrl } from "@/web3/utils/url";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -188,7 +189,7 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
                   {createAvatarName(comment.writor?.username).toUpperCase()}
                 </AvatarFallback>
                 <AvatarImage
-                  src={comment.writor.avatarUrl}
+                  src={getAvatarUrl(comment.writor?.avatarUrl)}
                   alt={comment.writor?.username}
                   className="size-full object-cover"
                 />
@@ -222,7 +223,7 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={reply.writor.avatarUrl}
+                          src={getAvatarUrl(reply.writor?.avatarUrl)}
                           alt={reply.writor?.username}
                           className="size-full object-cover"
                         />
