@@ -80,7 +80,6 @@ export const userProfileKeys = {
 
 export const defaultTokenId = 2;
 export const NetworkContextName = "NETWORK";
-// export const supportedChainIdstr = '56,250,43114,66,137';
 const devTokens = [
   {
     value: "dhb",
@@ -120,6 +119,26 @@ const devTokens = [
     chainId: 97,
     address: "0x4131fd3F1206d48A89410EE610BF1949934e0a72",
     iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
+    decimals: 18
+  },
+  {
+    value: "eth",
+    label: "ETH",
+    symbol: "ETH",
+    customAbbreviation: "eth",
+    chainId: 56,
+    address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8", // Update to relevant address if needed
+    iconUrl: "https://cryptologos.cc/logos/ethereum-eth-logo.png?v=024",
+    decimals: 18
+  },
+  {
+    value: "bnb",
+    label: "BNB",
+    symbol: "BNB",
+    customAbbreviation: "bnb",
+    chainId: 56,
+    address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d", // Update to relevant address if needed
+    iconUrl: "https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=024",
     decimals: 18
   }
 ];
@@ -247,6 +266,27 @@ const productionTokens = [
     address: "0xfb5b838b6cfeedc2873ab27866079ac55363d37e",
     iconUrl: "https://cryptologos.cc/logos/floki-inu-floki-logo.png?v=024",
     decimals: 9
+  },
+
+  {
+    value: "eth",
+    label: "ETH",
+    symbol: "ETH",
+    customAbbreviation: "eth",
+    chainId: 56,
+    address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8", // Update to relevant address if needed
+    iconUrl: "https://cryptologos.cc/logos/ethereum-eth-logo.png?v=024",
+    decimals: 18
+  },
+  {
+    value: "bnb",
+    label: "BNB",
+    symbol: "BNB",
+    customAbbreviation: "bnb",
+    chainId: 56,
+    address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d", // Update to relevant address if needed
+    iconUrl: "https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=024",
+    decimals: 18
   }
 ];
 
