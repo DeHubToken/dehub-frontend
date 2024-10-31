@@ -5,7 +5,7 @@ import type { LeaderboradResponse } from "@/services/nfts/leaderborad";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ArrowRight, Menu, MessageSquareText, NotepadText } from "lucide-react";
+import { ArrowRight, Menu, MessageSquareText, NotepadText, ThumbsUp } from "lucide-react";
 
 import { LeaderBoardModal } from "@/app/components/leaderboard-modal";
 
@@ -15,6 +15,7 @@ import {
   Documents,
   Exclusive,
   Explore,
+  Game,
   LeaderBoard,
   New,
   Notification,
@@ -137,6 +138,19 @@ const links = [
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "trends");
+      query.delete("q");
+      const qs = query.toString();
+      return `/?${qs}`;
+    },
+    isLink: true
+  },
+  {
+    id: "likedvideos",
+    name: "Liked Videos",
+    icon: <Game />,
+    url: () => {
+      const query = new URLSearchParams();
+      query.set("type", "liked");
       query.delete("q");
       const qs = query.toString();
       return `/?${qs}`;

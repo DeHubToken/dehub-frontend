@@ -5,7 +5,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { MessageSquareText, NotepadText } from "lucide-react";
+import { MessageSquareText, NotepadText, ThumbsUp } from "lucide-react";
 
 import { leaderboardColumns } from "@/app/components/leaderboard-modal";
 
@@ -16,6 +16,7 @@ import {
   Documents,
   Exclusive,
   Explore,
+  Game,
   LeaderBoard,
   New,
   Notification,
@@ -145,6 +146,19 @@ const links = [
       return `/?${qs}`;
     },
     external: false
+  },
+  {
+    id: "likedvideos",
+    name: "Liked Videos",
+    icon: <Game />,
+    url: () => {
+      const query = new URLSearchParams();
+      query.set("type", "liked");
+      query.delete("q");
+      const qs = query.toString();
+      return `/?${qs}`;
+    },
+    isLink: true
   },
   {
     id: "upload",

@@ -73,7 +73,7 @@ export async function getNFTs(params?: SearchParams) {
     const url = `/search_nfts${query}`;
     const res = await api<{ result: GetNFTsResult[] }>(url, {
       method: "GET",
-      // next: { revalidate: 2 * 60, tags: ["nfts"] }
+      next: { revalidate: 2 * 60, tags: ["nfts"] }
     });
     return res;
   }
@@ -82,7 +82,36 @@ export async function getNFTs(params?: SearchParams) {
   const url = `/search_nfts${query}`;
   const res = await api<{ result: GetNFTsResult[] }>(url, {
     method: "GET",
-    // next: { revalidate: 2 * 60, tags: ["nfts"] }
+    next: { revalidate: 2 * 60, tags: ["nfts"] }
+  });
+  return res;
+}
+
+export async function getLikedNFTs(params?: SearchParams) {
+  if (params?.search) {
+    const query = objectToGetParams(
+      removeUndefined({
+        q: params.search,
+        search: params.search,
+        unit: 50,
+        range: params.range,
+        category: params.category,
+        address: params.address
+      })
+    );
+    const url = `/liked_videos${query}`;
+    const res = await api<{ result: GetNFTsResult[] }>(url, {
+      method: "GET",
+      next: { revalidate: 2 * 60, tags: ["liked_nfts"] }
+    });
+    return res;
+  }
+
+  const query = objectToGetParams(params || {});
+  const url = `/liked_videos${query}`;
+  const res = await api<{ result: GetNFTsResult[] }>(url, {
+    method: "GET",
+    next: { revalidate: 2 * 60, tags: ["liked_nfts"] }
   });
   return res;
 }
