@@ -32,6 +32,7 @@ export function StreamItem(props: Props) {
   const { nft, isOwner, ...rest } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [isHidden, setIsHidden] = useState<boolean>(nft.isHidden);
+  const [isHovered, setIsHovered] = useState(false);
 
   const updateVisibility = async (id: string) => {
     try {
@@ -54,17 +55,25 @@ export function StreamItem(props: Props) {
         <Link
           href={`/stream/${nft.tokenId}`}
           className="next__link size-full overflow-hidden rounded-2xl"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          <ImageWithLoader
-            isHidden={isHidden}
-            url={nft.imageUrl}
-            name={nft.name}
-            transcodingStatus={nft.transcodingStatus}
-            status={nft.status}
-            tokenId={nft.tokenId}
-          />
+          {!isHovered && (
+            <ImageWithLoader
+              isHidden={false}
+              url={nft.imageUrl}
+              name={nft.name}
+              transcodingStatus={nft.transcodingStatus}
+              status={nft.status}
+              tokenId={nft.tokenId}
+            />
+          )}
 
-          <PreviewVideo nft={nft} />
+          {isHovered && (
+            <div className="absolute inset-0">
+              <PreviewVideo nft={nft} />
+            </div>
+          )}
         </Link>
 
         {nft?.streamInfo?.isAddBounty && (
