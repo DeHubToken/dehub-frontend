@@ -427,9 +427,9 @@ export function UploadForm(props: Props) {
             throw new Error("NFT mint has failed!");
           }
         }
-        console.log("r", result.r, res)
+        console.log("r", result.r, res);
         if (streamCollectionContract) {
-          console.log("here though")
+          console.log("here though");
           const tx = await streamCollectionContract.mint(
             result.createdTokenId,
             result.timestamp,
@@ -439,8 +439,8 @@ export function UploadForm(props: Props) {
             [],
             1000,
             `${result.createdTokenId}.json`
-          )
-          console.log("here though 2", tx)
+          );
+          console.log("here though 2", tx);
 
           if (tx?.hash) {
             addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
@@ -589,7 +589,7 @@ export function UploadForm(props: Props) {
                 />
               </div>
 
-              <div className="flex h-auto w-full flex-col flex-wrap items-center justify-start gap-4 sm:flex-row sm:gap-2">
+              <div className="flex h-auto w-full flex-col flex-wrap items-center justify-start gap-4 sm:flex-row sm:flex-nowrap sm:gap-2">
                 <p className="min-w-full text-lg leading-none sm:min-w-[20%]">
                   Cover <br className="hidden sm:block" /> Image
                 </p>
@@ -706,10 +706,11 @@ export function UploadForm(props: Props) {
             </div>
           </div>
 
-          <div className="flex h-auto w-full flex-col items-start justify-start gap-8 rounded-2xl border border-gray-300/25 px-6 pb-6 pt-10 sm:p-10">
-            <div className="relative flex h-auto w-full items-start justify-start 2xl:items-center">
-              <p className="min-w-[150px] text-lg lg:min-w-[15%]">Lock Content</p>
-              <div className="flex size-auto flex-wrap items-center justify-start gap-6">
+          <div className="flex h-auto w-full flex-col items-start justify-start gap-8 rounded-2xl border border-gray-300/25 px-4 pb-6 pt-10 sm:gap-8 sm:p-10">
+            <div className="relative flex size-auto flex-wrap items-start justify-start border-b-2 border-gray-300/5 pb-8 sm:flex-nowrap sm:border-b-0 sm:pb-0 2xl:items-center">
+              <p className="w-1/2 text-lg sm:w-[240px] lg:min-w-[15%]">Lock Content</p>
+
+              <div className="flex size-auto w-1/2 items-center justify-end gap-4 sm:w-auto">
                 <Controller
                   name="lockContent"
                   control={form.control}
@@ -718,6 +719,28 @@ export function UploadForm(props: Props) {
                   )}
                 />
 
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon_sm"
+                        className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
+                      >
+                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="w-80">
+                      <p>
+                        Make your upload exclusive for token holders, for amount, simply add the
+                        total amount of token holdings required to view your post!
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+
+              <div className="ml-0 mt-6 flex w-full flex-wrap items-center justify-between gap-0 sm:ml-6 sm:mt-0 sm:size-auto sm:gap-6">
                 <Controller
                   name="token"
                   control={form.control}
@@ -727,14 +750,14 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-10 w-[150px] rounded-full border-2 bg-transparent px-4 text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
                         {tokens.map((token: any, i: number) => (
                           <SelectItem key={i} value={token.value}>
-                            <div className="flex items-center justify-center gap-2">
-                              <Avatar className="size-8">
+                            <div className="flex items-center justify-center gap-1 text-xs sm:gap-2 sm:text-sm">
+                              <Avatar className="size-4 sm:size-8">
                                 <AvatarFallback>{createAvatarName(token.label)}</AvatarFallback>
                                 <AvatarImage src={token.iconUrl} alt={token.label} />
                               </Avatar>
@@ -756,7 +779,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-10 w-[150px] rounded-full border-2 bg-transparent px-4 text-sm">
+                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Network" />
                       </SelectTrigger>
                       <SelectContent>
@@ -775,34 +798,16 @@ export function UploadForm(props: Props) {
                   disabled={!isLockedContent}
                   type="text"
                   placeholder="Amount"
-                  className="h-10 w-[110px] rounded-full border-none px-5 text-sm"
+                  className="h-8 w-[40%] rounded-full border-none px-2 text-xs sm:h-10 sm:w-[110px] sm:px-5 sm:text-sm"
                   {...form.register("lockContentAmount")}
                 />
               </div>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon_sm"
-                      className="absolute right-0 top-0 z-10 sm:relative"
-                    >
-                      <Info className="size-5 text-gray-500 dark:text-white/50" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="w-80">
-                    <p>
-                      Make your upload exclusive for token holders, for amount, simply add the total
-                      amount of token holdings required to view your post!
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </div>
 
-            <div className="relative flex h-auto w-full items-start justify-start 2xl:items-center">
-              <p className="min-w-[150px] text-lg font-semibold lg:min-w-[15%]">Pay Per View</p>
-              <div className="flex size-auto flex-wrap items-center justify-start gap-6">
+            <div className="relative flex size-auto flex-wrap items-start justify-start border-b-2 border-gray-300/5 pb-8 sm:flex-nowrap sm:border-b-0 sm:pb-0 2xl:items-center">
+              <p className="w-1/2 text-lg sm:w-[240px] lg:min-w-[15%]">Pay Per View</p>
+
+              <div className="flex size-auto w-1/2 items-center justify-end gap-4 sm:w-auto">
                 <Controller
                   name="payPerView"
                   control={form.control}
@@ -811,6 +816,29 @@ export function UploadForm(props: Props) {
                   )}
                 />
 
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon_sm"
+                        className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
+                      >
+                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="w-80">
+                      <p>
+                        Charge a one time pay-per-view fee for accessing your upload or live stream.
+                        For amount, enter the one time fee you wish to charge each individual
+                        viewer. Only a 10% fee is charged on each transaction
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+
+              <div className="ml-0 mt-6 flex w-full flex-wrap items-center justify-between gap-0 sm:ml-6 sm:mt-0 sm:size-auto sm:gap-6">
                 <Controller
                   name="chain"
                   control={form.control}
@@ -820,14 +848,14 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-10 w-[150px] rounded-full border-2 bg-transparent px-4 text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
                         {payPerViewTokens.map((token: any) => (
                           <SelectItem key={token.symbol} value={token.value}>
-                            <div className="flex items-center gap-2">
-                              <Avatar className="size-8">
+                            <div className="flex items-center justify-center gap-1 text-xs sm:gap-2 sm:text-sm">
+                              <Avatar className="size-4 sm:size-8">
                                 <AvatarFallback>{createAvatarName(token.label)}</AvatarFallback>
                                 <AvatarImage src={token.iconUrl} alt={token.label} />
                               </Avatar>
@@ -849,7 +877,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-10 w-[150px] rounded-full border-2 bg-transparent px-4 text-sm">
+                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Network" />
                       </SelectTrigger>
                       <SelectContent>
@@ -867,35 +895,16 @@ export function UploadForm(props: Props) {
                   disabled={!isPayPerView}
                   type="text"
                   placeholder="Amount"
-                  className="h-10 w-[110px] rounded-full border-none px-5 text-sm"
+                  className="h-8 w-[40%] rounded-full border-none px-2 text-xs sm:h-10 sm:w-[110px] sm:px-5 sm:text-sm"
                   {...form.register("ppvAmount")}
                 />
               </div>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon_sm"
-                      className="absolute right-0 top-0 hover:bg-transparent sm:relative"
-                    >
-                      <Info className="size-5 text-gray-500 dark:text-white/50" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="w-80">
-                    <p>
-                      Charge a one time pay-per-view fee for accessing your upload or live stream.
-                      For amount, enter the one time fee you wish to charge each individual viewer.
-                      Only a 10% fee is charged on each transaction
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </div>
 
-            <div className="relative flex h-auto w-full items-start justify-start 2xl:items-center">
-              <p className="min-w-[150px] text-lg font-semibold lg:min-w-[15%]">Watch2Earn</p>
-              <div className="flex size-auto flex-wrap items-center justify-start gap-6">
+            <div className="relative flex size-auto flex-wrap items-start justify-start border-b-2 border-gray-300/5 pb-8 sm:flex-nowrap sm:border-b-0 sm:pb-0 2xl:items-center">
+              <p className="w-1/2 text-lg sm:w-[240px] lg:min-w-[15%]">Watch2Earn</p>
+
+              <div className="flex size-auto w-1/2 items-center justify-end gap-4 sm:w-auto">
                 <Controller
                   name="bounty"
                   control={form.control}
@@ -904,19 +913,43 @@ export function UploadForm(props: Props) {
                   )}
                 />
 
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon_sm"
+                        className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
+                      >
+                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="w-80">
+                      <p>
+                        Strap a bounty to your upload and make it watch2earn to reward your fans and
+                        build a community, fast. In the first two boxes, enter the number of viewers
+                        and commentor you wish to reward. The amount box is the amount each comment
+                        or view will earn. Only a 10% fee is charged for this service.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+
+              <div className="ml-0 mt-6 flex w-full flex-wrap items-center justify-between gap-y-3 sm:ml-6 sm:mt-0 sm:size-auto sm:gap-6">
                 <Controller
                   name="bountyChain"
                   control={form.control}
                   render={({ field }) => (
                     <Select disabled={!isBounty} value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="h-10 w-[150px] rounded-full border-2 bg-transparent px-4 text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
                         {supportedTokensForChain.map((token) => (
                           <SelectItem key={token.chainId} value={token.value}>
-                            <div className="flex items-center gap-2">
-                              <Avatar className="size-8">
+                            <div className="flex items-center justify-center gap-1 text-xs sm:gap-2 sm:text-sm">
+                              <Avatar className="size-4 sm:size-8">
                                 <AvatarFallback>{createAvatarName(token.label)}</AvatarFallback>
                                 <AvatarImage src={token.iconUrl} alt={token.label} />
                               </Avatar>
@@ -929,7 +962,10 @@ export function UploadForm(props: Props) {
                   )}
                 />
 
-                <Button disabled className="rounded-full">
+                <Button
+                  disabled
+                  className="h-8 w-[30%] rounded-full px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm"
+                >
                   {supportedNetworks.find((e) => e.chainId === chainId)?.value}
                 </Button>
 
@@ -937,46 +973,26 @@ export function UploadForm(props: Props) {
                   disabled={!isBounty}
                   type="text"
                   placeholder="First X Viewer"
-                  className="h-10 w-[150px] rounded-full border-none px-5 text-sm"
+                  className="h-8 w-[40%] rounded-full border-none px-2 text-xs sm:h-10 sm:w-[110px] sm:px-5 sm:text-sm"
                   {...form.register("bountyFirstXViewer")}
                 />
+
                 <Input
                   disabled={!isBounty}
                   type="text"
                   placeholder="First X Comments"
-                  className="h-10 w-[175px] rounded-full border-none px-5 text-sm"
+                  className="h-8 w-[48.5%] rounded-full border-none px-2 text-xs sm:h-10 sm:w-[110px] sm:px-5 sm:text-sm"
                   {...form.register("bountyFirstXComment")}
                 />
+
                 <Input
                   disabled={!isBounty}
                   type="text"
                   placeholder="Amount"
-                  className="h-10 w-[110px] rounded-full border-none px-5 text-sm"
+                  className="h-8 w-[48.5%] rounded-full border-none px-2 text-xs sm:h-10 sm:w-[110px] sm:px-5 sm:text-sm"
                   {...form.register("bountyAmount")}
                 />
               </div>
-
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon_sm"
-                      className="absolute right-0 top-0 hover:bg-transparent sm:relative"
-                    >
-                      <Info className="size-5 text-gray-500 dark:text-white/50" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="w-80">
-                    <p>
-                      Strap a bounty to your upload and make it watch2earn to reward your fans and
-                      build a community, fast. In the first two boxes, enter the number of viewers
-                      and commentor you wish to reward. The amount box is the amount each comment or
-                      view will earn. Only a 10% fee is charged for this service.
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </div>
 
             <Button

@@ -25,11 +25,11 @@ export function MobileContactList(props: MobileContactListProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <button className="flex size-8 flex-col items-center justify-center rounded-full bg-gray-100 p-2 dark:bg-theme-mine-shaft-dark lg:hidden">
-          <MessageCircle className="size-8 text-gray-400" />
+        <button className="absolute left-4 top-16 z-10 flex size-12 flex-col items-center justify-center rounded-full bg-gray-100 p-2 dark:bg-theme-mine-shaft-dark lg:hidden">
+          <MessageCircle className="size-5 text-gray-400" />
         </button>
       </SheetTrigger>
-      <SheetContent side="left">
+      <SheetContent side="left" className="w-full">
         <SheetHeader className="mb-4">
           <SheetTitle>Messages</SheetTitle>
           <SheetDescription className="sr-only">Your inbox</SheetDescription>

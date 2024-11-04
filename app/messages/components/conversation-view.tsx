@@ -83,7 +83,7 @@ function ChatContainer(props: React.ComponentProps<"div">) {
     <div
       {...rest}
       className={cn(
-        "max-h-[calc(100vh-80px-24px-150px)] min-h-[calc(100%-40px-100px)] overflow-y-scroll",
+        "max-h-[calc(100vh-80px-24px-150px)] min-h-[calc(100%-40px-100px)] overflow-y-scroll pb-10",
         messages.length === 0 && "flex flex-col items-center justify-center",
         rest.className
       )}

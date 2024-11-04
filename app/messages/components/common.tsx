@@ -5,7 +5,7 @@ export function NoConversation() {
   if (message) return null;
   return (
     <div className="grid w-full place-items-center">
-      <span className="text-lg text-gray-400">Select conversation from left</span>
+      <span className="text-center text-lg text-gray-400">Select conversation from left</span>
     </div>
   );
 }
