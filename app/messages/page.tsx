@@ -36,7 +36,7 @@ function Messages() {
         <ContactList />
       </div>
 
-      <div className="flex flex-1 px-6 pt-6">
+      <div className="flex flex-1 px-6 pt-2">
         <NoConversation />
         <ConversationView />
       </div>
