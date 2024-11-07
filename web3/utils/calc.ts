@@ -28,6 +28,13 @@ export const getBadge = (stakingAmount: number) => {
   return curBadge;
 };
 
+export const getBadgeUrl = (stakingAmount: number | string, theme = 'light') =>{
+  const badge  = typeof stakingAmount === 'string' ? stakingAmount : getBadge(stakingAmount as number).name;
+  return theme === "dark" 
+    ? `/icons/badge_white/${badge}.png`
+    : `/icons/badge/${badge}.png`;
+}
+
 export const sleep = async (ms: number) =>
   new Promise((resolve) => {
     setTimeout(resolve, ms);

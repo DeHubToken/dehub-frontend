@@ -16,6 +16,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Toaster as Toast } from "@/components/ui/toaster";
 
 import { AvatarWalletProvider } from "@/contexts/avatar-wallet";
+import { WebsocketProvider } from "@/contexts/websocket";
 
 import { StreamProvider } from "./components/stream-provider";
 
@@ -25,7 +26,7 @@ type Props = { children: React.ReactNode };
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="font-nunito overflow-x-hidden bg-theme-background text-theme-mine-shaft dark:bg-theme-background dark:text-theme-titan-white">
         <Toaster />
         <Toast />
@@ -39,9 +40,11 @@ export default function RootLayout({ children }: Props) {
         >
           <Providers>
             <AvatarWalletProvider>
-              <StreamProvider>
-                <Layout>{children}</Layout>
-              </StreamProvider>
+              <WebsocketProvider>
+                <StreamProvider>
+                  <Layout>{children}</Layout>
+                </StreamProvider>
+              </WebsocketProvider>
             </AvatarWalletProvider>
           </Providers>
         </ThemeProvider>

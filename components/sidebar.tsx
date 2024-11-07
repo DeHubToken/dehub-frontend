@@ -228,7 +228,12 @@ export function Sidebar(props: Props) {
 
           if (link.url) {
             // profile
-            if (link.id === "profile" || link.id === "messages" || link.id === "plans") {
+            if (
+              link.id === "profile" ||
+              link.id === "messages" ||
+              link.id === "plans" ||
+              link.id === "likedvideos"
+            ) {
               if (!account) return null;
               return (
                 <SidebarLinkButton

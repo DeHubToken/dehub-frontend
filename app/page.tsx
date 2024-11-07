@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { Categories } from "./components/categories";
 import { FeedList } from "./components/feed-list";
 import { Leaderboard, LeaderboardSkeleton } from "./components/leaderborad";
+import { LikedFeed } from "./components/liked";
 import { Stream } from "./components/stream";
 import { StreamLoader } from "./components/stream-skeleton";
 
@@ -44,6 +45,15 @@ export default async function Page(props: Props) {
         <div className="mt-8 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
           <Suspense key={key} fallback={<StreamLoader range={range} />}>
             {type === "feed" && <FeedList />}
+            {type === "liked" && (
+              <LikedFeed
+                title={type.toUpperCase()}
+                category={category}
+                range={range}
+                type={type}
+                q={q}
+              />
+            )}
             {type !== "feed" && (
               <Stream
                 title={type.toUpperCase()}

@@ -6,17 +6,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { EyeOpenIcon, HeartFilledIcon } from "@radix-ui/react-icons";
 import { formatDistance } from "date-fns";
+import { useTheme } from "next-themes";
 import { CiMenuKebab } from "react-icons/ci";
 
 import { PreviewVideo } from "@/components/preview-video";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
+import { useWebSockets } from "@/contexts/websocket";
+
 import { truncate } from "@/libs/strings";
 import { createAvatarName } from "@/libs/utils";
 
 import { updateNftVisibility } from "@/services/nfts/mint";
 
+import { getBadge, getBadgeUrl } from "@/web3/utils/calc";
 import { formatNumber } from "@/web3/utils/format";
 import { getAvatarUrl } from "@/web3/utils/url";
 
@@ -33,6 +37,8 @@ export function StreamItem(props: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isHidden, setIsHidden] = useState<boolean>(nft.isHidden);
   const [isHovered, setIsHovered] = useState(false);
+  const { isUserOnline } = useWebSockets();
+  const { theme } = useTheme();
 
   const updateVisibility = async (id: string) => {
     try {
@@ -136,9 +142,19 @@ export function StreamItem(props: Props) {
             <div className="flex w-full items-center justify-between">
               <div className="flex size-auto flex-col items-start justify-start">
                 <p className="text-[11px] font-bold">{truncate(nft.name, 26)}</p>
-                <Link href={`/${nft.mintername || nft.minter}`} className="text-[11px]">
-                  {truncate(nft.minterDisplayName || nft.mintername || nft.minter, 26)}
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link href={`/${nft.mintername || nft.minter}`} className="text-[11px]">
+                    {truncate(nft.minterDisplayName || nft.mintername || nft.minter, 26)}
+                  </Link>
+                  <div className="relative h-4 w-4">
+                    <Image
+                      src={getBadgeUrl(nft.minterStaked, theme)}
+                      alt="User Badge"
+                      layout="fill"
+                      className={`object-contain ${!isUserOnline(nft.minter) ? "" : ""}`} // TODO: Add glow effect for when they are online
+                    />
+                  </div>
+                </div>
               </div>
               {isOwner ? (
                 <div className="">

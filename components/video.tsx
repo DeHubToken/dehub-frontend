@@ -122,7 +122,7 @@ export function Video(props: { options: Options; onReady?: (player: Player) => v
         />
         {/* Played Indicator */}
         <div
-          className="absolute left-0 top-0 h-full bg-theme-orange-500"
+          className="bg-theme-orange-500 absolute left-0 top-0 h-full"
           style={{ width: `${playedPercentage}%` }}
         />
       </div>

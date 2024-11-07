@@ -9,7 +9,8 @@ import { getNFTs } from "@/services/nfts/trending";
 
 import { ProfileAction } from "./profile-action";
 import { Banner, UserAvater } from "./profile-images";
-import { UserDescription, UserFollowingInfo, UsernameBox } from "./user-info";
+import { UserDescription, UserFollowingInfo } from "./user-info";
+import { UsernameBox } from "./username-box";
 
 type Props = {
   username: string;
