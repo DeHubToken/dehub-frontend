@@ -1,12 +1,8 @@
-import { safeParseCookie } from "@/libs/cookies";
-import { getNFT } from "@/services/nfts";
-import { getImageUrl } from "@/web3/utils/url";
 import { Metadata } from "next";
-import { cookies } from "next/headers";
 
 type Props = {
   children: React.ReactNode;
-  params: { id: string};
+  params: { id: string };
 };
 
 // Function to dynamically generate metadata based on NFT data
