@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import { createContext, useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
 
@@ -12,6 +13,7 @@ export const useWebSockets = () => useContext(SocketsContext);
 
 export const SERVER_URL = env.socketUrl;
 
+// @ts-ignore
 export const WebsocketProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const { account } = useActiveWeb3React();
@@ -45,6 +47,7 @@ export const WebsocketProvider = ({ children }) => {
 
   const contextValue = {
     onlineUsers,
+    // @ts-ignore
     isUserOnline: (address: string) => onlineUsers.includes(address?.toLowerCase())
   };
 
