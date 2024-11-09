@@ -142,11 +142,11 @@ export function StreamItem(props: Props) {
             <div className="flex w-full items-center justify-between">
               <div className="flex size-auto flex-col items-start justify-start">
                 <p className="text-[11px] font-bold">{truncate(nft.name, 26)}</p>
-                <div className="flex items-center gap-2">
+                <div className="flex items-start gap-1">
                   <Link href={`/${nft.mintername || nft.minter}`} className="text-[11px]">
                     {truncate(nft.minterDisplayName || nft.mintername || nft.minter, 26)}
                   </Link>
-                  <div className="relative h-4 w-4">
+                  <div className="relative h-3 w-3">
                     <Image
                       src={getBadgeUrl(nft.minterStaked, theme)}
                       alt="User Badge"
