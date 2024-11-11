@@ -40,23 +40,37 @@ export function StreamRangeFilter(props: Props) {
   };
 
   return (
-    <Select defaultValue={range} onValueChange={onValueChange} {...rest}>
-      <SelectTrigger className="w-36 rounded-full text-theme-mine-shaft dark:text-theme-titan-white">
-        <SelectValue placeholder="Filter" />
-      </SelectTrigger>
-      <SelectContent
-        ref={(ref) => {
-          ref?.addEventListener("touchend", (e) => {
-            e.preventDefault();
-          });
-        }}
-      >
-        <SelectItem value="day">1 Day</SelectItem>
-        <SelectItem value="week">1 Week</SelectItem>
-        <SelectItem value="month">1 Month</SelectItem>
-        <SelectItem value="year">1 Year</SelectItem>
-        {range && <SelectItem value="All">Clear</SelectItem>}
-      </SelectContent>
-    </Select>
+    <select
+      className="w-36 rounded-full text-theme-mine-shaft dark:bg-theme-mine-shaft dark:text-theme-titan-white"
+      value={range}
+      onChange={(e) => {
+        onValueChange(e.target.value);
+      }}
+    >
+      <option value="">Filter</option>
+      <option value="day">1 Day</option>
+      <option value="week">1 Week</option>
+      <option value="month">1 Month</option>
+      <option value="year">1 Year</option>
+      {range && <option value="All">Clear</option>}
+    </select>
+    // <Select defaultValue={range} onValueChange={onValueChange} {...rest}>
+    //   <SelectTrigger className="w-36 rounded-full text-theme-mine-shaft dark:text-theme-titan-white">
+    //     <SelectValue placeholder="Filter" />
+    //   </SelectTrigger>
+    //   <SelectContent
+    //     ref={(ref) => {
+    //       ref?.addEventListener("touchend", (e) => {
+    //         e.preventDefault();
+    //       });
+    //     }}
+    //   >
+    //     <SelectItem value="day">1 Day</SelectItem>
+    //     <SelectItem value="week">1 Week</SelectItem>
+    //     <SelectItem value="month">1 Month</SelectItem>
+    //     <SelectItem value="year">1 Year</SelectItem>
+    //     {range && <SelectItem value="All">Clear</SelectItem>}
+    //   </SelectContent>
+    // </Select>
   );
 }
