@@ -5,7 +5,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { MessageSquareText, NotepadText, ThumbsUp } from "lucide-react";
+import { MessageSquareText, Newspaper, NotepadText, ThumbsUp } from "lucide-react";
 
 import { leaderboardColumns } from "@/app/components/leaderboard-modal";
 
@@ -78,7 +78,7 @@ const links = [
   {
     id: "feed",
     name: "Feed",
-    icon: <Feed />,
+    icon: <Newspaper className="size-4" />,
     url: () => "/?type=feed",
     external: false
   },

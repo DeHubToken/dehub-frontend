@@ -5,7 +5,14 @@ import type { LeaderboradResponse } from "@/services/nfts/leaderborad";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ArrowRight, Menu, MessageSquareText, NotepadText, ThumbsUp } from "lucide-react";
+import {
+  ArrowRight,
+  Menu,
+  MessageSquareText,
+  Newspaper,
+  NotepadText,
+  ThumbsUp
+} from "lucide-react";
 
 import { LeaderBoardModal } from "@/app/components/leaderboard-modal";
 
@@ -75,7 +82,7 @@ const links = [
   {
     id: "feed",
     name: "Feed",
-    icon: <Feed />,
+    icon: <Newspaper className="size-4" />,
     url: () => "/?type=feed",
     isLink: true
   },
