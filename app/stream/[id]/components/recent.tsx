@@ -1,14 +1,14 @@
+import { cookies } from "next/headers";
 import Link from "next/link";
 
 import { LazyImage } from "@/components/image";
 
+import { safeParseCookie } from "@/libs/cookies";
 import { truncate } from "@/libs/strings";
 
 import { getNFTs } from "@/services/nfts/trending";
 
 import { getImageUrl } from "@/web3/utils/url";
-import { safeParseCookie } from "@/libs/cookies";
-import { cookies } from "next/headers";
 
 /* ================================================================================================= */
 
@@ -16,7 +16,7 @@ export async function RecentPanel() {
   const cookie = cookies();
   const userCookie = cookie.get("user_information");
   const user = safeParseCookie<{ address: string }>(userCookie?.value);
-  const response = await getNFTs({ sortMode: "new", address: user?.address });
+  const response = await getNFTs({ sortMode: "trends", address: user?.address });
 
   if (!response.success) {
     return (
