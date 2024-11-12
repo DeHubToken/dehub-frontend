@@ -54,7 +54,7 @@ export default async function Page(props: Props) {
                 q={q}
               />
             )}
-            {type !== "feed" && (
+            {type !== "feed" && type !== "liked" && (
               <Stream
                 title={type.toUpperCase()}
                 category={category}

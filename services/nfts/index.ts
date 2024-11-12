@@ -86,9 +86,6 @@ export async function voteNFT(props: {
   const { account, streamTokenId, vote, sig, timestamp } = props;
   const strUrl = `/request_vote?address=${account?.toLowerCase()}&sig=${sig}&timestamp=${timestamp}&streamTokenId=${streamTokenId}&vote=${vote}`;
   const res = await api<{ error?: string }>(strUrl);
-  if (!res.success) {
-    throw new Error(res.error);
-  }
   return res;
 }
 

@@ -20,7 +20,7 @@ export function LikeButton(
   props: LikeButtonProps & { tokenId: number; vote: boolean; votes: number }
 ) {
   const { children, tokenId, vote, votes, ...rest } = props;
- 
+
   const { account, library } = useActiveWeb3React();
   const [total, setTotal] = useState(votes);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -42,13 +42,15 @@ export function LikeButton(
         timestamp: signData.timestamp
       });
       if (!res.success) {
-        toast.error(res.error);
+        // @ts-expect-error
+        toast.error(res.error || res.message);
         setStatus("error");
         return;
       }
 
       if (res.success && res.error) {
-        toast.error(res.error);
+        // @ts-expect-error
+        toast.error(res.error || res.message);
         setStatus("error");
         return;
       }

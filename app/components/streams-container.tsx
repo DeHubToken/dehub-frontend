@@ -19,17 +19,27 @@ type Props = {
   type: string;
   q?: string;
   address?: string;
+  isInfiniteScroll?: boolean;
 };
 
 const containerClass =
   "flex h-auto w-full flex-wrap items-stretch justify-start gap-5 xl:gap-x-[1.25%] xl:gap-y-4 3xl:gap-3";
 
 export function StreamsContainer(props: Props) {
-  const { data: initialData, isSearch, category, range, type, q, address } = props;
+  const {
+    data: initialData,
+    isSearch,
+    category,
+    range,
+    type,
+    q,
+    address,
+    isInfiniteScroll = true
+  } = props;
 
   const [data, setData] = useState(initialData);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(isInfiniteScroll);
   const { isPending } = useStreamProvider("FeedsList");
 
   async function fetchMore() {
@@ -63,7 +73,7 @@ export function StreamsContainer(props: Props) {
 
   return (
     <InfiniteScroll
-      next={fetchMore}
+      next={isInfiniteScroll ? fetchMore : () => {}}
       hasMore={hasMore}
       loader={<Skeleton total={4} />}
       dataLength={data.length || 0}

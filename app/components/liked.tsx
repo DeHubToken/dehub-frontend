@@ -1,8 +1,11 @@
-import "server-only";
+"use client";
 
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
+import { useEffect, useState } from "react";
 
 import { Error } from "@/components/error.server";
+
+import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { safeParseCookie } from "@/libs/cookies";
 
@@ -21,23 +24,27 @@ type FeedProps = {
 
 export async function LikedFeed(props: FeedProps) {
   const { category, range, type, q } = props;
-  const cookie = cookies();
-  const userCookie = cookie.get("user_information");
-  const user = safeParseCookie<{ address: string }>(userCookie?.value);
+  const { account, library } = useActiveWeb3React();
+  const [res, setRes] = useState<any>(null);
 
-  const res = await getLikedNFTs({
-    sortMode: type,
-    unit: q ? 50 : 20,
-    category: category === "All" ? null : category,
-    range,
-    search: q,
-    address: user?.address
-  });
+  useEffect(() => {
+    (async () => {
+      const res = await getLikedNFTs(
+        {
+          page: 1,
+          address: account
+        },
+        library
+      );
+      setRes(res);
+    })();
+  }, [account, library]);
 
-  if (!res.success) {
+  console.log("Res", res);
+  if (!res?.success) {
     return (
       <div className="flex min-h-[calc(100vh-48px-72px-32px-80px)] w-full items-center justify-center">
-        <Error error={res.error} title="Oops! Can not load feeds" />
+        <Error error={res?.error} title="Oops! Can not load feeds" />
       </div>
     );
   }
@@ -53,13 +60,14 @@ export async function LikedFeed(props: FeedProps) {
 
       <div className="mt-10 h-auto w-full">
         <StreamsContainer
-          address={user?.address}
+          address={account}
           isSearch={q ? true : false}
-          data={res.data.result}
+          data={res?.data?.result}
           type={type}
           range={range}
           q={q}
           category={category}
+          isInfiniteScroll={false}
         />
       </div>
     </div>
@@ -71,7 +79,6 @@ function Title(props: { title: string }) {
   if (title === "liked") {
     return <h1 className="text-4xl font-semibold">Liked Videos</h1>;
   }
-
 
   return <h1 className="text-4xl font-semibold">{title}</h1>;
 }

@@ -4,8 +4,8 @@ export type ApiResponse<T> = { success: true; data: T } | { success: false; erro
 
 function getErrorFromUnknown(error: unknown) {
   const err = error as Record<string, unknown>;
-  if ("error" in err) {
-    return err.error as string;
+  if ("error" in err || "message" in err) {
+    return (err.error || err.message) as string;
   }
 
   if (error instanceof Error) {
@@ -31,7 +31,7 @@ export async function api<T>(
 
     if (result.headers.get("content-type")?.includes("application/json")) {
       const body = await result.json();
-      if (!result.ok) {
+      if (!result.ok && !body.success && !body.result ) {
         return { success: false, error: getErrorFromUnknown(body) };
       }
 
