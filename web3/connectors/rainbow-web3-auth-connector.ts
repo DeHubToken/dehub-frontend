@@ -5,7 +5,7 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { OpenloginAdapter, OpenloginAdapterOptions } from "@web3auth/openlogin-adapter";
 
 const name = "Google";
-const iconUrl = "/assets/icons/google.svg";
+const iconUrl = "/icons/google.svg";
 
 const getChainConfig = (chains:any) => {
   return {
@@ -29,10 +29,10 @@ const createWeb3AuthNoModal = (chainConfig:any) => {
 };
 
 const adapterSettings: OpenloginAdapterOptions["adapterSettings"] = {
-  network: "cyan",
+  network: "sapphire_mainnet",
   uxMode: "popup",
   whiteLabel: {
-    appName: "Dehub",
+    appName: "Dehub.io",
     defaultLanguage: "en",
     mode: "dark",
   },
@@ -95,7 +95,7 @@ export const rainbowWeb3AuthTwitterConnector = ({ chains }:any) => {
   return {
     id: "web3auth-twitter",
     name: "Twitter",
-    iconUrl: "/assets/icons/x.png",
+    iconUrl: "/icons/x.png",
     iconBackground: "#ffffff00",
     createConnector: () => {
       return { connector };
