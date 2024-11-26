@@ -6,7 +6,7 @@ import io from "socket.io-client";
 
 import { LazyImage } from "@/components/image";
 
-import { getImageUrl } from "@/web3/utils/url";
+import { getImageUrl, getImageUrlApi } from "@/web3/utils/url";
 
 import { socketUrl } from "@/configs";
 
@@ -38,7 +38,7 @@ export function ImageWithLoader(props: {
   return (
     <div className="relative h-full overflow-hidden">
       <LazyImage
-        src={getImageUrl(props.url, 256, 256)}
+        src={getImageUrlApi(props.tokenId?.toString(), 256, 256)}
         alt={props.name || "Upload"}
         className={`absolute inset-0 size-full object-cover transition duration-300 ${
           props.isHidden ? "blur-md" : ""
@@ -70,7 +70,7 @@ export function ImageWithLoader(props: {
           </div>
         </div>
       ) : loading ? (
-        <div className="bg-theme-mine-shaft-dark absolute z-[2] size-full">
+        <div className="absolute z-[2] size-full bg-theme-mine-shaft-dark">
           <div className="shimmer size-full" />
         </div>
       ) : props?.status?.toLowerCase() !== "minted" ? (
