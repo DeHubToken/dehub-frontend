@@ -44,7 +44,15 @@ export default async function Page(props: Props) {
 
         <div className="mt-8 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
           <Suspense key={key} fallback={<StreamLoader range={range} />}>
-            {type === "feed" && <FeedList />}
+            {type === "feed" && (
+              <FeedList
+                title={type.toUpperCase()}
+                category={category}
+                range={range}
+                type={type}
+                q={q}
+              />
+            )}
             {type === "liked" && (
               <LikedFeed
                 title={type.toUpperCase()}
