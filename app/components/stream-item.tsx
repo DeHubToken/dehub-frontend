@@ -39,7 +39,7 @@ export function StreamItem(props: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const { isUserOnline } = useWebSockets();
   const { theme } = useTheme();
-
+console.log("nft1111",nft)
   const updateVisibility = async (id: string) => {
     try {
       const res = await updateNftVisibility({ id: nft.tokenId, isHidden: !isHidden });
@@ -149,7 +149,7 @@ export function StreamItem(props: Props) {
                   <div className="relative h-3 w-3">
                     <Image
                       src={getBadgeUrl(nft.minterStaked, theme)}
-                      alt="User Badge"
+                      alt="User Badge" 
                       layout="fill"
                       className={`object-contain ${!isUserOnline(nft.minter) ? "" : ""}`} // TODO: Add glow effect for when they are online
                     />

@@ -37,7 +37,7 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
             <Image
               src={getBadgeUrl(nft.minterStaked, theme)}
               alt="User Badge"
-              layout="fill"
+              layout="fill" 
               className={`rounded-full object-contain ${
                 isUserOnline(nft.minter)
                   ? "" // TODO: Add glow effect for when they are online

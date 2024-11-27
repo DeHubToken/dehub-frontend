@@ -167,6 +167,12 @@ const links = [
     url: () => "/upload"
   },
   {
+    id: "upload-feed",
+    name: "Upload Feed",
+    icon: <Upload />,
+    url: () => "/upload-feed"
+  },
+  {
     id: "explore",
     name: "Explore",
     icon: <Explore />,

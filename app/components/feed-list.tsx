@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
+import { HeartFilledIcon } from "@radix-ui/react-icons";
 
 import {
   FeedBookmarkButton,
@@ -12,6 +13,7 @@ import {
   FeedHeader,
   FeedImageGallary,
   FeedLikeButton,
+  FeedLikedButton,
   FeedProfile,
   FeedReplyDialog,
   FeedSettingsButton,
@@ -21,8 +23,11 @@ import {
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { getFeedNFTs } from "@/services/feeds";
+import { getNFT } from "@/services/nfts";
 
-import { getImageUrlApi, getImageUrlApiSimple } from "@/web3/utils/url";
+import {  getImageUrlApiSimple } from "@/web3/utils/url";
+
+import { LikeButton } from "../feeds/[id]/components/stream-actions";
 
 const fakeData = Array.from({ length: 5 }).map((_, index) => ({
   id: faker.string.uuid() + index,
@@ -59,17 +64,15 @@ type FeedProps = {
 };
 
 export function FeedList(props: FeedProps) {
-  const [selectedFeed, setSelectedFeed] = useState<{ open: boolean; tokenId: string }>({
-    open: false,
-    tokenId: ""
-  }); 
+  const [selectedFeed, setSelectedFeed] = useState<{ open: boolean; tokenId?: number }>({
+    open: false
+  });
 
   const { category, range, type, q } = props;
   const { account, library } = useActiveWeb3React();
   const [feeds, setFeeds] = useState([]);
-  const [feed,setFeed]=useState<any>(null);
-
-
+  const [feed, setFeed] = useState<any>(null);
+  console.log("eeeeeee", feeds);
   useEffect(() => {
     (async () => {
       const res: any = await getFeedNFTs({
@@ -87,10 +90,16 @@ export function FeedList(props: FeedProps) {
     })();
   }, [account, library]);
 
-
-  useEffect(()=>{
-
-  },[selectedFeed])
+  useEffect(() => {
+    (async () => {
+      if (!selectedFeed.tokenId) {
+        return;
+      }
+      const response: any = await getNFT(selectedFeed?.tokenId, account as string);
+      console.log("response", response);
+      if (response.data.result) setFeed(response.data.result);
+    })();
+  }, [selectedFeed]);
   return (
     <div className="flex w-full flex-col items-center gap-3">
       {feeds.map((feed: any) => (
@@ -111,46 +120,64 @@ export function FeedList(props: FeedProps) {
             }))}
           />
           <FeedFooter>
-            <FeedLikeButton>{feed.like}</FeedLikeButton>
-            <FeedCommentButton onClick={() => setSelectedFeed({ open: true, tokenId: feed.tokenId })}>
+            <LikeButton
+              className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+              vote
+              tokenId={feed.tokenId}
+              votes={feed.totalVotes?.for || 0}
+              size="sm"
+            >
+              <HeartFilledIcon className="size-3 fill-red-400" />
+            </LikeButton>
+            {/* <LikeButton vote= tokenId={feed.tokenId} votes={}/> */}
+            <FeedCommentButton
+              onClick={() => setSelectedFeed({ open: true, tokenId: feed.tokenId })}
+            >
               {feed.comment}
             </FeedCommentButton>
             <FeedBookmarkButton />
-            <FeedShareButton />
+            <FeedShareButton tokenId={feed?.tokenId} />
           </FeedFooter>
         </FeedCard>
       ))}
 
       <FeedReplyDialog
         open={selectedFeed.open}
-        onOpenChange={(open) => setSelectedFeed({ open: false, tokenId: "" })}
-        comments={[]}
-        // comments={
-        //   feed?.comments.map((c:any) => ({
-        //     id: c.id, 
-        //     time:new Date(c.createdAt).toString(),
-        //     name: c.name,
-        //     content: c.content,
-        //     avatar: c.avatar
-        //   })) || []
-        // }
+        onOpenChange={(open) => setSelectedFeed({ open: false })}
+        // comments={[]}
+        comments={
+          feed?.comments.map((c: any) => ({
+            id: c.id,
+            time: new Date(c.createdAt).toString(),
+            name: c?.writor?.username,
+            content: c.content,
+            avatar: c.avatar
+          })) || []
+        }
       >
         <FeedCard>
           <FeedHeader>
             <FeedProfile
               name={feed?.mintername || ""}
               avatar={feed?.avatar || ""}
-              time={feed?.createdAt.toLocaleDateString() || ""}
+              time={new Date(feed?.createdAt).toString()}
             />
             <FeedSettingsButton />
           </FeedHeader>
-          <FeedContent name={feed?.name} description={feed?.description}/>
-          <FeedImageGallary images={feed?.imageUrls.map((i:string) => ({ url: i, alt: feed?.url })) || []} />
+          <FeedContent name={feed?.name} description={feed?.description} />
+          <FeedImageGallary
+            images={
+              feed?.imageUrls.map((i: string) => ({
+                url: getImageUrlApiSimple(i),
+                alt: feed?.url
+              })) || []
+            }
+          />
           <FeedFooter>
-            <FeedLikeButton>{feed?.like || 0}</FeedLikeButton>
+            <FeedLikeButton>{feed?.totalVotes?.for || 0}</FeedLikeButton>
             <FeedCommentButton>{feed?.comment || 0}</FeedCommentButton>
             <FeedBookmarkButton />
-            <FeedShareButton />
+            <FeedShareButton tokenId={feed?.tokenId} />
           </FeedFooter>
         </FeedCard>
       </FeedReplyDialog>

@@ -1,13 +1,15 @@
 import Image from "next/image";
 import ImagePlacehoder from "@/assets/image-placeholder.png";
 
-export function FeedContent() {
+interface Props {
+  description: string;
+  name: string;
+}
+export function FeedContent({ name, description }: Props) {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-theme-monochrome-300 text-base">
-        Post Description here, text will be shown here, this is just a dummy description that is
-        being used here to show scale ability.{" "}
-      </p>
+      <p>{name}</p>
+      <p className="text-theme-monochrome-300 text-base max-h-40 overflow-scroll">{description}</p>
     </div>
   );
 }

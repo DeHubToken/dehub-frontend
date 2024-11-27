@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { cn } from "@/libs/utils";
+import Image from "next/image";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -30,9 +31,11 @@ export function SubscriptionModal() {
         <DialogDescription className="sr-only">Subscribe to my premium plans</DialogDescription>
         <DialogHeader className="flex flex-row gap-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?q=80&w=1856&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Avatar"
+          height={200}
+          width={200}
             className="size-16 rounded-full object-cover"
           />
           <div className="flex flex-col">
@@ -107,7 +110,7 @@ export function SubscriptionModal() {
   );
 }
 
-function SubscriptionCard(props: React.HTMLAttributes<HTMLDivElement>) {
+export function SubscriptionCard(props: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       {...props}
@@ -118,7 +121,7 @@ function SubscriptionCard(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 }
 
-function SubscriptionCardHeader(props: React.HTMLAttributes<HTMLDivElement>) {
+export function SubscriptionCardHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       {...props}
@@ -132,15 +135,15 @@ function SubscriptionCardHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 }
 
-function SubscriptionCardTitle(props: React.HTMLAttributes<HTMLHeadingElement>) {
+export function SubscriptionCardTitle(props: React.HTMLAttributes<HTMLHeadingElement>) {
   return <h1 {...props} className={cn("text-lg font-bold", props.className)} />;
 }
 
-function SubscriptionCardDescription(props: React.HTMLAttributes<HTMLParagraphElement>) {
+export function SubscriptionCardDescription(props: React.HTMLAttributes<HTMLParagraphElement>) {
   return <p {...props} className={cn("text-theme-monochrome-300 text-xs", props.className)} />;
 }
 
-function SubscriptionPricing(
+export function SubscriptionPricing(
   props: React.HTMLAttributes<HTMLDivElement> & { price: string; tier: string }
 ) {
   const { price, tier, ...rest } = props;
@@ -155,7 +158,7 @@ function SubscriptionPricing(
   );
 }
 
-function SubscriptionBenefits(props: { benefits: string[] }) {
+export function SubscriptionBenefits(props: { benefits: string[] }) {
   const { benefits } = props;
   return (
     <ul className="flex flex-col gap-3">

@@ -70,6 +70,7 @@ import {
 } from "@/configs";
 
 import { invalidateUpload } from "../action";
+import Image from "next/image";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -623,10 +624,12 @@ export function UploadForm(props: Props) {
 
                     {thumbnailPreview && (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         className="size-full rounded-3xl object-cover"
                         src={thumbnailPreview}
                         alt="Thumbnail Preview"
+                        height={300}
+                        width={300}
                       />
                     )}
                   </div>

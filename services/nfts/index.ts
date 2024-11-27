@@ -31,6 +31,8 @@ export type NFT = {
   minterStaked: number;
   mintername: string;
   isHidden: boolean;
+  imageUrls?:string[];
+  postType:string;
   isLiked: boolean;
   name: string;
   status: string;
@@ -40,7 +42,7 @@ export type NFT = {
   transcodingStatus: string;
   videoDuration: number;
   videoExt: string;
-  videoInfo: {
+  videoInfo?: {
     bitrate: number;
     channelLayout: string;
     h: number;
@@ -48,7 +50,7 @@ export type NFT = {
     size: number;
     w: number;
   };
-  videoUrl: string;
+  videoUrl?: string;
   views: number;
   lockedBounty?: {
     viewer: string;

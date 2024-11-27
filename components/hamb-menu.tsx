@@ -242,11 +242,11 @@ export function HambMenu() {
         >
           <div className="h-screen w-full overflow-y-scroll py-10">
             <div className="flex size-full flex-col items-start justify-start">
-              {links.map((link) => {
+              {links.map((link,key) => {
                 if (link.id === "notifications") {
                   return (
                     <NotificationMobileModal
-                      key={link.id}
+                      key={key}
                       className="w-full justify-start gap-4 rounded-none border-b border-theme-mine-shaft-dark p-8 dark:border-theme-mine-shaft"
                     />
                   );
@@ -257,7 +257,7 @@ export function HambMenu() {
                 return (
                   <Button
                     asChild
-                    key={link.id}
+                    key={key}
                     variant="ghost"
                     className="w-full justify-start gap-4 rounded-none border-b border-theme-mine-shaft-dark p-8 dark:border-theme-mine-shaft"
                     onClick={toggleMenu}
@@ -266,7 +266,7 @@ export function HambMenu() {
                       href={
                         typeof link.url === "string" ? link.url : link.url(searchParams.toString())
                       }
-                      key={link.id}
+                      key={key}
                       className="gap-1"
                     >
                       <span>{link.icon}</span>

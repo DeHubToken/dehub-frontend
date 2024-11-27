@@ -15,6 +15,7 @@ import { useUser } from "@/hooks/use-user";
 import { getAvatarUrl, getImageUrl } from "@/web3/utils/url";
 
 import { isUsernameSetAtom } from "@/stores";
+import Image from "next/image";
 
 type Props = React.ComponentProps<typeof RaninbowConnectButton>;
 
@@ -151,9 +152,11 @@ function WalletButton(props: RenderProps) {
                       className="size-5 rounded-full"
                     >
                       {chain.iconUrl && (
-                        <img
+                        <Image
                           alt={chain.name ?? "Chain icon"}
                           src={chain.iconUrl}
+                          height={100}
+                          width={100}
                           className="size-5"
                         />
                       )}
@@ -174,19 +177,23 @@ function WalletButton(props: RenderProps) {
                     {account.displayBalance ? account.displayBalance : ""}
                   </div>
                   {user ? (
-                    <img
+                    <Image
                       src={
                         user.result.avatarImageUrl
                           ? getAvatarUrl(user.result.avatarImageUrl)
                           : "/images/avatar.png"
                       }
+                      height={300}
+                      width={300}
                       alt="avatar"
                       className="size-6 rounded-full"
                     />
                   ) : (
-                    <img
+                    <Image
                       src={account.ensAvatar ? account.ensAvatar : "/images/avatar.png"}
                       alt="avatar"
+                      height={200}
+                      width={200}
                       className="size-6 rounded-full"
                     />
                   )}
@@ -209,9 +216,11 @@ function WalletButton(props: RenderProps) {
                       className="size-5 rounded-full"
                     >
                       {chain.iconUrl && (
-                        <img
+                        <Image
                           alt={chain.name ?? "Chain icon"}
                           src={chain.iconUrl}
+                          height={200}
+                          width={200}
                           className="size-5"
                         />
                       )}

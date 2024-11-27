@@ -10,7 +10,7 @@ import {
   coinbaseWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
-import { mainnet, polygon, bsc, bscTestnet, goerli } from "wagmi/chains";
+import { mainnet, polygon, bsc, bscTestnet, goerli,base } from "wagmi/chains";
 import { infuraProvider } from "wagmi/providers/infura";
 import { useMemo } from "react";
 import { useEthersProvider, useEthersSigner } from "./wagmi-ethers";
@@ -20,7 +20,7 @@ import { rainbowWeb3AuthConnector, rainbowWeb3AuthTwitterConnector } from "@/web
 const providers = [publicProvider(), infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY as string })] as any;
 export const { chains, publicClient, webSocketPublicClient } = env.isDevMode
   ? configureChains([bscTestnet, goerli], providers)
-  : configureChains([bsc, mainnet, polygon], providers);
+  : configureChains([bsc, mainnet, polygon,base], providers);
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "YOUR_PROJECT_ID";
 const appName = process.env.NEXT_PUBLIC_PROJECT_NAME || "YOUR_PROJECT_NAME";
 

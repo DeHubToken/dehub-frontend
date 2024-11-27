@@ -22,6 +22,7 @@ export async function api<T>(
   const { cache = "no-store", tags, ...restConfig } = config || {};
   const url = env.apiBaseUrl + endpoint;
   try {
+    console.log("fetch-server-side",url)
     const result = await fetch(url, {
       method: "GET",
       ...(cache && !restConfig.next?.revalidate && { cache }),

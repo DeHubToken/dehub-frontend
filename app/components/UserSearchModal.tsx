@@ -10,6 +10,7 @@ import { usersSearch } from "@/services/user";
 import { getAvatarUrl } from "@/web3/utils/url";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { toast } from "sonner";
+import Image from "next/image";
 
 interface UserSearchModalProps {
   setIsModalOpen: (isOpen: boolean) => void;
@@ -140,7 +141,7 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
               <div className="flex gap-2">
                 <div className="w-[20%]">
                   {/* <Avatar name={user?.username || user.displayName || ""}  url={user.avatarImageUrl} /> */}
-                  <img src={getAvatarUrl(user.avatarImageUrl)} />
+                  <Image src={getAvatarUrl(user.avatarImageUrl)} height={300} width={300} alt="avatar" />
                 </div>
                 <div className="w-[80%]">
                   <div>{user?.username}</div>

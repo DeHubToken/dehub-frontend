@@ -27,7 +27,7 @@ export function UsernameBox(props: Props) {
         <div className="relative h-4 w-4">
           <Image
             src={getBadgeUrl(user?.badge?.name as string, theme)}
-            alt="User Badge"
+            alt="User Badge" 
             layout="fill"
             className={`object-contain ${
               isUserOnline(user.address)

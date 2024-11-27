@@ -55,7 +55,7 @@ export async function Stream(props: FeedProps) {
         <StreamsContainer
           address={user?.address}
           isSearch={q ? true : false}
-          data={res.data.result}
+          data={res?.data?.result||[]}
           type={type}
           range={range}
           q={q}

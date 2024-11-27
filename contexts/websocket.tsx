@@ -19,6 +19,8 @@ export const WebsocketProvider = ({ children }) => {
   const { account } = useActiveWeb3React();
 
   useEffect(() => {
+    console.log("SERVER_URL",SERVER_URL)
+
     const socket = io(SERVER_URL, {
       query: {
         address: account
