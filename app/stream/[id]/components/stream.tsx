@@ -24,8 +24,8 @@ function StreamInfo(props: { nft: NFT }) {
 
   return (
     <div className="mt-5 h-auto w-full rounded-2xl border border-theme-mine-shaft-dark bg-theme-mine-shaft-dark p-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
-      <div className="flex h-auto w-full flex-col items-start justify-start gap-2">
-        <div className="flex h-auto w-full items-center justify-between">
+      <div className="flex h-auto w-full flex-col items-start justify-start gap-4">
+        <div className="flex h-auto w-full flex-col items-start justify-between gap-2 sm:flex-row">
           <div className="flex items-center gap-1">
             <p className="text-sm">
               <span className="font-semibold">Views :</span> {nft.views || 0}
@@ -37,7 +37,7 @@ function StreamInfo(props: { nft: NFT }) {
             {getTransactionLink(nft.chainId || defaultChainId, nft.mintTxHash) && (
               <a
                 href={getTransactionLink(nft.chainId || defaultChainId, nft.mintTxHash)!}
-                className="text-white"
+                className="whitespace-pre text-white"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -55,14 +55,12 @@ function StreamInfo(props: { nft: NFT }) {
           <span className="font-semibold">Description :</span> {nft.description}
         </p>
         <div className="w-full">
-          <span className="font-semibold">Categories :</span>{" "}
-          <div className="flex flex-wrap items-center gap-1">
-            {nft?.category?.map((i) => (
-              <Link key={i} href={`/?category=${i}&type=trends`} className="mr-1">
-                <span className="cursor-pointer">#{i}</span>
-              </Link>
-            ))}
-          </div>
+          <span className="mr-1 font-semibold">Categories :</span>{" "}
+          {nft?.category?.map((i) => (
+            <Link key={i} href={`/?category=${i}&type=trends`} className="mr-1">
+              <span className="cursor-pointer">#{i}</span>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
