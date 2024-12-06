@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-      domains: ['localhost','api.dehub.io','https://api.blockjerk.com'],
+      domains: ['localhost','cryptologos.cc','api.dehub.io','https://api.blockjerk.com','images.unsplash.com'],
     },
   };
   

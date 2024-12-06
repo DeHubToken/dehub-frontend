@@ -1,0 +1,500 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/ui/dropdown-menu";
+import { Minus, Plus, Trash } from "lucide-react";
+import { Controller, FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
+import { toast } from "sonner";
+import { useWaitForTransaction } from "wagmi";
+
+import { BJ } from "@/components/icons/bj";
+import { CheckCircle } from "@/components/icons/check-circle";
+import CrossCircled from "@/components/icons/cross-circled";
+import { Pound } from "@/components/icons/pound";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+
+import { useSubscriptionContract } from "@/hooks/use-web3";
+import { chains, useActiveWeb3React } from "@/hooks/web3-connect";
+
+import { createPlan, updatePlan } from "@/services/subscription-plans";
+
+import { supportedNetworks } from "@/web3/configs";
+
+import { durations, SB_ADDRESS, supportedTokens } from "@/configs";
+
+import PublishOnChain from "./publish-on-chain";
+import { SubscriptionModalPreView } from "./subscription-preview";
+
+export default function Form({ plan }: any) {
+  const { account, chainId } = useActiveWeb3React();
+  const router = useRouter();
+  const planId = plan != undefined ? plan.id : null;
+  useEffect(() => {
+    if (plan?.address && plan?.address != account?.toLowerCase()) {
+      toast.error("You are not the owner.");
+      router.push("/"); // Redirect to home
+    }
+  }, [plan, account]);
+  console.log("wwwwwwplan", plan);
+  const form = useForm({
+    defaultValues: {
+      tier: {
+        tier: plan?.tier ? plan?.tier : 1,
+        name: plan?.name ? plan?.name : "",
+        description: plan?.description ? plan?.description : "",
+        duration: plan?.duration ? plan?.duration : 1,
+        address: plan?.address ? plan?.address : account,
+        chains: plan?.chains ? plan?.chains : [],
+        benefits:
+          plan?.benefits?.map((v: string) => {
+            return { value: v };
+          }) ?? []
+      }
+    }
+  });
+  const {
+    handleSubmit,
+    register,
+    control,
+    watch,
+    formState: { errors }
+  } = form;
+  console.log("plan", plan);
+  const { tier } = watch();
+
+  console.log("tier", tier);
+  const onSubmit = async (plan: any) => {
+    // Add your API call logic here
+    let { benefits, ...tier } = plan.tier;
+    benefits = benefits.map((b: any) => b.value);
+
+    console.log("plan", plan);
+
+    plan = { ...tier, benefits };
+    try {
+      const {
+        success,
+        error,
+        plan: updatedPlan
+      }: any = planId !== null ? await updatePlan(plan, planId) : await createPlan(plan);
+      console.log("Submission successful");
+
+      if (success) {
+        if (plan?.id) {
+          form.reset();
+
+          toast.success("plan created");
+          return;
+        }
+        toast.success("plan Updated");
+        router.push("/");
+        return;
+      }
+      toast.error(error);
+    } catch (error: any) {
+      toast.error(error.message);
+      console.error("Submission error:", error);
+    }
+  };
+  return (
+    <FormProvider {...form}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex h-auto w-full flex-col items-start justify-start gap-12 rounded-3xl border border-gray-200/25 px-4 pb-10 pt-10 sm:p-10">
+          <div className="flex h-auto w-full flex-wrap items-center justify-center gap-6 text-center md:flex-nowrap md:justify-between md:gap-0 md:text-left">
+            <div className="h-auto w-full space-y-2">
+              <h1 className="text-4xl sm:text-5xl">Subscription tiers </h1>
+              <p className="text-lg">Customize your subscription tiers</p>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-6 sm:flex-nowrap sm:justify-end">
+              <div className="flex w-full items-stretch justify-center sm:w-auto"></div>
+              <SubscriptionModalPreView tiers={[tier]} />
+              <Button variant="gradientOne" size="sratch">
+                {plan?.id ? "Edit" : "Save"}
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex h-auto w-full flex-col items-start justify-start gap-16">
+            <div className="flex h-auto w-full flex-col items-start justify-start overflow-hidden rounded-2xl border border-gray-300/25">
+              <div className="w-full border-b border-gray-300/25 bg-gray-400/10 p-4 text-center">
+                <h1 className="text-2xl">Tier {tier.tier}</h1>
+              </div>
+
+              <div className="flex w-full flex-wrap items-stretch justify-start border-b border-gray-300/25">
+                <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
+                  <h1 className="text-xl">tiers Name</h1>
+                </div>
+                <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%]  ">
+                  <input
+                    placeholder="Basic tier"
+                    className=" w-full border-none bg-theme-background px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
+                    {...register(`tier.name`, { required: "tier name is required" })}
+                  />
+                  {errors.tier?.name?.message && (
+                    <p className="text-red-500">
+                      {typeof errors.tier.name.message === "string"
+                        ? errors.tier.name.message
+                        : "Invalid error message"}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex w-full flex-wrap items-stretch justify-start border-b border-gray-300/25">
+                <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
+                  <h1 className="text-xl">Description</h1>
+                </div>
+                <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%]">
+                  <textarea
+                    placeholder="tier description here"
+                    className="  w-full resize-none border-none bg-theme-background px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0"
+                    rows={2}
+                    {...register(`tier.description`, {
+                      required: "tier description is required"
+                    })}
+                  />
+                  {errors.tier?.description?.message && (
+                    <p className="text-red-500">
+                      {typeof errors.tier.description.message === "string"
+                        ? errors.tier.description.message
+                        : "Invalid error message"}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* row-3 */}
+              <div className="flex w-full flex-wrap items-stretch justify-start border-b border-gray-300/25">
+                <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
+                  <h1 className="text-xl">Duration</h1>
+                </div>
+                <SetDuration control={control} form={form} />
+              </div>
+
+              <div className="flex w-full flex-wrap items-stretch justify-start border-b border-gray-300/25">
+                <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
+                  <h1 className="text-xl">Benefits</h1>
+                </div>
+                <BenefitList control={control} />
+              </div>
+
+              <ChainSection
+                deployedPlan={plan}
+                tier={tier}
+                control={control}
+                onPublish={() => {}}
+                chainId={chainId}
+              />
+            </div>
+          </div>
+        </div>
+      </form>
+    </FormProvider>
+  );
+}
+
+export const SetDuration = ({ control, form }: { control: any; form: any }) => {
+  const { setValue } = form;
+  return (
+    <Controller
+      name={`tier.duration`} // Dynamic form field for each tier's duration
+      control={control}
+      defaultValue={durations[0].value} // Default value for duration (1 month)
+      render={({ field }) => {
+        const currentDuration = durations.find((d) => d.value === field.value); // Find the duration object by value
+
+        return (
+          <div className="flex w-full max-w-full flex-[0_0_100%] items-center justify-between pl-8 sm:max-w-[70%] sm:flex-[0_0_70%]">
+            <p className="text-lg">{currentDuration?.title}</p>
+            <div className="flex items-center justify-end gap-1">
+              <Button
+                className="h-full rounded-none px-5 py-6 sm:px-10"
+                type="button"
+                onClick={() => {
+                  const nextIndex = durations.findIndex((d) => d.value === field.value) + 1; // Find the current index
+                  if (nextIndex < durations.length) {
+                    field.onChange(durations[nextIndex].value); // Update field with the next duration
+                    setValue("tier.tier", durations[nextIndex].tier);
+                  }
+                }}
+              >
+                <Plus />
+              </Button>
+              <Button
+                type="button"
+                className="h-full rounded-none px-5 py-6 sm:px-10"
+                onClick={() => {
+                  const prevIndex = durations.findIndex((d) => d.value === field.value) - 1; // Find the current index
+                  if (prevIndex >= 0) {
+                    field.onChange(durations[prevIndex].value); // Update field with the previous duration
+                    setValue("tier.tier", durations[prevIndex].tier);
+                  }
+                }}
+              >
+                <Minus />
+              </Button>
+            </div>
+          </div>
+        );
+      }}
+    />
+  );
+};
+export function BenefitList({ control, tierIndex }: any) {
+  const [benefit, setBenefit] = useState("");
+
+  // Accessing the correct field array
+  const {
+    fields: benefitFields,
+    append: addBenefit,
+    remove: removeBenefit
+  }: any = useFieldArray({
+    control,
+    name: `tier.benefits`
+  });
+
+  return (
+    <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%]">
+      <div className="ml-3 mt-3 flex flex-wrap gap-5">
+        {benefitFields.map((field: { id: string; value: string }, n: number) => (
+          <div
+            key={field.id}
+            className="relative flex select-none justify-center gap-1 rounded-lg bg-theme-background px-8 py-6 text-center text-lg text-gray-500 outline-none sm:py-2"
+          >
+            <CheckCircle />
+            {field.value}
+            <span
+              onClick={() => removeBenefit(n)}
+              className="absolute -right-1 -top-2 cursor-pointer text-red-600"
+            >
+              <CrossCircled />
+            </span>
+          </div>
+        ))}
+
+        <input
+          placeholder="Enter Benefit"
+          onChange={(e) => setBenefit(e.target.value)}
+          value={benefit}
+          maxLength={100}
+          className="h-full border-none bg-theme-background px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
+        />
+      </div>
+
+      <div className="grid h-24 w-full place-items-center">
+        <button
+          type="button"
+          onClick={() => {
+            if (!benefit) return;
+            addBenefit({ value: benefit }); // Appending new benefit correctly
+            setBenefit(""); // Reset input
+          }}
+          className="flex items-center gap-2 rounded px-4 py-2 transition-colors hover:bg-gray-200 dark:hover:bg-theme-mine-shaft-dark"
+        >
+          <Plus className="size-5" />
+          <span className="text-lg">Add another benefit</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId }: any) => {
+  // Get form context for `register` if not explicitly passed
+  const { register } = useFormContext();
+  const { remove } = useFieldArray({
+    control,
+    name: "tier.chains" // Name of the field in the form schema
+  });
+
+  return (
+    <div className="flex w-full flex-wrap items-stretch justify-start border-b border-gray-300/25">
+      {/* Section Header */}
+      <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
+        <h1 className="text-xl">Chains</h1>
+      </div>
+
+      {/* Chain List Section */}
+      <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_60%]">
+        {tier?.chains?.map((field: any, index: number) => (
+          <div className="mb-4 ml-5 flex w-full items-center justify-between gap-5" key={field.id}>
+            {/* Chain ID or Label */}
+            <div className="w-full flex-shrink-0 text-center sm:w-auto sm:text-left">
+              {field.chainId}) {supportedNetworks.find((c) => c.chainId == field.chainId)?.label}
+            </div>
+
+            {/* Currency Select */}
+            <div className="w-full sm:w-40 md:w-48">
+              <CurrencySelect
+                control={control}
+                chainId={field.chainId}
+                index={index}
+                disabled={field.isPublished}
+              />
+            </div>
+
+            {/* Price Input */}
+            <div className="w-full sm:w-40 md:w-48">
+              <div className="flex items-center justify-center gap-5 align-middle">
+                <label> Amount: </label>
+                <input
+                  type="number"
+                  min={0}
+                  placeholder="Enter price"
+                  disabled={field.isPublished}
+                  className="w-full rounded-md border bg-gray-100 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  {...register(`tier.chains.${index}.price`, { valueAsNumber: true })}
+                />
+              </div>
+            </div>
+
+            {/* Conditional Delete Button (only for unpublished chains) */}
+            {!field.temp && !field.isPublished && (
+              <div className="sm:w-40 md:w-48">
+                <Button
+                  variant="gradientOne"
+                  type="button"
+                  onClick={() => remove(index)} // Removes the chain from the array
+                  className="w-full text-sm"
+                >
+                  Delete
+                </Button>
+              </div>
+            )}
+
+            <PublishOnChain
+              disabled={field.isPublished}
+              field={field}
+              chainId={chainId}
+              deployedPlan={deployedPlan}
+              onPublish={() => {}}
+            />
+          </div>
+        ))}
+
+        {/* Add Chain Dropdown */}
+        <div className="mt-4 grid h-24 w-full place-items-center">
+          <AddChainDropdown tier={tier} control={control} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AddChainDropdown: React.FC<any> = ({ tier, control }) => {
+  const { append: appendChain, fields: chainFields } = useFieldArray({
+    control,
+    name: "tier.chains"
+  });
+
+  // Function to check if a chain already exists by its chainId
+  const isChainExist = (chainId: number) => {
+    return tier?.chains?.some((chain: any) => chain.chainId === chainId);
+  };
+
+  return (
+    <div className="grid h-24 w-full place-items-center">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            className="flex items-center gap-2 rounded px-4 py-2 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
+          >
+            <Plus className="size-5" />
+            <span className="text-lg">Add another chain</span>
+          </button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent>
+          {supportedNetworks.map((network) => (
+            <DropdownMenuItem
+              key={network.chainId}
+              onClick={() => {
+                // Only append if the chainId is not already in the list
+                if (!isChainExist(network.chainId)) {
+                  appendChain({
+                    chainId: network.chainId,
+                    price: 0,
+                    token: "",
+                    isPublished: false,
+                    temp: true
+                  });
+                } else {
+                  alert(`Chain with ID ${network.chainId} already exists.`);
+                }
+              }}
+            >
+              {network.label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+};
+
+// CurrencySelect Component to correctly bind each chain's token field
+export const CurrencySelect = ({
+  control,
+  chainId,
+  index,
+  disabled
+}: {
+  control: any;
+  chainId: number;
+  index: number;
+  disabled: boolean;
+}) => {
+  return (
+    <Controller
+      name={`tier.chains.${index}.token`} // Correct path for the token of the specific chain
+      control={control}
+      defaultValue="" // Set a default value for the currency
+      render={({ field }) => (
+        <Select
+          {...field} // Spread the field to control its value and changes
+          value={field.value} // Use the field value from react-hook-form
+          onValueChange={(value: string) => field.onChange(value)} // Update the field value on change
+          disabled={disabled}
+        >
+          <SelectTrigger className="h-full min-w-32 rounded-none bg-transparent dark:bg-transparent">
+            <SelectValue placeholder="Select token" />
+          </SelectTrigger>
+          <SelectContent>
+            {supportedTokens
+              .filter((t) => t.chainId == chainId)
+              .map((token, i: number) => (
+                <SelectItem key={i} value={token.address}>
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src={token.iconUrl}
+                      width={24}
+                      height={24}
+                      alt={token.address}
+                      className="size-10"
+                    />
+                    <span className="text-lg">{token.label}</span>
+                  </div>
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
+      )}
+    />
+  );
+};

@@ -38,8 +38,7 @@ export function StreamItem(props: Props) {
   const [isHidden, setIsHidden] = useState<boolean>(nft.isHidden);
   const [isHovered, setIsHovered] = useState(false);
   const { isUserOnline } = useWebSockets();
-  const { theme } = useTheme();
-console.log("nft1111",nft)
+  const { theme } = useTheme(); 
   const updateVisibility = async (id: string) => {
     try {
       const res = await updateNftVisibility({ id: nft.tokenId, isHidden: !isHidden });
@@ -112,7 +111,22 @@ console.log("nft1111",nft)
             />
           </div>
         )}
-
+   {
+  //  nft?.plans!=null 
+   true&& (
+          <div className="absolute -left-20 bottom-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-classic-purple px-12 py-0.5 text-center text-xs text-white">
+            <span>
+          Subscribe To Watch 
+            </span>
+            {/* <Image
+              src="/icons/tokens/DHB.png"
+              alt="BJ"
+              width={20}
+              height={20}
+              className="size-4 rounded-full bg-black"
+            /> */}
+          </div>
+        )}
         {nft?.streamInfo?.isLockContent && (
           <div className="absolute -right-20 bottom-8 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-classic-violet px-12 py-0.5 text-center text-xs text-white">
             <span>

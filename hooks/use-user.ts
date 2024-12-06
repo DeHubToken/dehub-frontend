@@ -30,7 +30,6 @@ export function useUser() {
 
   useEffect(() => {
     if (isLoading) return;
-
     if (account && library && chainId) {
       const callDataArray: {
         contract: { address: string | undefined; abi: ContractInterface; interface: Interface };
@@ -105,5 +104,6 @@ export function useUser() {
     }
   }, [account, chainId, isLoading, library]);
 
+ 
   return { isLoading, user, account, library, chainId, ...rest };
 }

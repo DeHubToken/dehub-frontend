@@ -10,8 +10,8 @@ export const env = {
   pinataKey: process.env.NEXT_PUBLIC_PINATA_API_KEY,
   pinataSecretApiKey: process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
   socketUrl: process.env.NEXT_PUBLIC_SOCKET_URL,
-  pinataUploadUrl:process.env.NEXT_PUBLIC_PINATA_UPLOAD_URL,
-  pinataGatwayKey:process.env.NEXT_PUBLIC_PINATA_GATEWAY_KEY,
+  pinataUploadUrl: process.env.NEXT_PUBLIC_PINATA_UPLOAD_URL,
+  pinataGatwayKey: process.env.NEXT_PUBLIC_PINATA_GATEWAY_KEY,
   nodes: {
     1: process.env.NEXT_PUBLIC_NODE_1,
     2: process.env.NEXT_PUBLIC_NODE_2,
@@ -38,7 +38,7 @@ export enum ChainId {
   AVALANCHE_MAINNET = 43114,
   OKEX_MAINNET = 66,
   POLYGON_MAINNET = 137,
-  BASE_MAINNET=8453
+  BASE_MAINNET = 8453
 }
 
 export const streamInfoKeys = {
@@ -90,7 +90,7 @@ const devTokens = [
     symbol: "DHB",
     customAbbreviation: "dhb",
     chainId: 97,
-    address: "0x06EdA7889330031a8417f46e4C771C628c0b6418",
+    address: "0xeb6acdcfe1f13187126a504d56f7970bf6f3c5e1",
     iconUrl: "/icons/DHB.png", // Update to relevant image URL if needed
     decimals: 18
   },
@@ -146,7 +146,7 @@ const devTokens = [
   }
 ];
 
-const productionTokens = [ 
+const productionTokens = [
   {
     value: "dhb",
     label: "DHB",
@@ -212,16 +212,6 @@ const productionTokens = [
     decimals: 18
   },
 
-  {
-    value: "wbnb",
-    label: "WBNB",
-    symbol: "WBNB",
-    customAbbreviation: "wbnb",
-    chainId: 56,
-    address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-    iconUrl: "https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=002",
-    decimals: 18
-  },
   {
     value: "weth",
     label: "WETH",
@@ -349,7 +339,7 @@ const productionTokens = [
     symbol: "BNB",
     customAbbreviation: "bnb",
     chainId: 56,
-    address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d", // Update to relevant address if needed
+    address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", // Update to relevant address if needed
     iconUrl: "https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=024",
     decimals: 18
   }
@@ -364,7 +354,7 @@ export const supportedTokensForAddBounty = supportedTokens;
 export const supportedChainIdsForMinting = [56];
 export const supportedChainIds = isDevMode
   ? [ChainId.BSC_TESTNET, ChainId.GORLI]
-  : [ChainId.MAINNET, ChainId.BSC_MAINNET, ChainId.POLYGON_MAINNET,ChainId.BASE_MAINNET];
+  : [ChainId.MAINNET, ChainId.BSC_MAINNET, ChainId.POLYGON_MAINNET, ChainId.BASE_MAINNET];
 export const defaultChainId = isDevMode ? ChainId.GORLI : ChainId.BSC_MAINNET;
 export const defaultTokenSymbol = "DHB";
 export const defaultWatchTimeForPPV = 2 * 60 * 60; // second unit
@@ -453,7 +443,7 @@ export const MULTICALL2_ADDRESSES: { [chainId: number]: string } = {
   [ChainId.AVALANCHE_MAINNET]: "0x84514BeaaF8f9a4cbe25A9C5a7EBdd16B4FE7154",
   [ChainId.OKEX_MAINNET]: "0xdf4CDd4b8F1790f62a91Bcc4cb793159c641B1bd",
   [ChainId.POLYGON_MAINNET]: "0x275617327c958bD06b5D6b871E7f491D76113dd8",
-  [ChainId.BASE_MAINNET]:"0x944afB839712DfF2cCf83D2DaAf34A04B029B2B7"
+  [ChainId.BASE_MAINNET]: "0x944afB839712DfF2cCf83D2DaAf34A04B029B2B7"
 };
 
 export const DHB_ADDRESSESS: { [chainId: number]: string } = {
@@ -470,3 +460,14 @@ export const DHB_ADDRESSESS: { [chainId: number]: string } = {
   [ChainId.POLYGON_MAINNET]: "0x6051e59eb50BB568415B6C476Fbd394EEF83834D",
   [ChainId.BASE_MAINNET]: "0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c"
 };
+export const SB_ADDRESS: { [chainId: number]: string } = {
+  [ChainId.BSC_TESTNET]: "0x3A76858fb35520c3CA20E826901c7cB73F715251"
+};
+
+export const durations = [
+  { title: "1 month", value: 1, tier: 1 },
+  { title: "3 months", value: 3, tier: 2 },
+  { title: "6 months", value: 6, tier: 3 },
+  { title: "1 year", value: 12, tier: 4 },
+  { title: "lifetime", value: 999, tier: 5 }
+];

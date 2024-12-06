@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Error } from "@/components/error";
 import { ErrorBoundary } from "@/components/error-boundry";
 
-import { RecentPanel } from "./components/recent";
+import { RecentStreams } from "./components/recent";
 import { Stream } from "./components/stream";
 
 type Props = {
@@ -29,7 +29,7 @@ export default async function Page(props: Props) {
         </ErrorBoundary>
         <ErrorBoundary FallbackComponent={Error}>
           <Suspense fallback={<div>Loading...</div>}>
-            <RecentPanel />
+            <RecentStreams />
           </Suspense>
         </ErrorBoundary>
       </div>

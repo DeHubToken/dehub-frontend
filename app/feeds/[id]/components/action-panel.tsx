@@ -16,9 +16,9 @@ import { streamInfoKeys } from "@/configs";
 import { ClaimAsCommentor, ClaimAsViewer } from "./claims";
 import { PPVModal } from "./ppv-modal";
 import { Share } from "./share";
-import { LikeButton } from "./stream-actions";
+import { LikeButton } from "./stream-actions"; 
 import { TipModal } from "./tip-modal";
-
+import {SubscriptionModal} from "@/app/profile/[username]/components/subscription-modal"
 export function ActionPanel(props: { nft: NFT; tokenId: number }) {
   const { nft, tokenId } = props;
   const { isUserOnline } = useWebSockets();
@@ -56,7 +56,8 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
             <ThumbsDown className="size-5" />
           </LikeButton>
           <PPVModal nft={nft} />
-          <TipModal tokenId={tokenId} to={nft.minter} />
+          <TipModal tokenId={tokenId} to={nft.minter} /> 
+          <SubscriptionModal plans={nft?.planDetails} avatarImageUrl={null} displayName={nft.mintername || nft.minter}/>
           <ClaimAsViewer nft={nft} tokenId={tokenId} />
           <ClaimAsCommentor nft={nft} tokenId={tokenId} />
           <div className="absolute right-0 top-0 size-auto sm:hidden">

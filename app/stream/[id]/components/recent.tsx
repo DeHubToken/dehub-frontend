@@ -1,18 +1,12 @@
 import { cookies } from "next/headers";
-import Link from "next/link";
-
-import { LazyImage } from "@/components/image";
 
 import { safeParseCookie } from "@/libs/cookies";
-import { truncate } from "@/libs/strings";
 
 import { getNFTs } from "@/services/nfts/trending";
 
-import { getImageUrl, getImageUrlApi } from "@/web3/utils/url";
+import { RecentPanel } from "./recent-panel";
 
-/* ================================================================================================= */
-
-export async function RecentPanel() {
+export async function RecentStreams() {
   const cookie = cookies();
   const userCookie = cookie.get("user_information");
   const user = safeParseCookie<{ address: string }>(userCookie?.value);
@@ -36,28 +30,7 @@ export async function RecentPanel() {
             No recent NFTs
           </div>
         )}
-
-        {response.data.result.length > 0 &&
-          response.data.result.map((item, i) => (
-            <Link
-              key={i}
-              href={`/stream/${item.tokenId}`}
-              className="flex h-auto w-full items-center justify-between overflow-hidden rounded-2xl bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark"
-            >
-              <figure className="h-32 w-full max-w-[40%] flex-[0_0_40%] overflow-hidden rounded-2xl sm:h-40 xl:h-28">
-                <LazyImage
-                  src={getImageUrlApi(item.tokenId.toString(), 256, 256)}
-                  alt={item.name || "Upload"}
-                  className="size-full object-cover"
-                />
-              </figure>
-
-              <div className="flex h-auto w-full flex-col items-start justify-center gap-1 p-4">
-                <h1 className="text-md font-semibold">{truncate(item.name, 26)}</h1>
-                {item.views && item.views > 0 && <p className="text-sm">{item.views} viewers</p>}
-              </div>
-            </Link>
-          ))}
+        <RecentPanel streams={response.data.result} />
       </div>
     </div>
   );

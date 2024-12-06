@@ -95,6 +95,7 @@ const mainNetworks = [
     value: "Ethereum",
     label: "Ethereum",
     customAbbreviation: "ethereum",
+    iconUrl:""
   },
   {
     id: ChainId.BSC_MAINNET,
@@ -107,6 +108,7 @@ const mainNetworks = [
     value: "BNB Chain",
     label: "BNB Chain",
     customAbbreviation: "bnb_chain",
+    iconUrl:""
   },
   {
     id: ChainId.POLYGON_MAINNET,
@@ -119,6 +121,7 @@ const mainNetworks = [
     value: "Polygon",
     label: "Polygon",
     customAbbreviation: "polygon",
+    iconUrl:""
   },{
     id: ChainId.BASE_MAINNET,
     chainId: ChainId.BASE_MAINNET,
@@ -130,6 +133,7 @@ const mainNetworks = [
     value: "Base",
     label: "Base",
     customAbbreviation: "base",
+    iconUrl:""
   }
   
 ];

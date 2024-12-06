@@ -13,19 +13,23 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog";
 
+import { useUser } from "@/hooks/use-user";
+
 import { cn } from "@/libs/utils";
+
+import { getAvatarUrl } from "@/web3/utils/url";
 
 /* ----------------------------------------------------------------------------------------------- */
 interface Props {
   tiers: any;
 }
 export function SubscriptionModalPreView({ tiers = [] }: Props) {
+  const {user}: any = useUser(); 
+  const displayName = user?.result?.displayName;
+  const avatarImageUrl = user?.result?.avatarImageUrl;
   return (
     <Dialog>
       <DialogTrigger asChild>
-        {/* <Button variant="gradientOne" size="sratch" className="gap-2 py-5">
-          <CirclePlus className="size-5" /> Subscribe
-        </Button> */}
         <Button type="button" variant="default" size="sratch" className="rounded-full">
           Preview
         </Button>
@@ -33,20 +37,20 @@ export function SubscriptionModalPreView({ tiers = [] }: Props) {
       <DialogContent className="max-w-[1400px] sm:rounded-3xl">
         <DialogTitle className="sr-only">Subscribe</DialogTitle>
         <DialogDescription className="sr-only">Subscribe to my premium plans</DialogDescription>
-        {/* <DialogHeader className="flex flex-row gap-4"> */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        {/* <img
-            src="https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?q=80&w=1856&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        <DialogHeader className="flex flex-row gap-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={getAvatarUrl(avatarImageUrl)}
             alt="Avatar"
             className="size-16 rounded-full object-cover"
-          /> */}
-        {/* <div className="flex flex-col">
-            <span className="text-2xl">Name</span>
+          />
+          <div className="flex flex-col">
+            <span className="text-2xl">{displayName}</span>
             <span className="text-theme-monochrome-300 text-sm">
               Hello! Thank you for supporting me!!
-            </span> */}
-        {/* </div> */}
-        {/* </DialogHeader> */}
+            </span>
+          </div>
+        </DialogHeader>
         <div className="mt-8 flex flex-wrap gap-6">
           {tiers?.map((tier: any, index: number) => (
             <SubscriptionCard>
@@ -64,7 +68,7 @@ export function SubscriptionModalPreView({ tiers = [] }: Props) {
   );
 }
 
-function SubscriptionCard(props: React.HTMLAttributes<HTMLDivElement>) {
+export function SubscriptionCard(props: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       {...props}
@@ -75,7 +79,7 @@ function SubscriptionCard(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 }
 
-function SubscriptionCardHeader(props: React.HTMLAttributes<HTMLDivElement>) {
+export function SubscriptionCardHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       {...props}
@@ -89,15 +93,15 @@ function SubscriptionCardHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 }
 
-function SubscriptionCardTitle(props: React.HTMLAttributes<HTMLHeadingElement>) {
+export function SubscriptionCardTitle(props: React.HTMLAttributes<HTMLHeadingElement>) {
   return <h1 {...props} className={cn("text-lg font-bold", props.className)} />;
 }
 
-function SubscriptionCardDescription(props: React.HTMLAttributes<HTMLParagraphElement>) {
+export function SubscriptionCardDescription(props: React.HTMLAttributes<HTMLParagraphElement>) {
   return <p {...props} className={cn("text-theme-monochrome-300 text-xs", props.className)} />;
 }
 
-function SubscriptionPricing(
+export function SubscriptionPricing(
   props: React.HTMLAttributes<HTMLDivElement> & { price: string; tier: string }
 ) {
   const { price, tier, ...rest } = props;
@@ -112,7 +116,7 @@ function SubscriptionPricing(
   );
 }
 
-function SubscriptionBenefits(props: { benefits: string[] }) {
+export function SubscriptionBenefits(props: { benefits: string[] }) {
   const { benefits } = props;
   return (
     <ul className="flex flex-col gap-3">

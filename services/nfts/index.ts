@@ -50,6 +50,7 @@ export type NFT = {
     size: number;
     w: number;
   };
+  plansDetails?:any,
   videoUrl?: string;
   views: number;
   lockedBounty?: {

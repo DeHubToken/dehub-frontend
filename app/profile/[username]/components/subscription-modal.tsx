@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { CirclePlus } from "lucide-react";
 
 import { CheckCircle } from "@/components/icons/check-circle";
@@ -13,12 +14,21 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog";
 
+import { useActiveWeb3React } from "@/hooks/web3-connect";
+
 import { cn } from "@/libs/utils";
-import Image from "next/image";
+
+import { supportedNetworks } from "@/web3/configs";
+import { getAvatarUrl } from "@/web3/utils/url";
+
+import { supportedTokens } from "@/configs";
+
+import BuySubOnChain from "./buy-sub-on-chain";
 
 /* ----------------------------------------------------------------------------------------------- */
 
-export function SubscriptionModal() {
+export function SubscriptionModal({ avatarImageUrl, displayName, plans = [] }: any) {
+  const { account, chainId } = useActiveWeb3React();
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -31,79 +41,38 @@ export function SubscriptionModal() {
         <DialogDescription className="sr-only">Subscribe to my premium plans</DialogDescription>
         <DialogHeader className="flex flex-row gap-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <Image
-            src="https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?q=80&w=1856&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          <img
+            src={getAvatarUrl(avatarImageUrl)}
             alt="Avatar"
-          height={200}
-          width={200}
             className="size-16 rounded-full object-cover"
           />
           <div className="flex flex-col">
-            <span className="text-2xl">Name</span>
+            <span className="text-2xl">{displayName}</span>
             <span className="text-theme-monochrome-300 text-sm">
               Hello! Thank you for supporting me!!
             </span>
           </div>
         </DialogHeader>
-        <div className="mt-8 flex flex-wrap gap-6">
-          <SubscriptionCard>
-            <SubscriptionCardHeader>
-              <SubscriptionCardTitle>Tier one</SubscriptionCardTitle>
-              <SubscriptionCardDescription>
-                Tier Description. Description about the tire goes here.
-              </SubscriptionCardDescription>
-            </SubscriptionCardHeader>
-            <SubscriptionPricing price="$10" tier="1 month" />
-            <SubscriptionBenefits benefits={["Benefit 1"]} />
-          </SubscriptionCard>
-
-          <SubscriptionCard>
-            <SubscriptionCardHeader>
-              <SubscriptionCardTitle>Tier two</SubscriptionCardTitle>
-              <SubscriptionCardDescription>
-                Tier Description. Description about the tire goes here.
-              </SubscriptionCardDescription>
-            </SubscriptionCardHeader>
-            <SubscriptionPricing price="$20" tier="3 month" />
-            <SubscriptionBenefits benefits={["Benefit 1", "Benefits 2"]} />
-          </SubscriptionCard>
-
-          <SubscriptionCard>
-            <SubscriptionCardHeader>
-              <SubscriptionCardTitle>Tier three</SubscriptionCardTitle>
-              <SubscriptionCardDescription>
-                Tier Description. Description about the tire goes here.
-              </SubscriptionCardDescription>
-            </SubscriptionCardHeader>
-            <SubscriptionPricing price="$50" tier="6 month" />
-            <SubscriptionBenefits benefits={["Benefit 1", "Benefits 2", "Benefits 3"]} />
-          </SubscriptionCard>
-
-          <SubscriptionCard>
-            <SubscriptionCardHeader>
-              <SubscriptionCardTitle>Tier four</SubscriptionCardTitle>
-              <SubscriptionCardDescription>
-                Tier Description. Description about the tire goes here.
-              </SubscriptionCardDescription>
-            </SubscriptionCardHeader>
-            <SubscriptionPricing price="$100" tier="12 month" />
-            <SubscriptionBenefits
-              benefits={["Benefit 1", "Benefits 2", "Benefits 3", "Benefits 4"]}
-            />
-          </SubscriptionCard>
-
-          <SubscriptionCard>
-            <SubscriptionCardHeader>
-              <SubscriptionCardTitle>Tier five</SubscriptionCardTitle>
-              <SubscriptionCardDescription>
-                Tier Description. Description about the tire goes here.
-              </SubscriptionCardDescription>
-            </SubscriptionCardHeader>
-            <SubscriptionPricing price="$200" tier="Lifetime" />
-            <SubscriptionBenefits
-              benefits={["Benefit 1", "Benefits 2", "Benefits 3", "Benefits 4", "Benefits 5"]}
-            />
-          </SubscriptionCard>
+        <div className="mt-8 flex max-h-fit flex-wrap  gap-6 overflow-scroll">
+          {plans.map((plan: any) => {
+            return (
+              <SubscriptionCard>
+                <SubscriptionCardHeader>
+                  <SubscriptionCardTitle>{plan.name}</SubscriptionCardTitle>
+                  <SubscriptionCardDescription>{plan.description}</SubscriptionCardDescription>
+                </SubscriptionCardHeader>
+                <SubscriptionPricing
+                  chainId={chainId}
+                  chains={plan?.chains}
+                  tier={plan?.tier}
+                  duration={plan?.duration}
+                  planId={plan.id}
+                  creator={plan?.address}
+                />
+                <SubscriptionBenefits benefits={plan?.benefits || []} />
+              </SubscriptionCard>
+            );
+          })}
         </div>
       </DialogContent>
     </Dialog>
@@ -143,17 +112,66 @@ export function SubscriptionCardDescription(props: React.HTMLAttributes<HTMLPara
   return <p {...props} className={cn("text-theme-monochrome-300 text-xs", props.className)} />;
 }
 
-export function SubscriptionPricing(
-  props: React.HTMLAttributes<HTMLDivElement> & { price: string; tier: string }
-) {
-  const { price, tier, ...rest } = props;
+interface SubscriptionPricingProps extends React.HTMLAttributes<HTMLDivElement> {
+  chainId: number;
+  chains: any;
+  tier: number;
+  duration: number;
+  planId: string;
+  creator: string;
+}
+
+export function SubscriptionPricing(props: SubscriptionPricingProps) {
+  const { chains, tier, planId, duration, creator, chainId, ...rest } = props;
   return (
-    <div {...rest} className={cn("flex w-full flex-col items-center gap-3 px-5", rest.className)}>
-      <h1 className="text-3xl">{price}</h1>
-      <h2 className="text-theme-monochrome-200 text-sm">{tier}</h2>
-      <Button className="w-full" variant="gradientOne">
-        Subscribe
-      </Button>
+    <div {...rest} className={cn(" items-center gap-5 px-5", rest.className)}>
+      <div className=" mb-5 flex max-h-80 w-full flex-col gap-5 overflow-scroll">
+        {chains.map((chain: any) => {
+          const token: any = supportedTokens.find(
+            (token) => token?.chainId === chain?.chainId && token?.address === chain?.token
+          );
+          const network = supportedNetworks?.find((n) => n.chainId == token?.chainId);
+          if (!token) {
+            return (
+              <div
+                key={chain?.chainId}
+                className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
+              >
+                <h2 className="text-lg font-bold">Chain {chain?.chainId}</h2>
+                <p className="text-center text-sm text-red-500">Not supported (switch chain)</p>
+              </div>
+            );
+          }
+
+          return (
+            <div
+              key={chain.chainId}
+              className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
+            >
+              <h2 className="text-lg font-bold">
+                {token.label} ({network?.label})
+              </h2>
+              <div className="flex items-center gap-2">
+                <span> Price:</span>
+                <img src={token.iconUrl} alt={`${token.label} Icon`} className="h-6 w-6" />
+                <p className="text-theme-monochrome-200 text-sm">
+                  {chain.price} {token.symbol}
+                </p>
+              </div>
+              {chain.chainId == chainId && (
+                <BuySubOnChain
+                  planId={planId}
+                  chainId={chainId}
+                  creator={creator}
+                  duration={duration}
+                  field={chain}
+                  onPurchase={() => {}}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

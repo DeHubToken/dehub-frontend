@@ -7,8 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { ethers } from "ethers";
 import { ImagePlus, Info, Upload } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
+import ReactSelect from "react-select";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -51,6 +53,7 @@ import { getVideoCover } from "@/libs/canvas-preview";
 import { cn, createAvatarName } from "@/libs/utils";
 
 import { minNft } from "@/services/nfts/mint";
+import { getPlans } from "@/services/subscription-plans";
 
 import MULTICALL_ABI from "@/web3/abis/multicall.json";
 import { STREAM_CONTROLLER_CONTRACT_ADDRESSES, supportedNetworks } from "@/web3/configs";
@@ -100,13 +103,15 @@ const schema = z.object({
   payPerView: z.boolean().optional().default(false),
   chain: z.string().optional(),
   payPerViewNetwork: z.string().optional(),
+  isRequireSubscription: z.boolean().optional().default(false),
   ppvAmount: z.string().optional(),
   bounty: z.boolean().optional().default(false),
   bountyChain: z.string().optional(),
   bountyFirstXViewer: z.string().optional(),
   bountyFirstXComment: z.string().optional(),
   bountyAmount: z.string().optional(),
-  streamInfo: z.record(z.any()).optional()
+  streamInfo: z.record(z.any()).optional(),
+  plans: z.any().optional()
 });
 
 type Form = z.infer<typeof schema>;
@@ -128,12 +133,17 @@ export function UploadForm(props: Props) {
   const [modalDescription, setModalDescription] = useState("");
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedTokenAddress, setSelectedTokenAddress] = useState("");
-
+  const [plans, setPlans] = useState([]);
+  const transformedPlans = plans.map((plan: any) => ({
+    value: plan.id,
+    label: <span className="text-gray-500">Tier {plan.tier} </span>
+  }));
   const streamCollectionContract = useStreamCollectionContract();
   const streamController = useStreamControllerContract();
   const addTransaction = useAddRecentTransaction();
   const tokenBalances = useTokenBalance(false);
   const { account, chainId, library, user } = useUser();
+
   const streamControllerContractAddress = useMemo(
     // @ts-expect-error no index with type number on STREAM_CONTROLLER_CONTRACT_ADDRESSES
     () => STREAM_CONTROLLER_CONTRACT_ADDRESSES[chainId],
@@ -155,7 +165,7 @@ export function UploadForm(props: Props) {
   const selectedToken = form.watch("token");
   const network = form.watch("network");
   const amount = form.watch("lockContentAmount");
-
+  console.log("formPlans", form.watch("plans"));
   const tokens = getDistinctTokens(supportedTokensForLockContent, chainId);
   const token = tokens.find((t: any) => t.value === selectedToken);
   const networksForAToken = token
@@ -163,6 +173,7 @@ export function UploadForm(props: Props) {
     : supportedNetworks;
   const isPayPerView = form.watch("payPerView");
   const selectedPPVToken = form.watch("chain");
+  const isRequireSubscription = form.watch("isRequireSubscription");
   const ppvAmount = form.watch("ppvAmount");
   const ppvNetwork = form.watch("payPerViewNetwork");
   const payPerViewTokens = getDistinctTokens(supportedTokensForPPV, chainId);
@@ -178,7 +189,7 @@ export function UploadForm(props: Props) {
   const selectedBountyChain = form.watch("bountyChain");
   const bountyTokenContract = useERC20Contract(selectedTokenAddress);
   const multicallContract = useContract(MULTICALL2_ADDRESSES, MULTICALL_ABI);
-
+  const { theme } = useTheme();
   const onApproveClick = async () => {
     setUploading(true);
     const txHash = await approveToken(
@@ -219,7 +230,7 @@ export function UploadForm(props: Props) {
           formData.append("postType", "feed-simple");
         }
         if (activeTab == "video") {
-          formData.append("postType", "video"); 
+          formData.append("postType", "video");
           videoFile && formData.append("files", videoFile);
           thumbnailFile && formData.append("files", thumbnailFile);
         }
@@ -234,7 +245,10 @@ export function UploadForm(props: Props) {
         formData.append("address", account.toLowerCase());
         formData.append("sig", sigData.sig);
         formData.append("chainId", chainId.toString());
-        formData.append("timestamp", sigData.timestamp);
+        formData.append("timestamp", sigData.timestamp); 
+        if(data.isRequireSubscription){ 
+          formData.append("plans", JSON.stringify(data.plans));
+        }
 
         const res = await minNft(formData);
         if (!res.success) {
@@ -314,10 +328,10 @@ export function UploadForm(props: Props) {
         }
 
         await invalidateUpload();
-        if(activeTab=="video"){
-        router.push(`/stream/${result.createdTokenId}`);
-        }else{
-        router.push(`/?type=feed/${result.createdTokenId}`); 
+        if (activeTab == "video") {
+          router.push(`/stream/${result.createdTokenId}`);
+        } else {
+          router.push(`/?type=feed/${result.createdTokenId}`);
         }
       } catch (err) {
         if (err instanceof Error) {
@@ -394,6 +408,23 @@ export function UploadForm(props: Props) {
     setShowConfirmationModal(true);
   };
 
+  const fetchPlans = async () => {
+    const obj = {
+      address: account?.toLowerCase()
+    };
+    const { data, success, error }: any = await getPlans(obj);
+    if (success) {
+      const { plans }: any = data;
+      setPlans(plans);
+    }
+    if (error) {
+      toast.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlans();
+  }, [account, chainId]);
   // Update bounty Token address
   useEffect(() => {
     const chain = supportedTokensForChain.find((t) => t.value === selectedBountyChain);
@@ -508,6 +539,7 @@ export function UploadForm(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bountyAmount, chainId, firstXComment, firstXViewer, isBounty, supportedTokensForChain]);
 
+  console.log("plans22222222222", plans);
   return (
     <main className="h-auto min-h-screen w-full">
       <Form {...form}>
@@ -902,6 +934,84 @@ export function UploadForm(props: Props) {
                   placeholder="Amount"
                   className="h-8 w-[48.5%] rounded-full border-none px-2 text-xs sm:h-10 sm:w-[110px] sm:px-5 sm:text-sm"
                   {...form.register("bountyAmount")}
+                />
+              </div>
+            </div>
+
+            <div className="relative flex size-auto flex-wrap items-start justify-start border-b-2 border-gray-300/5 pb-8 sm:flex-nowrap sm:border-b-0 sm:pb-0 2xl:items-center">
+              <p className="w-1/2 text-lg sm:w-[240px] lg:min-w-[15%]">Add Subscription</p>
+
+              <div className="flex size-auto w-1/2 items-center justify-end gap-4 sm:w-auto">
+                <Controller
+                  name="isRequireSubscription"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  )}
+                />
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon_sm"
+                        className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
+                      >
+                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="w-80">
+                      <p>
+                        Strap a bounty to your upload and make it watch2earn to reward your fans and
+                        build a community, fast. In the first two boxes, enter the number of viewers
+                        and commentor you wish to reward. The amount box is the amount each comment
+                        or view will earn. Only a 10% fee is charged for this service.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+
+              <div className="ml-0 mt-6 flex w-full flex-wrap items-center justify-between gap-y-3 sm:ml-6 sm:mt-0 sm:size-auto sm:gap-6">
+                <Controller
+                  name="plans"
+                  control={form.control}
+                  render={({ field }) => (
+                    <ReactSelect
+                      isMulti
+                      isDisabled={!isRequireSubscription}
+                      options={transformedPlans}
+                      value={field.value?.map((id: any) =>
+                        transformedPlans.find((option: any) => option.value === id)
+                      )}
+                      onChange={(selectedOptions) =>
+                        field.onChange(selectedOptions.map((option: any) => option.value))
+                      }
+                      placeholder="Select Plans"
+                      classNamePrefix="react-select rounded-full"
+                      theme={(base) =>
+                        theme == "light"
+                          ? base
+                          : {
+                              ...base,
+                              colors: {
+                                ...base.colors,
+                                primary: "#4f8aef", // Highlight color (matches blue button from the image)
+                                primary25: "#354152", // Hover state
+                                neutral0: "#111", // Background color of the select
+                                neutral5: "#222", // Border color
+                                neutral10: "#333", // Placeholder color
+                                neutral20: "#444" // Option hover color
+                              },
+                              spacing: {
+                                ...base.spacing,
+                                controlHeight: 35 // Adjust the control height
+                              }
+                            }
+                      }
+                    />
+                  )}
                 />
               </div>
             </div>

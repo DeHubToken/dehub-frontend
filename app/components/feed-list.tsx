@@ -25,7 +25,7 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 import { getFeedNFTs } from "@/services/feeds";
 import { getNFT } from "@/services/nfts";
 
-import {  getImageUrlApiSimple } from "@/web3/utils/url";
+import { getImageUrlApiSimple } from "@/web3/utils/url";
 
 import { LikeButton } from "../feeds/[id]/components/stream-actions";
 
@@ -89,16 +89,16 @@ export function FeedList(props: FeedProps) {
       }
     })();
   }, [account, library]);
-
+  const fetchFeed = async () => {
+    if (!selectedFeed.tokenId) {
+      return;
+    }
+    const response: any = await getNFT(selectedFeed?.tokenId, account as string);
+    console.log("response", response);
+    if (response.data.result) setFeed(response.data.result);
+  };
   useEffect(() => {
-    (async () => {
-      if (!selectedFeed.tokenId) {
-        return;
-      }
-      const response: any = await getNFT(selectedFeed?.tokenId, account as string);
-      console.log("response", response);
-      if (response.data.result) setFeed(response.data.result);
-    })();
+    fetchFeed();
   }, [selectedFeed]);
   return (
     <div className="flex w-full flex-col items-center gap-3">
@@ -123,7 +123,7 @@ export function FeedList(props: FeedProps) {
             <LikeButton
               className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
               vote
-              tokenId={feed.tokenId}
+              tokenId={feed?.tokenId}
               votes={feed.totalVotes?.for || 0}
               size="sm"
             >
@@ -144,7 +144,8 @@ export function FeedList(props: FeedProps) {
       <FeedReplyDialog
         open={selectedFeed.open}
         onOpenChange={(open) => setSelectedFeed({ open: false })}
-        // comments={[]}
+        tokenId={feed?.tokenId}
+        fetchFeed={fetchFeed}
         comments={
           feed?.comments.map((c: any) => ({
             id: c.id,

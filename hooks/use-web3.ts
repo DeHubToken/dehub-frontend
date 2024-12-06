@@ -3,6 +3,7 @@ import { BigNumber, Contract } from "ethers";
 import { useCallback, useMemo } from "react";
 
 import * as ERC20_ABI from "../contracts/ERC20.json";
+import SC_ABI from "@/web3/abis/subscription.json"
 import VAULT_ABI from "../web3/abis/vault.json";
 import MULTICALL_ABI from "../web3/abis/multicall.json";
 import STREAM_CONTROLLER_ABI from "../web3/abis/stream-controller.json";
@@ -52,6 +53,10 @@ export const useDHBTokenContract = () => {
 export const useERC20Contract = (tokenAddress:any) => {
   const { account, chainId } = useActiveWeb3React();
   return useContract(!!account && !!chainId ? tokenAddress : undefined, (ERC20_ABI as any).abi, true);
+};
+export const useSubscriptionContract = (tokenAddress:any) => {
+  const { account, chainId } = useActiveWeb3React();
+  return useContract(!!account && !!chainId ? tokenAddress : undefined, (SC_ABI as any), true);
 };
 
 export const useVaultContract = () => {

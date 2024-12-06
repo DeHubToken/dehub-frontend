@@ -254,7 +254,7 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
   );
 }
 
-function SubmitButton(props: React.ComponentProps<typeof Button>) {
+export function SubmitButton(props: React.ComponentProps<typeof Button>) {
   const status = useFormStatus();
   return (
     <Button variant="gradientOne" size="md" type="submit" {...props} disabled={status.pending}>
