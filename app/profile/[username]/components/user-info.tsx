@@ -13,7 +13,7 @@ type Props = {
 export function UserFollowingInfo(props: Props) {
   const { user } = props;
   return (
-    <div className="flex size-auto max-w-screen-xs flex-wrap items-start justify-start gap-4">
+    <div className="flex size-auto max-w-screen-xs flex-wrap items-start justify-start gap-3 sm:gap-4">
       <Badge variant="secondary" className="px-4 text-[11px]">
         <span>Followers</span> <span>{user.followers?.length || 0}</span>
       </Badge>

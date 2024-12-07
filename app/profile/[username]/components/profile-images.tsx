@@ -40,13 +40,13 @@ export function Banner(props: Props) {
 
   return (
     <div className="relative h-auto w-full">
-      <Avatar className="relative h-auto max-h-[200px] min-h-[200px] w-full overflow-hidden rounded-3xl sm:max-h-[300px] sm:min-h-[300px]">
+      <Avatar className="relative h-0 w-full overflow-hidden rounded-3xl pt-[56.25%] sm:h-[400px] sm:pt-0">
         <AvatarImageWithLoader
           src={getCoverUrl(user.coverImageUrl || "") || ""}
           alt={user?.username}
-          className="size-full max-h-[300px] min-h-[300px] object-cover"
+          className="absolute left-0 top-0 size-full object-cover"
         />
-        <AvatarFallback className="size-full max-h-[200px] min-h-[200px] rounded-none bg-gradient-to-br from-slate-900 to-zinc-700 text-3xl sm:max-h-[300px] sm:min-h-[300px]">
+        <AvatarFallback className="absolute left-0 top-0 size-full rounded-none bg-gradient-to-br from-slate-900 to-zinc-700 text-3xl">
           {createAvatarName(user?.username || user.displayName || "").toUpperCase()}
         </AvatarFallback>
       </Avatar>
@@ -57,7 +57,7 @@ export function Banner(props: Props) {
 export function UserAvater(props: Props) {
   const { user } = props;
   return (
-    <Avatar className="relative z-[2] -mt-36 ml-8 size-32 sm:-mt-44 sm:ml-12 sm:size-44">
+    <Avatar className="relative z-[2] -mt-36 ml-6 size-32 sm:-mt-44 sm:ml-12 sm:size-44">
       <AvatarImageWithLoader
         src={getAvatarUrl(user.avatarImageUrl || "") || ""}
         alt={user?.username}

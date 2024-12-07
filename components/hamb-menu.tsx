@@ -214,7 +214,7 @@ export function HambMenu() {
   if (!isSmallScreen) return null;
 
   return (
-    <div className="size-auto">
+    <div className="flex size-auto items-center justify-center">
       <Button size="icon_sm" onClick={toggleMenu} variant="ghost" className="rounded-full">
         <Menu className="text-gray-400 dark:text-theme-titan-white" />
       </Button>
@@ -241,7 +241,7 @@ export function HambMenu() {
           }
         >
           <div className="h-screen w-full overflow-y-scroll py-10">
-            <div className="flex size-full flex-col items-start justify-start">
+            <div className="flex w-full flex-col items-start justify-start">
               {links.map((link) => {
                 if (link.id === "notifications") {
                   return (
@@ -280,7 +280,7 @@ export function HambMenu() {
           </div>
 
           <div
-            className="fixed bottom-0 left-0 z-10 grid h-auto w-full place-items-center py-8"
+            className="fixed bottom-6 left-0 z-10 grid h-auto w-full place-items-center bg-theme-background/50 py-8 backdrop-blur-sm dark:bg-theme-mine-shaft-dark/50"
             onClick={toggleMenu}
           >
             <Button variant="ghost" className="size-20 rounded-full">

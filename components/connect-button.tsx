@@ -139,7 +139,7 @@ function WalletButton(props: RenderProps) {
         }
 
         return (
-          <div className="flex items-center justify-end gap-2 md:gap-4">
+          <div className="flex items-center justify-end gap-0 md:gap-4">
             {!isSmallScreen ? (
               <>
                 <Button onClick={openChainModal} className="h-10 gap-2 rounded-full px-4" size="lg">

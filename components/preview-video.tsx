@@ -1,9 +1,12 @@
 "use client";
 
-import { lazy, Suspense, useState } from "react";
 import type { NFT } from "@/services/nfts";
-import { Spinner } from "./ui/spinner";
+
+import { lazy, Suspense, useState } from "react";
+
 import { env } from "@/configs";
+
+import { Spinner } from "./ui/spinner";
 
 const HoverVideoPlayer = lazy(() => import("react-hover-video-player"));
 
@@ -29,7 +32,7 @@ export function PreviewVideo({ nft }: Props) {
         playbackRangeStart={0}
         playbackRangeEnd={3}
         videoStyle={{ width: "100%", height: "100%" }}
-        className="relative h-[225px] w-full overflow-hidden rounded-2xl text-sm font-semibold sm:h-[175px] 3xl:h-[190px]"
+        className="relative size-full overflow-hidden rounded-2xl text-sm font-semibold sm:h-[175px] 3xl:h-[190px]"
         loadingOverlay={
           <div className="relative flex size-full items-center justify-center">
             <Spinner />
@@ -37,7 +40,6 @@ export function PreviewVideo({ nft }: Props) {
         }
         preload="auto" // Preload the video for better streaming
       />
-     
     </Suspense>
   );
 }

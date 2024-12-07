@@ -427,9 +427,7 @@ export function UploadForm(props: Props) {
             throw new Error("NFT mint has failed!");
           }
         }
-        console.log("r", result.r, res);
         if (streamCollectionContract) {
-          console.log("here though");
           const tx = await streamCollectionContract.mint(
             result.createdTokenId,
             result.timestamp,
@@ -440,7 +438,6 @@ export function UploadForm(props: Props) {
             1000,
             `${result.createdTokenId}.json`
           );
-          console.log("here though 2", tx);
 
           if (tx?.hash) {
             addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });

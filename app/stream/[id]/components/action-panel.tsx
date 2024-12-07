@@ -27,7 +27,7 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
   return (
     <div className="mt-3 h-auto w-full">
       <p className="flex text-sm">
-        Uploaded by{" "}
+        Uploaded by
         <Link
           href={`/${nft.mintername || nft.minter}`}
           className="ml-2 flex items-center gap-2 text-classic-purple"
