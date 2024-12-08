@@ -63,7 +63,8 @@ export function StreamsContainer(props: Props) {
       return;
     }
 
-    setData([...data, ...res.data.result]);
+    // @ts-ignore
+    setData([...data.videos, ...res.data.result.videos]);
     setPage(page + 1);
   }
 
@@ -82,7 +83,9 @@ export function StreamsContainer(props: Props) {
       {isSearch &&
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
-        data?.videos?.map((nft, index) => <FeedItem nft={nft} key={nft.tokenId + "--" + index} />)}
+        data?.videos?.map((nft, index) => (
+          <StreamItem nft={nft} key={nft.tokenId + "--" + index} />
+        ))}
 
       {!isSearch &&
         data?.map((nft, index) => (
