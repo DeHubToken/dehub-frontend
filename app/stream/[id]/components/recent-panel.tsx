@@ -61,12 +61,12 @@ export function RecentPanel(props: Props) {
         >
           <Link
             href={`/stream/${item.tokenId}`}
-            className="h-[225px] w-full overflow-hidden rounded-2xl"
+            className="relative h-0 w-full overflow-hidden rounded-2xl pt-[56.25%]"
           >
             <LazyImage
               src={getImageUrl(item.imageUrl, 256, 256)}
               alt={item.name || "Upload"}
-              className="size-full object-cover"
+              className="absolute left-0 top-0 size-full object-cover"
             />
           </Link>
           <div className="flex h-auto w-full flex-col items-start justify-start gap-1 p-4">

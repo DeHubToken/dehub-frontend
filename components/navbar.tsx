@@ -29,7 +29,7 @@ export function Navbar() {
           <Logo />
         </Link>
 
-        <div className="flex flex-[0_0_60%] items-center justify-end gap-2 md:gap-6">
+        <div className="flex flex-[0_0_60%] items-center justify-end gap-1 md:gap-6">
           <SearchBox />
           <SearchModal />
           <ConnectButton label="Connect" />

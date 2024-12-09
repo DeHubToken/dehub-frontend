@@ -48,7 +48,7 @@ export function SocialLinks(props: Props) {
   };
 
   return (
-    <div className="flex h-auto w-full items-center justify-end px-4 py-6">
+    <div className="flex h-auto w-full items-center justify-end py-6 sm:px-4">
       {user?.facebookLink && (
         <Link href={getSocialLink(user.facebookLink, "facebook.com")}>
           <Button variant="ghost" size="icon" className="rounded-full">

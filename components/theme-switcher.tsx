@@ -5,15 +5,14 @@ import { useTheme } from "next-themes";
 
 export function ThemeSwitcher() {
   const { setTheme, theme } = useTheme();
-  console.log({ theme });
 
   if (theme === "dark") {
     return (
       <button
         onClick={() => setTheme("light")}
-        className="rounded-full bg-theme-mine-shaft-dark p-3 text-theme-background dark:bg-theme-mine-shaft dark:text-theme-background"
+        className="rounded-full bg-theme-mine-shaft-dark p-2 text-theme-background dark:bg-theme-mine-shaft dark:text-theme-background sm:p-3"
       >
-        <MoonIcon className="dark:text-theme-titan-white" />
+        <MoonIcon className="size-3 dark:text-theme-titan-white sm:size-5" />
       </button>
     );
   }
@@ -21,9 +20,9 @@ export function ThemeSwitcher() {
   return (
     <button
       onClick={() => setTheme("dark")}
-      className="rounded-full bg-theme-mine-shaft-dark p-3 text-theme-background dark:bg-theme-mine-shaft dark:text-theme-background"
+      className="rounded-full bg-theme-mine-shaft-dark p-2 text-theme-background dark:bg-theme-mine-shaft dark:text-theme-background sm:p-3"
     >
-      <SunIcon className="text-gray-600" />
+      <SunIcon className="size-3 text-gray-600 sm:size-5" />
     </button>
   );
 }

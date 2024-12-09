@@ -24,7 +24,7 @@ function StreamInfo(props: { nft: NFT }) {
 
   return (
     <div className="mt-5 h-auto w-full rounded-2xl border border-theme-mine-shaft-dark bg-theme-mine-shaft-dark p-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
-      <div className="flex h-auto w-full flex-col items-start justify-start gap-4">
+      <div className="flex h-auto w-full flex-col items-start justify-start gap-4 overflow-hidden">
         <div className="flex h-auto w-full flex-col items-start justify-between gap-2 sm:flex-row">
           <div className="flex items-center gap-1">
             <p className="text-sm">
@@ -32,7 +32,7 @@ function StreamInfo(props: { nft: NFT }) {
             </p>
           </div>
           <p className="text-sm">
-            <span className="font-semibold">Uploaded At :</span>{" "}
+            <span className="font-semibold">Uploaded :</span>{" "}
             {new Date(nft.createdAt).toDateString()}{" "}
             {getTransactionLink(nft.chainId || defaultChainId, nft.mintTxHash) && (
               <a
@@ -46,7 +46,7 @@ function StreamInfo(props: { nft: NFT }) {
             )}
           </p>
         </div>
-        <h1 className="text-2xl font-medium">{nft.name}</h1>
+        <h1 className="w-full break-words text-2xl font-medium">{nft.name}</h1>
         {/* <p className="text-sm">
           <span className="font-semibold">Duration :</span> {secondToMinute(nft?.videoDuration)}{" "}
           minutes
@@ -54,8 +54,8 @@ function StreamInfo(props: { nft: NFT }) {
         <p className="text-sm">
           <span className="font-semibold">Description :</span> {nft.description}
         </p>
-        <div className="w-full">
-          <span className="mr-1 font-semibold">Categories :</span>{" "}
+        <div className="flex w-full flex-wrap">
+          <span className="mr-1 font-semibold">Categories :</span>
           {nft?.category?.map((i) => (
             <Link key={i} href={`/?category=${i}&type=trends`} className="mr-1">
               <span className="cursor-pointer">#{i}</span>

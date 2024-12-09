@@ -114,7 +114,7 @@ export function Video(props: { options: Options; onReady?: (player: Player) => v
       )}
 
       {/* Custom Progress Bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-2 bg-gray-800">
+      <div className="absolute bottom-0 left-0 right-0 hidden h-2 bg-gray-800">
         {/* Buffered Indicator */}
         <div
           className="absolute left-0 top-0 h-full bg-gray-500"

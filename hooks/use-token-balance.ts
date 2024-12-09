@@ -1,14 +1,14 @@
+import { useCallback, useEffect, useState } from "react";
 import { ethers } from "ethers";
 
-import { useCallback, useEffect, useState } from "react";
-import { useMulticallContract } from "./use-web3";
-import { useActiveWeb3React } from "./web3-connect";
-import { supportedTokens } from "@/configs";
-import { getContractData } from "@/web3/utils/contract";
 import { ERC20Abi } from "@/web3/abis";
+import { getContractData } from "@/web3/utils/contract";
 import { multicallRead } from "@/web3/utils/multicall";
 
+import { supportedTokens } from "@/configs";
 
+import { useMulticallContract } from "./use-web3";
+import { useActiveWeb3React } from "./web3-connect";
 
 export default function useTokenBalance(isUpdate: boolean) {
   const multicallContract = useMulticallContract();
@@ -19,31 +19,33 @@ export default function useTokenBalance(isUpdate: boolean) {
 
   const fetchWalletBalance = useCallback(async () => {
     if (account && library && chainId && multicallContract) {
-      const callDataArray:any = [];
+      const callDataArray: any = [];
       supportedTokens
-        .filter((token:any) => token.chainId === chainId)
-        .forEach((token:any) => {
+        .filter((token: any) => token.chainId === chainId)
+        .forEach((token: any) => {
           const tokenContract = getContractData(token.address.toString(), ERC20Abi);
           callDataArray.push({
             param: [account],
             contract: tokenContract,
             functionName: "balanceOf",
-            returnKey: token.address.toString(),
+            returnKey: token.address.toString()
           });
         });
       try {
-        const result:any = await multicallRead(multicallContract as any, callDataArray);
+        const result: any = await multicallRead(multicallContract as any, callDataArray);
         supportedTokens
-          .filter(e => e.chainId === chainId)
-          .forEach(token => {
+          .filter((e) => e.chainId === chainId)
+          .forEach((token) => {
             const key = token.address.toString();
 
-            if (result[key]) result[key] = Number(ethers.utils.formatUnits(result[`${token.address}`], token.decimals));
+            if (result[key])
+              result[key] = Number(
+                ethers.utils.formatUnits(result[`${token.address}`], token.decimals)
+              );
           });
         setTokenBalances(result);
       } catch (e) {
         setIsError(true);
-        console.log("----read wallet", e);
       }
     }
   }, [account, chainId, library, multicallContract]);

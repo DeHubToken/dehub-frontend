@@ -50,7 +50,7 @@ export function ProfileAction(props: Props) {
   const isFollowing = user.followers?.includes(account?.toLowerCase() || "");
 
   return (
-    <div className="flex size-auto max-w-screen-xs flex-wrap items-start justify-start gap-4">
+    <div className="flex w-full max-w-screen-xs flex-wrap items-start justify-start gap-3 overflow-hidden sm:gap-4">
       <SubscriptionModal />
       <TipModal tokenId={0} to={user.address!} />
 

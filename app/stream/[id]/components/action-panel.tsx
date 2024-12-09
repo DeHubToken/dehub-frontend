@@ -28,7 +28,7 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
   return (
     <div className="mt-3 h-auto w-full">
       <p className="flex text-sm">
-        Uploaded by{" "}
+        Uploaded by
         <Link
           href={`/${nft.mintername || nft.minter}`}
           className="ml-2 flex items-center gap-2 text-classic-purple"
@@ -59,7 +59,7 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
           <PPVModal nft={nft} />
           <TipModal tokenId={tokenId} to={nft.minter} />
           <ClaimAsViewer nft={nft} tokenId={tokenId} />
-          <SubscriptionModal plans={nft?.planDetails} avatarImageUrl={null} displayName={nft.mintername || nft.minter}/>
+          <SubscriptionModal plans={nft?.plansDetails} avatarImageUrl={null} displayName={nft.mintername || nft.minter}/>
           <ClaimAsCommentor nft={nft} tokenId={tokenId} />
           <div className="absolute right-0 top-0 size-auto sm:hidden">
             <Share />
