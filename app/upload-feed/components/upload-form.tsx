@@ -481,8 +481,8 @@ export function UploadForm(props: Props) {
     const lockContentToken = { [streamInfoKeys.lockContentTokenSymbol]: token?.symbol || "" };
 
     const lockContentChainIds = {
-      [streamInfoKeys.lockContentChainIds]:
-        networksForAToken.find((t) => t.value === network)?.chainId || ""
+      [streamInfoKeys.lockContentChainIds]:[
+        networksForAToken.find((t) => t.value === network)?.chainId || ""]
     };
     const lockContentAmount = { [streamInfoKeys.lockContentAmount]: amount || 0 };
     form.setValue("streamInfo", {
@@ -502,8 +502,8 @@ export function UploadForm(props: Props) {
       [streamInfoKeys.payPerViewTokenSymbol]: networkForPPVToken?.symbol || ""
     };
     const payPerViewChainIds = {
-      [streamInfoKeys.payPerViewChainIds]:
-        networksForPPVToken.find((t) => t.value === ppvNetwork)?.chainId || ""
+      [streamInfoKeys.payPerViewChainIds]:[
+        networksForPPVToken.find((t) => t.value === ppvNetwork)?.chainId || ""]
     };
     const payPerViewAmount = { [streamInfoKeys.payPerViewAmount]: ppvAmount || 0 };
     form.setValue("streamInfo", {

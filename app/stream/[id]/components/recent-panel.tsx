@@ -15,7 +15,7 @@ import { createAvatarName } from "@/libs/utils";
 
 import { GetNFTsResult } from "@/services/nfts/trending";
 
-import { getAvatarUrl, getImageUrl } from "@/web3/utils/url";
+import { getAvatarUrl, getImageUrl, getImageUrlApi } from "@/web3/utils/url";
 
 import { LikeButton } from "./stream-actions";
 
@@ -37,7 +37,7 @@ export function RecentPanel(props: Props) {
           >
             <figure className="h-32 w-52 overflow-hidden rounded-2xl sm:h-40 sm:w-full sm:max-w-[40%] sm:flex-[0_0_40%] xl:h-28">
               <LazyImage
-                src={getImageUrl(item.imageUrl, 256, 256)}
+                src={getImageUrlApi(item.tokenId, 256, 256)}
                 alt={item.name || "Upload"}
                 className="size-full object-cover"
               />
