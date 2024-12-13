@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { cn } from "@/libs/utils";
+
+import { fetchDmMessages } from "@/services/dm";
 
 import { StartNewConversation } from "./common";
 import { ConversationHeader } from "./conversation-header";
@@ -11,17 +16,44 @@ import { useMessage } from "./provider";
 
 export function ConversationView() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("loading");
-  const { messages, selectedMessage: message } = useMessage("MessageList");
+  const { account }: any = useActiveWeb3React();
+  const { messages, selectedMessage: message }: { messages: any; selectedMessage: any } =
+    useMessage("MessageList");
+  const [chat, setChat] = useState(message);
+  const [page, setPage] = useState({
+    q: null,
+    skip: 0,
+    limit: 10,
+    address: account
+  });
 
+  console.log("sssSSSS", message);
+  useEffect(() => {
+    setChat(message);
+    setPage({
+      q: null,
+      skip: 0,
+      limit: 10,
+      address: account
+    });
+  }, [message, account]);
   useEffect(() => {
     setStatus("loading");
-    setTimeout(() => {
+    (async () => {
+      if (!message?._id) {
+        return;
+      }
+      const { success, data, error = "" }: any = await fetchDmMessages(message._id, page);
+      if (!success) {
+        toast.error(error);
+      }
+      setChat({ ...message, messages: data.messages });
       setStatus("success");
-    }, 3000);
-  }, [message]);
+    })();
+  }, [message, page]);
 
   if (!messages.length) return null;
-  if (!message) return null;
+  if (!chat) return null;
 
   if (status === "loading") {
     return (
@@ -55,7 +87,6 @@ export function ConversationView() {
       </div>
     );
   }
-
   return (
     <div className="w-full">
       <div className="flex justify-between">
@@ -64,10 +95,10 @@ export function ConversationView() {
 
       <ChatContainer>
         <StartNewConversation />
-        {message.messages.map((message) => (
-          <div key={message.id} className="mb-4">
-            {message.author === "me" && <OutgoingMessage message={message} />}
-            {message.author !== "me" && <IncomingMessage message={message} />}
+        {chat.messages.map((message: any) => (
+          <div key={message?.id} className="mb-4">
+            {message?.author === "me" && <OutgoingMessage message={message} />}
+            {message?.author !== "me" && <IncomingMessage message={message} />}
           </div>
         ))}
       </ChatContainer>

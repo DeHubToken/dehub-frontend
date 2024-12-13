@@ -1,9 +1,18 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef, } from "react";
+import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Settings } from "lucide-react";
+import io from "socket.io-client";
+import { toast } from "sonner"; 
+
+import { Button } from "@/components/ui/button";
+
+import { SERVER_URL, useWebSockets } from "@/contexts/websocket";
+
+import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { cn } from "@/libs/utils";
 
@@ -11,15 +20,46 @@ import { NoConversation } from "./components/common";
 import { ContactList } from "./components/contact-list";
 import { ConversationView } from "./components/conversation-view";
 import { MobileContactList } from "./components/mobile-contact-list";
+import { NewChatModal } from "./components/new-chat-modal";
 import { MessageProvider } from "./components/provider";
 
 /* ----------------------------------------------------------------------------------------------- */
 
 dayjs.extend(relativeTime);
-
 export default function MessagesScreen() {
+  const { account } = useActiveWeb3React();
+  const router = useRouter();
+  // Use any for socket connections
+  const socketConnections = useRef<any>({
+    dm: null
+  });
+
+  useEffect(() => {
+    if (!account ) {
+      if(socketConnections.current.dm)
+      socketConnections?.current?.dm?.disconnect();
+      toast.error("please connect to wallet.");
+      router.push("/");
+    }
+    if (!socketConnections.current.dm && !socketConnections.current.gpDm) {
+      // Initialize both sockets only once
+      socketConnections.current.dm = io(`${SERVER_URL}/dm`, {
+        query: {
+          address: account
+        }
+      });
+      // Clean up on unmount
+      return () => {
+        if (socketConnections.current.dm) {
+          socketConnections.current.dm.disconnect();
+          socketConnections.current.dm = null;
+        }
+      };
+    }
+  }, [SERVER_URL, account, socketConnections]);
+
   return (
-    <MessageProvider>
+    <MessageProvider socketConnections={socketConnections}>
       <ScreenHeight>
         <Messages />
       </ScreenHeight>
@@ -33,6 +73,14 @@ function Messages() {
       <MobileContactList />
       <div className="hidden flex-col gap-8 pt-6 lg:flex lg:flex-1">
         {contactListHeader}
+
+        <div className="grid w-full justify-items-center">
+          <div className="flex w-1/2 items-center justify-between gap-5">
+            <NewChatModal />
+            <Button>Dm </Button>
+            <Button>Groups </Button>
+          </div>
+        </div>
         <ContactList />
       </div>
 

@@ -19,3 +19,13 @@ export const messages = Array.from({ length: 50 }).map((_, index) => ({
 }));
 
 export type TMessage = (typeof messages)[0];
+
+export const SocketEvent = {
+  disconnect: "disconnect",
+  connection: "connection",
+  fetchDMessages: "fetchDMessages",
+  ping: "ping",
+  pong: "pong",
+  createAndStart: "createAndStart",
+  sendMessage: "sendMessage"
+};
