@@ -44,13 +44,15 @@ export default function Form({ plan }: any) {
   const { account, chainId } = useActiveWeb3React();
   const router = useRouter();
   const planId = plan != undefined ? plan.id : null;
+  const [saved, setSaved] = useState(false);
+
   useEffect(() => {
     if (plan?.address && plan?.address != account?.toLowerCase()) {
       toast.error("You are not the owner.");
       router.push("/"); // Redirect to home
     }
   }, [plan, account]);
-  console.log("wwwwwwplan", plan);
+
   const form = useForm({
     defaultValues: {
       tier: {
@@ -74,17 +76,19 @@ export default function Form({ plan }: any) {
     watch,
     formState: { errors }
   } = form;
-  console.log("plan", plan);
-  const { tier } = watch();
+  
+    const { tier } = watch();
+    const onSubmit = async (plan: any) => {
 
-  console.log("tier", tier);
-  const onSubmit = async (plan: any) => {
     // Add your API call logic here
     let { benefits, ...tier } = plan.tier;
     benefits = benefits.map((b: any) => b.value);
 
-    console.log("plan", plan);
-
+    if (benefits.length < 2) {
+      toast.error("Please add at least two benefits.");
+      return;
+    }
+ 
     plan = { ...tier, benefits };
     try {
       const {
@@ -92,12 +96,11 @@ export default function Form({ plan }: any) {
         error,
         plan: updatedPlan
       }: any = planId !== null ? await updatePlan(plan, planId) : await createPlan(plan);
-      console.log("Submission successful");
 
       if (success) {
         if (plan?.id) {
           form.reset();
-
+          setSaved(true);
           toast.success("plan created");
           return;
         }
@@ -358,13 +361,22 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId }
                   placeholder="Enter price"
                   disabled={field.isPublished}
                   className="w-full rounded-md border bg-gray-100 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  {...register(`tier.chains.${index}.price`, { valueAsNumber: true })}
+                  {...register(`tier.chains.${index}.price`, {
+                    valueAsNumber: true,
+                    required: "Amount is required",
+                    validate: value => {
+                      if (value <= 0) {
+                        toast.error("Amount should be greater than 0");
+                        return "Amount should be greater than 0"; 
+                      }
+                    }
+                  })}
                 />
               </div>
             </div>
 
             {/* Conditional Delete Button (only for unpublished chains) */}
-            {!field.temp && !field.isPublished && (
+            {(field.temp || !field.isPublished) && (
               <div className="sm:w-40 md:w-48">
                 <Button
                   variant="gradientOne"
@@ -378,7 +390,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId }
             )}
 
             <PublishOnChain
-              disabled={field.isPublished}
+              disabled={field.isPublished || field.temp}
               field={field}
               chainId={chainId}
               deployedPlan={deployedPlan}
