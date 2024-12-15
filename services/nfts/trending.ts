@@ -1,5 +1,6 @@
 import { api } from "@/libs/api";
 import objectToGetParams, { removeUndefined } from "@/libs/utils";
+
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
 type SearchParams = {
@@ -10,7 +11,7 @@ type SearchParams = {
   search?: string;
   range?: string | number;
   category?: string | null;
-  address?: string
+  address?: string;
 };
 
 export type GetNFTsResult = {
@@ -88,13 +89,16 @@ export async function getNFTs(params?: SearchParams) {
   return res;
 }
 
-export async function getLikedNFTs(params: {page: number, address: string | undefined}, library: any) {
+export async function getLikedNFTs(
+  params: { page: number; address: string | undefined },
+  library: any
+) {
   const sigData = await getSignInfo(library, params?.address as string);
   const payload = {
     ...params,
     sig: sigData?.sig,
     timestamp: sigData?.timestamp
-  }
+  };
   const query = objectToGetParams(payload || {});
   const url = `/liked_videos${query}`;
   const res = await api<{ result: GetNFTsResult[] }>(url, {
