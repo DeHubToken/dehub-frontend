@@ -40,6 +40,14 @@ import { durations, SB_ADDRESS, supportedTokens } from "@/configs";
 import PublishOnChain from "./publish-on-chain";
 import { SubscriptionModalPreView } from "./subscription-preview";
 
+type FormValues = {
+  tier: {
+    chains: {
+      token: string;
+    }[];
+  };
+};
+
 export default function Form({ plan }: any) {
   const { account, chainId } = useActiveWeb3React();
   const router = useRouter();
@@ -472,16 +480,32 @@ export const CurrencySelect = ({
   index: number;
   disabled: boolean;
 }) => {
+
+  const { setValue, trigger, formState: { errors } } = useFormContext<FormValues>();
+
+  const handleValidation = async () => {
+    const isValid = await trigger(`tier.chains.${index}.token`); // Validate the token field
+    if (!isValid) {
+      toast.error('Token is required'); // Show toast message if validation fails
+    }
+    return isValid;
+  };
+
   return (
     <Controller
       name={`tier.chains.${index}.token`} // Correct path for the token of the specific chain
       control={control}
       defaultValue="" // Set a default value for the currency
+      rules={{ required: true }}
       render={({ field }) => (
+        <>
         <Select
           {...field} // Spread the field to control its value and changes
           value={field.value} // Use the field value from react-hook-form
-          onValueChange={(value: string) => field.onChange(value)} // Update the field value on change
+          onValueChange={(value: string) => {
+            field.onChange(value); 
+            handleValidation(); 
+          }} // Update the field value on change
           disabled={disabled}
         >
           <SelectTrigger className="h-full min-w-32 rounded-none bg-transparent dark:bg-transparent">
@@ -506,6 +530,10 @@ export const CurrencySelect = ({
               ))}
           </SelectContent>
         </Select>
+        {errors?.tier?.chains?.[index]?.token && (
+            <p className="text-red-500 text-sm">Token is required</p> 
+        )}
+        </>
       )}
     />
   );
