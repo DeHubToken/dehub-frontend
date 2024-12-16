@@ -124,9 +124,11 @@ export function StreamVideoProvider(props: { nft: NFT }) {
 
   useEffect(() => {
     async function recordView() {
-      api(`/record-views/${nft.tokenId}?sig=""&timestamp=""&address=""`).catch(() => {
-        // --
-      });
+      if (!account) return;
+      const result = await getSignInfo(library, account);
+      api(
+        `/record-view/${nft.tokenId}?sig=${result.sig.trim()}&timestamp=${result.timestamp}&address=${account}`
+      );
     }
 
     recordView();
