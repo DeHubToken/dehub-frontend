@@ -26,7 +26,7 @@ export function OutgoingMessage(props: {
             <p className="text-sm dark:text-gray-200">{message.content}</p>
           </div>
           <Avatar className="size-8">
-            <AvatarFallback>{createAvatarName(message.author)}</AvatarFallback>
+            <AvatarFallback>{createAvatarName(message?.author)}</AvatarFallback>
             <AvatarImage
               className="object-cover"
               src={getAvatarUrl(message?.avatar)}

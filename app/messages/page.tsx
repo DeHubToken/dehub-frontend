@@ -1,14 +1,16 @@
 "use client";
 
-import { Fragment, useEffect, useRef, } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Settings } from "lucide-react";
 import io from "socket.io-client";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 
 import { SERVER_URL, useWebSockets } from "@/contexts/websocket";
 
@@ -21,6 +23,7 @@ import { ContactList } from "./components/contact-list";
 import { ConversationView } from "./components/conversation-view";
 import { MobileContactList } from "./components/mobile-contact-list";
 import { NewChatModal } from "./components/new-chat-modal";
+import { NewGroupChatModal } from "./components/new-group-chat";
 import { MessageProvider } from "./components/provider";
 
 /* ----------------------------------------------------------------------------------------------- */
@@ -29,34 +32,48 @@ dayjs.extend(relativeTime);
 export default function MessagesScreen() {
   const { account } = useActiveWeb3React();
   const router = useRouter();
-  // Use any for socket connections
+
+  // Ref to hold socket connections
   const socketConnections = useRef<any>({
     dm: null
   });
-
   useEffect(() => {
-    if (!account ) {
-      if(socketConnections.current.dm)
-      socketConnections?.current?.dm?.disconnect();
-      toast.error("please connect to wallet.");
+    if (!account) {
+      // If no account is connected, disconnect socket and redirect to home page
+      if (socketConnections.current.dm) {
+        socketConnections.current.dm.disconnect();
+        socketConnections.current.dm = null;
+      }
+      toast.error("Please connect to wallet.");
       router.push("/");
+    } else {
+      // If account is present and no socket connection exists, initialize it
+      if (!socketConnections.current.dm) {
+        socketConnections.current.dm = io(`${SERVER_URL}/dm`, {
+          query: {
+            address: account
+          }
+        });
+
+        // Handle socket connection events (Optional)
+        socketConnections.current.dm.on("connect", () => {
+          console.log("Socket connected for DM");
+        });
+
+        socketConnections.current.dm.on("disconnect", () => {
+          console.log("Socket disconnected");
+        });
+      }
     }
-    if (!socketConnections.current.dm && !socketConnections.current.gpDm) {
-      // Initialize both sockets only once
-      socketConnections.current.dm = io(`${SERVER_URL}/dm`, {
-        query: {
-          address: account
-        }
-      });
-      // Clean up on unmount
-      return () => {
-        if (socketConnections.current.dm) {
-          socketConnections.current.dm.disconnect();
-          socketConnections.current.dm = null;
-        }
-      };
-    }
-  }, [SERVER_URL, account, socketConnections]);
+
+    // Cleanup: Disconnect socket when account changes or component unmounts
+    return () => {
+      if (socketConnections.current.dm) {
+        socketConnections.current.dm.disconnect();
+        socketConnections.current.dm = null;
+      }
+    };
+  }, [socketConnections, account]); // Only re-run this effect when the account changes
 
   return (
     <MessageProvider socketConnections={socketConnections}>
@@ -70,20 +87,22 @@ export default function MessagesScreen() {
 function Messages() {
   return (
     <Fragment>
-      <MobileContactList />
-      <div className="hidden flex-col gap-8 pt-6 lg:flex lg:flex-1">
-        {contactListHeader}
+      <Tabs defaultValue="dm">
+        <MobileContactList />
+        <div className="hidden flex-col gap-8 pt-6 lg:flex lg:flex-1">
+          {contactListHeader}
 
-        <div className="grid w-full justify-items-center">
-          <div className="flex w-1/2 items-center justify-between gap-5">
-            <NewChatModal />
-            <Button>Dm </Button>
-            <Button>Groups </Button>
+          <div className="grid w-full justify-items-center">
+            <TabsList className="mb-4 flex w-1/2 items-center justify-between gap-5">
+              <div className="flax  flex-grow gap-5 ">
+                <NewChatModal />
+                <NewGroupChatModal /> 
+              </div>
+            </TabsList>
           </div>
+          <ContactList />
         </div>
-        <ContactList />
-      </div>
-
+      </Tabs>
       <div className="flex flex-1 px-6 pt-2">
         <NoConversation />
         <ConversationView />

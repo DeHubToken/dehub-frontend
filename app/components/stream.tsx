@@ -9,7 +9,7 @@ import { safeParseCookie } from "@/libs/cookies";
 import { getNFTs } from "@/services/nfts/trending";
 
 import { StreamRangeFilter } from "./filters";
-import { StreamsContainer } from "./streams-container";
+import { SearchItemsContainer, StreamsContainer } from "./streams-container";
 
 type FeedProps = {
   title: string;
@@ -34,6 +34,8 @@ export async function Stream(props: FeedProps) {
     address: user?.address
   });
 
+  const isSearched = q ? true : false;
+
   if (!res.success) {
     return (
       <div className="flex min-h-[calc(100vh-48px-72px-32px-80px)] w-full items-center justify-center">
@@ -52,15 +54,29 @@ export async function Stream(props: FeedProps) {
       </div>
 
       <div className="mt-10 h-auto w-full">
-        <StreamsContainer
-          address={user?.address}
-          isSearch={q ? true : false}
-          data={res?.data?.result||[]}
-          type={type}
-          range={range}
-          q={q}
-          category={category}
-        />
+        {isSearched && (
+          <SearchItemsContainer
+            // @ts-ignore
+            data={res.data.result.videos}
+            // @ts-ignore
+            accounts={res.data.result.accounts}
+            type={type}
+            range={range}
+            q={q}
+            category={category}
+          />
+        )}
+        {!isSearched && (
+          <StreamsContainer
+            address={user?.address}
+            isSearch={isSearched}
+            data={res.data.result}
+            type={type}
+            range={range}
+            q={q}
+            category={category}
+          />
+        )}
       </div>
     </div>
   );

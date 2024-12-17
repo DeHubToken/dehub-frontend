@@ -80,7 +80,7 @@ export const NewChatModal = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="gradientOne" className="gap-2 py-5">
+        <Button   className="gap-2 py-5">
           <CirclePlus className="size-5" /> New DM
         </Button>
       </DialogTrigger>

@@ -12,6 +12,8 @@ import { Video } from "@/components/video";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
+import { api } from "@/libs/api";
+
 import { getStreamStatus, isOwner, isTranscoding } from "@/web3/utils/validators";
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
@@ -118,8 +120,26 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     streamStatus?.lockTokenWithLockContent?.symbol,
     streamStatus?.streamStatus?.isLockedWithLockContent,
     streamStatus?.streamStatus?.isLockedWithPPV
-  ]); 
-  if (nft.videoUrl && !isTranscodingVideo && !streamStatus?.streamStatus?.isLockedWithLockContent && !streamStatus?.streamStatus?.isLockedWithPPV) {
+  ]);
+
+  useEffect(() => {
+    async function recordView() {
+      if (!account) return;
+      const result = await getSignInfo(library, account);
+      api(
+        `/record-view/${nft.tokenId}?sig=${result.sig.trim()}&timestamp=${result.timestamp}&address=${account}`
+      );
+    }
+
+    recordView();
+  }, [nft.tokenId]);
+
+  if (
+    nft.videoUrl &&
+    !isTranscodingVideo &&
+    !streamStatus?.streamStatus?.isLockedWithLockContent &&
+    !streamStatus?.streamStatus?.isLockedWithPPV
+  ) {
     return (
       <div className="relative h-auto w-full overflow-hidden rounded-2xl">
         {loading && <StreamVideoSkeleton />}
