@@ -9,7 +9,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
@@ -22,13 +22,11 @@ import { getAvatarUrl } from "@/web3/utils/url";
 
 import { useMessage } from "./provider";
 
-// Interface for the API response
 interface SearchUserResponse {
   success: boolean;
   data?: { users: User[] };
 }
 
-// Interface for a single user
 interface User {
   _id: string;
   address: string;
@@ -54,7 +52,7 @@ interface User {
   youtubeLink?: string | null;
 }
 
-export const NewGroupChatModal = () => {
+export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolean)=>void}) => {
   const { account } = useActiveWeb3React();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<User[]>([]);
@@ -64,6 +62,8 @@ export const NewGroupChatModal = () => {
   const [error, setError] = useState<string>("");
   const [selectedPlansIds, setSelectedPlansIds] = useState<number[]>([]);
   const [plans, setPlans] = useState([]);
+  const { handleAddNewChat } = useMessage("NewGroupChatModal");
+ 
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
@@ -75,7 +75,7 @@ export const NewGroupChatModal = () => {
       if (response?.success && response.data?.users) {
         setSearchResults(response.data.users);
       } else {
-        setSearchResults([]); // Clear results if the response is not as expected
+        setSearchResults([]);
         setError("No users found.");
       }
     } catch (err: any) {
@@ -95,25 +95,23 @@ export const NewGroupChatModal = () => {
       }
     });
   };
+
   const togglePlanSelection = (planId: number) => {
     setSelectedPlansIds((prev) => {
-      // Check if the planId is already selected
       if (prev.includes(planId)) {
-        // If it is, remove it
         return prev.filter((id) => id !== planId);
       } else {
-        // If it isn't, add it
         return [...prev, planId];
       }
     });
   };
 
-  const handleCreateGroupChat = () => {
+  const handleCreateGroupChat = async () => {
     if (!account) {
-      setError("please connect to wallet");
+      setError("Please connect to wallet");
       return;
     }
-    
+
     if (selectedUsers.length < 2) {
       setError("You need at least two users to create a group chat.");
       return;
@@ -124,12 +122,25 @@ export const NewGroupChatModal = () => {
       return;
     }
 
-    createGroupChat({
+    const response: any = await createGroupChat({
       groupName,
       users: selectedUsers.map((user) => user._id),
       plans: selectedPlansIds,
-      address: account?.toLowerCase()
+      address: account?.toLowerCase(),
     });
+    const { success, error } = response;
+    const data = response.data;
+
+    if (!success) {
+      toast.error(error);
+      return;
+    }
+
+    handleAddNewChat(data);
+
+    // Close dialog after successful creation
+    setOpen(false);
+    toast.success("Group chat created successfully!");
   };
 
   const fetchMyPlans = async () => {
@@ -146,11 +157,11 @@ export const NewGroupChatModal = () => {
   }, [account]);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2 py-5">
+        {/* <Button className="gap-2 py-5">
           <CirclePlus className="size-5" /> New Group Chat
-        </Button>
+        </Button> */}
       </DialogTrigger>
       <DialogContent className="max-w-[1400px] sm:rounded-3xl">
         <DialogTitle className="sr-only">New Group Chat</DialogTitle>
@@ -159,14 +170,14 @@ export const NewGroupChatModal = () => {
           <h3>Start a new group chat</h3>
         </DialogHeader>
         <div className="mt-8 flex flex-col gap-6">
-          <div className="flex  gap-4">
+          <div className="flex gap-4">
             <Input
               placeholder="Enter group name"
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
             />
           </div>
-          <div className="flex  gap-4">
+          <div className="flex gap-4">
             <Input
               placeholder="Enter username or address"
               value={searchTerm}
@@ -234,7 +245,6 @@ export const NewGroupChatModal = () => {
             </div>
           </div>
 
-          {/* Display Selected Tiers */}
           {selectedPlansIds.length > 0 && (
             <div className="mt-4">
               <h6 className="font-semibold">Selected Tiers:</h6>

@@ -1,15 +1,21 @@
 "use client";
 
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Settings } from "lucide-react";
+import { CirclePlus, Settings, Users } from "lucide-react";
 import io from "socket.io-client";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 
 import { SERVER_URL, useWebSockets } from "@/contexts/websocket";
@@ -101,14 +107,10 @@ function Messages() {
       <Tabs defaultValue="dm">
         <MobileContactList />
         <div className="hidden flex-col gap-8 pt-6 lg:flex lg:flex-1">
-          {contactListHeader}
-
+          <ContactListHeader />
           <div className="grid w-full justify-items-center">
             <TabsList className="mb-4 flex w-1/2 items-center justify-between gap-5">
-              <div className="flax  flex-grow gap-5 ">
-                <NewChatModal />
-                <NewGroupChatModal />
-              </div>
+              <div className="flax  flex-grow gap-5 "></div>
             </TabsList>
           </div>
           <ContactList />
@@ -122,15 +124,38 @@ function Messages() {
   );
 }
 
-const contactListHeader = (
-  <div className="flex items-center justify-between">
-    <h1 className="text-2xl">Messages</h1>
-    <button>
-      <Settings className="text-gray-400" />
-    </button>
-  </div>
-);
-
+const ContactListHeader = () => {
+  const [isDmModal, setIsDmModal] = useState(false);
+  const [isOpenGroupModal, setIsOpenGroupModal] = useState(false);
+  const handleDmChatModal = () => {
+    setIsDmModal(!isDmModal);
+  };
+  const handleGroupChatModal = () => {
+    setIsOpenGroupModal(!isOpenGroupModal);
+  };
+  return (
+    <div className="flex items-center justify-between">
+      <h1 className="text-2xl">Messages</h1>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <Settings className="text-gray-400" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="end">
+          <DropdownMenuItem onClick={handleDmChatModal}>
+            <CirclePlus className="size-5" /> Dm
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleGroupChatModal}>
+            <Users className="size-5" /> Group
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <NewGroupChatModal open={isOpenGroupModal} setOpen={setIsOpenGroupModal} />
+      <NewChatModal open={isDmModal} setOpen={setIsDmModal} />
+    </div>
+  );
+};
 function ScreenHeight(props: React.ComponentProps<"div">) {
   const { className, ...rest } = props;
   return (

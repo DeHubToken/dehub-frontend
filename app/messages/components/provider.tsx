@@ -30,6 +30,7 @@ type State = {
   }) => void;
   sendMessage: (newMsg: string) => void;
   setMessages: any;
+  handleAddNewChat: any;
 };
 
 const [Provider, useMessage] = createContext<State>("MessagesScreen");
@@ -38,37 +39,47 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const socket = props?.socketConnections?.current?.dm;
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
   const [status, setStatus] = useState<State["status"]>("idle");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any>([]);
   const message: any & { _id: string } = messages.find((msg: any) => msg._id === selectedMessageId);
   const { account }: any = useActiveWeb3React();
   useEffect(() => {
     setStatus("loading");
-    if (!socket) return; 
+    if (!socket) return;
     socket.on(SocketEvent.pong, (data: any) => {
       console.log(data);
     });
     socket.on(SocketEvent.sendMessage, newMsgHandler);
-    // socket.on(SocketEvent.fetchDMessages, setMsgsHandler);
+    socket.on(SocketEvent.createAndStart, handleAddNewChat);
     if (account) {
       fetchMyContacts();
     }
-    // setTimeout(() => {
-    //   setStatus("success");
-    // }, 3000);
 
     return () => {
-      // socket.off(SocketEvent.fetchDMessages, setMsgsHandler);
       socket.off(SocketEvent.sendMessage, newMsgHandler);
+      socket.off(SocketEvent.createAndStart, handleAddNewChat);
     };
   }, [socket]);
 
+  const handleAddNewChat = ({ message, data }: any) => {
+    if (!data) {
+      return;
+    }
+
+    setMessages((prevState: any[]) => {
+      const exist = prevState.find((d) => d._id == data._id);
+      if (exist) return prevState
+        return [data, ...prevState];
+    });
+    toast.success(message);
+  };
+  console.log("messages", messages.length);
   const newMsgHandler = (data: any) => {
     setMessages((privState: any) => {
       return privState.map((state: any) => {
         if (state._id === data.conversation) {
           return {
             ...state,
-            messages: [...state.messages, data]
+            messages: [...state?.messages||[], data]
           };
         }
         return state;
@@ -91,21 +102,16 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     }
     setMessages(data);
     setStatus("success");
-
   };
   const startNewChat = (user: { address: string; username: string; _id?: string }) => {
     socket.emit(SocketEvent.createAndStart, user);
     toast.success(`please wait starting chat with ${user.username || user.address}`);
   };
-  // const setMsgsHandler = (msgs: any) => {
-  //   setMessages(msgs);
-  // };
 
   const sendMessage = (newMsg: string) => {
     socket.emit(SocketEvent.sendMessage, { msg: newMsg, dmId: message?._id });
   };
 
-  console.log("messages", messages);
   return (
     <Provider
       messages={messages} // <- From API
@@ -117,6 +123,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       sendMessage={sendMessage}
       socket={socket}
       setMessages={setMessages}
+      handleAddNewChat={handleAddNewChat}
     >
       {props.children}
     </Provider>

@@ -50,13 +50,13 @@ interface User {
   youtubeLink?: string | null;
 }
 
-export const NewChatModal = () => {
+export const NewChatModal = ({ open, setOpen }: { open: boolean; setOpen: (d:boolean) => void }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const { startNewChat } = useMessage("NewChatModal");
-
+  // State for dialog open/close
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
     setIsLoading(true);
@@ -76,14 +76,17 @@ export const NewChatModal = () => {
       setIsLoading(false);
     }
   };
-
+  const handleStartNewChat = (user: any) => {
+    startNewChat(user);
+    setOpen(false);
+  };
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button   className="gap-2 py-5">
+    <Dialog open={open} onOpenChange={setOpen}>
+      {/* <DialogTrigger asChild>
+        <Button className="gap-2 py-5">
           <CirclePlus className="size-5" /> New DM
         </Button>
-      </DialogTrigger>
+      </DialogTrigger> */}
       <DialogContent className="max-w-[1400px] sm:rounded-3xl">
         <DialogTitle className="sr-only">New DM</DialogTitle>
         <DialogDescription className="sr-only">Start a direct message</DialogDescription>
@@ -120,11 +123,9 @@ export const NewChatModal = () => {
                       <span className="text-sm text-gray-500">{user.address}</span>
                     </div>
                     <Button
-                      variant="outline" 
+                      variant="outline"
                       className="ml-auto"
-                      onClick={() => { 
-                        startNewChat(user);
-                      }}
+                      onClick={() => handleStartNewChat(user)}
                     >
                       DM
                     </Button>

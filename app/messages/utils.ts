@@ -28,5 +28,6 @@ export const SocketEvent = {
   pong: "pong",
   createAndStart: "createAndStart",
   sendMessage: "sendMessage",
+  onCreateChat:'onCreateChat',
   reConnect: "reConnect"
 };
