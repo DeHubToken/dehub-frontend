@@ -22,10 +22,11 @@ export type TMessage = (typeof messages)[0];
 
 export const SocketEvent = {
   disconnect: "disconnect",
+  connect: "connect",
   connection: "connection",
-  fetchDMessages: "fetchDMessages",
   ping: "ping",
   pong: "pong",
   createAndStart: "createAndStart",
-  sendMessage: "sendMessage"
+  sendMessage: "sendMessage",
+  reConnect: "reConnect"
 };

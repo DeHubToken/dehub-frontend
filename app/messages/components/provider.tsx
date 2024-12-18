@@ -43,8 +43,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const { account }: any = useActiveWeb3React();
   useEffect(() => {
     setStatus("loading");
-    if (!socket) return;
-    socket.emit(SocketEvent.fetchDMessages, { msg: "hello" });
+    if (!socket) return; 
     socket.on(SocketEvent.pong, (data: any) => {
       console.log(data);
     });
@@ -90,7 +89,6 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     if (!data) {
       return;
     }
-    console.log("setMessages",data)
     setMessages(data);
     setStatus("success");
 

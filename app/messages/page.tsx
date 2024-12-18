@@ -25,6 +25,7 @@ import { MobileContactList } from "./components/mobile-contact-list";
 import { NewChatModal } from "./components/new-chat-modal";
 import { NewGroupChatModal } from "./components/new-group-chat";
 import { MessageProvider } from "./components/provider";
+import { SocketEvent } from "./utils";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -48,22 +49,32 @@ export default function MessagesScreen() {
       router.push("/");
     } else {
       // If account is present and no socket connection exists, initialize it
-      if (!socketConnections.current.dm) {
-        socketConnections.current.dm = io(`${SERVER_URL}/dm`, {
-          query: {
-            address: account
-          }
-        });
 
-        // Handle socket connection events (Optional)
-        socketConnections.current.dm.on("connect", () => {
-          console.log("Socket connected for DM");
-        });
-
-        socketConnections.current.dm.on("disconnect", () => {
-          console.log("Socket disconnected");
-        });
+      const socketOptions = {
+        query: {
+          address: account
+        }
+      };
+      console.log("socket-conn-options", `${SERVER_URL}/dm`, socketOptions);
+      if (socketConnections?.current?.dm?.disconnect) {
+        socketConnections.current.dm.disconnect();
       }
+      socketConnections.current.dm = io(`${SERVER_URL}/dm`, socketOptions);
+
+      // Handle socket connection events (Optional)
+      socketConnections.current.dm.on(SocketEvent.connect, () => {
+        console.log("Socket connected for DM");
+      });
+      // Handle socket connection events (Optional)
+      socketConnections.current.dm.on(SocketEvent.reConnect, () => {
+        console.log("re-connecting...");
+        socketConnections.current.dm = io(`${SERVER_URL}/dm`, socketOptions);
+        toast.info("connecting...");
+      });
+
+      socketConnections.current.dm.on(SocketEvent.disconnect, () => {
+        console.log("Socket disconnected");
+      });
     }
 
     // Cleanup: Disconnect socket when account changes or component unmounts
@@ -73,7 +84,7 @@ export default function MessagesScreen() {
         socketConnections.current.dm = null;
       }
     };
-  }, [socketConnections, account]); // Only re-run this effect when the account changes
+  }, [socketConnections.current, account]); // Only re-run this effect when the account changes
 
   return (
     <MessageProvider socketConnections={socketConnections}>
@@ -96,7 +107,7 @@ function Messages() {
             <TabsList className="mb-4 flex w-1/2 items-center justify-between gap-5">
               <div className="flax  flex-grow gap-5 ">
                 <NewChatModal />
-                <NewGroupChatModal /> 
+                <NewGroupChatModal />
               </div>
             </TabsList>
           </div>
