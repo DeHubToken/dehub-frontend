@@ -31,6 +31,14 @@ type State = {
   sendMessage: (newMsg: string) => void;
   setMessages: any;
   handleAddNewChat: any;
+  input: string;
+  setInput: (input: string) => void;
+  handleToggleGif: (input: boolean) => void;
+  handleToggleEmoji: (input: boolean) => void;
+  handleToggleMedia: (input: boolean) => void;
+  toggleMedia:boolean;
+  toggleEmoji: boolean;
+  toggleGif: boolean;
 };
 
 const [Provider, useMessage] = createContext<State>("MessagesScreen");
@@ -41,7 +49,12 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const [status, setStatus] = useState<State["status"]>("idle");
   const [messages, setMessages] = useState<any>([]);
   const message: any & { _id: string } = messages.find((msg: any) => msg._id === selectedMessageId);
+  const [input, setInput] = useState("");
+  const [toggleEmoji, setToggleEmoji] = useState(false);
+  const [toggleGif, setToggleGif] = useState(false);
+  const [toggleMedia, setToggleMedia] = useState(false);
   const { account }: any = useActiveWeb3React();
+
   useEffect(() => {
     setStatus("loading");
     if (!socket) return;
@@ -67,19 +80,18 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
 
     setMessages((prevState: any[]) => {
       const exist = prevState.find((d) => d._id == data._id);
-      if (exist) return prevState
-        return [data, ...prevState];
+      if (exist) return prevState;
+      return [data, ...prevState];
     });
     toast.success(message);
   };
-  console.log("messages", messages.length);
   const newMsgHandler = (data: any) => {
     setMessages((privState: any) => {
       return privState.map((state: any) => {
         if (state._id === data.conversation) {
           return {
             ...state,
-            messages: [...state?.messages||[], data]
+            messages: [...(state?.messages || []), data]
           };
         }
         return state;
@@ -88,28 +100,53 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   };
 
   const fetchMyContacts = async () => {
-    const { data, error, success }: any = await fetchContacts(account, {
-      q: null,
-      limit: 100,
-      skip: 0
-    });
-    if (!success) {
-      toast.error(error);
-      return;
+    try {
+      const { data, error, success }: any = await fetchContacts(account, {
+        q: null,
+        limit: 100,
+        skip: 0
+      });
+      if (!success) {
+        toast.error(error);
+        return;
+      }
+      if (!data) {
+        return;
+      }
+      setMessages(data);
+      setStatus("success");
+    } catch (error: any & { message?: string }) {
+      toast.error(error?.message);
+      setStatus("error");
     }
-    if (!data) {
-      return;
-    }
-    setMessages(data);
-    setStatus("success");
   };
   const startNewChat = (user: { address: string; username: string; _id?: string }) => {
     socket.emit(SocketEvent.createAndStart, user);
     toast.success(`please wait starting chat with ${user.username || user.address}`);
   };
 
-  const sendMessage = (newMsg: string) => {
-    socket.emit(SocketEvent.sendMessage, { msg: newMsg, dmId: message?._id });
+  const sendMessage = (content = "", gif = null, type = "msg") => {
+    socket.emit(SocketEvent.sendMessage, { content, gif, type, dmId: message?._id });
+    setToggleGif(false);
+    setToggleEmoji(false);
+    setToggleMedia(false);
+  };
+
+  const handleToggleEmoji = () => {
+    setToggleEmoji((b) => !b);
+    setToggleGif(false);
+    setToggleMedia(false);
+  };
+
+  const handleToggleGif = () => {
+    setToggleGif((b) => !b);
+    setToggleEmoji(false);
+    setToggleMedia(false);
+  };
+  const handleToggleMedia = () => {
+    setToggleMedia((b) => !b);
+    setToggleEmoji(false);
+    setToggleGif(false);
   };
 
   return (
@@ -124,6 +161,14 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       socket={socket}
       setMessages={setMessages}
       handleAddNewChat={handleAddNewChat}
+      setInput={setInput}
+      input={input}
+      handleToggleGif={handleToggleGif}
+      handleToggleEmoji={handleToggleEmoji}
+      handleToggleMedia={handleToggleMedia}
+      toggleEmoji={toggleEmoji}
+      toggleGif={toggleGif}
+      toggleMedia={toggleMedia}
     >
       {props.children}
     </Provider>

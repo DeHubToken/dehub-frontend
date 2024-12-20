@@ -1,19 +1,16 @@
 "use client";
 
 import type { TMessage } from "../utils";
-
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-
 import { AvatarStar } from "@/components/icons/avatar-star";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import { cn, createAvatarName } from "@/libs/utils";
-
 import { getAvatarUrl, getGroupAvatarUrl } from "@/web3/utils/url";
-
 import { useMessage } from "./provider";
 import { ContactSkeleton } from "./skeleton";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 dayjs.extend(relativeTime);
 
@@ -25,6 +22,22 @@ export function ContactList(props: ContactListProps) {
   const { onMessageSelect, ...rest } = props;
   const { messages, selectedMessageId, setSelectedMessageId, status } = useMessage("ContactList");
 
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter and sort messages based on search query
+  const filteredMessages = messages
+    .filter((message: any) => {
+      const { participants, groupName } = message;
+      const lastMessage = message.messages?.length > 0 ? message.messages[message.messages.length - 1] : {};
+      const participantName = participants?.[0]?.displayName || participants?.[0]?.username || groupName;
+      return participantName.toLowerCase().includes(searchQuery.toLowerCase());
+    })
+    .sort((a: any, b: any) => {
+      const aLastMessage = a.messages?.length > 0 ? a.messages[a.messages.length - 1] : {};
+      const bLastMessage = b.messages?.length > 0 ? b.messages[b.messages.length - 1] : {};
+      return dayjs(bLastMessage.timestamp).isBefore(dayjs(aLastMessage.timestamp)) ? 1 : -1;
+    });
+
   return (
     <div
       {...rest}
@@ -33,11 +46,22 @@ export function ContactList(props: ContactListProps) {
         rest.className
       )}
     >
+      {/* Search Box */}
+      <div className="mb-3 p-2">
+        <Input
+          type="text"
+          placeholder="Search contacts..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 rounded-lg border border-gray-300"
+        />
+      </div>
+
       {status === "loading" &&
         Array.from({ length: 10 }).map((_, index) => <ContactSkeleton key={index} />)}
 
       {status === "success" &&
-        messages.map((message: any) => {
+        filteredMessages.map((message: any) => {
           const { participants, messages, conversationType } = message;
           const lastMessage = messages?.length > 0 ? messages[messages?.length - 1] : {};
           return (
@@ -88,7 +112,6 @@ const UserInfo = ({ participant, isPro = true, lastOnline, lastMessage }: any) =
               `${participant?.address.substring(0, 6)}...${participant?.address.slice(-4)}`}
           </span>
           {isPro && <AvatarStar />}
-
           <span className="text-xs text-gray-500">{dayjs(lastOnline).fromNow()}</span>
         </div>
 
@@ -115,7 +138,6 @@ const GroupInfo = ({ group, isPro = false, lastOnline = true, lastMessage }: any
         <div className="flex items-center gap-2">
           <span className="text-base font-bold">{group?.groupName}</span>
           {isPro && <AvatarStar />}
-
           <span className="text-xs text-gray-500">{dayjs(lastOnline).fromNow()}</span>
         </div>
         <div>
@@ -125,4 +147,3 @@ const GroupInfo = ({ group, isPro = false, lastOnline = true, lastMessage }: any
     </>
   );
 };
-//dhb-new/public/icons/team.png

@@ -1,3 +1,5 @@
+import { EllipsisVertical } from "lucide-react";
+
 import { AvatarStar } from "@/components/icons/avatar-star";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -5,12 +7,13 @@ import { createAvatarName } from "@/libs/utils";
 
 import { getAvatarUrl, getGroupAvatarUrl } from "@/web3/utils/url";
 
+import ConversationOptions from "./conversation-options";
 import { useMessage } from "./provider";
 
 export function ConversationHeader() {
   const { selectedMessage: message } = useMessage("MessageListHeader");
-  const { participants, conversationType ,groupName=""}: any = message;
-  
+  const { participants, conversationType, groupName = "" }: any = message;
+
   const participant = participants[0];
   if (!participant) return null;
   if (conversationType == "dm") {
@@ -33,6 +36,7 @@ export function ConversationHeader() {
                 `${participant?.address.substring(0, 6)}...${participant?.address.slice(-4)}`}
             </span>
             {!participant?.isPro && <AvatarStar />}
+            <ConversationOptions />
           </div>
         </div>
         <span className=" ml-12">
@@ -51,15 +55,13 @@ export function ConversationHeader() {
               <AvatarImage
                 className="size-12 object-cover"
                 alt={groupName}
-                src={getGroupAvatarUrl(  "")}
+                src={getGroupAvatarUrl("")}
               />
             </Avatar>
-            <span className="text-2xl font-bold">
-              {groupName} 
-            </span>
+            <span className="text-2xl font-bold">{groupName}</span>
             {!participant?.isPro && <AvatarStar />}
           </div>
-        </div> 
+        </div>
       </div>
     );
   }

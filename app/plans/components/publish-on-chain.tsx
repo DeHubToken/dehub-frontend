@@ -18,7 +18,7 @@ interface PublishOnChainProps {
     price: number;
     isPublished: boolean;
   };
-  disabled:boolean;
+  disabled: boolean;
   onPublish: (field: any) => void;
 }
 
@@ -34,9 +34,8 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
   const token: any = useERC20Contract(field.token);
 
   // Wait for the transaction using useWaitForTransaction
-  const { data, isLoading, isError } = useWaitForTransaction({
-    hash // Transaction hash for monitoring
-  });
+  //@ts-ignore
+  const { data, isLoading, isError } = useWaitForTransaction({ hash: hash });
 
   const createPlan = async (
     planId: string,
@@ -49,9 +48,7 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
   ) => {
     try {
       // Fetch token decimals
-      const decimals = await token.decimals();
-      console.log("Decimals:", decimals);
-
+      const decimals = await token.decimals(); 
       // Adjust the amount using BigNumber
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
       // Send the transaction
@@ -87,7 +84,7 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
 
   return (
     <div className="sm:w-40 md:w-48">
-      <Button 
+      <Button
         variant="gradientOne"
         type="button"
         onClick={() =>
@@ -102,7 +99,7 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
           )
         }
         className="w-full text-sm"
-        disabled={chainId !== field.chainId || isLoading || field.isPublished||disabled} // Disable in various conditions
+        disabled={chainId !== field.chainId || isLoading || field.isPublished || disabled} // Disable in various conditions
       >
         {isLoading
           ? "Processing..."

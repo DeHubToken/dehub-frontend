@@ -12,6 +12,7 @@ export const env = {
   socketUrl: process.env.NEXT_PUBLIC_SOCKET_URL,
   pinataUploadUrl: process.env.NEXT_PUBLIC_PINATA_UPLOAD_URL,
   pinataGatwayKey: process.env.NEXT_PUBLIC_PINATA_GATEWAY_KEY,
+  tensor_api_key: process.env.NEXT_PUBLIC_TENSOR_API_KEY,
   nodes: {
     1: process.env.NEXT_PUBLIC_NODE_1,
     2: process.env.NEXT_PUBLIC_NODE_2,
@@ -461,7 +462,7 @@ export const DHB_ADDRESSESS: { [chainId: number]: string } = {
   [ChainId.BASE_MAINNET]: "0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c"
 };
 export const SB_ADDRESS: { [chainId: number]: string } = {
-  [ChainId.BSC_TESTNET]: "0x3A76858fb35520c3CA20E826901c7cB73F715251"
+  [ChainId.BSC_TESTNET]: "0xD23dC2Eb9a6c7c7A50E5FA4B9644671c217D2A79" //'0x3A76858fb35520c3CA20E826901c7cB73F715251',
 };
 
 export const durations = [
