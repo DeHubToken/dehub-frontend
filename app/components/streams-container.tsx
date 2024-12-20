@@ -32,6 +32,8 @@ type Props = {
 const containerClass =
   "flex h-auto w-full flex-wrap items-stretch justify-start gap-5 xl:gap-x-[1.25%] xl:gap-y-4 3xl:gap-3";
 
+const streamsMap = new Map<string, any>();
+
 export function StreamsContainer(props: Props) {
   const {
     data: initialData,
@@ -43,6 +45,10 @@ export function StreamsContainer(props: Props) {
     address,
     isInfiniteScroll = true
   } = props;
+
+  initialData.forEach((nft) => {
+    streamsMap.set(`${nft.tokenId}`, nft);
+  });
 
   const [data, setData] = useState(initialData);
   const [page, setPage] = useState(1);
@@ -70,8 +76,9 @@ export function StreamsContainer(props: Props) {
       return;
     }
 
+    const filteredData = res.data.result.filter((nft) => !streamsMap.has(`${nft.tokenId}`));
     // @ts-ignore
-    setData([...data, ...res.data.result]);
+    setData([...data, ...filteredData]);
     setPage(page + 1);
   }
 

@@ -82,11 +82,13 @@ export async function getNFTs(params?: SearchParams) {
   }
 
   const query = objectToGetParams(params || {});
-  const url = `/search_nfts${query}`;
+  const url = params?.range ? `/search_nfts?range=${params?.range}` : `/search_nfts${query}`;
+  console.log({ url });
   const res = await api<{ result: GetNFTsResult[] }>(url, {
     method: "GET",
     next: { revalidate: 2 * 60, tags: ["nfts"] }
   });
+  console.log(res);
   return res;
 }
 
