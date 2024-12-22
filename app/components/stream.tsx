@@ -93,5 +93,5 @@ function Title(props: { title: string }) {
     return <h1 className="text-4xl font-semibold">TOKEN GATED</h1>;
   }
 
-  return <h1 className="text-4xl font-semibold">{title}</h1>;
+  return <h1 className="text-4xl font-semibold capitalize">{title}</h1>;
 }

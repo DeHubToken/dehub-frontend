@@ -12,7 +12,7 @@ import { calculateGasMargin, GAS_MARGIN } from "@/web3/utils/transaction";
 
 import { DHB_ADDRESSESS, MULTICALL2_ADDRESSES } from "@/configs";
 
-import * as ERC20_ABI from "../contracts/ERC20.json";
+import ERC20_ABI from "../contracts/ERC20.json";
 import STREAMNFTABI from "../web3/abis/erc1155.json";
 import MULTICALL_ABI from "../web3/abis/multicall.json";
 import STREAM_CONTROLLER_ABI from "../web3/abis/stream-controller.json";
