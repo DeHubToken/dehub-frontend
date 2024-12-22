@@ -45,7 +45,7 @@ export default async function Page(props: Props) {
         />
 
         <div className="mt-8 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
-          <Suspense key={key} fallback={<StreamLoader range={range} />}>
+          <Suspense key={key} fallback={<StreamLoader />}>
             {type === "feed" && <FeedList />}
             {type === "liked" && (
               <LikedFeed
