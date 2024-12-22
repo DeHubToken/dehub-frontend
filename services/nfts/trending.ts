@@ -90,7 +90,8 @@ export async function getNFTs(params?: SearchParams) {
       category: params?.category,
       address: params?.address,
       page: params?.page,
-      sortMode: params?.sortMode
+      sortMode: params?.sortMode,
+      minter: params?.minter
     })
   );
   const url = `/search_nfts${query}`;
