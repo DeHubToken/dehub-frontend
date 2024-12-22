@@ -16,6 +16,7 @@ import objectToGetParams from "@/libs/utils";
 import { getCategories } from "@/services/categories";
 
 import { CategoryButton } from "./category-button";
+import { FeedRangeFilterMobile } from "./filters";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -25,6 +26,7 @@ type Props = {
   range?: string;
   type?: string;
   q?: string;
+  sortBy?: string;
 };
 
 export async function Categories(props: Props) {
@@ -39,7 +41,7 @@ export async function Categories(props: Props) {
 
 async function CategoriesLoader(props: Props) {
   const categoriesRes = await getCategories();
-  const { category, type, title, range } = props;
+  const { category, type, title, range, sortBy } = props;
 
   const isActive = (name: string) => category === name;
 
@@ -60,6 +62,9 @@ async function CategoriesLoader(props: Props) {
         <CarouselPrevious className="scale-75" />
         <CarouselContent>
           <CarouselItem className="basis-auto pl-4">
+            <FeedRangeFilterMobile type={type} range={range} sortBy={sortBy} />
+          </CarouselItem>
+          <CarouselItem className="basis-auto">
             <CategoryButton
               isActive={isActive("All")}
               url={`/${objectToGetParams({ category: "All", type, title, range })}`}

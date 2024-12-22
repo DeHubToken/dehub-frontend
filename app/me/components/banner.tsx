@@ -21,12 +21,12 @@ function Figure(props: { url: string }) {
   const [loading, setLoading] = useState(true);
 
   return (
-    <figure className="max-h-auto relative h-auto min-h-[125px] w-full overflow-hidden rounded-3xl bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark sm:max-h-[300px] sm:min-h-[300px]">
+    <figure className="relative h-0 w-full overflow-hidden rounded-3xl bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark pt-[56.25%] sm:h-[400px] sm:pt-0">
       {url && (
         <LazyImage
           src={url}
           alt="Banner Picture"
-          className="max-h-auto size-full min-h-[125px] object-cover sm:max-h-[300px] sm:min-h-[300px]"
+          className="absolute left-0 top-0 size-full object-cover"
           onLoad={() => setLoading(false)}
         />
       )}
@@ -42,7 +42,7 @@ function Figure(props: { url: string }) {
 function FigureWithBackdrop(props: { url: string; children: React.ReactNode }) {
   const { url, children } = props;
   return (
-    <figure className="max-h-auto relative flex h-auto min-h-[125px] w-full flex-col items-center justify-center overflow-hidden rounded-3xl sm:max-h-[300px] sm:min-h-[300px]">
+    <figure className="relative h-0 w-full overflow-hidden rounded-3xl bg-theme-cloud-burst dark:bg-theme-mine-shaft-dark pt-[56.25%] sm:h-[400px] sm:pt-0">
       {children}
       {url && (
         <>
@@ -50,7 +50,7 @@ function FigureWithBackdrop(props: { url: string; children: React.ReactNode }) {
           <LazyImage
             src={url}
             alt="Banner Picture"
-            className="max-h-auto size-full min-h-[125px] object-cover sm:max-h-[300px] sm:min-h-[300px]"
+            className="absolute left-0 top-0 size-full object-cover"
           />
         </>
       )}
@@ -77,7 +77,7 @@ function UploadBanner() {
       />
       <Button
         asChild
-        className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 translate-y-1/2 cursor-pointer"
+        className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
       >
         <label htmlFor="banner-upload">Upload banner</label>
       </Button>

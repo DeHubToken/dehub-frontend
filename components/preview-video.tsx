@@ -32,7 +32,7 @@ export function PreviewVideo({ nft }: Props) {
         playbackRangeStart={0}
         playbackRangeEnd={3}
         videoStyle={{ width: "100%", height: "100%" }}
-        className="relative size-full overflow-hidden rounded-2xl text-sm font-semibold sm:h-[175px] 3xl:h-[190px]"
+        className="relative size-full overflow-hidden rounded-2xl text-sm font-semibold"
         loadingOverlay={
           <div className="relative flex size-full items-center justify-center">
             <Spinner />

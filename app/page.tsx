@@ -19,11 +19,12 @@ type Props = {
     range?: string;
     type: string;
     q?: string;
+    sortBy?: string;
   };
 };
 
 export default async function Page(props: Props) {
-  const { category, range, type, q } = props.searchParams;
+  const { category, range, type, q, sortBy } = props.searchParams;
 
   if (!type) {
     return redirect(`/?type=trends`);
@@ -40,6 +41,7 @@ export default async function Page(props: Props) {
           range={range}
           type={type}
           q={q}
+          sortBy={sortBy}
         />
 
         <div className="mt-8 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">

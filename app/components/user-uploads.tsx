@@ -19,7 +19,7 @@ export function UserUploads(props: Props) {
         </div>
 
         <div className="mt-10 h-auto w-full">
-          <div className="flex h-auto w-full flex-wrap items-stretch justify-start gap-6">
+          <div className="relative grid h-auto w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 3xl:grid-cols-5">
             {nfts.map((nft: any, index: number) => (
               <StreamItem nft={nft} key={nft.tokenId + "--" + index} isOwner={isOwner} />
             ))}

@@ -16,10 +16,11 @@ import { getAvatarUrl, getImageUrl } from "@/web3/utils/url";
 
 import { isUsernameSetAtom } from "@/stores";
 
-type Props = React.ComponentProps<typeof RaninbowConnectButton>;
+export type Props = React.ComponentProps<typeof RaninbowConnectButton>;
 
 type AuthenticationStatus = "loading" | "unauthenticated" | "authenticated";
 type RenderProps = {
+fixed?: boolean;
   account?: {
     address: string;
     balanceDecimals?: number;
@@ -49,7 +50,7 @@ type RenderProps = {
   connectModalOpen: boolean;
 };
 
-function WalletButton(props: RenderProps) {
+export function WalletButton(props: RenderProps) {
   const {
     account,
     chain,
@@ -57,7 +58,8 @@ function WalletButton(props: RenderProps) {
     openChainModal,
     openConnectModal,
     authenticationStatus,
-    mounted
+    mounted,
+    fixed
   } = props;
 
   const { user } = useUser();
@@ -105,7 +107,7 @@ function WalletButton(props: RenderProps) {
     >
       {(() => {
         if (!connected) {
-          if (!isSmallScreen) {
+          if (!isSmallScreen || fixed) {
             return (
               <Button
                 variant="gradientOne"
@@ -140,7 +142,7 @@ function WalletButton(props: RenderProps) {
 
         return (
           <div className="flex items-center justify-end gap-0 md:gap-4">
-            {!isSmallScreen ? (
+            {!isSmallScreen || fixed ? (
               <>
                 <Button onClick={openChainModal} className="h-10 gap-2 rounded-full px-4" size="lg">
                   {chain.hasIcon && (

@@ -55,12 +55,12 @@ export function StreamItem(props: Props) {
   return (
     <div
       {...rest}
-      className="relative flex h-auto w-full max-w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark sm:max-w-[300px] lg:max-w-[300px] xl:max-w-[31.95%] 2xl:max-w-[24%] 3xl:max-w-[290px]"
+      className="relative flex h-auto w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
     >
-      <div className="relative flex h-0 w-full overflow-hidden rounded-2xl pt-[56.25%] text-sm font-semibold sm:h-[175px] sm:pt-0 3xl:h-[190px]">
+      <div className="relative flex h-0 w-full overflow-hidden rounded-2xl pt-[56.25%] text-sm font-semibold sm:h-[225px] sm:pt-0 xl:h-[175px] 2xl:h-[235px]">
         <Link
           href={`/stream/${nft.tokenId}`}
-          className="next__link absolute left-0 top-0 size-full overflow-hidden rounded-2xl sm:relative"
+          className="next__link absolute left-0 top-0 size-full overflow-hidden rounded-2xl"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >

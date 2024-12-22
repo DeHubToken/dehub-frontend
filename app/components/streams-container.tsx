@@ -30,7 +30,7 @@ type Props = {
 };
 
 const containerClass =
-  "flex h-auto w-full flex-wrap items-stretch justify-start gap-5 xl:gap-x-[1.25%] xl:gap-y-4 3xl:gap-3";
+  "h-auto w-full grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 relative";
 
 const streamsMap = new Map<string, any>();
 
@@ -191,7 +191,7 @@ export function SearchItemsContainer(props: Omit<Props, "isSearch"> & { accounts
         <Link
           href={`/${nft.username || nft.address}`}
           key={index}
-          className="relative flex h-auto w-full max-w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark sm:max-w-[300px] lg:max-w-[300px] xl:max-w-[31.95%] 2xl:max-w-[24%] 3xl:max-w-[290px]"
+          className="relative flex h-auto w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
         >
           <div className="shadow-lg overflow-hidden rounded-xl">
             <div className="relative h-32 bg-gradient-to-r from-blue-500 to-purple-600">
