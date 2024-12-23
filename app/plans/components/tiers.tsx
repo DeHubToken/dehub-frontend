@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
-
+import { useRouter } from 'next/router';
 import { CheckCircle } from "@/components/icons/check-circle";
 import { Button } from "@/components/ui/button";
 
@@ -18,14 +18,23 @@ import { supportedNetworks } from "@/web3/configs";
 
 import { supportedTokens } from "@/configs";
 
-type Props = {};
+type Props = {
+  focus: string
+};
 
 const Tiers = (props: Props) => {
   const { account, chainId } = useActiveWeb3React();
   const [plans, setPlans] = useState([]);
+
+  const planFocusRef: any = useRef(null);
+
+  useEffect(() => { 
+    getTiers(); 
+    planFocusRef.current?.focus();  
+  }, [props.focus]);
+
   async function getTiers() {
     const data: any = await getPlans({ address: account?.toLowerCase(), chainId });
-    console.log("datadatadata", data);
     if (!data.success) {
       toast.error(data.error);
       return;
@@ -36,7 +45,8 @@ const Tiers = (props: Props) => {
     getTiers();
   }, []);
   return (
-    <div className="mt-8 flex flex-wrap gap-6">
+    <div ref={planFocusRef} tabIndex={-1}
+      className="mt-8 flex flex-wrap gap-6">
       {plans.map((tier: any) => {
         return (
           <SubscriptionCard>
@@ -103,17 +113,17 @@ interface SubscriptionPricingProps extends React.HTMLAttributes<HTMLDivElement> 
 
 export function SubscriptionPricing(props: SubscriptionPricingProps) {
   const { chains, tier, id, ...rest } = props;
-console.log("object-chains",chains,supportedNetworks)
+  console.log("object-chains", chains, supportedNetworks)
   return (
     <div {...rest} className={cn(" items-center gap-5 px-5", rest.className)}>
-    
+
       <div className=" flex w-full flex-col gap-5 max-h-80 overflow-scroll">
         {chains.map((chain) => {
           const token: any = supportedTokens.find(
             (token) => token?.chainId === chain?.chainId && token.address === chain?.token
           );
           const network = supportedNetworks.find((n) => n?.chainId == token?.chainId);
-          console.log("object-token",token,network)
+          console.log("object-token", token, network)
 
           if (!token) {
             return (
