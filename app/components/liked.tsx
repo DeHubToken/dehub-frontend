@@ -39,7 +39,6 @@ export async function LikedFeed(props: FeedProps) {
     })();
   }, [account, library]);
 
-  console.log("Res", res);
   if (!res?.success) {
     return (
       <div className="flex min-h-[calc(100vh-48px-72px-32px-80px)] w-full items-center justify-center">

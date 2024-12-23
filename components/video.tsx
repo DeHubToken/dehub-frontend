@@ -20,13 +20,18 @@ type Options = {
   sources?: { src: string; type: string }[];
 };
 
-export function Video(props: { options: Options; onReady?: (player: Player) => void }) {
-  const { options, onReady } = props;
+export function Video(props: {
+  options: Options;
+  onReady?: (player: Player) => void;
+  onPlay?: () => void;
+}) {
+  const { options, onReady, onPlay } = props;
   const videoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<Player | null>(null);
   const [isBuffering, setIsBuffering] = useState(false);
   const [playedPercentage, setPlayedPercentage] = useState(0);
   const [bufferedPercentage, setBufferedPercentage] = useState(0);
+  const isPlayed = useRef<boolean>(false);
 
   useEffect(() => {
     const _options = {
@@ -72,6 +77,13 @@ export function Video(props: { options: Options; onReady?: (player: Player) => v
           setBufferedPercentage((bufferedEnd / duration) * 100);
         }
       });
+
+      player.player().on("play", () => {
+        if (!isPlayed.current) {
+          isPlayed.current = true;
+          onPlay && onPlay();
+        }
+      });
     } else {
       const player = playerRef.current;
       player.autoplay(_options.autoplay);
@@ -79,6 +91,7 @@ export function Video(props: { options: Options; onReady?: (player: Player) => v
     }
   }, [
     onReady,
+    onPlay,
     options.aspectRatio,
     options.autoplay,
     options.controls,

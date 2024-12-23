@@ -19,7 +19,6 @@ type FeedProps = {
 };
 
 export async function Stream(props: FeedProps) {
-  console.log(props);
   const { category, range, type, q } = props;
   const cookie = cookies();
   const userCookie = cookie.get("user_information");

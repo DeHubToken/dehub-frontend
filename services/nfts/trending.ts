@@ -70,7 +70,7 @@ export async function getNFTs(params?: SearchParams) {
         range: params.range,
         category: params.category,
         address: params.address,
-        page: params.page,
+        page: params.page
       })
     );
     const url = `/search_nfts${query}`;

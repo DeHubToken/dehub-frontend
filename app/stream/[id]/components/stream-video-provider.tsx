@@ -122,17 +122,14 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     streamStatus?.streamStatus?.isLockedWithPPV
   ]);
 
-  useEffect(() => {
-    async function recordView() {
-      if (!account) return;
+  async function recordView() {
+    if (!account) return;
 
-      const result = await getSignInfo(library, account);
-      api(
-        `/record-view/${nft.tokenId}?sig=${result.sig.trim()}&timestamp=${result.timestamp}&address=${account}`
-      );
-    }
-    recordView();
-  }, [account, library, nft.tokenId]);
+    const result = await getSignInfo(library, account);
+    api(
+      `/record-view/${nft.tokenId}?sig=${result.sig.trim()}&timestamp=${result.timestamp}&address=${account}`
+    );
+  }
 
   if (
     nft.videoUrl &&
@@ -147,6 +144,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
           options={{
             sources: [{ src: `${env.cdnBaseUrl}videos/${nft.tokenId}.mp4`, type: "video/mp4" }]
           }}
+          onPlay={recordView}
           onReady={(player) => {
             playerRef.current = player;
             player.on("loadedmetadata", () => {
