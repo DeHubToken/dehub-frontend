@@ -52,7 +52,7 @@ export function MobileOnlyBottomBar() {
   const isSmallScreen = useMediaQuery("(max-width: 960px)");
   if (!isSmallScreen) return null;
   return (
-    <div className="fixed bottom-0 left-0 z-[100] h-auto w-full border-t-2 bg-theme-background py-2 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
+    <div className="fixed bottom-0 left-0 z-10 h-auto w-full border-t-2 bg-theme-background py-2 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
       <div className="flex h-auto w-full items-center justify-around">
         {links.map((link) => (
           <Button key={link.id} className="h-max flex-col gap-0.5 py-1" asChild variant="ghost">

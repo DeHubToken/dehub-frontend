@@ -8,7 +8,6 @@ import { safeParseCookie } from "@/libs/cookies";
 
 import { getNFTs } from "@/services/nfts/trending";
 
-import { StreamRangeFilter } from "./filters";
 import { SearchItemsContainer, StreamsContainer } from "./streams-container";
 
 type FeedProps = {
@@ -46,14 +45,14 @@ export async function Stream(props: FeedProps) {
 
   return (
     <div className="h-auto w-full">
-      <div className="flex h-auto w-full items-center justify-between">
+      {/* <div className="flex h-auto w-full items-center justify-between">
         <Title title={props.type} />
         <div className="flex size-auto items-center justify-center gap-4">
           <StreamRangeFilter range={range} />
         </div>
-      </div>
+      </div> */}
 
-      <div className="mt-10 h-auto w-full">
+      <div className="h-auto w-full">
         {isSearched && (
           <SearchItemsContainer
             // @ts-ignore
@@ -82,15 +81,15 @@ export async function Stream(props: FeedProps) {
   );
 }
 
-function Title(props: { title: string }) {
-  const { title } = props;
-  if (title === "trends") {
-    return <h1 className="text-4xl font-semibold">Most Viewed</h1>;
-  }
+// function Title(props: { title: string }) {
+//   const { title } = props;
+//   if (title === "trends") {
+//     return <h1 className="text-4xl font-semibold">Most Viewed</h1>;
+//   }
 
-  if (title === "locked") {
-    return <h1 className="text-4xl font-semibold">TOKEN GATED</h1>;
-  }
+//   if (title === "locked") {
+//     return <h1 className="text-4xl font-semibold">TOKEN GATED</h1>;
+//   }
 
-  return <h1 className="text-4xl font-semibold">{title}</h1>;
-}
+//   return <h1 className="text-4xl font-semibold capitalize">{title}</h1>;
+// }

@@ -81,7 +81,19 @@ export async function getNFTs(params?: SearchParams) {
     return res;
   }
 
-  const query = objectToGetParams(params || {});
+  const query = objectToGetParams(
+    removeUndefined({
+      q: params?.search,
+      search: params?.search,
+      unit: 50,
+      range: params?.range,
+      category: params?.category,
+      address: params?.address,
+      page: params?.page,
+      sortMode: params?.sortMode,
+      minter: params?.minter
+    })
+  );
   const url = `/search_nfts${query}`;
   const res = await api<{ result: GetNFTsResult[] }>(url, {
     method: "GET",

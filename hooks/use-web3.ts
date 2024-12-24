@@ -14,7 +14,7 @@ import { DHB_ADDRESSESS, MULTICALL2_ADDRESSES } from "@/configs";
 
 import * as ERC20_ABI from "../contracts/ERC20.json";
 import SC_ABI from "@/web3/abis/subscription.json"
-import VAULT_ABI from "../web3/abis/vault.json";
+import VAULT_ABI from "../web3/abis/vault.json"; 
 import STREAMNFTABI from "../web3/abis/erc1155.json";
 import MULTICALL_ABI from "../web3/abis/multicall.json";
 import STREAM_CONTROLLER_ABI from "../web3/abis/stream-controller.json"; 

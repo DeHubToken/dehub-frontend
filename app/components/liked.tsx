@@ -11,7 +11,6 @@ import { safeParseCookie } from "@/libs/cookies";
 
 import { getLikedNFTs } from "@/services/nfts/trending";
 
-import { StreamRangeFilter } from "./filters";
 import { StreamsContainer } from "./streams-container";
 
 type FeedProps = {
@@ -40,7 +39,6 @@ export async function LikedFeed(props: FeedProps) {
     })();
   }, [account, library]);
 
-  console.log("Res", res);
   if (!res?.success) {
     return (
       <div className="flex min-h-[calc(100vh-48px-72px-32px-80px)] w-full items-center justify-center">
@@ -51,12 +49,12 @@ export async function LikedFeed(props: FeedProps) {
 
   return (
     <div className="h-auto w-full">
-      <div className="flex h-auto w-full items-center justify-between">
+      {/* <div className="flex h-auto w-full items-center justify-between">
         <Title title={props.type} />
         <div className="flex size-auto items-center justify-center gap-4">
           <StreamRangeFilter range={range} />
         </div>
-      </div>
+      </div> */}
 
       <div className="mt-10 h-auto w-full">
         <StreamsContainer
