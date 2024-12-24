@@ -31,6 +31,7 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
 }) => {
   const [hash, setHash] = useState<`0x${string}` | undefined>(undefined);
   const subcontract: any = useSubscriptionContract(SB_ADDRESS[chainId]);
+  console.log("fcewfh",subcontract)
   const token: any = useERC20Contract(field.token);
 
   // Wait for the transaction using useWaitForTransaction
@@ -49,8 +50,10 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
     try {
       // Fetch token decimals
       const decimals = await token.decimals(); 
+
       // Adjust the amount using BigNumber
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
+
       // Send the transaction
       const txResponse = await subcontract.createPlan(
         planId,

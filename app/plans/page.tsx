@@ -3,11 +3,14 @@ import React from "react";
 import Form from "./components/form";
 import Tiers from "./components/tiers";
 
-const page = () => {
+const page = (props: any) => {
+
+
+
   return (
     <div>
       <div className="min-h-screen w-full px-2 py-32 sm:px-6">
-        <Form />
+        <Form  focus={props.searchParams.focus}  />
       </div>
       <div className="min-h-screen w-full px-2 py-32 sm:px-6">
         <div className="flex h-auto w-full flex-col items-start justify-start gap-12 rounded-3xl border border-gray-200/25 px-4 pb-10 pt-10 sm:p-10">
@@ -19,9 +22,9 @@ const page = () => {
           </div>
           <div className=" items-center justify-center gap-6 sm:flex-nowrap sm:justify-end">
             <div className="  w-full items-stretch justify-center sm:w-auto">
-          
-                <Tiers />
-          
+
+              <Tiers focus={props.searchParams.focus} />
+
             </div>
           </div>
         </div>
