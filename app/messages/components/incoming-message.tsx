@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { createAvatarName } from "@/libs/utils";
+import MediaView from "./media-view";
 
 export function IncomingMessage(props: {
   message: {
@@ -16,7 +17,7 @@ export function IncomingMessage(props: {
     msgType: string;
   };
 }) {
-  const { message } = props; 
+  const { message }:any = props;
   return (
     <div className="flex w-full justify-start">
       <div className="flex max-w-96 flex-col items-end gap-1">
@@ -33,9 +34,7 @@ export function IncomingMessage(props: {
           </Avatar>
           <div className="rounded-r-[20px] rounded-tl-[20px] px-4 py-3 dark:bg-theme-mine-shaft-dark">
             <p className="text-sm dark:text-gray-200">{message?.content}</p>sss
-            {message.msgType == "gif" && (
-              <img src={message.mediaUrls[0]} alt="gif" height={200} width={200} />
-            )}
+            <MediaView  isLocked={false} isPaid={false} amount={100} token={"0x0001"} chainId={97} mediaUrls={message.mediaUrls} />
           </div>
         </div>
       </div>

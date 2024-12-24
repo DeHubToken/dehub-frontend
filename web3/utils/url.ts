@@ -51,3 +51,8 @@ export function getCoverUrl(url: string) {
 
   return `${env.cdnBaseUrl}covers/${fileName}`;
 }
+export function dmMediaUrl(url: string) { 
+ 
+
+  return `${env.cdnBaseUrl}${url}`;
+}

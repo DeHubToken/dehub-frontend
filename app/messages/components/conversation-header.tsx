@@ -36,7 +36,7 @@ export function ConversationHeader() {
                 `${participant?.address.substring(0, 6)}...${participant?.address.slice(-4)}`}
             </span>
             {!participant?.isPro && <AvatarStar />}
-            <ConversationOptions />
+            <ConversationOptions participant={participant}/>
           </div>
         </div>
         <span className=" ml-12">

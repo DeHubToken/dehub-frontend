@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { ImagePlay, ImagePlus, Paperclip, SendHorizonal, Smile } from "lucide-react";
+import { ImagePlay, ImagePlus, Paperclip, PiggyBank, SendHorizonal, Smile } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -61,6 +61,9 @@ export function MessageInput() {
               <DropdownMenuItem onClick={handleToggleMedia}>
                 <Paperclip className="size-5" />
               </DropdownMenuItem>
+              {/* <DropdownMenuItem onClick={handleToggleMedia}>
+                <PiggyBank className="size-5" />
+              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
           <Button variant="gradientOne" className="size-10 p-0" onClick={sendHandler}>

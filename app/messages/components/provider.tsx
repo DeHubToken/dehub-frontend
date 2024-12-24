@@ -36,9 +36,11 @@ type State = {
   handleToggleGif: (input: boolean) => void;
   handleToggleEmoji: (input: boolean) => void;
   handleToggleMedia: (input: boolean) => void;
-  toggleMedia:boolean;
+  handleToggleUserReport: (input: boolean) => void;
+  toggleMedia: boolean;
   toggleEmoji: boolean;
   toggleGif: boolean;
+  toggleUserReport: boolean;
 };
 
 const [Provider, useMessage] = createContext<State>("MessagesScreen");
@@ -53,6 +55,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const [toggleEmoji, setToggleEmoji] = useState(false);
   const [toggleGif, setToggleGif] = useState(false);
   const [toggleMedia, setToggleMedia] = useState(false);
+  const [toggleUserReport,setToggleUserReport]=useState(false)
   const { account }: any = useActiveWeb3React();
 
   useEffect(() => {
@@ -148,6 +151,9 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     setToggleEmoji(false);
     setToggleGif(false);
   };
+ const  handleToggleUserReport = () => {
+    setToggleUserReport((b) => !b);
+  };
 
   return (
     <Provider
@@ -166,9 +172,11 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       handleToggleGif={handleToggleGif}
       handleToggleEmoji={handleToggleEmoji}
       handleToggleMedia={handleToggleMedia}
+      handleToggleUserReport={handleToggleUserReport}
       toggleEmoji={toggleEmoji}
       toggleGif={toggleGif}
       toggleMedia={toggleMedia}
+      toggleUserReport={toggleUserReport}
     >
       {props.children}
     </Provider>
