@@ -25,10 +25,11 @@ type Props = {
 
 export function SocialLinks(props: Props) {
   const { user } = props;
-  const currentUrl = typeof window !== "undefined" ? window.location.href : "";
+  // const currentUrl = typeof window !== "undefined" ? window.location.href : "";
+  const currentUrl = `https://dehub.io/${user?.username}`;
 
   const copyUrl = () => {
-    navigator.clipboard.writeText(`https://dehub.io/profile/${user?.username}`);
+    navigator.clipboard.writeText(`https://dehub.io/${user?.username}`);
     toast.success("Copied URL");
   };
 
