@@ -37,7 +37,6 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 
 import { getLeaderborard } from "@/services/nfts/leaderborad";
 
-import { Feed } from "./icons/feed";
 import { NotificationMobileModal } from "./modals/notification-modal";
 
 type LinkBase = {
@@ -276,7 +275,7 @@ export function HambMenu() {
                 );
               })}
             </div>
-            <div className="py-28"></div>
+            <div className="py-28" />
           </div>
 
           <div

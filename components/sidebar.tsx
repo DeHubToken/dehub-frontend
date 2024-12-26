@@ -5,7 +5,8 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { MessageSquareText, Newspaper } from "lucide-react";
+
+// import { MessageSquareText, Newspaper } from "lucide-react";
 
 import { leaderboardColumns } from "@/app/components/leaderboard-modal";
 
@@ -242,7 +243,7 @@ const groups = [
       },
       {
         id: "leaderboard",
-        name: "Leaderboard",
+        name: "Track",
         icon: <LeaderBoard />
       },
       {
@@ -271,7 +272,7 @@ export function Sidebar(props: Props) {
   const [openLeaderBoard, setOpenLeaderBoard] = useState(false);
 
   function handleClick(link: Link) {
-    if (link.name === "Leaderboard") setOpenLeaderBoard(true);
+    if (link.name === "Track") setOpenLeaderBoard(true);
   }
 
   useEffect(() => {
