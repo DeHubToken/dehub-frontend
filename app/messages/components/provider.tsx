@@ -41,6 +41,7 @@ type State = {
   toggleEmoji: boolean;
   toggleGif: boolean;
   toggleUserReport: boolean;
+  blockState: any;
 };
 
 const [Provider, useMessage] = createContext<State>("MessagesScreen");
@@ -55,9 +56,10 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const [toggleEmoji, setToggleEmoji] = useState(false);
   const [toggleGif, setToggleGif] = useState(false);
   const [toggleMedia, setToggleMedia] = useState(false);
-  const [toggleUserReport,setToggleUserReport]=useState(false)
+  const [toggleUserReport, setToggleUserReport] = useState(false);
+  const [blockState, setBlockState] = useState<any>();
   const { account }: any = useActiveWeb3React();
-
+  console.log("messages", messages);
   useEffect(() => {
     setStatus("loading");
     if (!socket) return;
@@ -75,7 +77,12 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       socket.off(SocketEvent.createAndStart, handleAddNewChat);
     };
   }, [socket]);
+  useEffect(() => {
+    // message?.blockList.find((list: any) => {});
+    console.log("message?.blockList", message);
+    console.log("message?.blockList", message?.blockList);
 
+  }, [selectedMessageId]);
   const handleAddNewChat = ({ message, data }: any) => {
     if (!data) {
       return;
@@ -151,7 +158,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     setToggleEmoji(false);
     setToggleGif(false);
   };
- const  handleToggleUserReport = () => {
+  const handleToggleUserReport = () => {
     setToggleUserReport((b) => !b);
   };
 
@@ -177,6 +184,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       toggleGif={toggleGif}
       toggleMedia={toggleMedia}
       toggleUserReport={toggleUserReport}
+      blockState={blockState}
     >
       {props.children}
     </Provider>

@@ -10,7 +10,7 @@ import { fetchDmMessages } from "@/services/dm";
 
 import { StartNewConversation } from "./common";
 import { ConversationHeader } from "./conversation-header";
-import ExtraInputs from "./ExtraInputs";
+import ExtraInputsAndNotice from "./ExtraInputsAndNotice";
 import { IncomingMessage } from "./incoming-message";
 import { MessageInput } from "./message-input";
 import { OutgoingMessage } from "./outgoing-message";
@@ -115,7 +115,7 @@ export function ConversationView() {
           </div>
         ))}
 
-        <ExtraInputs />
+        <ExtraInputsAndNotice />
       </ChatContainer>
       <MessageInput />
     </div>

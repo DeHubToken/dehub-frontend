@@ -29,7 +29,7 @@ export function ContactList(props: ContactListProps) {
     .filter((message: any) => {
       const { participants, groupName } = message;
       const lastMessage = message.messages?.length > 0 ? message.messages[message.messages.length - 1] : {};
-      const participantName = participants?.[0]?.displayName || participants?.[0]?.username || groupName;
+      const participantName = participants?.[0]?.displayName || participants?.[0]?.username||participants?.[0]?.address || groupName;
       return participantName.toLowerCase().includes(searchQuery.toLowerCase());
     })
     .sort((a: any, b: any) => {

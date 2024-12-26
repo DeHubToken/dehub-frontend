@@ -29,17 +29,24 @@ const Tiers = (props: Props) => {
   const planFocusRef: any = useRef(null);
 
   useEffect(() => { 
-    getTiers(); 
-    planFocusRef.current?.focus();  
-  }, [props.focus]);
+    getTiers();  
+  }, [ ]);
 
   async function getTiers() {
+    if(!account){
+return
+    }
     const data: any = await getPlans({ address: account?.toLowerCase(), chainId });
     if (!data.success) {
       toast.error(data.error);
       return;
     }
     setPlans(data.data.plans);
+    // planFocusRef.current?.focus();
+    planFocusRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   }
   useEffect(() => {
     getTiers();
