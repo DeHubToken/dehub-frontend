@@ -80,7 +80,7 @@ export function CopyUrl(props: { url: string }) {
 export function Share() {
   const path = usePathname();
 
-  const url = process.env.NEXT_PUBLIC_URL + path;
+  const url = "https://dehub.io" + path;
 
   return (
     <DropdownMenu>
