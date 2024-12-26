@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { BigNumber } from "ethers";
 import { useWaitForTransaction } from "wagmi";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
 import { useERC20Contract, useSubscriptionContract } from "@/hooks/use-web3";
 
 import { SB_ADDRESS } from "@/configs";
+import { toast } from "sonner";
 
 interface PublishOnChainProps {
   chainId: number;
@@ -18,25 +20,29 @@ interface PublishOnChainProps {
     price: number;
     isPublished: boolean;
   };
-  disabled: boolean;
-  onPublish: (field: any) => void;
+  disabled: boolean; 
 }
 
 const PublishOnChain: React.FC<PublishOnChainProps> = ({
   chainId,
   disabled,
   deployedPlan,
-  field,
-  onPublish
+  field, 
 }) => {
   const [hash, setHash] = useState<`0x${string}` | undefined>(undefined);
   const subcontract: any = useSubscriptionContract(SB_ADDRESS[chainId]);
-  console.log("fcewfh",subcontract)
   const token: any = useERC20Contract(field.token);
+  const router = useRouter();
+
 
   // Wait for the transaction using useWaitForTransaction
   //@ts-ignore
-  const { data, isLoading, isError } = useWaitForTransaction({ hash: hash });
+  const { data, isLoading, isError, onSuccess } = useWaitForTransaction({
+    hash: hash,  
+  });
+
+
+
 
   const createPlan = async (
     planId: string,
@@ -49,7 +55,7 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
   ) => {
     try {
       // Fetch token decimals
-      const decimals = await token.decimals(); 
+      const decimals = await token.decimals();
 
       // Adjust the amount using BigNumber
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
@@ -76,8 +82,8 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
   // Transaction success or failure handling
   if (data && !isLoading) {
     console.log("Transaction successful:", data);
-    if (!field.isPublished) {
-      onPublish(field); // Trigger onPublish callback to update state
+    if (!field.isPublished) { 
+      router.push("/plans")
     }
   }
 

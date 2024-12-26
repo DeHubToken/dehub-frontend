@@ -19,38 +19,20 @@ import { supportedNetworks } from "@/web3/configs";
 import { supportedTokens } from "@/configs";
 
 type Props = {
-  focus: string
+  plans: any
 };
 
 const Tiers = (props: Props) => {
-  const { account, chainId } = useActiveWeb3React();
-  const [plans, setPlans] = useState([]);
-
+  const { plans } = props;
+  const { chainId } = useActiveWeb3React()
   const planFocusRef: any = useRef(null);
 
-  useEffect(() => { 
-    getTiers();  
-  }, [ ]);
-
-  async function getTiers() {
-    if(!account){
-return
-    }
-    const data: any = await getPlans({ address: account?.toLowerCase(), chainId });
-    if (!data.success) {
-      toast.error(data.error);
-      return;
-    }
-    setPlans(data.data.plans);
-    // planFocusRef.current?.focus();
+  useEffect(()=>{
     planFocusRef.current.scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
-  }
-  useEffect(() => {
-    getTiers();
-  }, []);
+  },[plans])
   return (
     <div ref={planFocusRef} tabIndex={-1}
       className="mt-8 flex flex-wrap gap-6">

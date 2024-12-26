@@ -2,13 +2,14 @@ import { api } from "@/libs/api";
 import objectToGetParams from "@/libs/utils";
 
 export async function createPlan(data: FormData) {
-  return api<{}>("/plans", {
+  return  await api<{}>("/plans", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(data)
   });
+  
 }
 export async function getPlan(id: string) {
   return api<{}>(`/plans/${id}`, {

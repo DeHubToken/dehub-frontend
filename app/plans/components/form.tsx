@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
@@ -48,11 +48,12 @@ type FormValues = {
   };
 };
 
-export default function Form({ plan }: any) {
+export default function Form({ plan, getTiers }: any) {
   const { account, chainId } = useActiveWeb3React();
   const router = useRouter();
   const planId = plan != undefined ? plan.id : null;
   const [saved, setSaved] = useState(false);
+  const planFocusRef: any = useRef(null);
 
   useEffect(() => {
     if (plan?.address && plan?.address != account?.toLowerCase()) {
@@ -84,44 +85,42 @@ export default function Form({ plan }: any) {
     watch,
     formState: { errors }
   } = form;
-  
-    const { tier } = watch();
-    const onSubmit = async (plan: any) => {
+
+  const { tier } = watch();
+  const onSubmit = async (plan: any) => {
 
     // Add your API call logic here
     let { benefits, ...tier } = plan.tier;
-    benefits = benefits.map((b: any) => b.value);
-
+    benefits = benefits.map((b: any) => b.value); 
     if (benefits.length < 2) {
       toast.error("Please add at least two benefits.");
       return;
-    }
- 
+    } 
     plan = { ...tier, benefits };
-    try {
-      const {
-        success,
-        error,
-        plan: updatedPlan
-      }: any = planId !== null ? await updatePlan(plan, planId) : await createPlan(plan);
-
-      if (success) {
-        if (plan?.id) {
-          form.reset();
-          setSaved(true);
-          toast.success("plan created");
-          return;
-        }
+    try { 
+      const data: any = planId !== null ? await updatePlan(plan, planId) : await createPlan(plan);  
+      if (data?.error) {
+        toast.error(data?.error)
+        return
+      } 
+      if (planId) {
+        form.reset();
+        setSaved(true);
         toast.success("plan Updated");
-        router.push("/");
         return;
       }
-      toast.error(error);
+      toast.success("plan created");  
+      getTiers()
+      return;  
     } catch (error: any) {
       toast.error(error.message);
       console.error("Submission error:", error);
     }
   };
+
+  // Check if any chain has `isPublished: true` or if the whole plan is published
+  const isPlanPublished = plan?.chains.some((chain: any) => chain.isPublished) || plan?.isPublished;
+
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -194,7 +193,7 @@ export default function Form({ plan }: any) {
                 <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
                   <h1 className="text-xl">Duration</h1>
                 </div>
-                <SetDuration control={control} form={form} />
+                <SetDuration control={control} form={form} isPublished={isPlanPublished} />
               </div>
 
               <div className="flex w-full flex-wrap items-stretch justify-start border-b border-gray-300/25">
@@ -208,7 +207,9 @@ export default function Form({ plan }: any) {
                 deployedPlan={plan}
                 tier={tier}
                 control={control}
-                onPublish={() => {}}
+                onPublish={() => {
+                  router.push("/plans")
+                }}
                 chainId={chainId}
               />
             </div>
@@ -219,7 +220,7 @@ export default function Form({ plan }: any) {
   );
 }
 
-export const SetDuration = ({ control, form }: { control: any; form: any }) => {
+export const SetDuration = ({ control, form, isPublished }: { control: any; form: any; isPublished: boolean }) => {
   const { setValue } = form;
   return (
     <Controller
@@ -243,12 +244,13 @@ export const SetDuration = ({ control, form }: { control: any; form: any }) => {
                     setValue("tier.tier", durations[nextIndex].tier);
                   }
                 }}
+                disabled={isPublished}
               >
                 <Plus />
               </Button>
               <Button
                 type="button"
-                className="h-full rounded-none px-5 py-6 sm:px-10"
+                className="h-full rounded-none px-5 py-6 sm:px-89"
                 onClick={() => {
                   const prevIndex = durations.findIndex((d) => d.value === field.value) - 1; // Find the current index
                   if (prevIndex >= 0) {
@@ -256,6 +258,7 @@ export const SetDuration = ({ control, form }: { control: any; form: any }) => {
                     setValue("tier.tier", durations[prevIndex].tier);
                   }
                 }}
+                disabled={isPublished}
               >
                 <Minus />
               </Button>
@@ -375,7 +378,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId }
                     validate: value => {
                       if (value <= 0) {
                         toast.error("Amount should be greater than 0");
-                        return "Amount should be greater than 0"; 
+                        return "Amount should be greater than 0";
                       }
                     }
                   })}
@@ -402,7 +405,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId }
               field={field}
               chainId={chainId}
               deployedPlan={deployedPlan}
-              onPublish={() => {}}
+
             />
           </div>
         ))}
@@ -499,40 +502,40 @@ export const CurrencySelect = ({
       rules={{ required: true }}
       render={({ field }) => (
         <>
-        <Select
-          {...field} // Spread the field to control its value and changes
-          value={field.value} // Use the field value from react-hook-form
-          onValueChange={(value: string) => {
-            field.onChange(value); 
-            handleValidation(); 
-          }} // Update the field value on change
-          disabled={disabled}
-        >
-          <SelectTrigger className="h-full min-w-32 rounded-none bg-transparent dark:bg-transparent">
-            <SelectValue placeholder="Select token" />
-          </SelectTrigger>
-          <SelectContent>
-            {supportedTokens
-              .filter((t) => t.chainId == chainId)
-              .map((token, i: number) => (
-                <SelectItem key={i} value={token.address}>
-                  <div className="flex items-center gap-4">
-                    <Image
-                      src={token.iconUrl}
-                      width={24}
-                      height={24}
-                      alt={token.address}
-                      className="size-10"
-                    />
-                    <span className="text-lg">{token.label}</span>
-                  </div>
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
-        {errors?.tier?.chains?.[index]?.token && (
-            <p className="text-red-500 text-sm">Token is required</p> 
-        )}
+          <Select
+            {...field} // Spread the field to control its value and changes
+            value={field.value} // Use the field value from react-hook-form
+            onValueChange={(value: string) => {
+              field.onChange(value);
+              handleValidation();
+            }} // Update the field value on change
+            disabled={disabled}
+          >
+            <SelectTrigger className="h-full min-w-32 rounded-none bg-transparent dark:bg-transparent">
+              <SelectValue placeholder="Select token" />
+            </SelectTrigger>
+            <SelectContent>
+              {supportedTokens
+                .filter((t) => t.chainId == chainId)
+                .map((token, i: number) => (
+                  <SelectItem key={i} value={token.address}>
+                    <div className="flex items-center gap-4">
+                      <Image
+                        src={token.iconUrl}
+                        width={24}
+                        height={24}
+                        alt={token.address}
+                        className="size-10"
+                      />
+                      <span className="text-lg">{token.label}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
+          {errors?.tier?.chains?.[index]?.token && (
+            <p className="text-red-500 text-sm">Token is required</p>
+          )}
         </>
       )}
     />
