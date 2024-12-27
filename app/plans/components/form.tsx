@@ -104,13 +104,13 @@ export default function Form({ plan, getTiers }: any) {
         return
       } 
       if (planId) {
-        form.reset();
         setSaved(true);
         toast.success("plan Updated");
+        router.push("/plans")
         return;
       }
       toast.success("plan created");  
-      getTiers()
+      await getTiers()
       return;  
     } catch (error: any) {
       toast.error(error.message);
