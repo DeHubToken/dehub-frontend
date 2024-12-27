@@ -24,6 +24,7 @@ type Props = React.ComponentProps<typeof Select> & {
   range?: string;
   sortBy?: string;
   type?: string;
+  categories: string[];
 };
 
 const defaults = {
@@ -33,7 +34,7 @@ const defaults = {
 };
 
 export function FeedRangeFilterMobile(props: Props) {
-  const { range, sortBy, type: defaultType } = props;
+  const { range, sortBy, type: defaultType, categories } = props;
 
   const { startTransition } = useStreamProvider("FeedRangeFilterMobile");
   const router = useRouter();
@@ -42,6 +43,7 @@ export function FeedRangeFilterMobile(props: Props) {
   const [date, setDate] = useState(range);
   const [type, setType] = useState(defaultType);
   const [sort, setSort] = useState(sortBy);
+  const [category, setCategory] = useState("");
 
   const onApply = () => {
     setOpen(false);
@@ -50,6 +52,11 @@ export function FeedRangeFilterMobile(props: Props) {
       q.range = date;
       q.type = type;
       q.sort = sort;
+      if (category) {
+        q.category = category;
+      } else {
+        delete q.category;
+      }
       const query = stringify(q);
       return router.push(`/?${query}`);
     });
@@ -58,6 +65,7 @@ export function FeedRangeFilterMobile(props: Props) {
   const onReset = () => {
     setDate("");
     setType(defaults.type);
+    setCategory("");
     setSort(defaults.sort);
     setOpen(false);
     startTransition(() => {
@@ -65,6 +73,7 @@ export function FeedRangeFilterMobile(props: Props) {
       q.type = defaults.type;
       delete q.range;
       delete q.sort;
+      delete q.category;
       const query = stringify(q);
       return router.push(`/?${query}`);
     });
@@ -79,7 +88,7 @@ export function FeedRangeFilterMobile(props: Props) {
       </SheetTrigger>
       <SheetContent
         side="bottom"
-        className="text-theme-monochrome-300 flex flex-col items-start gap-8 rounded-t-2xl border-none bg-background px-0 pb-0 pt-14"
+        className="text-theme-monochrome-300 flex flex-col items-start gap-5 rounded-t-2xl border-none bg-background px-0 pb-0 pt-14"
       >
         {/* hidden parts */}
         <div className="absolute -top-1 left-1/2 h-2 w-20 -translate-x-1/2 rounded-md bg-theme-mine-shaft dark:bg-theme-mine-shaft" />
@@ -134,7 +143,52 @@ export function FeedRangeFilterMobile(props: Props) {
           </select>
         </div>
 
-        <SheetFooter className="border-theme-monochrome-600 mt-32 grid w-full grid-cols-2 border-t">
+        <div className="grid w-full grid-cols-2 items-center px-8">
+          <h1 className="text-theme-monochrome-300 text-2xl font-medium">Category</h1>
+
+          <select
+            className="w-full rounded-full border-none bg-theme-mine-shaft-dark py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="All">All</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="grid w-full grid-cols-2 items-center px-8">
+          <h1 className="text-theme-monochrome-300 text-2xl font-medium">Format</h1>
+
+          <select
+            className="w-full rounded-full border-none bg-theme-mine-shaft-dark py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
+            value="All"
+          >
+            <option value="All">All</option>
+            <option value="Standard">Standard</option>
+            <option value="LiveStream">Live Stream</option>
+            <option value="VR">VR</option>
+          </select>
+        </div>
+
+        <div className="grid w-full grid-cols-2 items-center px-8">
+          <h1 className="text-theme-monochrome-300 text-2xl font-medium">Quality</h1>
+
+          <select
+            className="w-full rounded-full border-none bg-theme-mine-shaft-dark py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
+            value="All"
+          >
+            <option value="All">All</option>
+            <option value="SD">SD</option>
+            <option value="HD">HD</option>
+            <option value="4K">4K</option>
+          </select>
+        </div>
+
+        <SheetFooter className="border-theme-monochrome-600 mt-10 grid w-full grid-cols-2 border-t">
           <Button
             variant="ghost"
             className="border-theme-monochrome-600 text-theme-monochrome-300 w-full gap-3 rounded-none border-r py-8 text-xl"

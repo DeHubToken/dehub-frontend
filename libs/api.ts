@@ -32,7 +32,7 @@ export async function api<T>(
 
     if (result.headers.get("content-type")?.includes("application/json")) {
       const body = await result.json();
-      if (!result.ok && !body.success && !body.result ) {
+      if (!result.ok && !body.success && !body.result) {
         return { success: false, error: getErrorFromUnknown(body) };
       }
 

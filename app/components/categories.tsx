@@ -62,7 +62,12 @@ async function CategoriesLoader(props: Props) {
         <CarouselPrevious className="scale-75" />
         <CarouselContent>
           <CarouselItem className="basis-auto pl-4">
-            <FeedRangeFilterMobile type={type} range={range} sortBy={sortBy} />
+            <FeedRangeFilterMobile
+              categories={categories}
+              type={type}
+              range={range}
+              sortBy={sortBy}
+            />
           </CarouselItem>
           <CarouselItem className="basis-auto">
             <CategoryButton
