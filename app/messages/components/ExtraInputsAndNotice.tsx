@@ -20,12 +20,7 @@ const ExtraInputsAndNotice = (props: Props) => {
       <CustomEmojiPicker />
       <GifPickerModal />
       <MediaUploader />
-      <BlockModal />
-      {/* <UnBlockModal/> */}
-      <div className="text-center">
-        {true && <h4>Please Unblock to send Messages</h4>}
-        {true && <h4>You Blocked</h4>}
-      </div>
+      <BlockModal /> 
     </div>
   );
 };

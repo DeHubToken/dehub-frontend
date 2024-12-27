@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import { ImagePlay, ImagePlus, Paperclip, PiggyBank, SendHorizonal, Smile } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { ImagePlay, ImagePlus, Paperclip, SendHorizonal, Smile } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 
-import CustomEmojiPicker from "./custom-emoji-picker";
-import { GifPickerModal } from "./gif-picker-modal";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
+
 import { useMessage } from "./provider";
 
 export function MessageInput() {
@@ -22,9 +22,17 @@ export function MessageInput() {
     input,
     handleToggleEmoji,
     handleToggleGif,
-    handleToggleMedia
+    handleToggleMedia,
+    handleUnBlock,
+    selectedMessage: message
   }: any = useMessage("MessageList");
 
+  const [chatStatus, setChatStatus] = useState({
+    reportedId: null,
+    allow: true,
+    msg: <></>
+  });
+  console.log("chatStatus", chatStatus);
   const sendHandler = useCallback(() => {
     if (input.trim() === "") {
       toast.error("Please enter a message!");
@@ -33,7 +41,57 @@ export function MessageInput() {
     sendMessage(input);
     setInput("");
   }, [input, sendMessage]);
+  const { account } = useActiveWeb3React();
 
+  useEffect(() => {
+    setChatStatus({
+      allow: true,
+      msg: <></>,
+      reportedId: null
+    });
+    message?.blockList?.find((list: any) => {
+      console.log("chatStatus", list);
+      if (message.conversationType == "group") {
+        if (list?.reportedByDetails[0]?.address == account?.toLowerCase()) {
+          setChatStatus({
+            allow: false,
+            reportedId: list._id,
+            msg: (
+              <div>
+                You block this Group<Button onClick={handleUnBlock}> Un-Block Now</Button>{" "}
+              </div>
+            )
+          });
+        }
+        return;
+      }
+      if (list?.reportedByDetails[0]?.address == account?.toLowerCase()) {
+        setChatStatus({
+          allow: false,
+          reportedId: list._id,
+          msg: (
+            <div>
+              You Block This Chat <Button onClick={handleUnBlock}> Un-Block Now</Button>{" "}
+            </div>
+          )
+        });
+      } else if (list?.reportedUserDetails[0]?.address == account?.toLowerCase()) {
+        setChatStatus({
+          allow: false,
+          reportedId: list._id,
+          msg: <div>You are Blocked by the user.</div>
+        });
+      }
+    });
+  }, [message]);
+
+  if (!chatStatus.allow) {
+    return (
+      <div className="sticky bottom-12 flex h-[calc((80/16)*1rem)] w-full items-center gap-5 rounded-lg border px-5 dark:border-theme-mine-shaft-dark dark:bg-theme-background">
+        {chatStatus.msg}
+      </div>
+    );
+  }
   return (
     <>
       <div className="sticky bottom-12 flex h-[calc((80/16)*1rem)] w-full items-center gap-5 rounded-lg border px-5 dark:border-theme-mine-shaft-dark dark:bg-theme-background">

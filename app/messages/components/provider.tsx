@@ -9,6 +9,7 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 import { createContext } from "@/libs/context";
 
 import { fetchContacts, fetchDmMessages } from "@/services/dm";
+import { unBlockUser } from "@/services/user-report";
 
 import { messages, SocketEvent, TMessage } from "../utils";
 
@@ -36,12 +37,12 @@ type State = {
   handleToggleGif: (input: boolean) => void;
   handleToggleEmoji: (input: boolean) => void;
   handleToggleMedia: (input: boolean) => void;
+  handleUnBlock: () => void;
   handleToggleUserReport: (input: boolean) => void;
   toggleMedia: boolean;
   toggleEmoji: boolean;
   toggleGif: boolean;
   toggleUserReport: boolean;
-  blockState: any;
 };
 
 const [Provider, useMessage] = createContext<State>("MessagesScreen");
@@ -57,9 +58,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const [toggleGif, setToggleGif] = useState(false);
   const [toggleMedia, setToggleMedia] = useState(false);
   const [toggleUserReport, setToggleUserReport] = useState(false);
-  const [blockState, setBlockState] = useState<any>();
   const { account }: any = useActiveWeb3React();
-  console.log("messages", messages);
   useEffect(() => {
     setStatus("loading");
     if (!socket) return;
@@ -81,7 +80,6 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     // message?.blockList.find((list: any) => {});
     console.log("message?.blockList", message);
     console.log("message?.blockList", message?.blockList);
-
   }, [selectedMessageId]);
   const handleAddNewChat = ({ message, data }: any) => {
     if (!data) {
@@ -108,7 +106,50 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       });
     });
   };
+  const handleUnBlock = async () => {
+    if (!account) {
+      toast.error("Please connect to your wallet.");
+      return;
+    }
 
+    try {
+      const { success, error, data }: any = await unBlockUser({
+        conversationId: message._id,
+        address: account.toLowerCase()
+      });
+
+      if (!success) {
+        toast.error(error || "Failed to unblock the user or conversation.");
+        return;
+      }
+
+      if (data.unblocked) {
+        // Updated to match the API response
+        toast.success(data.message);
+
+        // Update the messages state to reflect the unblocked status
+        setMessages((prevMessages: any[]) =>
+          prevMessages.map((msg) => {
+            if (msg._id === message._id) {
+              console.log("metched", msg);
+              return {
+                ...msg,
+                blockList: msg.blockList.filter((block: { _id: string }) => {
+                  return block._id != data.reportId;
+                })
+              };
+            }
+            return msg;
+          })
+        );
+      } else {
+        toast.error("Unblock action failed, please try again.");
+      }
+    } catch (err) {
+      console.error("Error in handleUnBlock:", err);
+      toast.error("An unexpected error occurred. Please try again.");
+    }
+  };
   const fetchMyContacts = async () => {
     try {
       const { data, error, success }: any = await fetchContacts(account, {
@@ -134,20 +175,17 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     socket.emit(SocketEvent.createAndStart, user);
     toast.success(`please wait starting chat with ${user.username || user.address}`);
   };
-
   const sendMessage = (content = "", gif = null, type = "msg") => {
     socket.emit(SocketEvent.sendMessage, { content, gif, type, dmId: message?._id });
     setToggleGif(false);
     setToggleEmoji(false);
     setToggleMedia(false);
   };
-
   const handleToggleEmoji = () => {
     setToggleEmoji((b) => !b);
     setToggleGif(false);
     setToggleMedia(false);
   };
-
   const handleToggleGif = () => {
     setToggleGif((b) => !b);
     setToggleEmoji(false);
@@ -184,7 +222,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       toggleGif={toggleGif}
       toggleMedia={toggleMedia}
       toggleUserReport={toggleUserReport}
-      blockState={blockState}
+      handleUnBlock={handleUnBlock}
     >
       {props.children}
     </Provider>
