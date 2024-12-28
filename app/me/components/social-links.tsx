@@ -67,7 +67,7 @@ export function SocialLinks(props: Props) {
       )}
 
       {user?.twitterLink && (
-        <Link href={getSocialLink(user.twitterLink, "twitter.com")}>
+        <Link href={getSocialLink(user.twitterLink, "x.com")}>
           <Button variant="ghost" size="icon" className="rounded-full">
             <Twitter className="size-4" />
           </Button>{" "}
