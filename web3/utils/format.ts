@@ -74,7 +74,7 @@ export const filteredStreamInfo = (streamInfo: Record<string, unknown>) => {
 /**
  *
  * @param rawLink username or link
- * @param host for example, twitter.com
+ * @param host for example, x.com
  */
 export const getSocialLink = (rawLink: string, host: string): string => {
   if (!rawLink) return "#";

@@ -51,7 +51,7 @@ export function SocialLinks(props: Props) {
   return (
     <div className="flex h-auto w-full items-center justify-end py-6 sm:px-4">
       {user?.facebookLink && (
-        <Link href={getSocialLink(user.facebookLink, "facebook.com")}>
+        <Link href={getSocialLink(user.facebookLink, "facebook.com")} target="_blank">
           <Button variant="ghost" size="icon" className="rounded-full">
             <Facebook className="size-4" />
           </Button>
@@ -59,7 +59,7 @@ export function SocialLinks(props: Props) {
       )}
 
       {user?.instagramLink && (
-        <Link href={getSocialLink(user.instagramLink, "instagram.com")}>
+        <Link href={getSocialLink(user.instagramLink, "instagram.com")} target="_blank">
           <Button variant="ghost" size="icon" className="rounded-full">
             <Instagram className="size-4" />
           </Button>{" "}
@@ -67,7 +67,7 @@ export function SocialLinks(props: Props) {
       )}
 
       {user?.twitterLink && (
-        <Link href={getSocialLink(user.twitterLink, "twitter.com")}>
+        <Link href={getSocialLink(user.twitterLink, "x.com")} target="_blank">
           <Button variant="ghost" size="icon" className="rounded-full">
             <Twitter className="size-4" />
           </Button>{" "}
@@ -75,7 +75,7 @@ export function SocialLinks(props: Props) {
       )}
 
       {user?.youtubeLink && (
-        <Link href={getSocialLink(user.youtubeLink, "youtube.com")}>
+        <Link href={getSocialLink(user.youtubeLink, "youtube.com")} target="_blank">
           <Button variant="ghost" size="icon" className="rounded-full">
             <Youtube className="size-4" />
           </Button>{" "}
