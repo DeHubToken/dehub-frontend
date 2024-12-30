@@ -1,25 +1,9 @@
-import dynamic from "next/dynamic";
-import Image from "next/image";
-import Link from "next/link";
-
 import { SearchBox, SearchModal } from "@/app/components/search-box";
-
 import { HambMenu } from "@/components/hamb-menu";
-import { Skeleton } from "@/components/ui/skeleton";
-
+import Link from "next/link";
+import { ConnectButtonDynamic } from "./connect-button-dynamic";
 import { Logo } from "./logo";
 import { ThemeSwitcher } from "./theme-switcher";
-
-/* ----------------------------------------------------------------------------------------------- */
-
-const ConnectButton = dynamic(() => import("./connect-button"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex size-auto items-center justify-center">
-      <Skeleton className="h-12 w-[162px] rounded-full bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft" />
-    </div>
-  )
-});
 
 export function Navbar() {
   return (
@@ -32,7 +16,7 @@ export function Navbar() {
         <div className="flex flex-[0_0_60%] items-center justify-end gap-1 md:gap-6">
           <SearchBox />
           <SearchModal />
-          <ConnectButton label="Connect" />
+          <ConnectButtonDynamic label="Connect" />
           <HambMenu />
           <ThemeSwitcher />
         </div>
