@@ -44,46 +44,71 @@ export function MessageInput() {
   const { account } = useActiveWeb3React();
 
   useEffect(() => {
-    setChatStatus({
+    if (!message?.blockList || !account) return;
+
+    const accountLower = account.toLowerCase();
+    let chatStatus = {
       allow: true,
       msg: <></>,
       reportedId: null
-    });
-    message?.blockList?.find((list: any) => {
-      console.log("chatStatus", list);
-      if (message.conversationType == "group") {
-        if (list?.reportedByDetails[0]?.address == account?.toLowerCase()) {
-          setChatStatus({
+    };
+
+    for (const list of message.blockList) {
+      const reportedByAddress = list?.reportedByDetails[0]?.address?.toLowerCase();
+      const reportedUserAddress = list?.reportedUserDetails[0]?.address?.toLowerCase();
+
+      // Check for group chat blocking logic
+      if (message.conversationType === "group") {
+        if (!list.reportedUser && reportedByAddress === accountLower) {
+          chatStatus = {
             allow: false,
             reportedId: list._id,
             msg: (
               <div>
-                You block this Group<Button onClick={handleUnBlock}> Un-Block Now</Button>{" "}
+                You block this Group <Button onClick={handleUnBlock}>Un-Block Now</Button>
               </div>
             )
-          });
+          };
+          break; // Exit the loop early since we've found a match
         }
-        return;
+
+        if (reportedUserAddress === accountLower) {
+          chatStatus = {
+            allow: false,
+            reportedId: list._id,
+            msg: <div>You are Blocked by the Admin.</div>
+          };
+          break; // Exit early as the status is determined
+        }
+      } else {
+        // Check for non-group chat blocking logic
+        if (reportedByAddress === accountLower) {
+          chatStatus = {
+            allow: false,
+            reportedId: list._id,
+            msg: (
+              <div>
+                You Block This Chat <Button onClick={handleUnBlock}>Un-Block Now</Button>
+              </div>
+            )
+          };
+          break; // Exit early as the status is determined
+        }
+
+        if (reportedUserAddress === accountLower) {
+          chatStatus = {
+            allow: false,
+            reportedId: list._id,
+            msg: <div>You are Blocked by the user.</div>
+          };
+          break; // Exit early as the status is determined
+        }
       }
-      if (list?.reportedByDetails[0]?.address == account?.toLowerCase()) {
-        setChatStatus({
-          allow: false,
-          reportedId: list._id,
-          msg: (
-            <div>
-              You Block This Chat <Button onClick={handleUnBlock}> Un-Block Now</Button>{" "}
-            </div>
-          )
-        });
-      } else if (list?.reportedUserDetails[0]?.address == account?.toLowerCase()) {
-        setChatStatus({
-          allow: false,
-          reportedId: list._id,
-          msg: <div>You are Blocked by the user.</div>
-        });
-      }
-    });
-  }, [message]);
+    }
+
+    // If no blocking is detected, default status
+    setChatStatus(chatStatus);
+  }, [message, account, handleUnBlock]);
 
   if (!chatStatus.allow) {
     return (

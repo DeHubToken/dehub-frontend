@@ -9,7 +9,7 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 import { createContext } from "@/libs/context";
 
 import { fetchContacts, fetchDmMessages } from "@/services/dm";
-import { unBlockUser } from "@/services/user-report";
+import { blockDM, unBlockUser } from "@/services/user-report";
 
 import { messages, SocketEvent, TMessage } from "../utils";
 
@@ -39,49 +39,59 @@ type State = {
   handleToggleMedia: (input: boolean) => void;
   handleUnBlock: () => void;
   handleToggleUserReport: (input: boolean) => void;
+  handleToggleConversationMoreOptions: (input: boolean) => void;
+  blockChatHandler: (input: string) => Promise<any>;
   toggleMedia: boolean;
   toggleEmoji: boolean;
   toggleGif: boolean;
   toggleUserReport: boolean;
+  toggleConversationMoreOptions: boolean;
+  permissions: {};
+  me: any;
 };
 
 const [Provider, useMessage] = createContext<State>("MessagesScreen");
 
 export function MessageProvider(props: { children: React.ReactNode; socketConnections: any }) {
+  const { account }: any = useActiveWeb3React();
   const socket = props?.socketConnections?.current?.dm;
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
   const [status, setStatus] = useState<State["status"]>("idle");
   const [messages, setMessages] = useState<any>([]);
   const message: any & { _id: string } = messages.find((msg: any) => msg._id === selectedMessageId);
+  const me = message?.participants.find(
+    (p: any) => p?.participant?.address == account?.toLowerCase()
+  );
+
   const [input, setInput] = useState("");
   const [toggleEmoji, setToggleEmoji] = useState(false);
   const [toggleGif, setToggleGif] = useState(false);
   const [toggleMedia, setToggleMedia] = useState(false);
   const [toggleUserReport, setToggleUserReport] = useState(false);
-  const { account }: any = useActiveWeb3React();
+  const [toggleConversationMoreOptions, setToggleConversationMoreOptions] = useState(false);
+
   useEffect(() => {
     setStatus("loading");
     if (!socket) return;
     socket.on(SocketEvent.pong, (data: any) => {
       console.log(data);
     });
+    socket.on(SocketEvent.error, errorHandler);
     socket.on(SocketEvent.sendMessage, newMsgHandler);
     socket.on(SocketEvent.createAndStart, handleAddNewChat);
     if (account) {
       fetchMyContacts();
     }
-
     return () => {
+      socket.off(SocketEvent.error, errorHandler);
       socket.off(SocketEvent.sendMessage, newMsgHandler);
       socket.off(SocketEvent.createAndStart, handleAddNewChat);
     };
   }, [socket]);
-  useEffect(() => {
-    // message?.blockList.find((list: any) => {});
-    console.log("message?.blockList", message);
-    console.log("message?.blockList", message?.blockList);
-  }, [selectedMessageId]);
-  const handleAddNewChat = ({ message, data }: any) => {
+  const errorHandler = (error: any) => {
+    toast.error(error.msg);
+  };
+  const handleAddNewChat = ({ msg, data }: any) => {
     if (!data) {
       return;
     }
@@ -91,7 +101,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       if (exist) return prevState;
       return [data, ...prevState];
     });
-    toast.success(message);
+    toast.success(msg);
   };
   const newMsgHandler = (data: any) => {
     setMessages((privState: any) => {
@@ -106,7 +116,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       });
     });
   };
-  const handleUnBlock = async () => {
+  const handleUnBlock = async (reportId?: string) => {
     if (!account) {
       toast.error("Please connect to your wallet.");
       return;
@@ -115,7 +125,8 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     try {
       const { success, error, data }: any = await unBlockUser({
         conversationId: message._id,
-        address: account.toLowerCase()
+        address: account.toLowerCase(),
+        reportId: reportId ?? ""
       });
 
       if (!success) {
@@ -130,8 +141,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
         // Update the messages state to reflect the unblocked status
         setMessages((prevMessages: any[]) =>
           prevMessages.map((msg) => {
-            if (msg._id === message._id) {
-              console.log("metched", msg);
+            if (msg._id === message._id) { 
               return {
                 ...msg,
                 blockList: msg.blockList.filter((block: { _id: string }) => {
@@ -149,6 +159,24 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       console.error("Error in handleUnBlock:", err);
       toast.error("An unexpected error occurred. Please try again.");
     }
+  };
+  const blockChatHandler = async (reason: string,userAddress?:string) => {
+    if (!account) {
+      toast.error("please connect to wallet.");
+      return;
+    }
+    toast.info("blocking...");
+    const { data, error }: any = await blockDM({
+      conversationId: message._id,
+      reason,
+      address: account?.toLowerCase(),
+      userAddress:userAddress??""
+    }); 
+    if (error) {
+      toast.error(error);
+      return
+    }
+  toast.success(data?.message||data?.msg)  
   };
   const fetchMyContacts = async () => {
     try {
@@ -199,9 +227,12 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const handleToggleUserReport = () => {
     setToggleUserReport((b) => !b);
   };
-
+  const handleToggleConversationMoreOptions = () => {
+    setToggleConversationMoreOptions((b) => !b);
+  };
   return (
     <Provider
+      me={me}
       messages={messages} // <- From API
       status={status}
       selectedMessageId={selectedMessageId}
@@ -218,11 +249,15 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       handleToggleEmoji={handleToggleEmoji}
       handleToggleMedia={handleToggleMedia}
       handleToggleUserReport={handleToggleUserReport}
+      handleToggleConversationMoreOptions={handleToggleConversationMoreOptions}
       toggleEmoji={toggleEmoji}
       toggleGif={toggleGif}
       toggleMedia={toggleMedia}
       toggleUserReport={toggleUserReport}
+      toggleConversationMoreOptions={toggleConversationMoreOptions}
       handleUnBlock={handleUnBlock}
+      blockChatHandler={blockChatHandler}
+      permissions={{}}
     >
       {props.children}
     </Provider>

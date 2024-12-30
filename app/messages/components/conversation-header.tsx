@@ -12,35 +12,34 @@ import { useMessage } from "./provider";
 
 export function ConversationHeader() {
   const { selectedMessage: message } = useMessage("MessageListHeader");
-  const { participants, conversationType, groupName = "" }: any = message;
-
-  const participant = participants[0];
-  if (!participant) return null;
+  const { participants, conversationType, groupName = "" }: any = message; 
+  const user = participants[0]?.participant;  
+  if (!user) return null;
   if (conversationType == "dm") {
     return (
       <div className="flex flex-col gap-1">
         <div className="flex justify-between">
           <div className="flex items-center gap-3">
             <Avatar>
-              <AvatarFallback>{createAvatarName(participant.name)}</AvatarFallback>
+              <AvatarFallback>{createAvatarName(user.name)}</AvatarFallback>
               <AvatarImage
                 className="size-12 object-cover"
-                alt={participant?.username}
-                src={getAvatarUrl(participant.avatarUrl || "")}
+                alt={user?.username}
+                src={getAvatarUrl(user.avatarUrl || "")}
               />
             </Avatar>
             <span className="text-2xl font-bold">
               {" "}
-              {participant?.displayName ||
-                participant?.username ||
-                `${participant?.address.substring(0, 6)}...${participant?.address.slice(-4)}`}
+              {user?.displayName ||
+                user?.username ||
+                `${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}
             </span>
-            {!participant?.isPro && <AvatarStar />}
-            <ConversationOptions type={"dm"} participant={participant}/>
+            {!user?.isPro && <AvatarStar />}
+            <ConversationOptions type={"dm"} participant={user}/>
           </div>
         </div>
         <span className=" ml-12">
-          {`${participant?.address.substring(0, 6)}...${participant?.address.slice(-4)}`}
+          {`${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}
         </span>
       </div>
     );
@@ -59,8 +58,8 @@ export function ConversationHeader() {
               />
             </Avatar>
             <span className="text-2xl font-bold">{groupName}</span>
-            {!participant?.isPro && <AvatarStar />}
-            <ConversationOptions type="group" participant={participant}/>
+            {!user?.isPro && <AvatarStar />}
+            <ConversationOptions type="group" participant={user}/>
           </div>
           
         </div>

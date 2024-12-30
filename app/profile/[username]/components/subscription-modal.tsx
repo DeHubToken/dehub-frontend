@@ -24,6 +24,7 @@ import { getAvatarUrl } from "@/web3/utils/url";
 import { supportedTokens } from "@/configs";
 
 import BuySubOnChain from "./buy-sub-on-chain";
+import SubscriptionGroupList from "@/app/components/join-subscription-group";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -70,6 +71,7 @@ export function SubscriptionModal({ avatarImageUrl, displayName, plans = [] }: a
                   creator={plan?.address}
                 />
                 <SubscriptionBenefits benefits={plan?.benefits || []} />
+                <SubscriptionGroupList/>
               </SubscriptionCard>
             );
           })}

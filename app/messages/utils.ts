@@ -29,5 +29,6 @@ export const SocketEvent = {
   createAndStart: "createAndStart",
   sendMessage: "sendMessage",
   onCreateChat:'onCreateChat',
-  reConnect: "reConnect"
+  reConnect: "reConnect",
+  error:"error"
 };

@@ -6,10 +6,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@radix-ui/react-dropdown-menu";
-import { CircleAlert, CircleX, EllipsisVertical, User } from "lucide-react";
+import { CircleAlert, CircleEllipsis, CircleX, EllipsisVertical, User } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 import { useMessage } from "./provider";
-import { Button } from "@/components/ui/button";
 
 type Props = {
   type: "dm" | "group";
@@ -23,14 +24,13 @@ const ConversationOptions = ({ type, participant }: Props) => {
   const router = useRouter();
   const {
     setSelectedMessageId,
-    handleToggleUserReport
+    handleToggleUserReport,
+    handleToggleConversationMoreOptions
   }: any & { handleToggleUserReport: () => void } = useMessage("ConversationOptions");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-     
-          <EllipsisVertical className="size-6 text-gray-600 dark:text-gray-300" />
- 
+        <EllipsisVertical className="size-6 text-gray-600 dark:text-gray-300" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="flex flex-col gap-2   rounded-md bg-slate-500 ">
         {type == "dm" && (
@@ -45,12 +45,9 @@ const ConversationOptions = ({ type, participant }: Props) => {
         )}
         <DropdownMenuItem
           className="flex gap-1 p-2 hover:bg-slate-600"
-          onClick={
-            //handleToggleMediaUpload
-            () => {
-              setSelectedMessageId(null);
-            }
-          }
+          onClick={() => {
+            setSelectedMessageId(null);
+          }}
         >
           <CircleX className="size-5" /> <span> Close chat</span>
         </DropdownMenuItem>
@@ -61,6 +58,13 @@ const ConversationOptions = ({ type, participant }: Props) => {
         >
           <CircleAlert className="size-5" />
           <span> Block </span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="flex gap-1    p-2  hover:bg-slate-600"
+          onClick={handleToggleConversationMoreOptions}
+        >
+          <CircleEllipsis />
+          <span> more </span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

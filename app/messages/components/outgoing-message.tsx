@@ -12,6 +12,7 @@ import MediaView from "./media-view";
 
 export function OutgoingMessage(props: {
   message: {
+    createdAt:Date,
     content: string;
     author: string;
     avatar: string;
@@ -30,9 +31,9 @@ export function OutgoingMessage(props: {
       <div className="flex max-w-96 flex-col items-end gap-1">
         <span className="pr-4 text-xs text-gray-400">
           {
-            // dayjs(message.date).fromNow()
+            dayjs(message.createdAt).fromNow()
           }
-          dayjs
+           
         </span>
         <div className="flex items-end gap-3">
           <div className="rounded-l-[20px] rounded-tr-[20px] px-4 py-3 dark:bg-theme-mine-shaft-dark">

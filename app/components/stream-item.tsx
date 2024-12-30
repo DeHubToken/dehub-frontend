@@ -112,8 +112,8 @@ export function StreamItem(props: Props) {
           </div>
         )}
    {
-  //  nft?.plans!=null 
-   true&& (
+   nft?.plans!=null 
+    && (
           <div className="absolute -left-20 bottom-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-classic-purple px-12 py-0.5 text-center text-xs text-white">
             <span>
           Subscribe To Watch 
