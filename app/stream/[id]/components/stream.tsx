@@ -71,7 +71,7 @@ export async function Stream(props: { tokenId: number }) {
   const { tokenId } = props;
   const cookie = await cookies();
   const userCookie = cookie.get("user_information");
-  const user = safeParseCookie<{ address: string }>(userCookie?.value);
+  const user = await safeParseCookie<{ address: string }>(userCookie?.value);
   const response = await getNFT(tokenId, user?.address as string);
 
   if (!response.success) {
