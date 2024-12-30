@@ -14,17 +14,17 @@ import { StreamLoader } from "./components/stream-skeleton";
 
 type Props = {
   params: null;
-  searchParams: {
+  searchParams: Promise<{
     category?: string;
     range?: string;
     type: string;
     q?: string;
     sortBy?: string;
-  };
+  }>;
 };
 
 export default async function Page(props: Props) {
-  const { category, range, type, q, sortBy } = props.searchParams;
+  const { category, range, type, q, sortBy } = (await props.searchParams);
 
   if (!type) {
     return redirect(`/?type=trends`);

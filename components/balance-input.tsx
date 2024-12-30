@@ -1,13 +1,13 @@
 /* eslint-disable */
 
-import React, { InputHTMLAttributes, ReactNode, ReactText } from "react";
+import React, { InputHTMLAttributes, ReactNode } from "react";
 
 export interface BalanceInputProps {
-  value: ReactText;
+  value: number | string;
   onUserInput: (input: string) => void;
   currencyValue?: ReactNode;
   placeholder?: string;
-  innerRef?: React.RefObject<HTMLInputElement>;
+  innerRef?: React.RefObject<HTMLInputElement | null>;
   inputProps?: Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "placeholder" | "onChange">;
   isWarning?: boolean;
   isDisabled?: boolean;

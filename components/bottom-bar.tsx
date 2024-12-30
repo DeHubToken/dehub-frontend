@@ -4,6 +4,8 @@ import { MessageSquareText } from "lucide-react";
 import { Home, Plus, Profile, Stream } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 
+import type { JSX } from "react";
+
 const links: {
   id: number;
   name: string;

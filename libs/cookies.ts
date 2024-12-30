@@ -1,7 +1,7 @@
-import { cookies } from "next/headers";
+import { cookies, type UnsafeUnwrappedCookies } from "next/headers";
 
 export function clearCookies() {
-  const cookie = cookies();
+  const cookie = (cookies() as unknown as UnsafeUnwrappedCookies);
   cookie.delete("wallet_information");
   cookie.delete("chain_information");
   cookie.delete("user_information");

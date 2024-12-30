@@ -7,7 +7,7 @@ import { getAccount } from "@/services/user";
 import { getAvatarUrl } from "@/web3/utils/url";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const cookie = cookies();
+  const cookie = await cookies();
   const userCookie = cookie.get("user_information");
   const user = safeParseCookie<{ address: string }>(userCookie?.value);
   

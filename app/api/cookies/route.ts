@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const { wallet_information, chain_information, user_information, connected } = await req.json();
-    const cookie = cookies();
+    const cookie = await cookies();
 
     if (!connected) {
       cookie.delete("wallet_information");
@@ -48,8 +48,8 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export function DELETE() {
-  const cookie = cookies();
+export async function DELETE() {
+  const cookie = await cookies();
   cookie.delete("account");
   return NextResponse.json({ message: "Ok" });
 }

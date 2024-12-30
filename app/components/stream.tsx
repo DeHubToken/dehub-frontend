@@ -20,7 +20,7 @@ type FeedProps = {
 
 export async function Stream(props: FeedProps) {
   const { category, range, type, q } = props;
-  const cookie = cookies();
+  const cookie = await cookies();
   const userCookie = cookie.get("user_information");
   const user = safeParseCookie<{ address: string }>(userCookie?.value);
 

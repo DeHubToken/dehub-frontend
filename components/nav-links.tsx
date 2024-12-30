@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 
 import { useMediaQuery } from "@/hooks/use-media-query";
 
+import type { JSX } from "react";
+
 /* ----------------------------------------------------------------------------------------------- */
 
 type Link = {
