@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 type Props = {
   children: React.ReactNode;
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 // Function to dynamically generate metadata based on NFT data

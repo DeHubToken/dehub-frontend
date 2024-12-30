@@ -13,7 +13,6 @@ import { StreamLoader } from "./components/stream-skeleton";
 /* ----------------------------------------------------------------------------------------------- */
 
 type Props = {
-  params: null;
   searchParams: Promise<{
     category?: string;
     range?: string;
