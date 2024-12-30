@@ -71,7 +71,7 @@ export function SubscriptionModal({ avatarImageUrl, displayName, plans = [] }: a
                   creator={plan?.address}
                 />
                 <SubscriptionBenefits benefits={plan?.benefits || []} />
-                <SubscriptionGroupList/>
+                <SubscriptionGroupList plan={plan}/>
               </SubscriptionCard>
             );
           })}

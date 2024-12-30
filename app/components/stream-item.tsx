@@ -26,6 +26,7 @@ import { getAvatarUrl } from "@/web3/utils/url";
 
 import { LikeButton } from "../stream/[id]/components/stream-actions";
 import { ImageWithLoader } from "./nft-image";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 type Props = {
   nft: any;
@@ -38,6 +39,7 @@ export function StreamItem(props: Props) {
   const [isHidden, setIsHidden] = useState<boolean>(nft.isHidden);
   const [isHovered, setIsHovered] = useState(false);
   const { isUserOnline } = useWebSockets();
+  const {account }=useActiveWeb3React()
   const { theme } = useTheme(); 
   const updateVisibility = async (id: string) => {
     try {
@@ -51,6 +53,7 @@ export function StreamItem(props: Props) {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  console.log(" nft?.plans?.length>0 ", nft?.plansDetails?.length>0, nft )
   return (
     <div
       {...rest}
@@ -71,6 +74,7 @@ export function StreamItem(props: Props) {
               transcodingStatus={nft.transcodingStatus}
               status={nft.status}
               tokenId={nft.tokenId}
+              address={account}
             />
           )}
 
@@ -112,19 +116,12 @@ export function StreamItem(props: Props) {
           </div>
         )}
    {
-   nft?.plans!=null 
+   nft?.plansDetails?.length>0 
     && (
           <div className="absolute -left-20 bottom-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-classic-purple px-12 py-0.5 text-center text-xs text-white">
             <span>
           Subscribe To Watch 
-            </span>
-            {/* <Image
-              src="/icons/tokens/DHB.png"
-              alt="BJ"
-              width={20}
-              height={20}
-              className="size-4 rounded-full bg-black"
-            /> */}
+            </span> 
           </div>
         )}
         {nft?.streamInfo?.isLockContent && (

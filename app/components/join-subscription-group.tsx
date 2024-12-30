@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
-import { Button } from "react-day-picker";
+ 
 
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
-type Props = {};
+type Props = {
+  plan:any
+};
 
 const SubscriptionGroupList = (props: Props) => {
   const [open, setOpen] = useState(false);

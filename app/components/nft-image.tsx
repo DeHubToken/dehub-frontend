@@ -19,6 +19,7 @@ export function ImageWithLoader(props: {
   transcodingStatus?: string;
   status?: string;
   tokenId: string;
+  address?:string;
 }) {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -38,7 +39,7 @@ export function ImageWithLoader(props: {
   return (
     <div className="relative h-full overflow-hidden">
       <LazyImage
-        src={getImageUrlApi(props.tokenId?.toString(), 256, 256)}
+        src={getImageUrlApi(props.tokenId?.toString(),props.address, 256, 256)}
         alt={props.name || "Upload"}
         className={`absolute inset-0 size-full object-cover transition duration-300 ${
           props.isHidden ? "blur-md" : ""

@@ -14,17 +14,12 @@ export const useTokenApproval = (
   const token: any = useERC20Contract(tokenAddress);
 
   const approveToken = async () => {
-    try {
-      console.log("tokentokentoken",token)
-      const decimals = await token.decimals(); // Replace with dynamic token decimals if needed
-      // let fee = fees.toString()/10**decimals; 
-      // alert(fee)
-      const adjustedPrice = BigNumber.from(price  + 10).mul(BigNumber.from(10).pow(decimals)).add(fees);
-
+    try { 
+      const decimals = await token.decimals(); // Replace with dynamic token decimals if needed 
+      const adjustedPrice = BigNumber.from(price  + 10).mul(BigNumber.from(10).pow(decimals)).add(fees); 
       console.log("Initiating token approval...");
       const approvalTx = await token.approve(spenderAddress, adjustedPrice);
-      setHash(approvalTx.hash); // Set approval transaction hash
-
+      setHash(approvalTx.hash); // Set approval transaction hash 
       console.log("Approval transaction submitted, waiting for confirmation...");
       await approvalTx.wait(); // Wait for approval transaction to confirm
       setIsApproved(true);

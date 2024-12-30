@@ -50,7 +50,7 @@ const BuySubOnChain: React.FC<BuySubOnChainProps> = ({
   const subcontract: any = useSubscriptionContract(SB_ADDRESS[chainId]);
   const { account } = useActiveWeb3React();
   const getFee = async () => {
-    const fee = await subcontract._checkFeeByBadges(creator, account, duration); 
+    const fee = await subcontract._checkFeeByBadges(creator, account, duration);
     console.log("fee", fee);
     setFees(fee);
   };
@@ -96,9 +96,13 @@ const BuySubOnChain: React.FC<BuySubOnChainProps> = ({
           type="button"
           onClick={approveToken} // Approve tokens before purchasing
           className="w-full text-sm"
-          disabled={isTransactionPending || !field.isPublished}
+          disabled={!field.isPublished || isTransactionPending || !field.isPublished}
         >
-          {approvalHash ? "Approving..." : "Approve Tokens"}
+          {!field.isPublished
+            ? "Not Published Yet"
+            : isTransactionPending
+              ? "Approving..."
+              : "Approve Tokens"}
         </Button>
       ) : (
         <Button
