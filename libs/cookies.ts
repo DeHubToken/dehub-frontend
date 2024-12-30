@@ -1,20 +1,20 @@
-import { cookies, type UnsafeUnwrappedCookies } from "next/headers";
+import { cookies } from "next/headers";
 
-export function clearCookies() {
-  const cookie = (cookies() as unknown as UnsafeUnwrappedCookies);
+export async function clearCookies() {
+  const cookie = await cookies();
   cookie.delete("wallet_information");
   cookie.delete("chain_information");
   cookie.delete("user_information");
 }
 
-export function safeParseCookie<T>(cookie: string | undefined | null) {
+export async function safeParseCookie<T>(cookie: string | undefined | null) {
   if (!cookie) return null;
 
   try {
     const parsed = JSON.parse(cookie);
     return parsed as T;
   } catch (err) {
-    clearCookies();
+    await clearCookies();
     return null;
   }
 }

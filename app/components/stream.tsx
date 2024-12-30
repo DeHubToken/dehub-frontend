@@ -22,7 +22,7 @@ export async function Stream(props: FeedProps) {
   const { category, range, type, q } = props;
   const cookie = await cookies();
   const userCookie = cookie.get("user_information");
-  const user = safeParseCookie<{ address: string }>(userCookie?.value);
+  const user = await safeParseCookie<{ address: string }>(userCookie?.value);
 
   const res = await getNFTs({
     sortMode: type,

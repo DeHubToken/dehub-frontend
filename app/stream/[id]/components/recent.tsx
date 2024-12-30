@@ -9,7 +9,7 @@ import { RecentPanel } from "./recent-panel";
 export async function RecentStreams() {
   const cookie = await cookies();
   const userCookie = cookie.get("user_information");
-  const user = safeParseCookie<{ address: string }>(userCookie?.value);
+  const user = await safeParseCookie<{ address: string }>(userCookie?.value);
   const response = await getNFTs({ sortMode: "trends", address: user?.address });
 
   if (!response.success) {
