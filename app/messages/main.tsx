@@ -145,10 +145,10 @@ const ContactListHeader = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="end">
           <DropdownMenuItem onClick={handleDmChatModal}>
-            <CirclePlus className="size-5" /> Dm
+            <CirclePlus className="size-5" />&nbsp;&nbsp;Dm
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleGroupChatModal}>
-            <Users className="size-5" /> Group
+            <Users className="size-5" />&nbsp;&nbsp;Group
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
