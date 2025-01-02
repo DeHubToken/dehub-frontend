@@ -462,7 +462,7 @@ export const DHB_ADDRESSESS: { [chainId: number]: string } = {
   [ChainId.BASE_MAINNET]: "0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c"
 };
 export const SB_ADDRESS: { [chainId: number]: string } = {
-  [ChainId.BSC_TESTNET]: "0xEAF3D73f9da7C4fDe4929C29eaCd33f254E7EA35" //'0x3A76858fb35520c3CA20E826901c7cB73F715251',
+  [ChainId.BSC_TESTNET]: "0x9F84c23fc1Bd28781e6c666843f870eC6f0eE8c2" //'0x3A76858fb35520c3CA20E826901c7cB73F715251',
 };
 
 export const durations = [

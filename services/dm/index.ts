@@ -1,6 +1,8 @@
 import { api } from "@/libs/api";
 import objectToGetParams, { removeUndefined } from "@/libs/utils";
 
+import { durations } from "@/configs";
+
 interface SearchUserResponse {
   success: boolean;
   data?: {
@@ -28,7 +30,6 @@ export async function fetchDmMessages(
   id: string,
   data: { q?: string | null; skip: number; limit: number; address: `0x${string}` | null }
 ) {
-  console.log("fetchDmMessages");
   if (data) {
     const query = objectToGetParams(
       removeUndefined({
@@ -112,8 +113,85 @@ export async function createGroupChat(data: CreateGroupChatData) {
 
     // Returning the API response
     return res;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating group chat:", error);
-    throw new Error("Failed to create group chat"); // Provide a meaningful error message
+
+    // Check for known error formats
+    if (error?.response?.status === 400) {
+      throw new Error("Invalid data provided for creating group chat.");
+    } else if (error?.response?.status === 401) {
+      throw new Error("Unauthorized. Please log in to create a group chat.");
+    } else if (error?.response?.status === 500) {
+      throw new Error("Server error while creating group chat. Please try again later.");
+    } else {
+      throw new Error("An unexpected error occurred while creating the group chat.");
+    }
+  }
+}
+interface JoinGroupData {
+  groupId: string;
+  planId: string;
+  address: string;
+  userAddress: string;
+}
+// This function joins a group
+export async function joinGroup(data: JoinGroupData) {
+  const url = `/dm/group/join`; // API endpoint for joining a group
+  try {
+    // Make the API request to join a group
+    const res = await api<{ result: SearchUserResponse }>(url, {
+      method: "POST", // HTTP method
+      headers: {
+        "Content-Type": "application/json" // Specify the content type
+      },
+      body: JSON.stringify(data)
+    });
+
+    // Returning the API response
+    return res;
+  } catch (error: any) {
+    console.error("Error joining group:", error);
+
+    // Check for known error formats
+    if (error?.response?.status === 400) {
+      throw new Error("Invalid data provided for joining the group.");
+    } else if (error?.response?.status === 401) {
+      throw new Error("Unauthorized. Please log in to join the group.");
+    } else if (error?.response?.status === 404) {
+      throw new Error("Group not found. Please check the group ID and try again.");
+    } else if (error?.response?.status === 500) {
+      throw new Error("Server error while joining the group. Please try again later.");
+    } else {
+      throw new Error("An unexpected error occurred while joining the group.");
+    }
+  }
+}
+
+// This function fetches groups by plan
+export async function fetchGroupsByPlan(data: { id: string; duration?: string }) {
+  const query = objectToGetParams(removeUndefined({ ...data }));
+  const url = `/dm/plan/${data.id}/${query}`;
+  try {
+    // Make the API request to fetch groups
+    const res = await api<{ result: SearchUserResponse }>(url, {
+      method: "GET",
+      next: { revalidate: 2 * 60 }
+    });
+
+    // Returning the API response
+    return res;
+  } catch (error: any) {
+    console.error("Error fetching groups by plan:", error);
+
+    // Check for known error formats
+    if (error?.response?.status === 400) {
+      throw new Error("Invalid data provided for fetching groups by plan.");
+    } else if (error?.response?.status === 404) {
+      throw new Error("No groups found for the specified plan.");
+    } else if (error?.response?.status === 500) {
+      throw new Error("Server error while fetching groups by plan. Please try again later.");
+    } else {
+      throw new Error("An unexpected error occurred while fetching groups by plan.");
+    }
   }
 }

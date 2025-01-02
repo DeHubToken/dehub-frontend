@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { CirclePlus } from "lucide-react";
 
+import SubscriptionGroupList from "@/app/components/join-subscription-group";
+
 import { CheckCircle } from "@/components/icons/check-circle";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +26,6 @@ import { getAvatarUrl } from "@/web3/utils/url";
 import { supportedTokens } from "@/configs";
 
 import BuySubOnChain from "./buy-sub-on-chain";
-import SubscriptionGroupList from "@/app/components/join-subscription-group";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -62,16 +63,23 @@ export function SubscriptionModal({ avatarImageUrl, displayName, plans = [] }: a
                   <SubscriptionCardTitle>{plan.name}</SubscriptionCardTitle>
                   <SubscriptionCardDescription>{plan.description}</SubscriptionCardDescription>
                 </SubscriptionCardHeader>
-                <SubscriptionPricing
-                  chainId={chainId}
-                  chains={plan?.chains}
-                  tier={plan?.tier}
-                  duration={plan?.duration}
-                  planId={plan.id}
-                  creator={plan?.address}
-                />
+                {!plan.alreadySubscribed && (
+                  <SubscriptionPricing
+                    chainId={chainId}
+                    chains={plan?.chains}
+                    tier={plan?.tier}
+                    duration={plan?.duration}
+                    planId={plan.id}
+                    creator={plan?.address}
+                  />
+                )}{" "}
+                {plan.alreadySubscribed && (
+                  <div>
+                    <h5>Purchased and Active</h5>
+                  </div>
+                )}
                 <SubscriptionBenefits benefits={plan?.benefits || []} />
-                <SubscriptionGroupList plan={plan}/>
+                <SubscriptionGroupList plan={plan} />
               </SubscriptionCard>
             );
           })}
@@ -160,6 +168,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
                   {chain.price} {token.symbol}
                 </p>
               </div>
+
               {chain.chainId == chainId && (
                 <BuySubOnChain
                   planId={planId}
