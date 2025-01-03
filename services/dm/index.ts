@@ -7,7 +7,9 @@ interface SearchUserResponse {
   success: boolean;
   data?: {
     users: any[];
+    message?: string;
   };
+  message?: string;
 }
 export async function searchUserOrGroup(data: any) {
   console.log("searchUserOrGroup");

@@ -45,6 +45,18 @@ const SubscriptionGroupList = (props: Props) => {
       planId: id
     });
 
+    if(!response.success){
+      toast.error(response.error);
+      setOpen(false)
+    }
+
+    if(response.success){
+      //@ts-ignore
+      toast.success(response.data.message)
+      setOpen(false)
+    }
+    
+  
     console.log(`Joining group with ID: ${groupId}`, response);
     // Add your logic for joining the group here
   };
