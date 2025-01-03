@@ -21,7 +21,8 @@ import { useMessage } from "./provider";
 // Interface for the API response
 interface SearchUserResponse {
   success: boolean;
-  data?: { users: User[] };
+  data?: { users: User[],message?: string };
+  message?: string;
 }
 
 // Interface for a single user

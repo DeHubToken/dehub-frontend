@@ -24,7 +24,8 @@ import { useMessage } from "./provider";
 
 interface SearchUserResponse {
   success: boolean;
-  data?: { users: User[] };
+  data?: { users: User[],message?: string };
+  message?: string;
 }
 
 interface User {
