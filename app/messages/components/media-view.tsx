@@ -6,17 +6,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 
 import { dmMediaUrl } from "@/web3/utils/url";
 
-type Props = {
-  isPaid: boolean;
-  isLocked: boolean;
-  amount: number;
+type Props = { 
   mediaUrls: {
     url: string;
     type: string;
     mimeType: string;
-  }[];
-  token: string;
-  chainId: number;
+  }[]; 
 };
 
 const MediaView = (props: Props) => {

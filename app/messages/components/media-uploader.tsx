@@ -50,7 +50,8 @@ const MediaUploader: React.FC = () => {
     handleToggleMedia: toggleModal,
     selectedMessage
   }: any = useMessage("FileUpload");
-  const { _id: conversationId, conversationType }: { _id: string; conversationType: string } = selectedMessage;
+  const { _id: conversationId, conversationType }: { _id: string; conversationType: string } =
+    selectedMessage;
   const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]);
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>({});
   const [isUploading, setIsUploading] = useState(false); // Loading state
@@ -126,10 +127,23 @@ const MediaUploader: React.FC = () => {
     });
     formData.append("conversationId", conversationId);
     formData.append("senderId", account);
+    formData.append("isPaid", isPaid.toString());
     if (isPaid) {
-      formData.append("amount", amount);
-      formData.append("token", token);
-      formData.append("isPaid", `${isPaid}`);
+      if (!token && !amount) {
+        toast.error("Please select token and add amount.");
+
+        return;
+      }
+
+      const purchaseOptions = [
+        { 
+          address: token,
+          isLocked: true,
+          amount,
+          chainId: supportedTokens.find((t) => t.address == token)?.chainId
+        }
+      ];
+      formData.append("purchaseOptions", JSON.stringify(purchaseOptions));
     }
 
     try {
