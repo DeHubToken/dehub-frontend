@@ -28,6 +28,7 @@ import { getNFT } from "@/services/nfts";
 import { getImageUrlApiSimple } from "@/web3/utils/url";
 
 import { LikeButton } from "../feeds/[id]/components/stream-actions";
+import Link from "next/link";
 
 const fakeData = Array.from({ length: 5 }).map((_, index) => ({
   id: faker.string.uuid() + index,
@@ -101,6 +102,7 @@ export function FeedList(props: FeedProps) {
     fetchFeed();
   }, [selectedFeed]);
   return (
+   <Link href={`/feeds/${feed?.tokenId}`}>
     <div className="flex w-full flex-col items-center gap-3">
       {feeds.map((feed: any) => (
         <FeedCard key={feed.id}>
@@ -183,5 +185,6 @@ export function FeedList(props: FeedProps) {
         </FeedCard>
       </FeedReplyDialog>
     </div>
+   </Link>
   );
 }

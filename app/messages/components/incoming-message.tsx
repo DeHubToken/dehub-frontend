@@ -1,5 +1,6 @@
 import type { TMessage } from "../utils";
 
+import { useState } from "react";
 import Image from "next/image";
 import dayjs from "dayjs";
 
@@ -10,6 +11,7 @@ import { createAvatarName } from "@/libs/utils";
 import { supportedTokens } from "@/configs";
 
 import MediaView from "./media-view";
+import PayNowModal from "./pay-now-modal";
 import { useMessage } from "./provider";
 
 export function IncomingMessage(props: {
@@ -44,24 +46,18 @@ export function IncomingMessage(props: {
 }
 
 const PayView = ({ message }: any) => {
-  const { purchaseOptions } = message;
-  console.log("message", message);
-  const { selectedMessage }: any = useMessage("PayView");
-  console.log("selectedMessage", selectedMessage);
-  const sender = selectedMessage.participants.find(({ participant, role }: any) => {
-    console.log("sender",  message.sender);
-    console.log("sender participant",  participant);
-    return participant === message.sender._id;
-  });
-
-  // console.log("sender", sender);
+  const { sender, purchaseOptions } = message;
+  const [toggleSendFund, setToggleSendFund] = useState(false);
+  const handleToggleSendFund = () => {
+    setToggleSendFund((p) => !p);
+  };
   return (
     <div className="shadow-lg mx-auto max-w-md rounded-lg bg-gray-800 p-6 text-white">
       <h2 className="mb-4 text-2xl font-semibold">
         To see this media, you need to pay some tokens:
       </h2>
 
-      {purchaseOptions.map((pricing:any, index:any) => {
+      {purchaseOptions.map((pricing: any, index: any) => {
         const token = supportedTokens.find((a) => a.address == pricing.address);
         return (
           <div key={index} className="mb-4 rounded-lg bg-gray-700 p-4">
@@ -77,10 +73,17 @@ const PayView = ({ message }: any) => {
 
       <button
         className="mt-4 w-full rounded-lg bg-blue-500 py-2 font-semibold text-white transition duration-200 hover:bg-blue-700"
-        onClick={() => {}}
+        onClick={handleToggleSendFund}
       >
         Pay Now
       </button>
+      <PayNowModal
+      type="tip-media"
+        purchaseOptions={purchaseOptions}
+        sender={sender}
+        toggleSendFund={toggleSendFund}
+        handleToggleSendFund={handleToggleSendFund}
+      />
     </div>
   );
 };

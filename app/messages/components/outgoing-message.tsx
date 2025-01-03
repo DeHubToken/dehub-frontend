@@ -38,7 +38,7 @@ export function OutgoingMessage(props: {
         <div className="flex items-end gap-3">
           <div className="rounded-l-[20px] rounded-tr-[20px] px-4 py-3 dark:bg-theme-mine-shaft-dark">
             <p className="text-sm dark:text-gray-200">{message.content}</p> 
-            <MediaView  isLocked={false} isPaid={false} amount={100} token={"0x0001"} chainId={97} mediaUrls={message.mediaUrls} />
+            <MediaView     mediaUrls={message.mediaUrls} />
           </div>
           <Avatar className="size-8">
             <AvatarFallback>{createAvatarName(message?.author)}</AvatarFallback>
