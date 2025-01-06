@@ -24,12 +24,13 @@ import { cn } from "@/libs/utils";
 
 import { Button } from "../ui/button";
 
-export function FeedButton(props: React.ComponentProps<"button"> & { icon: React.ReactNode }) {
-  const { icon, children, ...rest } = props;
+export function FeedButton(props: React.ComponentProps<"button"> & { icon: React.ReactNode,saveCount?: number }) {
+  const { icon, children,saveCount, ...rest } = props;
   return (
     <button {...rest} className={cn("flex items-center gap-2", rest.className)}>
       {icon}
-      <span className="text-theme-monochrome-300 text-xs">{children}</span>
+      <span className="text-theme-monochrome-300 text-xs">{children}</span> 
+      {saveCount && <span className="text-theme-monochrome-400 text-xs">{saveCount}</span>} 
     </button>
   );
 }
@@ -48,8 +49,10 @@ export function FeedCommentButton(props: FeedButtonProps) {
   return <FeedButton {...props} icon={<Comment className="size-5" />} />;
 }
 
-export function FeedBookmarkButton(props: FeedButtonProps) {
-  return <FeedButton {...props} icon={<Bookmark className="size-5" />} />;
+type FeedBookmarkButtonProps = FeedButtonProps & { saveCount?: number };
+
+export function FeedBookmarkButton({ saveCount, ...props }: FeedBookmarkButtonProps) {
+  return <FeedButton {...props} icon={<Bookmark className="size-0" fill="#FF0000"/>} saveCount={saveCount} />;
 }
 
 export function FeedShareButton(props: FeedButtonProps & { tokenId: number }) {
