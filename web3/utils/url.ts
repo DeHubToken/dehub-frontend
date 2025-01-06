@@ -47,14 +47,11 @@ export function getGroupAvatarUrl(url: string) {
 }
 
 export function getCoverUrl(url: string) {
-  if (!url) return "/images/default-avatar.png";
-
-  const fileName = url.split("/").pop();
+  if (!url) return "/images/default-banner.png"; 
+  const fileName = url.split("/").pop(); 
 
   return `${env.cdnBaseUrl}covers/${fileName}`;
 }
-export function dmMediaUrl(url: string) { 
- 
-
+export function dmMediaUrl(url: string) {   
   return `${env.cdnBaseUrl}${url}`;
 }

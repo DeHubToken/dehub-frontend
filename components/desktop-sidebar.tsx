@@ -87,7 +87,7 @@ export function MobileOnlyBottomBar() {
 
   return (
     <div className="fixed bottom-0 left-0 z-20 h-auto w-full border-t-2 bg-theme-background py-2 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
-      <div className="flex h-auto w-full items-center justify-around">
+      <div className="grid w-full grid-cols-5 items-center">
         {links.map((link) => {
           if (link.name === "Track") {
             return (

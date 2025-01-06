@@ -9,6 +9,7 @@ import { truncate } from "@/libs/strings";
 import { getNFTs } from "@/services/nfts/trending";
 
 import { getImageUrl, getImageUrlApi } from "@/web3/utils/url";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 /* ================================================================================================= */
 
@@ -17,7 +18,7 @@ export async function RecentPanel() {
   const userCookie = cookie.get("user_information");
   const user = safeParseCookie<{ address: string }>(userCookie?.value);
   const response = await getNFTs({ sortMode: "trends", address: user?.address });
-
+const {account}=useActiveWeb3React()
   if (!response.success) {
     return (
       <div className="flex size-full h-screen flex-col items-center justify-center p-4">
@@ -46,7 +47,7 @@ export async function RecentPanel() {
             >
               <figure className="h-32 w-full max-w-[40%] flex-[0_0_40%] overflow-hidden rounded-2xl sm:h-40 xl:h-28">
                 <LazyImage
-                  src={getImageUrlApi(item.tokenId.toString(), 256, 256)}
+                  src={getImageUrlApi(item.tokenId.toString(),account, 256, 256)}
                   alt={item.name || "Upload"}
                   className="size-full object-cover"
                 />
