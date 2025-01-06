@@ -29,6 +29,9 @@ import { getImageUrlApiSimple } from "@/web3/utils/url";
 
 import { LikeButton } from "../feeds/[id]/components/stream-actions";
 import Link from "next/link";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { BugIcon} from "lucide-react";
+import TipModal from "../feeds/[id]/components/tip-modal";
 
 const fakeData = Array.from({ length: 5 }).map((_, index) => ({
   id: faker.string.uuid() + index,
@@ -74,6 +77,7 @@ export function FeedList(props: FeedProps) {
   const [feeds, setFeeds] = useState([]);
   const [feed, setFeed] = useState<any>(null);
   console.log("eeeeeee", feeds);
+
   useEffect(() => {
     (async () => {
       const res: any = await getFeedNFTs({
@@ -112,7 +116,23 @@ export function FeedList(props: FeedProps) {
               avatar={feed.avatar}
               time={new Date(feed.createdAt).toString()}
             />
-            <FeedSettingsButton />
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <FeedSettingsButton />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="bottom" align="end">
+                <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                  <TipModal tokenId={feed.tokenId} to={feed.minter} />
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <BugIcon className="size-5" />&nbsp;&nbsp;Report
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          
           </FeedHeader>
           <FeedContent name={feed.name} description={feed.description} />
           <FeedImageGallary
