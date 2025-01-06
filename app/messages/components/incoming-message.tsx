@@ -46,7 +46,7 @@ export function IncomingMessage(props: {
 }
 
 const PayView = ({ message }: any) => {
-  const { sender, purchaseOptions } = message;
+  const { sender, purchaseOptions, _id } = message;
   const [toggleSendFund, setToggleSendFund] = useState(false);
   const handleToggleSendFund = () => {
     setToggleSendFund((p) => !p);
@@ -78,7 +78,8 @@ const PayView = ({ message }: any) => {
         Pay Now
       </button>
       <PayNowModal
-      type="tip-media"
+        messageId={_id}
+        type="tip-media"
         purchaseOptions={purchaseOptions}
         sender={sender}
         toggleSendFund={toggleSendFund}

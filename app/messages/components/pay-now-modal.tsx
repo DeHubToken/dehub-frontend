@@ -9,13 +9,14 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useERC20Contract } from "@/hooks/use-web3";
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
-import { saveDMTnx } from "@/services/dm";
+import { saveDMTnx, updateDMTnx } from "@/services/dm";
 
 import { supportedNetworks } from "@/web3/configs";
 
 import { supportedTokens } from "@/configs";
 
 type Props = {
+  messageId: string;
   toggleSendFund: boolean;
   handleToggleSendFund: (b: boolean) => void;
   type: "tip" | "tip-media";
@@ -30,14 +31,41 @@ type Props = {
 };
 
 const PayNowModal = (props: Props) => {
-  const { purchaseOptions, sender, toggleSendFund, handleToggleSendFund } = props;
+  const { purchaseOptions, sender, toggleSendFund, handleToggleSendFund, messageId } = props;
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedToken, setSelectedToken] = useState<null | string>(null);
   const tokenContract: any = useERC20Contract(selectedToken);
-  const [hash, setHash] = useState<any>(null);
+  const [tnx, setTnx] = useState<any>();
   const [decimals, setDecimals] = useState<number | null>(null);
-  const { account ,chainId} = useActiveWeb3React();
-  // Fetch decimals when the token contract is available
+  const { account, chainId } = useActiveWeb3React(); 
+  const [tnxId, setTnxId] = useState(null);
+  useWaitForTransaction({
+    hash: tnx?.hash,
+    onSuccess(data) {
+      const obj = {
+        tnxId,
+        status: data.status,
+        tnxHash: data.transactionHash
+      };
+      updateDMTnx(obj)
+        .then((res) => {
+          const { success, data: dmTnxData, error }: any = res;
+          if (!success) {
+            toast.error(error);
+          }
+          setIsProcessing(false);
+        })
+        .catch((err) => {
+          const { success, data: dmTnxData, error } = err;
+          toast.error(error);
+          setIsProcessing(false);
+        });
+    },
+    onError(err) {
+      console.log("error", err);
+      toast.error(err.message);
+    }
+  });
   useEffect(() => {
     const fetchDecimals = async () => {
       if (tokenContract) {
@@ -68,25 +96,29 @@ const PayNowModal = (props: Props) => {
       toast.error("Unable to fetch token decimals.");
       return;
     }
-
     const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
-
     try {
       setIsProcessing(true);
       const data = await tokenContract.transfer(sender?.address, adjustedAmount);
+      setTnx(data);
       const transactionData = {
-        
+        messageId,
         senderAddress: account, // or sender's address from props/context
         receiverAddress: sender?.address, // The receiver's address
-        chainId:chainId,
+        chainId: chainId,
         amount,
         type: "paid-dm",
         transactionHash: data.hash,
-        description: `For Paid Content Sent ${amount} ${token.symbol} to ${sender?.address}`,
+        description: `For Paid Content Sent ${amount} ${token.symbol} to ${sender?.address}`
         // status: "pending" // Adjust status as needed
       };
 
       const saveTnx = await saveDMTnx(transactionData);
+      const { success, data: tnxData, error }: any = saveTnx;
+      if (!success) {
+        toast.error(error);
+      }
+      setTnxId(tnxData._id || tnxData.data._id);
     } catch (error: any) {
       toast.error(error.message);
       setIsProcessing(false);

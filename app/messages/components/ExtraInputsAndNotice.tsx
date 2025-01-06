@@ -7,6 +7,7 @@ import ConversationMoreOptionsModal from "./conversation-more-options-modal";
 import CustomEmojiPicker from "./custom-emoji-picker";
 import { GifPickerModal } from "./gif-picker-modal";
 import { MediaUploader } from "./media-uploader";
+import TipModal from "./tip-modal";
 
 type Props = {};
 
@@ -17,6 +18,7 @@ const ExtraInputsAndNotice = (props: Props) => {
       <GifPickerModal />
       <MediaUploader />
       <BlockModal />
+      <TipModal />
       <ConversationMoreOptionsModal />
     </div>
   );

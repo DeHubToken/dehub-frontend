@@ -37,6 +37,7 @@ type State = {
   handleToggleGif: (input: boolean) => void;
   handleToggleEmoji: (input: boolean) => void;
   handleToggleMedia: (input: boolean) => void;
+  handleToggleTipModal: (input: boolean) => void;
   handleUnBlock: () => void;
   handleToggleUserReport: (input: boolean) => void;
   handleToggleConversationMoreOptions: (input: boolean) => void;
@@ -44,6 +45,7 @@ type State = {
   toggleMedia: boolean;
   toggleEmoji: boolean;
   toggleGif: boolean;
+  toggleTipModal:boolean;
   toggleUserReport: boolean;
   toggleConversationMoreOptions: boolean;
   permissions: {};
@@ -67,6 +69,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const [toggleEmoji, setToggleEmoji] = useState(false);
   const [toggleGif, setToggleGif] = useState(false);
   const [toggleMedia, setToggleMedia] = useState(false);
+  const [toggleTipModal, setToggleTipModal] = useState(false);
   const [toggleUserReport, setToggleUserReport] = useState(false);
   const [toggleConversationMoreOptions, setToggleConversationMoreOptions] = useState(false);
 
@@ -141,7 +144,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
         // Update the messages state to reflect the unblocked status
         setMessages((prevMessages: any[]) =>
           prevMessages.map((msg) => {
-            if (msg._id === message._id) { 
+            if (msg._id === message._id) {
               return {
                 ...msg,
                 blockList: msg.blockList.filter((block: { _id: string }) => {
@@ -160,7 +163,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       toast.error("An unexpected error occurred. Please try again.");
     }
   };
-  const blockChatHandler = async (reason: string,userAddress?:string) => {
+  const blockChatHandler = async (reason: string, userAddress?: string) => {
     if (!account) {
       toast.error("please connect to wallet.");
       return;
@@ -170,13 +173,13 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       conversationId: message._id,
       reason,
       address: account?.toLowerCase(),
-      userAddress:userAddress??""
-    }); 
+      userAddress: userAddress ?? ""
+    });
     if (error) {
       toast.error(error);
-      return
+      return;
     }
-  toast.success(data?.message||data?.msg)  
+    toast.success(data?.message || data?.msg);
   };
   const fetchMyContacts = async () => {
     try {
@@ -230,6 +233,10 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const handleToggleConversationMoreOptions = () => {
     setToggleConversationMoreOptions((b) => !b);
   };
+  const handleToggleTipModal = () => {
+    setToggleTipModal((b) => !b);
+  };
+
   return (
     <Provider
       me={me}
@@ -249,7 +256,9 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       handleToggleEmoji={handleToggleEmoji}
       handleToggleMedia={handleToggleMedia}
       handleToggleUserReport={handleToggleUserReport}
+      handleToggleTipModal={handleToggleTipModal}
       handleToggleConversationMoreOptions={handleToggleConversationMoreOptions}
+      toggleTipModal={toggleTipModal}
       toggleEmoji={toggleEmoji}
       toggleGif={toggleGif}
       toggleMedia={toggleMedia}
