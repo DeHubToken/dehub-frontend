@@ -15,8 +15,11 @@ import { supportedNetworks } from "@/web3/configs";
 
 import { supportedTokens } from "@/configs";
 
+import { useMessage } from "./provider";
+
 type Props = {
   messageId: string;
+  dmId: string;
   toggleSendFund: boolean;
   handleToggleSendFund: (b: boolean) => void;
   type: "tip" | "tip-media";
@@ -31,13 +34,14 @@ type Props = {
 };
 
 const PayNowModal = (props: Props) => {
-  const { purchaseOptions, sender, toggleSendFund, handleToggleSendFund, messageId } = props;
+  const { reValidateMessage } = useMessage("PayNowModal");
+  const { purchaseOptions, sender, toggleSendFund, handleToggleSendFund, messageId, dmId } = props;
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedToken, setSelectedToken] = useState<null | string>(null);
   const tokenContract: any = useERC20Contract(selectedToken);
   const [tnx, setTnx] = useState<any>();
   const [decimals, setDecimals] = useState<number | null>(null);
-  const { account, chainId } = useActiveWeb3React(); 
+  const { account, chainId } = useActiveWeb3React();
   const [tnxId, setTnxId] = useState(null);
   useWaitForTransaction({
     hash: tnx?.hash,
@@ -53,6 +57,7 @@ const PayNowModal = (props: Props) => {
           if (!success) {
             toast.error(error);
           }
+          reValidateMessage(messageId, dmId);
           setIsProcessing(false);
         })
         .catch((err) => {

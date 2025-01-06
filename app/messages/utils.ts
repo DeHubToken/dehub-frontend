@@ -30,5 +30,6 @@ export const SocketEvent = {
   sendMessage: "sendMessage",
   onCreateChat:'onCreateChat',
   reConnect: "reConnect",
-  error:"error"
+  error:"error",
+  ReValidateMessage:'ReValidateMessage'
 };

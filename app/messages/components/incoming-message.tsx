@@ -11,8 +11,8 @@ import { createAvatarName } from "@/libs/utils";
 import { supportedTokens } from "@/configs";
 
 import MediaView from "./media-view";
-import PayNowModal from "./pay-now-modal";
-import { useMessage } from "./provider";
+import PayNowModal from "./pay-now-modal"; 
+import { Spinner } from "@/components/ui/spinner";
 
 export function IncomingMessage(props: {
   message: {
@@ -36,8 +36,32 @@ export function IncomingMessage(props: {
           </Avatar>
           <div className="rounded-r-[20px] rounded-tl-[20px] px-4 py-3 dark:bg-theme-mine-shaft-dark">
             <p className="text-sm dark:text-gray-200">{message?.content}</p>
-            {!message?.isPaid && <MediaView mediaUrls={message.mediaUrls} />}
-            {message?.isPaid && <PayView message={message} />}
+            {message?.msgType !== "msg" && (
+              <>
+                {/* If upload is pending, show loading */}
+                {message.uploadStatus === "pending" && (
+                  <Spinner/>
+                )}
+
+                {/* If upload is successful and it's not paid or unlocked, show media */}
+                {message.uploadStatus === "success" && !message.isPaid && !message.isUnLocked && (
+                  <div>
+                    {/* Show media preview */}
+                    <MediaView mediaUrls={message.mediaUrls} />
+                  </div>
+                )}
+
+                {/* If message is paid but not unlocked, show PayView */}
+                {message.uploadStatus === "success" && message.isPaid && !message.isUnLocked && (
+                  <PayView message={message} />
+                )}
+
+                {/* If message is unlocked (paid or not), show media */}
+                {message.uploadStatus === "success" && message.isUnLocked && (
+                  <MediaView mediaUrls={message.mediaUrls} />
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -46,7 +70,7 @@ export function IncomingMessage(props: {
 }
 
 const PayView = ({ message }: any) => {
-  const { sender, purchaseOptions, _id } = message;
+  const { sender, purchaseOptions, _id, conversation } = message;
   const [toggleSendFund, setToggleSendFund] = useState(false);
   const handleToggleSendFund = () => {
     setToggleSendFund((p) => !p);
@@ -79,6 +103,7 @@ const PayView = ({ message }: any) => {
       </button>
       <PayNowModal
         messageId={_id}
+        dmId={conversation}
         type="tip-media"
         purchaseOptions={purchaseOptions}
         sender={sender}
@@ -88,3 +113,5 @@ const PayView = ({ message }: any) => {
     </div>
   );
 };
+
+

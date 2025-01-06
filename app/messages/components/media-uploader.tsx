@@ -48,7 +48,8 @@ const MediaUploader: React.FC = () => {
   const {
     toggleMedia: isOpen,
     handleToggleMedia: toggleModal,
-    selectedMessage
+    selectedMessage,
+    reValidateMessage
   }: any = useMessage("FileUpload");
   const { _id: conversationId, conversationType }: { _id: string; conversationType: string } =
     selectedMessage;
@@ -136,7 +137,7 @@ const MediaUploader: React.FC = () => {
       }
 
       const purchaseOptions = [
-        { 
+        {
           address: token,
           isLocked: true,
           amount,
@@ -172,6 +173,7 @@ const MediaUploader: React.FC = () => {
         }
       });
 
+      reValidateMessage(response.data._id, conversationId);
       // If the request is successful, update the upload status
       selectedFiles.forEach((fileData) => {
         setUploadStatus((prevStatus) => ({

@@ -44,6 +44,16 @@ export function MessageInput() {
   }, [input, sendMessage]);
   const { account } = useActiveWeb3React();
 
+
+  const handleKeyDown = (event:any) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // Prevent a new line
+      if (input.trim()) {
+        sendMessage(input);
+        setInput("");
+      }
+    }
+  };
   useEffect(() => {
     if (!message?.blockList || !account) return;
 
@@ -124,6 +134,7 @@ export function MessageInput() {
         <Input
           placeholder="Type here..."
           value={input}
+          onKeyDown={handleKeyDown}
           className="h-10 rounded-full text-sm placeholder:text-sm dark:bg-theme-mine-shaft"
           onChange={(e) => setInput(e.target.value)}
         />
