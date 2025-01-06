@@ -226,6 +226,12 @@ const groups = [
         url: () => "/"
       },
       {
+        id: "my-saved",
+        name: "Saved Feeds",
+        icon: <MyUploads />,
+        url: () => "?type=feed&saved"
+      },
+      {
         id: "my-playlists",
         name: "My Playlists",
         icon: <Playlist />,
