@@ -7,6 +7,9 @@ import { useSendTransaction, useWaitForTransaction } from "wagmi";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { useERC20Contract } from "@/hooks/use-web3";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
+
+import { saveDMTnx } from "@/services/dm";
 
 import { supportedNetworks } from "@/web3/configs";
 
@@ -29,12 +32,11 @@ type Props = {
 const PayNowModal = (props: Props) => {
   const { purchaseOptions, sender, toggleSendFund, handleToggleSendFund } = props;
   const [isProcessing, setIsProcessing] = useState(false);
-  const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const [selectedToken, setSelectedToken] = useState<null | string>(null);
   const tokenContract: any = useERC20Contract(selectedToken);
-  const [hash, setHash] = useState<`0x${string}` | null>(null);
+  const [hash, setHash] = useState<any>(null);
   const [decimals, setDecimals] = useState<number | null>(null);
-
+  const { account ,chainId} = useActiveWeb3React();
   // Fetch decimals when the token contract is available
   useEffect(() => {
     const fetchDecimals = async () => {
@@ -72,23 +74,25 @@ const PayNowModal = (props: Props) => {
     try {
       setIsProcessing(true);
       const data = await tokenContract.transfer(sender?.address, adjustedAmount);
-      console.log("DDDDDDDDD", data);
-      if(data){
-        console.log("data aya")
-      }else{
-        console.log("koni aya")
+      const transactionData = {
+        
+        senderAddress: account, // or sender's address from props/context
+        receiverAddress: sender?.address, // The receiver's address
+        chainId:chainId,
+        amount,
+        type: "paid-dm",
+        transactionHash: data.hash,
+        description: `For Paid Content Sent ${amount} ${token.symbol} to ${sender?.address}`,
+        // status: "pending" // Adjust status as needed
+      };
 
-      }
-
-      setHash(data);
-      setTransactionHash(data.hash);
+      const saveTnx = await saveDMTnx(transactionData);
     } catch (error: any) {
       toast.error(error.message);
       setIsProcessing(false);
     }
   };
 
-  console.log("hash", hash);
   return (
     <Dialog open={toggleSendFund} onOpenChange={handleToggleSendFund}>
       <DialogContent className="shadow-lg max-w-lg rounded-lg p-6">
@@ -142,13 +146,6 @@ const PayNowModal = (props: Props) => {
             );
           })}
         </div>
-
-        {transactionHash && (
-          <div className="mt-4 rounded border border-green-200 bg-green-50 p-3 text-green-700">
-            <p>Transaction successful!</p>
-            <p className="break-all">Hash: {transactionHash}</p>
-          </div>
-        )}
 
         <button
           onClick={() => handleToggleSendFund(false)}

@@ -129,6 +129,35 @@ export async function createGroupChat(data: CreateGroupChatData) {
       throw new Error("An unexpected error occurred while creating the group chat.");
     }
   }
+} // This function creates a group chat
+export async function saveDMTnx(data: any) {
+  const url = `/dm/tnx`; // API endpoint for creating a group chat
+  try {
+    // Make the API request to create a group chat
+    const res = await api<{ result: SearchUserResponse }>(url, {
+      method: "POST", // HTTP method
+      headers: {
+        "Content-Type": "application/json" // Specify the content type
+      },
+      body: JSON.stringify(data)
+    });
+
+    // Returning the API response
+    return res;
+  } catch (error: any) {
+    console.error("Error creating group chat:", error);
+
+    // Check for known error formats
+    if (error?.response?.status === 400) {
+      throw new Error("Invalid data provided for creating group chat.");
+    } else if (error?.response?.status === 401) {
+      throw new Error("Unauthorized. Please log in to create a group chat.");
+    } else if (error?.response?.status === 500) {
+      throw new Error("Server error while creating group chat. Please try again later.");
+    } else {
+      throw new Error("An unexpected error occurred while creating the group chat.");
+    }
+  }
 }
 interface JoinGroupData {
   groupId: string;
