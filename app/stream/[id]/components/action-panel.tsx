@@ -24,13 +24,14 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
   const { nft, tokenId } = props;
   const { isUserOnline } = useWebSockets();
   const { theme } = useTheme();
+  console.log('nft?.plansDetails:',nft?.plansDetails)
 
   return (
     <div className="mt-3 h-auto w-full">
       <p className="flex text-sm">
         Uploaded by
         <Link
-          href={`/${nft.mintername || nft.minter}`}
+          href={`/profile/${nft.mintername || nft.minter}`}
           className="ml-2 flex items-center gap-2 text-classic-purple"
         >
           <span>{nft.minterDisplayName || nft.mintername}</span>
