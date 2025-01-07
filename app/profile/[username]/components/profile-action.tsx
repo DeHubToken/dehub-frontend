@@ -51,7 +51,6 @@ export async function ProfileAction(props: Props) {
   const { account } = useActiveWeb3React();
   const isFollowing = user.followers?.includes(account?.toLowerCase() || "");
   const [plans,setPlans] = useState([])
-
   const fetchMyPlans = async () => {
     if(user?.address){
     const { success, error, data }: any = await getPlans({ address: (user?.address).toLowerCase() });
@@ -69,7 +68,7 @@ export async function ProfileAction(props: Props) {
 
   return (
     <div className="flex w-full max-w-screen-xs flex-wrap items-start justify-start gap-3 overflow-hidden sm:gap-4">
-      <SubscriptionModal plans={plans} displayName={user.displayName} />
+      <SubscriptionModal plans={plans} displayName={user.displayName} avatarImageUrl={user.avatarImageUrl}/>
       <TipModal tokenId={0} to={user.address!} />
 
       {isFollowing && <UnfollowButton user={user} />}
