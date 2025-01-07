@@ -25,6 +25,7 @@ export function IncomingMessage(props: {
   };
 }) {
   const { message }: any = props;
+  const [isUnLocked, setIsUnLocked] = useState(message.isUnLocked);
   return (
     <div className="flex w-full justify-start">
       <div className="flex max-w-96 flex-col items-end gap-1">
@@ -41,8 +42,14 @@ export function IncomingMessage(props: {
                 {/* If upload is pending, show loading */}
                 {message.uploadStatus === "pending" && <Spinner />}
 
-                {message.isPaid && <PayView message={message} />}
-                {message.isUnLocked && <MediaView mediaUrls={message.mediaUrls} />}
+                {isUnLocked && <MediaView mediaUrls={message.mediaUrls} />}
+                {message.isPaid && (
+                  <PayView
+                    message={message}
+                    setIsUnLocked={setIsUnLocked}
+                    isUnLocked={isUnLocked}
+                  />
+                )}
               </>
             )}
           </div>
@@ -52,12 +59,16 @@ export function IncomingMessage(props: {
   );
 }
 
-const PayView = ({ message }: any) => {
+const PayView = ({ message, isUnLocked, setIsUnLocked }: any) => {
   const { sender, purchaseOptions, _id, conversation } = message;
   const [toggleSendFund, setToggleSendFund] = useState(false);
   const handleToggleSendFund = () => {
     setToggleSendFund((p) => !p);
   };
+
+  if (isUnLocked) {
+    return <div>Media is Unlocked</div>;
+  }
   return (
     <div className="shadow-lg mx-auto max-w-md rounded-lg bg-gray-800 p-6 text-white">
       <h2 className="mb-4 text-2xl font-semibold">
@@ -92,6 +103,9 @@ const PayView = ({ message }: any) => {
         sender={sender}
         toggleSendFund={toggleSendFund}
         handleToggleSendFund={handleToggleSendFund}
+        callback={() => {
+          setIsUnLocked(true);
+        }}
       />
     </div>
   );

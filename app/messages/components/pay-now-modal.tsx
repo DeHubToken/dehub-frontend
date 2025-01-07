@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { BigNumber } from "ethers";
-import { toast } from "react-toastify";
-import { parseEther } from "viem";
-import { useSendTransaction, useWaitForTransaction } from "wagmi";
+import { toast } from "sonner";
+import { useWaitForTransaction } from "wagmi";
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 
 import { useERC20Contract } from "@/hooks/use-web3";
 import { useActiveWeb3React } from "@/hooks/web3-connect";
@@ -20,6 +20,7 @@ import { useMessage } from "./provider";
 type Props = {
   messageId: string;
   dmId: string;
+  callback: () => void;
   toggleSendFund: boolean;
   handleToggleSendFund: (b: boolean) => void;
   type: "tip" | "tip-media";
@@ -34,15 +35,22 @@ type Props = {
 };
 
 const PayNowModal = (props: Props) => {
-  const { reValidateMessage } = useMessage("PayNowModal");
-  const { purchaseOptions, sender, toggleSendFund, handleToggleSendFund, messageId, dmId } = props;
+  const {
+    purchaseOptions,
+    sender,
+    toggleSendFund,
+    handleToggleSendFund,
+    messageId,
+    dmId,
+    callback
+  } = props;
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedToken, setSelectedToken] = useState<null | string>(null);
   const tokenContract: any = useERC20Contract(selectedToken);
   const [tnx, setTnx] = useState<any>();
-  const [decimals, setDecimals] = useState<number | null>(null);
   const { account, chainId } = useActiveWeb3React();
   const [tnxId, setTnxId] = useState(null);
+
   useWaitForTransaction({
     hash: tnx?.hash,
     onSuccess(data) {
@@ -57,7 +65,7 @@ const PayNowModal = (props: Props) => {
           if (!success) {
             toast.error(error);
           }
-          reValidateMessage(messageId, dmId);
+          callback();
           setIsProcessing(false);
         })
         .catch((err) => {
@@ -71,15 +79,17 @@ const PayNowModal = (props: Props) => {
       toast.error(err.message);
     }
   });
+
   useEffect(() => {
-    const fetchDecimals = async () => {
-      if (tokenContract) {
-        const decimals = await tokenContract.decimals();
-        setDecimals(decimals);
-      }
-    };
-    fetchDecimals();
-  }, [tokenContract]);
+    if (purchaseOptions.length > 0) {
+      const defaultToken = purchaseOptions[0].address; // Automatically select the first token in the list
+      setSelectedToken(defaultToken);
+    }
+  }, [purchaseOptions]);
+
+  const fetchDecimals = async () => {
+    return await tokenContract?.decimals();
+  };
 
   const handleSendFund = async (option: {
     amount: string;
@@ -93,17 +103,16 @@ const PayNowModal = (props: Props) => {
       toast.error("Token not supported.");
       return;
     }
+    console.log("aa bbbb");
 
-    setSelectedToken(token?.address);
-
-    // Ensure decimals is set
-    if (!decimals) {
-      toast.error("Unable to fetch token decimals.");
-      return;
-    }
-    const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
     try {
-      setIsProcessing(true);
+      const decimals = await fetchDecimals();
+      if (!decimals) {
+        toast.error("Unable to fetch token decimals.");
+        return;
+      }
+      setIsProcessing(true); 
+      const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
       const data = await tokenContract.transfer(sender?.address, adjustedAmount);
       setTnx(data);
       const transactionData = {
@@ -115,9 +124,7 @@ const PayNowModal = (props: Props) => {
         type: "paid-dm",
         transactionHash: data.hash,
         description: `For Paid Content Sent ${amount} ${token.symbol} to ${sender?.address}`
-        // status: "pending" // Adjust status as needed
-      };
-
+      }; 
       const saveTnx = await saveDMTnx(transactionData);
       const { success, data: tnxData, error }: any = saveTnx;
       if (!success) {
@@ -177,7 +184,7 @@ const PayNowModal = (props: Props) => {
                       : "bg-blue-600 hover:bg-blue-700"
                   }`}
                 >
-                  {isProcessing ? <span className="spinner" /> : "Send Fund"}
+                  {isProcessing ? <Spinner /> : "Send Fund"}
                 </button>
               </div>
             );

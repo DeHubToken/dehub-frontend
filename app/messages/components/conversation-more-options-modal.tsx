@@ -124,15 +124,15 @@ export const UserOptions = ({ user }: any) => {
   }: any = useMessage("UserOptions");
   const router = useRouter(); 
   const { blockList } = message;
-  const { isBlocked, reportId } = blockList?.reduce(
-    (acc: boolean, item: any) => {
-      if (item?.reportedUserDetails?.[0]?.address?.toLowerCase() === user?.address?.toLowerCase()) {
-        return { isBlocked: true, reportId: item._id };
-      }
-      return acc;
-    },
-    { isBlocked: false, reportId: "" }
-  );
+    const { isBlocked=false, reportId=null } = blockList?.reduce(
+      (acc: boolean, item: any) => {
+        if (item?.reportedUserDetails?.[0]?.address?.toLowerCase() === user?.address?.toLowerCase()) {
+          return { isBlocked: true, reportId: item._id };
+        }
+        return acc;
+      },
+      { isBlocked: false, reportId: "" }
+    )??{};
   const handleBlockUserOrGroup = async () => {
     if (me?.role != "admin") {
       toast.error("only admin can Block users.");

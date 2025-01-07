@@ -127,6 +127,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     });
   };
   const reValidateMessage = (messageId: string, dmId: string) => {
+    console.log("reValidateMessage do")
     socket.emit(SocketEvent.ReValidateMessage, { messageId, dmId });
   };
 
@@ -224,8 +225,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     setToggleMedia(false);
   };
   const handleReValidateMessage = (data: any) => {
-    console.log("handleReValidateMessage", data);
-
+    console.log("handleReValidateMessage done", data); 
     const { dmId, message } = data; // Extract dmId and message from data
     setMessages((prevState: any) => {
       return prevState.map((state: any) => {
