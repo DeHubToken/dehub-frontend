@@ -5,14 +5,14 @@ import Image from "next/image";
 import dayjs from "dayjs";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Spinner } from "@/components/ui/spinner";
 
 import { createAvatarName } from "@/libs/utils";
 
 import { supportedTokens } from "@/configs";
 
 import MediaView from "./media-view";
-import PayNowModal from "./pay-now-modal"; 
-import { Spinner } from "@/components/ui/spinner";
+import PayNowModal from "./pay-now-modal";
 
 export function IncomingMessage(props: {
   message: {
@@ -39,27 +39,10 @@ export function IncomingMessage(props: {
             {message?.msgType !== "msg" && (
               <>
                 {/* If upload is pending, show loading */}
-                {message.uploadStatus === "pending" && (
-                  <Spinner/>
-                )}
+                {message.uploadStatus === "pending" && <Spinner />}
 
-                {/* If upload is successful and it's not paid or unlocked, show media */}
-                {message.uploadStatus === "success" && !message.isPaid && !message.isUnLocked && (
-                  <div>
-                    {/* Show media preview */}
-                    <MediaView mediaUrls={message.mediaUrls} />
-                  </div>
-                )}
-
-                {/* If message is paid but not unlocked, show PayView */}
-                {message.uploadStatus === "success" && message.isPaid && !message.isUnLocked && (
-                  <PayView message={message} />
-                )}
-
-                {/* If message is unlocked (paid or not), show media */}
-                {message.uploadStatus === "success" && message.isUnLocked && (
-                  <MediaView mediaUrls={message.mediaUrls} />
-                )}
+                {message.isPaid && <PayView message={message} />}
+                {message.isUnLocked && <MediaView mediaUrls={message.mediaUrls} />}
               </>
             )}
           </div>
@@ -113,5 +96,3 @@ const PayView = ({ message }: any) => {
     </div>
   );
 };
-
-

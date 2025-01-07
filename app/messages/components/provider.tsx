@@ -64,16 +64,16 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const message: any & { _id: string } = messages.find((msg: any) => msg._id === selectedMessageId);
   const me = message?.participants.find(
     (p: any) => p?.participant?.address == account?.toLowerCase()
-  ); 
+  );
 
-  console.log("messages-list",message?.messages)
+  console.log("messages-list", message?.messages);
   const [input, setInput] = useState("");
   const [toggleEmoji, setToggleEmoji] = useState(false);
   const [toggleGif, setToggleGif] = useState(false);
   const [toggleMedia, setToggleMedia] = useState(false);
   const [toggleTipModal, setToggleTipModal] = useState(false);
   const [toggleUserReport, setToggleUserReport] = useState(false);
-  const [toggleConversationMoreOptions, setToggleConversationMoreOptions] = useState(false); 
+  const [toggleConversationMoreOptions, setToggleConversationMoreOptions] = useState(false);
   useEffect(() => {
     setStatus("loading");
     if (!socket) return;
@@ -81,13 +81,17 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       console.log(data);
     });
     socket.on(SocketEvent.error, errorHandler);
+    socket.on(SocketEvent.jobMessageId,handleUpdatedMessage);
     socket.on(SocketEvent.sendMessage, newMsgHandler);
     socket.on(SocketEvent.createAndStart, handleAddNewChat);
     socket.on(SocketEvent.ReValidateMessage, handleReValidateMessage);
+    
     if (account) {
       fetchMyContacts();
     }
     return () => {
+    socket.off(SocketEvent.jobMessageId,handleUpdatedMessage);
+
       socket.off(SocketEvent.error, errorHandler);
       socket.off(SocketEvent.sendMessage, newMsgHandler);
       socket.off(SocketEvent.createAndStart, handleAddNewChat);
@@ -101,7 +105,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const handleAddNewChat = ({ msg, data }: any) => {
     if (!data) {
       return;
-    } 
+    }
     setMessages((prevState: any[]) => {
       const exist = prevState.find((d) => d._id == data._id);
       if (exist) return prevState;
@@ -122,7 +126,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       });
     });
   };
-  const reValidateMessage = (messageId: string, dmId: string) => { 
+  const reValidateMessage = (messageId: string, dmId: string) => {
     socket.emit(SocketEvent.ReValidateMessage, { messageId, dmId });
   };
 
@@ -221,46 +225,81 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   };
   const handleReValidateMessage = (data: any) => {
     console.log("handleReValidateMessage", data);
-  
+
     const { dmId, message } = data; // Extract dmId and message from data
     setMessages((prevState: any) => {
       return prevState.map((state: any) => {
         if (state._id === dmId) {
           // Ensure messages is an array
           const messagesArray = state.messages || [];
-          
+
           // Find the index of the existing message in the messages array
           const existingMessageIndex = messagesArray.findIndex(
             (msg: any) => msg._id === message._id
           );
-    
+
           if (existingMessageIndex !== -1) {
             // Update the existing message
             const updatedMessages = [...messagesArray];
             updatedMessages[existingMessageIndex] = {
               ...updatedMessages[existingMessageIndex],
-              ...message, // Spread the updated message properties
+              ...message // Spread the updated message properties
             };
             return {
               ...state,
-              messages: updatedMessages,
+              messages: updatedMessages
             };
           } else {
             // Add the new message if it doesn't exist
             return {
               ...state,
-              messages: [...messagesArray, message],
+              messages: [...messagesArray, message]
             };
           }
         }
-        
+
         return state; // Return state unchanged if dmId doesn't match
       });
     });
-    
   };
-  
-  
+
+  const handleUpdatedMessage=(data:any)=>{
+    const {dmId,message}=data;
+    setMessages((prevState: any) => {
+      return prevState.map((state: any) => {
+        if (state._id === dmId) {
+          // Ensure messages is an array
+          const messagesArray = state.messages || [];
+
+          // Find the index of the existing message in the messages array
+          const existingMessageIndex = messagesArray.findIndex(
+            (msg: any) => msg._id === message._id
+          );
+
+          if (existingMessageIndex !== -1) {
+            // Update the existing message
+            const updatedMessages = [...messagesArray];
+            updatedMessages[existingMessageIndex] = {
+              ...updatedMessages[existingMessageIndex],
+              ...message // Spread the updated message properties
+            };
+            return {
+              ...state,
+              messages: updatedMessages
+            };
+          } else {
+            // Add the new message if it doesn't exist
+            return {
+              ...state,
+              messages: [...messagesArray, message]
+            };
+          }
+        }
+
+        return state; // Return state unchanged if dmId doesn't match
+      });
+    });
+  }
   const handleToggleEmoji = () => {
     setToggleEmoji((b) => !b);
     setToggleGif(false);
