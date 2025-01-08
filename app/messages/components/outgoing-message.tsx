@@ -1,9 +1,12 @@
 import type { TMessage } from "../utils";
 
 import Image from "next/image";
+import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
 import dayjs from "dayjs";
+import { EllipsisVertical, Trash } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Spinner } from "@/components/ui/spinner";
 
 import { createAvatarName } from "@/libs/utils";
@@ -11,9 +14,11 @@ import { createAvatarName } from "@/libs/utils";
 import { getAvatarUrl } from "@/web3/utils/url";
 
 import MediaView from "./media-view";
+import { useMessage } from "./provider";
 
 export function OutgoingMessage(props: {
   message: {
+    _id: string;
     createdAt: Date;
     content: string;
     author: string;
@@ -30,6 +35,8 @@ export function OutgoingMessage(props: {
   };
 }) {
   const { message } = props;
+  const { deleteMessage, selectedMessage }: any = useMessage("OutgoingMessage");
+  const dmId = selectedMessage._id;;
   return (
     <div className="flex w-full justify-end">
       <div className="flex max-w-96 flex-col items-end gap-1">
@@ -69,6 +76,16 @@ export function OutgoingMessage(props: {
           </Avatar>
         </div>
       </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <EllipsisVertical className="size-6 text-gray-600 dark:text-gray-300" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="flex flex-wrap gap-2">
+          <DropdownMenuItem onClick={() => deleteMessage(message._id,dmId)}>
+            <Trash className="size-5" /> Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

@@ -32,5 +32,6 @@ export const SocketEvent = {
   reConnect: "reConnect",
   error:"error",
   ReValidateMessage:'ReValidateMessage',
-  jobMessageId:'jobMessageId'
+  jobMessageId:'jobMessageId',
+  deleteMessage:'deleteMessage',
 };

@@ -30,6 +30,7 @@ type State = {
     _id?: string;
   }) => void;
   sendMessage: (newMsg: string) => void;
+  deleteMessage: (messageId: string, dmId: string) => void;
   setMessages: any;
   handleAddNewChat: any;
   input: string;
@@ -65,7 +66,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const me = message?.participants.find(
     (p: any) => p?.participant?.address == account?.toLowerCase()
   );
- 
+
   const [input, setInput] = useState("");
   const [toggleEmoji, setToggleEmoji] = useState(false);
   const [toggleGif, setToggleGif] = useState(false);
@@ -80,21 +81,22 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       // console.log(data);
     });
     socket.on(SocketEvent.error, errorHandler);
-    socket.on(SocketEvent.jobMessageId,handleUpdatedMessage);
+    socket.on(SocketEvent.jobMessageId, handleUpdatedMessage);
     socket.on(SocketEvent.sendMessage, newMsgHandler);
     socket.on(SocketEvent.createAndStart, handleAddNewChat);
     socket.on(SocketEvent.ReValidateMessage, handleReValidateMessage);
-    
+    socket.on(SocketEvent.deleteMessage, handleDeletedMessage);
+
     if (account) {
       fetchMyContacts();
     }
     return () => {
-    socket.off(SocketEvent.jobMessageId,handleUpdatedMessage);
-
+      socket.off(SocketEvent.jobMessageId, handleUpdatedMessage);
       socket.off(SocketEvent.error, errorHandler);
       socket.off(SocketEvent.sendMessage, newMsgHandler);
       socket.off(SocketEvent.createAndStart, handleAddNewChat);
       socket.off(SocketEvent.ReValidateMessage, handleReValidateMessage);
+      socket.off(SocketEvent.deleteMessage, handleDeletedMessage);
     };
   }, [socket]);
   const errorHandler = (error: any) => {
@@ -125,7 +127,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       });
     });
   };
-  const reValidateMessage = (messageId: string, dmId: string) => { 
+  const reValidateMessage = (messageId: string, dmId: string) => {
     socket.emit(SocketEvent.ReValidateMessage, { messageId, dmId });
   };
 
@@ -222,7 +224,35 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     setToggleEmoji(false);
     setToggleMedia(false);
   };
-  const handleReValidateMessage = (data: any) => { 
+  const deleteMessage = (messageId: string, dmId: string) => {
+    socket.emit(SocketEvent.deleteMessage, { dmId, messageId });
+  };
+  const handleDeletedMessage = (data: any) => {
+    const { dmId, messageId } = data; // Extract dmId and messageId from data
+  
+    setMessages((prevState: any) => {
+      return prevState.map((state: any) => {
+        if (state._id === dmId) {
+          // Ensure messages is an array
+          const messagesArray = state.messages || [];
+  
+          // Filter out the message with the matching messageId
+          const updatedMessages = messagesArray.filter(
+            (msg: any) => msg._id !== messageId
+          );
+  
+          // Return the updated state for this dmId
+          return {
+            ...state,
+            messages: updatedMessages,
+          };
+        }
+  
+        return state; // Return state unchanged if dmId doesn't match
+      });
+    });
+  };
+  const handleReValidateMessage = (data: any) => {
     const { dmId, message } = data; // Extract dmId and message from data
     setMessages((prevState: any) => {
       return prevState.map((state: any) => {
@@ -259,9 +289,8 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       });
     });
   };
-
-  const handleUpdatedMessage=(data:any)=>{
-    const {dmId,message}=data;
+  const handleUpdatedMessage = (data: any) => {
+    const { dmId, message } = data;
     setMessages((prevState: any) => {
       return prevState.map((state: any) => {
         if (state._id === dmId) {
@@ -296,7 +325,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
         return state; // Return state unchanged if dmId doesn't match
       });
     });
-  }
+  };
   const handleToggleEmoji = () => {
     setToggleEmoji((b) => !b);
     setToggleGif(false);
@@ -321,7 +350,6 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const handleToggleTipModal = () => {
     setToggleTipModal((b) => !b);
   };
-
   return (
     <Provider
       me={me}
@@ -332,6 +360,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       selectedMessage={message}
       startNewChat={startNewChat}
       sendMessage={sendMessage}
+      deleteMessage={deleteMessage}
       socket={socket}
       setMessages={setMessages}
       handleAddNewChat={handleAddNewChat}

@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { BigNumber } from "ethers";
 import { toast } from "sonner";
-import { useWaitForTransaction } from "wagmi";
-
+import { useWaitForTransaction } from "wagmi"; 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner";
-
+import { Spinner } from "@/components/ui/spinner"; 
 import { useERC20Contract } from "@/hooks/use-web3";
-import { useActiveWeb3React } from "@/hooks/web3-connect";
-
-import { saveDMTnx, updateDMTnx } from "@/services/dm";
-
-import { supportedNetworks } from "@/web3/configs";
-
-import { supportedTokens } from "@/configs";
-
-import { useMessage } from "./provider";
+import { useActiveWeb3React } from "@/hooks/web3-connect"; 
+import { saveDMTnx, updateDMTnx } from "@/services/dm"; 
+import { supportedNetworks } from "@/web3/configs"; 
+import { supportedTokens } from "@/configs"; 
 
 type Props = {
   messageId: string;
@@ -111,7 +104,9 @@ const PayNowModal = (props: Props) => {
       }
       setIsProcessing(true); 
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
-      const data = await tokenContract.transfer(sender?.address, adjustedAmount);
+      const data = await tokenContract.transfer(sender?.address, adjustedAmount,{
+        gasLimit: "50000"
+      });
       setTnx(data);
       const transactionData = {
         messageId,

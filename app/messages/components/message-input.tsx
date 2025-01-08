@@ -24,15 +24,16 @@ export function MessageInput() {
     handleToggleGif,
     handleToggleMedia,
     handleToggleTipModal,
-    handleUnBlock,    
+    handleUnBlock,
     selectedMessage: message
   }: any = useMessage("MessageList");
-
+  const isDmChat = message.conversationType == "dm";
+  const isGroupChat = message.conversationType == "group";
   const [chatStatus, setChatStatus] = useState({
     reportedId: null,
     allow: true,
     msg: <></>
-  }); 
+  });
   const sendHandler = useCallback(() => {
     if (input.trim() === "") {
       toast.error("Please enter a message!");
@@ -43,8 +44,7 @@ export function MessageInput() {
   }, [input, sendMessage]);
   const { account } = useActiveWeb3React();
 
-
-  const handleKeyDown = (event:any) => {
+  const handleKeyDown = (event: any) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); // Prevent a new line
       if (input.trim()) {
@@ -155,9 +155,11 @@ export function MessageInput() {
               <DropdownMenuItem onClick={handleToggleMedia}>
                 <Paperclip className="size-5" />
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleToggleTipModal}>
-                <PiggyBank className="size-5" />
-              </DropdownMenuItem>
+              {isDmChat && (
+                <DropdownMenuItem onClick={handleToggleTipModal}>
+                  <PiggyBank className="size-5" />
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
           <Button variant="gradientOne" className="size-10 p-0" onClick={sendHandler}>
