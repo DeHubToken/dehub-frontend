@@ -34,7 +34,7 @@ const ConversationMoreOptionsModal = (props: Props) => {
   const { conversationType, me = {} } = message;
   const { role = "member" } = me;
   const handleUpdateGroup = () => {
-    console.log("Update Group clicked");
+    // console.log("Update Group clicked");
     // Add navigation or logic for updating the group
   };
 

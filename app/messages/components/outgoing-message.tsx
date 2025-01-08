@@ -25,9 +25,11 @@ export function OutgoingMessage(props: {
       mimeType: string;
     }[];
     msgType: string;
+    isPaid: boolean;
+    isUnLocked: boolean;
   };
 }) {
-  const { message } = props; 
+  const { message } = props;
   return (
     <div className="flex w-full justify-end">
       <div className="flex max-w-96 flex-col items-end gap-1">
@@ -42,6 +44,19 @@ export function OutgoingMessage(props: {
                 {message.uploadStatus === "pending" && <Spinner />}
                 <MediaView mediaUrls={message.mediaUrls} />
               </>
+            )}
+            {/* Paid Content Notice */}
+            {message.isPaid && !message.isUnLocked && (
+              <div className="mt-2 text-xs text-blue-500 dark:text-blue-400">
+                <span>🔒 You shared paid content</span>
+              </div>
+            )}
+
+            {/* Unlocked Content Notice */}
+            {message.isPaid && message.isUnLocked && (
+              <div className="mt-2 text-xs text-green-500 dark:text-green-400">
+                <span>✅ User Unlocked the content.</span>
+              </div>
             )}
           </div>
           <Avatar className="size-8">

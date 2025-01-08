@@ -32,8 +32,7 @@ export function MessageInput() {
     reportedId: null,
     allow: true,
     msg: <></>
-  });
-  console.log("chatStatus", chatStatus);
+  }); 
   const sendHandler = useCallback(() => {
     if (input.trim() === "") {
       toast.error("Please enter a message!");

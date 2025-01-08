@@ -1,6 +1,6 @@
 import type { TMessage } from "../utils";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import dayjs from "dayjs";
 
@@ -25,7 +25,11 @@ export function IncomingMessage(props: {
   };
 }) {
   const { message }: any = props;
-  const [isUnLocked, setIsUnLocked] = useState(message.isUnLocked);
+  const [isUnLocked, setIsUnLocked] = useState(message.isUnLocked); 
+  useEffect(() => {
+    setIsUnLocked(message.isUnLocked);
+  }, [message.isUnLocked]); 
+  console.log('message:',message)
   return (
     <div className="flex w-full justify-start">
       <div className="flex max-w-96 flex-col items-end gap-1">
@@ -67,7 +71,10 @@ const PayView = ({ message, isUnLocked, setIsUnLocked }: any) => {
   };
 
   if (isUnLocked) {
-    return <div>Media is Unlocked</div>;
+  
+    return     <div className="mt-2 text-xs text-green-500 dark:text-green-400">
+    <span>✅ Media is Unlocked</span>
+  </div>
   }
   return (
     <div className="shadow-lg mx-auto max-w-md rounded-lg bg-gray-800 p-6 text-white">

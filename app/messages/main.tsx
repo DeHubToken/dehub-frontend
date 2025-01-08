@@ -61,16 +61,14 @@ export default function MessagesScreen() {
         query: {
           address: account
         }
-      };
-      console.log("socket-conn-options", `${SERVER_URL}/dm`, socketOptions);
+      }; 
       if (socketConnections?.current?.dm?.disconnect) {
         socketConnections.current.dm.disconnect();
       }
       socketConnections.current.dm = io(`${SERVER_URL}/dm`, socketOptions);
 
       // Handle socket connection events (Optional)
-      socketConnections.current.dm.on(SocketEvent.connect, () => {
-        console.log("Socket connected for DM");
+      socketConnections.current.dm.on(SocketEvent.connect, () => { 
       });
       // Handle socket connection events (Optional)
       socketConnections.current.dm.on(SocketEvent.reConnect, () => {

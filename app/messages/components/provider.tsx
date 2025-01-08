@@ -65,8 +65,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const me = message?.participants.find(
     (p: any) => p?.participant?.address == account?.toLowerCase()
   );
-
-  console.log("messages-list", message?.messages);
+ 
   const [input, setInput] = useState("");
   const [toggleEmoji, setToggleEmoji] = useState(false);
   const [toggleGif, setToggleGif] = useState(false);
@@ -78,7 +77,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     setStatus("loading");
     if (!socket) return;
     socket.on(SocketEvent.pong, (data: any) => {
-      console.log(data);
+      // console.log(data);
     });
     socket.on(SocketEvent.error, errorHandler);
     socket.on(SocketEvent.jobMessageId,handleUpdatedMessage);
@@ -126,8 +125,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       });
     });
   };
-  const reValidateMessage = (messageId: string, dmId: string) => {
-    console.log("reValidateMessage do")
+  const reValidateMessage = (messageId: string, dmId: string) => { 
     socket.emit(SocketEvent.ReValidateMessage, { messageId, dmId });
   };
 
@@ -171,7 +169,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
         toast.error("Unblock action failed, please try again.");
       }
     } catch (err) {
-      console.error("Error in handleUnBlock:", err);
+      // console.error("Error in handleUnBlock:", err);
       toast.error("An unexpected error occurred. Please try again.");
     }
   };
@@ -224,8 +222,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     setToggleEmoji(false);
     setToggleMedia(false);
   };
-  const handleReValidateMessage = (data: any) => {
-    console.log("handleReValidateMessage done", data); 
+  const handleReValidateMessage = (data: any) => { 
     const { dmId, message } = data; // Extract dmId and message from data
     setMessages((prevState: any) => {
       return prevState.map((state: any) => {

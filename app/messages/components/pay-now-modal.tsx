@@ -74,8 +74,7 @@ const PayNowModal = (props: Props) => {
           setIsProcessing(false);
         });
     },
-    onError(err) {
-      console.log("error", err);
+    onError(err) { 
       toast.error(err.message);
     }
   });
@@ -102,8 +101,7 @@ const PayNowModal = (props: Props) => {
     if (token == null) {
       toast.error("Token not supported.");
       return;
-    }
-    console.log("aa bbbb");
+    } 
 
     try {
       const decimals = await fetchDecimals();
