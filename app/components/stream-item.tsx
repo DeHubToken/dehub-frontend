@@ -53,7 +53,7 @@ export function StreamItem(props: Props) {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  console.log(" nft?.plans?.length>0 ", nft?.plansDetails?.length>0, nft )
+  
   return (
     <div
       {...rest}

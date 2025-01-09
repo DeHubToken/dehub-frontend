@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { CirclePlus } from "lucide-react";
 
 import SubscriptionGroupList from "@/app/components/join-subscription-group";
