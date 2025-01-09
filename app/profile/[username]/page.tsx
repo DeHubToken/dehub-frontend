@@ -12,11 +12,11 @@ import { Profile } from "./components/profile";
 /* ----------------------------------------------------------------------------------------------- */
 
 type Props = {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 };
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
-  const { username } = props.params;
+  const { username } = (await props.params);
 
   // Default metadata setup
   let metadata: Metadata = {
@@ -75,7 +75,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 }
 
 export default async function Page(props: Props) {
-  const { username } = props.params;
+  const { username } = (await props.params);
   const res = await getAccount(username);
 
   if (!res.success) {
@@ -93,7 +93,7 @@ export default async function Page(props: Props) {
     );
   }
 
-  const cookie = cookies();
+  const cookie = await cookies();
   const loggedInUserInformation = cookie.get("user_information");
   if (loggedInUserInformation?.value) {
     const userInformation = JSON.parse(loggedInUserInformation.value) as { address: string };

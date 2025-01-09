@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, type JSX } from "react";
 import Link from "next/link";
 import { Separator } from "@radix-ui/react-separator";
 import { MessageSquareText, Plus } from "lucide-react";

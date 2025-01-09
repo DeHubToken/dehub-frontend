@@ -10,9 +10,9 @@ import { NotLinkedAccount } from "./components/not-linked";
 import { Profile } from "./components/profile";
 
 export default async function Page() {
-  const cookie = cookies();
+  const cookie = await cookies();
   const userCookie = cookie.get("user_information");
-  const user = safeParseCookie<{ address: string }>(userCookie?.value);
+  const user = await safeParseCookie<{ address: string }>(userCookie?.value);
   if (!user) return <NotLinkedAccount />;
 
   const res = await getAccount(user.address);

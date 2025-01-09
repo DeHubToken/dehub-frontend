@@ -8,11 +8,11 @@ import { RecentStreams } from "./components/recent";
 import { Stream } from "./components/stream";
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export default async function Page(props: Props) {
-  const { id } = props.params;
+  const { id } = (await props.params);
   const _id = Number(id);
 
   if (isNaN(_id)) {
