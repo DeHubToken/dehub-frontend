@@ -9,6 +9,8 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { createAvatarName } from "@/libs/utils";
 
+import { getAvatarUrl } from "@/web3/utils/url";
+
 import { supportedTokens } from "@/configs";
 
 import MediaView from "./media-view";
@@ -25,21 +27,26 @@ export function IncomingMessage(props: {
   };
 }) {
   const { message }: any = props;
-  const [isUnLocked, setIsUnLocked] = useState(message.isUnLocked); 
+  const [isUnLocked, setIsUnLocked] = useState(message.isUnLocked);
   useEffect(() => {
     setIsUnLocked(message.isUnLocked);
   }, [message.isUnLocked]); 
-  console.log('message:',message)
   return (
     <div className="flex w-full justify-start">
       <div className="flex max-w-96 flex-col items-end gap-1">
         <span className="pr-4 text-xs text-gray-400">{dayjs(message.createdAt).fromNow()}</span>
         <div className="flex items-end gap-3">
           <Avatar className="size-8">
-            <AvatarFallback>{createAvatarName(message?.author)}</AvatarFallback>
-            <AvatarImage className="object-cover" src={message?.avatar} alt={message?.author} />
+            <AvatarFallback>{createAvatarName(message?.sender?.username)}</AvatarFallback>
+            <AvatarImage
+              className="object-cover"
+              src={getAvatarUrl(message?.sender?.avatarImageUrl)}
+              alt={message?.sender?.username}
+            />
+            {message?.sender?.username}
           </Avatar>
           <div className="rounded-r-[20px] rounded-tl-[20px] px-4 py-3 dark:bg-theme-mine-shaft-dark">
+         
             <p className="text-sm dark:text-gray-200">{message?.content}</p>
             {message?.msgType !== "msg" && (
               <>
@@ -71,10 +78,11 @@ const PayView = ({ message, isUnLocked, setIsUnLocked }: any) => {
   };
 
   if (isUnLocked) {
-  
-    return     <div className="mt-2 text-xs text-green-500 dark:text-green-400">
-    <span>✅ Media is Unlocked</span>
-  </div>
+    return (
+      <div className="mt-2 text-xs text-green-500 dark:text-green-400">
+        <span>✅ Media is Unlocked</span>
+      </div>
+    );
   }
   return (
     <div className="shadow-lg mx-auto max-w-md rounded-lg bg-gray-800 p-6 text-white">
