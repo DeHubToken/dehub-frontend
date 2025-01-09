@@ -97,7 +97,7 @@ export const User = ({ participant }: any) => {
           <AvatarImage
             className="object-cover"
             alt={user?.username}
-            src={getAvatarUrl(user?.avatarUrl || "")}
+            src={getAvatarUrl(user?.avatarImageUrl || "")}
           />
         </Avatar>
         <div className="flex flex-grow flex-col">

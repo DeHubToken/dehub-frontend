@@ -34,7 +34,7 @@ export function OutgoingMessage(props: {
     isUnLocked: boolean;
   };
 }) {
-  const { message } = props;
+  const { message }:any = props;
   const { deleteMessage, selectedMessage }: any = useMessage("OutgoingMessage");
   const dmId = selectedMessage._id;;
   return (
@@ -70,7 +70,7 @@ export function OutgoingMessage(props: {
             <AvatarFallback>{createAvatarName(message?.author)}</AvatarFallback>
             <AvatarImage
               className="object-cover"
-              src={getAvatarUrl(message?.avatar)}
+              src={getAvatarUrl(message?.sender.avatarImageUrl)}
               alt={message.author}
             />
           </Avatar>

@@ -25,7 +25,7 @@ export function ConversationHeader() {
               <AvatarImage
                 className="size-12 object-cover"
                 alt={user?.username}
-                src={getAvatarUrl(user.avatarUrl || "")}
+                src={getAvatarUrl(user.avatarImageUrl || "")}
               />
             </Avatar>
             <span className="text-2xl font-bold">
