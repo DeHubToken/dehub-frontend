@@ -23,15 +23,13 @@ export async function Profile(props: Props) {
     minter: user.address,
     unit: 40,
     address: user?.address
-  });
-
+  }); 
   return (
     <div className="h-auto w-full overflow-hidden">
       <div className="relative h-auto w-full">
         <Banner url={user.coverImageUrl} />
         <EditProfileButton />
-      </div>
-
+      </div> 
       <SocialLinks user={user} />
       <Avatar name={user?.username || user.displayName || ""} url={user.avatarImageUrl} />
       <UserInfo user={user} />

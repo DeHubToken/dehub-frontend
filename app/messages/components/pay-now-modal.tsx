@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { BigNumber } from "ethers";
 import { toast } from "sonner";
-import { useWaitForTransaction } from "wagmi"; 
+import { useWaitForTransaction } from "wagmi";
+
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner"; 
+import { Spinner } from "@/components/ui/spinner";
+
 import { useERC20Contract } from "@/hooks/use-web3";
-import { useActiveWeb3React } from "@/hooks/web3-connect"; 
-import { saveDMTnx, updateDMTnx } from "@/services/dm"; 
-import { supportedNetworks } from "@/web3/configs"; 
-import { supportedTokens } from "@/configs"; 
+import { useActiveWeb3React } from "@/hooks/web3-connect";
+
+import { saveDMTnx, updateDMTnx } from "@/services/dm";
+
+import { supportedNetworks } from "@/web3/configs";
+
+import { supportedTokens } from "@/configs";
 
 type Props = {
   messageId: string;
@@ -49,7 +54,7 @@ const PayNowModal = (props: Props) => {
     onSuccess(data) {
       const obj = {
         tnxId,
-        status: data.status,
+        status: data.status,dmId,
         tnxHash: data.transactionHash
       };
       updateDMTnx(obj)
@@ -67,7 +72,7 @@ const PayNowModal = (props: Props) => {
           setIsProcessing(false);
         });
     },
-    onError(err) { 
+    onError(err) {
       toast.error(err.message);
     }
   });
@@ -94,7 +99,7 @@ const PayNowModal = (props: Props) => {
     if (token == null) {
       toast.error("Token not supported.");
       return;
-    } 
+    }
 
     try {
       const decimals = await fetchDecimals();
@@ -102,9 +107,9 @@ const PayNowModal = (props: Props) => {
         toast.error("Unable to fetch token decimals.");
         return;
       }
-      setIsProcessing(true); 
+      setIsProcessing(true);
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
-      const data = await tokenContract.transfer(sender?.address, adjustedAmount,{
+      const data = await tokenContract.transfer(sender?.address, adjustedAmount, {
         gasLimit: "50000"
       });
       setTnx(data);
@@ -114,10 +119,12 @@ const PayNowModal = (props: Props) => {
         receiverAddress: sender?.address, // The receiver's address
         chainId: chainId,
         amount,
+        tokenAddress:selectedToken,
         type: "paid-dm",
         transactionHash: data.hash,
+        dmId,
         description: `For Paid Content Sent ${amount} ${token.symbol} to ${sender?.address}`
-      }; 
+      };
       const saveTnx = await saveDMTnx(transactionData);
       const { success, data: tnxData, error }: any = saveTnx;
       if (!success) {
