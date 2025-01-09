@@ -24,7 +24,7 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
   const { nft, tokenId } = props;
   const { isUserOnline } = useWebSockets();
   const { theme } = useTheme();
-  console.log('nft?.plansDetails:',nft?.plansDetails)
+
 
   return (
     <div className="mt-3 h-auto w-full">
@@ -60,7 +60,7 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
           <PPVModal nft={nft} />
           <TipModal tokenId={tokenId} to={nft.minter} />
           <ClaimAsViewer nft={nft} tokenId={tokenId} />
-          <SubscriptionModal plans={nft?.plansDetails} avatarImageUrl={null} displayName={nft.mintername || nft.minter}/>
+          <SubscriptionModal plans={nft?.plansDetails} avatarImageUrl={nft.minterAvatarUrl} displayName={nft.mintername || nft.minter}/>
           <ClaimAsCommentor nft={nft} tokenId={tokenId} />
           <div className="absolute right-0 top-0 size-auto sm:hidden">
             <Share />
