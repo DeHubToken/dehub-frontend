@@ -126,7 +126,7 @@ const UserInfo = ({ participant, isPro = true, lastOnline, lastMessage }: any) =
         <AvatarImage
           className="object-cover"
           alt={user?.username}
-          src={getAvatarUrl(user.avatarUrl || "")}
+          src={getAvatarUrl(user.avatarImageUrl || "")}
         />
       </Avatar>
       <div className="flex flex-col ">

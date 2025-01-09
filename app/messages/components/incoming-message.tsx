@@ -43,7 +43,7 @@ export function IncomingMessage(props: {
               src={getAvatarUrl(message?.sender?.avatarImageUrl)}
               alt={message?.sender?.username}
             />
-            {message?.sender?.username}
+            {/* {message?.sender?.username} */}
           </Avatar>
           <div className="rounded-r-[20px] rounded-tl-[20px] px-4 py-3 dark:bg-theme-mine-shaft-dark">
          
