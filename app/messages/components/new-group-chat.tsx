@@ -138,7 +138,10 @@ export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolea
     }
 
     handleAddNewChat(data);
-
+    setGroupName('')
+    setSearchTerm('')
+    setSelectedUsers([])
+    setSearchResults([])
     // Close dialog after successful creation
     setOpen(false);
     toast.success("Group chat created successfully!");

@@ -19,6 +19,8 @@ export function MessageInput() {
   const {
     sendMessage,
     setInput,
+    chatStatus,
+    setChatStatus,
     input,
     handleToggleEmoji,
     handleToggleGif,
@@ -29,11 +31,7 @@ export function MessageInput() {
   }: any = useMessage("MessageList");
   const isDmChat = message.conversationType == "dm";
   const isGroupChat = message.conversationType == "group";
-  const [chatStatus, setChatStatus] = useState({
-    reportedId: null,
-    allow: true,
-    msg: <></>
-  });
+
   const sendHandler = useCallback(() => {
     if (input.trim() === "") {
       toast.error("Please enter a message!");
@@ -75,7 +73,7 @@ export function MessageInput() {
             reportedId: list._id,
             msg: (
               <div>
-                You block this Group <Button onClick={handleUnBlock}>Un-Block Now</Button>
+                You block this Group <Button onClick={()=>handleUnBlock(list._id)}>Un-Block Now</Button>
               </div>
             )
           };
@@ -98,7 +96,7 @@ export function MessageInput() {
             reportedId: list._id,
             msg: (
               <div>
-                You Block This Chat <Button onClick={handleUnBlock}>Un-Block Now</Button>
+                You Block This Chat <Button onClick={()=>handleUnBlock(list._id)}>Un-Block Now</Button>
               </div>
             )
           };
@@ -118,7 +116,9 @@ export function MessageInput() {
 
     // If no blocking is detected, default status
     setChatStatus(chatStatus);
-  }, [message, account, handleUnBlock]);
+  }, [message]);
+
+
 
   if (!chatStatus.allow) {
     return (

@@ -12,6 +12,7 @@ import { fetchContacts, fetchDmMessages } from "@/services/dm";
 import { blockDM, unBlockUser } from "@/services/user-report";
 
 import { messages, SocketEvent, TMessage } from "../utils";
+import { Button } from "@/components/ui/button";
 
 type State = {
   socket: any;
@@ -44,6 +45,8 @@ type State = {
   handleToggleConversationMoreOptions: (input: boolean) => void;
   blockChatHandler: (input: string) => Promise<any>;
   reValidateMessage: (messageId: string, dmId: string) => void;
+  setChatStatus: (data: any) => void;
+  chatStatus: any;
   toggleMedia: boolean;
   toggleEmoji: boolean;
   toggleGif: boolean;
@@ -74,6 +77,11 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const [toggleTipModal, setToggleTipModal] = useState(false);
   const [toggleUserReport, setToggleUserReport] = useState(false);
   const [toggleConversationMoreOptions, setToggleConversationMoreOptions] = useState(false);
+  const [chatStatus, setChatStatus] = useState({
+    reportedId: null,
+    allow: true,
+    msg: <></>
+  });
   useEffect(() => {
     setStatus("loading");
     if (!socket) return;
@@ -107,9 +115,9 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     if (!data) {
       return;
     }
-    console.log("handleAddNewChat",{ msg, data })
+    console.log("handleAddNewChat", { msg, data })
     setMessages((prevState: any[]) => {
-     
+
       const exist = prevState.find((d) => d._id == data._id);
       if (exist) return prevState;
       return [data, ...prevState];
@@ -117,13 +125,13 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     toast.success(msg);
   };
   const newMsgHandler = (data: any) => {
-    console.log("newMsgHandler",data)  
+    console.log("newMsgHandler", data)
     setMessages((privState: any) => {
       return privState.map((state: any) => {
         if (state._id === data.conversation) {
           return {
             ...state,
-            lastMessageAt:data.createdAt            ,
+            lastMessageAt: data.createdAt,
             messages: [...(state?.messages || []), data]
           };
         }
@@ -140,7 +148,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       toast.error("Please connect to your wallet.");
       return;
     }
-
+    console.log('reportId:',reportId)
     try {
       const { success, error, data }: any = await unBlockUser({
         conversationId: message._id,
@@ -195,6 +203,16 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       toast.error(error);
       return;
     }
+    const reportedId = data.reportedId;
+    setChatStatus({
+      allow: false,
+      reportedId: reportedId,
+      msg: (
+        <div>
+          You Block This Chat <Button onClick={()=>{handleUnBlock(reportedId)}}>Un-Block Now</Button>
+          </div>
+      )
+    })
     toast.success(data?.message || data?.msg);
   };
   const fetchMyContacts = async () => {
@@ -233,25 +251,25 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   };
   const handleDeletedMessage = (data: any) => {
     const { dmId, messageId } = data; // Extract dmId and messageId from data
-  
+
     setMessages((prevState: any) => {
       return prevState.map((state: any) => {
         if (state._id === dmId) {
           // Ensure messages is an array
           const messagesArray = state.messages || [];
-  
+
           // Filter out the message with the matching messageId
           const updatedMessages = messagesArray.filter(
             (msg: any) => msg._id !== messageId
           );
-  
+
           // Return the updated state for this dmId
           return {
             ...state,
             messages: updatedMessages,
           };
         }
-  
+
         return state; // Return state unchanged if dmId doesn't match
       });
     });
@@ -356,6 +374,8 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   };
   return (
     <Provider
+      chatStatus={chatStatus}
+      setChatStatus={setChatStatus}
       me={me}
       messages={messages} // <- From API
       status={status}
