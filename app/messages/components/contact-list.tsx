@@ -27,37 +27,44 @@ type ContactListProps = React.ComponentProps<"div"> & {
 
 export function ContactList(props: ContactListProps) {
   const { onMessageSelect, ...rest } = props;
-  const { messages, selectedMessageId, setSelectedMessageId, status } = useMessage("ContactList");
+  const {
+    messages: chats,
+    selectedMessageId,
+    setSelectedMessageId,
+    status
+  } = useMessage("ContactList");
   const { account = "" } = useActiveWeb3React();
-  const [searchQuery, setSearchQuery] = useState(""); 
+  const [searchQuery, setSearchQuery] = useState("");
   // Filter and sort messages based on search query
-  const filteredMessages = messages
-    .filter((message: any) => {
-      const { participants, groupName, conversationType } = message;
-      let name = "";
-      if (conversationType === "dm") {
-        // Find the user that is not the current account
-        const user = participants.find((U: any & { address: string }) => {
-          return U?.address?.toLowerCase() !== account.toLowerCase();
-        });
-        // Set the name of the other user
-        name =
-          user?.participant?.displayName ||
-          user?.participant?.username ||
-          user?.participant?.address;
-      } else if (conversationType === "group") {
-        // Use the groupName for group chats
-        name = groupName;
-      }
-      // Return true if the name includes the search query (case insensitive)
-      return name?.toLowerCase()?.includes(searchQuery.toLowerCase());
+  const filteredChats = chats
+    .filter((chat: any) => {
+      const { participants, groupName, tips } = chat;
+      const user = participants.find((U: any & { address: string }) => {
+        return U?.address?.toLowerCase() !== account.toLowerCase();
+      });
+      return getChatName(user, groupName)?.toLowerCase()?.includes(searchQuery.toLowerCase());
     })
     .sort((a: any, b: any) => {
-      const aLastMessage = a.messages?.length > 0 ? a.messages[a.messages.length - 1] : {};
-      const bLastMessage = b.messages?.length > 0 ? b.messages[b.messages.length - 1] : {};
-      // Sort messages by the timestamp of the last message
-      return dayjs(bLastMessage.timestamp).isBefore(dayjs(aLastMessage.timestamp)) ? 1 : -1;
+      // Get the latest tip (if exists) for sorting
+      const aTip = a.tips?.length > 0 ? a.tips[0].totalTip : 0; // Assuming tips is an array and we're taking the first tip's total
+      const bTip = b.tips?.length > 0 ? b.tips[0].totalTip : 0;
+
+      // First, sort by tip amount (descending)
+      if (bTip !== aTip) {
+        return bTip - aTip;
+      } 
+      // If tip amounts are equal, then sort by the timestamp of the last message
+      return dayjs(a.lastMessageAt).isBefore(dayjs(b.lastMessageAt)) ? 1 : -1;
     });
+
+  function getChatName(user: any, groupName: string) {
+    return (
+      user?.participant?.displayName ||
+      user?.participant?.username ||
+      user?.participant?.address ||
+      groupName
+    );
+  }
   return (
     <div
       {...rest}
@@ -81,7 +88,7 @@ export function ContactList(props: ContactListProps) {
         Array.from({ length: 10 }).map((_, index) => <ContactSkeleton key={index} />)}
 
       {status === "success" &&
-        filteredMessages.map((message: any) => {
+        filteredChats.map((message: any) => {
           const { participants, messages, conversationType } = message;
           const lastMessage = messages?.length > 0 ? messages[messages?.length - 1] : {};
           return (
@@ -100,6 +107,7 @@ export function ContactList(props: ContactListProps) {
                 <UserInfo
                   participant={participants[0]}
                   lastMessage={lastMessage}
+                  tips={message.tips}
                   // lastOnline={}
                 />
               )}
@@ -117,8 +125,9 @@ export function ContactList(props: ContactListProps) {
   );
 }
 
-const UserInfo = ({ participant, isPro = true, lastOnline, lastMessage }: any) => {
+const UserInfo = ({ participant, isPro = true, lastOnline, lastMessage, tips }: any) => {
   const user = participant.participant;
+  const isTiped = tips?.length > 0;
   return (
     <>
       <Avatar>
@@ -139,7 +148,24 @@ const UserInfo = ({ participant, isPro = true, lastOnline, lastMessage }: any) =
           {isPro && <AvatarStar />}
           <span className="text-xs text-gray-500">{dayjs(lastMessage?.createdAt).fromNow()}</span>
         </div>
-
+        {isTiped && (
+          <div className="flex flex-wrap gap-2">
+            {tips?.map((tip: any) => (
+              <span
+                key={tip._id} // Use a unique key to prevent unnecessary re-renders
+                className="flex items-center space-x-2 rounded-full  px-3 py-1 text-sm"
+              >
+                <span>
+                {tip.totalTip}  Tip by 
+                  {tip.userDetails.displayName ||
+                    tip.userDetails.username ||
+                    tip.userDetails.address}{" "}
+                  
+                </span>
+              </span>
+            ))}
+          </div>
+        )}
         <div>
           <p className="text-sm text-gray-500">{lastMessage?.content}</p>
         </div>

@@ -107,7 +107,9 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     if (!data) {
       return;
     }
+    console.log("handleAddNewChat",{ msg, data })
     setMessages((prevState: any[]) => {
+     
       const exist = prevState.find((d) => d._id == data._id);
       if (exist) return prevState;
       return [data, ...prevState];
@@ -115,11 +117,13 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     toast.success(msg);
   };
   const newMsgHandler = (data: any) => {
+    console.log("newMsgHandler",data)  
     setMessages((privState: any) => {
       return privState.map((state: any) => {
         if (state._id === data.conversation) {
           return {
             ...state,
+            lastMessageAt:data.createdAt            ,
             messages: [...(state?.messages || []), data]
           };
         }
