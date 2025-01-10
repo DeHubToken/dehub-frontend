@@ -21,6 +21,8 @@ export const isValidDataForMinting = (
   user: User,
   tokenBalances: unknown
 ) => {
+  
+
   if (streamInfo[streamInfoKeys.isLockContent]) {
     let errorKey = "";
     if (!streamInfo[streamInfoKeys.lockContentAmount]) errorKey = "Amount";
@@ -43,7 +45,7 @@ export const isValidDataForMinting = (
 
   if (streamInfo[streamInfoKeys.isPayPerView]) {
     let errorKey = "";
-    if (!streamInfo[streamInfoKeys.payPerViewAmount]) errorKey = "Amount";
+    if (!+streamInfo[streamInfoKeys.payPerViewAmount]) errorKey = "Amount";
     if (!streamInfo[streamInfoKeys.payPerViewChainIds]) errorKey = "Network";
     if (!streamInfo[streamInfoKeys.payPerViewTokenSymbol]) errorKey = "Token";
     if (errorKey)

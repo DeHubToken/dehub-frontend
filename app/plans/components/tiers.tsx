@@ -145,10 +145,11 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
           );
         })}
       </div>
-
+      <Link href={`plans/${id}`}>
       <Button className="mt-4 w-full" variant="gradientOne">
-        <Link href={`plans/${id}`}>Explore</Link>
+     Explore
       </Button>
+      </Link>
     </div>
   );
 }
