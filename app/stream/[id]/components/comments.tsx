@@ -226,13 +226,16 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
                       href={`/${reply.writor?.username || reply.address}`}
                       className="size-12 overflow-hidden rounded-full"
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <Image
-                        src={getAvatarUrl(reply.writor?.avatarUrl)}
-                        alt={reply.writor?.username}
-                        fill={true}
-                        className="size-full object-cover"
-                      />
+                      <Avatar>
+                        <AvatarFallback className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark">
+                          {createAvatarName(comment.writor?.username).toUpperCase()}
+                        </AvatarFallback>
+                        <AvatarImage
+                          src={getAvatarUrl(reply.writor?.avatarUrl)}
+                          alt={reply.writor?.username}
+                          className="size-full object-cover"
+                        />
+                      </Avatar>
                     </Link>
                     <div className="flex h-auto w-full flex-col items-start justify-start gap-2">
                       <p className="flex items-center gap-2 text-sm font-medium">
