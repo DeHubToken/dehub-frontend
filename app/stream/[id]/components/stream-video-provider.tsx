@@ -33,7 +33,7 @@ export function StreamVideoSkeleton() {
 
 export function StreamVideoProvider(props: { nft: NFT }) {
   const { nft } = props;
-
+  console.log('943062:')
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<Player | null>(null);
 
@@ -49,10 +49,10 @@ export function StreamVideoProvider(props: { nft: NFT }) {
 
   const isFreeStream =
     !nft?.streamInfo ||
-    !(
-      nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
-      nft?.streamInfo?.[streamInfoKeys?.isPayPerView]
-    )
+      !(
+        nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
+        nft?.streamInfo?.[streamInfoKeys?.isPayPerView]
+      )
       ? true
       : false;
 
@@ -163,7 +163,6 @@ export function StreamVideoProvider(props: { nft: NFT }) {
       </div>
     );
   }
-
   if (
     streamStatus?.streamStatus?.isLockedWithLockContent ||
     streamStatus?.streamStatus?.isLockedWithPPV ||
@@ -197,7 +196,6 @@ export function StreamVideoProvider(props: { nft: NFT }) {
       </div>
     );
   }
-
   return (
     <div className="flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl p-3">
       <p>Something went wrong</p>

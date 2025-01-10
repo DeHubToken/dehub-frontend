@@ -83,7 +83,8 @@ export default function Form({ plan, getTiers }: any) {
     register,
     control,
     watch,
-    formState: { errors }
+   
+    formState: { errors,isDirty }
   } = form;
 
   const { tier } = watch();
@@ -211,6 +212,7 @@ export default function Form({ plan, getTiers }: any) {
                   router.push("/plans")
                 }}
                 chainId={chainId}
+                isDirty={isDirty}
               />
             </div>
           </div>
@@ -328,7 +330,7 @@ export function BenefitList({ control, tierIndex }: any) {
   );
 }
 
-export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId }: any) => {
+export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId,isDirty }: any) => {
   // Get form context for `register` if not explicitly passed
   const { register } = useFormContext();
   const { remove } = useFieldArray({
@@ -401,7 +403,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId }
             )}
 
             <PublishOnChain
-              disabled={field.isPublished || field.temp}
+              disabled={field.isPublished || field.temp || isDirty}
               field={field}
               chainId={chainId}
               deployedPlan={deployedPlan}
