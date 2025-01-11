@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Socket } from "socket.io-client";
 import { toast } from "sonner";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";

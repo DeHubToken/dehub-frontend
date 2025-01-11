@@ -120,24 +120,29 @@ export const UserOptions = ({ user }: any) => {
     selectedMessage: message,
     me,
     handleUnBlock,
-    blockChatHandler
+    blockChatHandler,
+    handleExitGroup
   }: any = useMessage("UserOptions");
-  const router = useRouter(); 
+  const router = useRouter();
   const { blockList } = message;
-    const { isBlocked=false, reportId=null } = blockList?.reduce(
-      (acc: boolean, item: any) => {
-        if (item?.reportedUserDetails?.[0]?.address?.toLowerCase() === user?.address?.toLowerCase()) {
-          return { isBlocked: true, reportId: item._id };
-        }
-        return acc;
-      },
-      { isBlocked: false, reportId: "" }
-    )??{};
+  const { isBlocked = false, reportId = null } = blockList?.reduce(
+    (acc: boolean, item: any) => {
+      if (item?.reportedUserDetails?.[0]?.address?.toLowerCase() === user?.address?.toLowerCase()) {
+        return { isBlocked: true, reportId: item._id };
+      }
+      return acc;
+    },
+    { isBlocked: false, reportId: "" }
+  ) ?? {};
+  const { account } = useActiveWeb3React()
+  console.log('account:00',account, me)
+  const isMeAdmin = (user.address)?.toLocaleLowerCase() == (me?.participant?.address).toLocaleLowerCase() ? true : false
+  console.log('isMeAdmin:',isMeAdmin)
   const handleBlockUserOrGroup = async () => {
     if (me?.role != "admin") {
       toast.error("only admin can Block users.");
       return;
-    } 
+    }
     blockChatHandler(null, user.address).then(() => {
       toast.success("user Blocked");
     });
@@ -149,6 +154,9 @@ export const UserOptions = ({ user }: any) => {
     }
     handleUnBlock(reportId);
   };
+  const handleRemove = async () => {
+    handleExitGroup((user.address).toLowerCase())
+  }
 
   return (
     <DropdownMenu>
@@ -164,8 +172,11 @@ export const UserOptions = ({ user }: any) => {
         >
           <UserCircle /> <span> Profile</span>
         </DropdownMenuItem>
-        {me?.role == "admin" && (
-          <DropdownMenuItem className="flex gap-1 p-2 hover:bg-slate-600">
+        {me?.role == "admin" && !isMeAdmin && (
+          <DropdownMenuItem
+            className="flex gap-1 p-2 hover:bg-slate-600"
+            onClick={() => handleRemove()}
+          >
             <CircleMinus /> <span> Remove</span>
           </DropdownMenuItem>
         )}{" "}
