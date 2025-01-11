@@ -42,6 +42,7 @@ const PayNowModal = (props: Props) => {
     dmId,
     callback
   } = props;
+
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedToken, setSelectedToken] = useState<null | string>(null);
   const tokenContract: any = useERC20Contract(selectedToken);
@@ -54,38 +55,41 @@ const PayNowModal = (props: Props) => {
     onSuccess(data) {
       const obj = {
         tnxId,
-        status: data.status,dmId,
+        status: data.status,
+        dmId,
         tnxHash: data.transactionHash
       };
       updateDMTnx(obj)
         .then((res) => {
-          const { success, data: dmTnxData, error }: any = res;
+          const { success, error }: any = res;
           if (!success) {
             toast.error(error);
+          } else {
+            callback();
           }
-          callback();
           setIsProcessing(false);
         })
         .catch((err) => {
-          const { success, data: dmTnxData, error } = err;
-          toast.error(error);
+          toast.error(err.message || "Transaction update failed.");
           setIsProcessing(false);
         });
     },
     onError(err) {
-      toast.error(err.message);
+      toast.error(err.message || "Transaction failed.");
+      setIsProcessing(false);
     }
   });
 
   useEffect(() => {
     if (purchaseOptions.length > 0) {
-      const defaultToken = purchaseOptions[0].address; // Automatically select the first token in the list
+      const defaultToken = purchaseOptions[0].address; // Automatically select the first token
       setSelectedToken(defaultToken);
     }
   }, [purchaseOptions]);
 
   const fetchDecimals = async () => {
-    return await tokenContract?.decimals();
+    if (!tokenContract) return 18; // Default fallback to 18 decimals
+    return await tokenContract.decimals();
   };
 
   const handleSendFund = async (option: {
@@ -96,7 +100,8 @@ const PayNowModal = (props: Props) => {
   }) => {
     const { amount, address: tokenAddress } = option;
     const token = supportedTokens.find((t) => t.address === tokenAddress);
-    if (token == null) {
+
+    if (!token) {
       toast.error("Token not supported.");
       return;
     }
@@ -107,32 +112,38 @@ const PayNowModal = (props: Props) => {
         toast.error("Unable to fetch token decimals.");
         return;
       }
+
       setIsProcessing(true);
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
       const data = await tokenContract.transfer(sender?.address, adjustedAmount, {
-        gasLimit: "50000"
+        gasLimit: "300000" // Adjusted gas limit
       });
+
       setTnx(data);
       const transactionData = {
         messageId,
-        senderAddress: account, // or sender's address from props/context
-        receiverAddress: sender?.address, // The receiver's address
+        senderAddress: account,
+        receiverAddress: sender?.address,
         chainId: chainId,
         amount,
-        tokenAddress:selectedToken,
+        tokenAddress: selectedToken,
         type: "paid-dm",
         transactionHash: data.hash,
         dmId,
         description: `For Paid Content Sent ${amount} ${token.symbol} to ${sender?.address}`
       };
+
       const saveTnx = await saveDMTnx(transactionData);
       const { success, data: tnxData, error }: any = saveTnx;
       if (!success) {
         toast.error(error);
+        setIsProcessing(false);
+        return;
       }
+
       setTnxId(tnxData._id || tnxData.data._id);
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message || "Transaction failed.");
       setIsProcessing(false);
     }
   };

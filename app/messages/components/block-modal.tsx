@@ -78,7 +78,8 @@ const BlockModal = () => {
 export default BlockModal;
 
 const UserInfo = ({ participant, isPro = true, lastOnline, lastMessage }: any) => {
-  const user = participant;
+  const user = participant.participant; 
+
   return (
     <div className="flex items-start space-x-4">
       <Avatar>

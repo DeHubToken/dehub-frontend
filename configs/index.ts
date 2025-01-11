@@ -352,7 +352,7 @@ export const supportedTokensForLockContent = supportedTokens.filter((e) => e.sym
 export const supportedTokensForPPV = supportedTokens;
 export const supportedTokensForAddBounty = supportedTokens;
 
-export const supportedChainIdsForMinting = [56];
+export const supportedChainIdsForMinting = [ChainId.BSC_MAINNET,ChainId.BASE_MAINNET];
 export const supportedChainIds = isDevMode
   ? [ChainId.BSC_TESTNET, ChainId.GORLI]
   : [ChainId.MAINNET, ChainId.BSC_MAINNET, ChainId.POLYGON_MAINNET, ChainId.BASE_MAINNET];

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
+
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { createContext } from "@/libs/context";
@@ -11,7 +13,6 @@ import { exitGroup, fetchContacts, fetchDmMessages } from "@/services/dm";
 import { blockDM, unBlockUser } from "@/services/user-report";
 
 import { messages, SocketEvent, TMessage } from "../utils";
-import { Button } from "@/components/ui/button";
 
 type State = {
   socket: any;
@@ -94,11 +95,13 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     socket.on(SocketEvent.createAndStart, handleAddNewChat);
     socket.on(SocketEvent.ReValidateMessage, handleReValidateMessage);
     socket.on(SocketEvent.deleteMessage, handleDeletedMessage);
+    socket.on(SocketEvent.tipUpdate, handleTipUpdates);
 
     if (account) {
       fetchMyContacts();
     }
     return () => {
+      socket.off(SocketEvent.tipUpdate, handleTipUpdates);
       socket.off(SocketEvent.jobMessageId, handleUpdatedMessage);
       socket.off(SocketEvent.error, errorHandler);
       socket.off(SocketEvent.sendMessage, newMsgHandler);
@@ -111,13 +114,30 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     toast.error(error.msg);
   };
 
+  const handleTipUpdates = (data: any) => {
+    console.log("handleTipUpdates", data);
+
+    const { dmId, tips } = data; // Extract dmId and messageId from data
+
+    setMessages((prevState: any) => {
+      return prevState.map((state: any) => {
+        if (state._id === dmId) { 
+          return {
+            ...state,
+            tips
+          };
+        }
+
+        return state; // Return state unchanged if dmId doesn't match
+      });
+    });
+  };
   const handleAddNewChat = ({ msg, data }: any) => {
     if (!data) {
       return;
     }
-    console.log("handleAddNewChat", { msg, data })
+    console.log("handleAddNewChat", { msg, data });
     setMessages((prevState: any[]) => {
-
       const exist = prevState.find((d) => d._id == data._id);
       if (exist) return prevState;
       return [data, ...prevState];
@@ -125,7 +145,6 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     toast.success(msg);
   };
   const newMsgHandler = (data: any) => {
-    console.log("newMsgHandler", data)
     setMessages((privState: any) => {
       return privState.map((state: any) => {
         if (state._id === data.conversation) {
@@ -142,13 +161,12 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const reValidateMessage = (messageId: string, dmId: string) => {
     socket.emit(SocketEvent.ReValidateMessage, { messageId, dmId });
   };
-
   const handleUnBlock = async (reportId?: string) => {
     if (!account) {
       toast.error("Please connect to your wallet.");
       return;
     }
-    console.log('reportId:',reportId)
+    console.log("reportId:", reportId);
     try {
       const { success, error, data }: any = await unBlockUser({
         conversationId: message._id,
@@ -209,10 +227,17 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       reportedId: reportedId,
       msg: (
         <div>
-          You Block This Chat <Button onClick={()=>{handleUnBlock(reportedId)}}>Un-Block Now</Button>
-          </div>
+          You Block This Chat{" "}
+          <Button
+            onClick={() => {
+              handleUnBlock(reportedId);
+            }}
+          >
+            Un-Block Now
+          </Button>
+        </div>
       )
-    })
+    });
     toast.success(data?.message || data?.msg);
   };
   const fetchMyContacts = async () => {
@@ -259,14 +284,12 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
           const messagesArray = state.messages || [];
 
           // Filter out the message with the matching messageId
-          const updatedMessages = messagesArray.filter(
-            (msg: any) => msg._id !== messageId
-          );
+          const updatedMessages = messagesArray.filter((msg: any) => msg._id !== messageId);
 
           // Return the updated state for this dmId
           return {
             ...state,
-            messages: updatedMessages,
+            messages: updatedMessages
           };
         }
 

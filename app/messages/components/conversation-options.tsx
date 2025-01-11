@@ -6,11 +6,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@radix-ui/react-dropdown-menu";
+import { ExitIcon } from "@radix-ui/react-icons";
 import { CircleAlert, CircleEllipsis, CircleX, EllipsisVertical, User } from "lucide-react";
 
-import { useMessage } from "./provider";
-import { ExitIcon } from "@radix-ui/react-icons";
 import { useActiveWeb3React } from "@/hooks/web3-connect";
+
+import { useMessage } from "./provider";
 
 type Props = {
   type: "dm" | "group";
@@ -29,8 +30,8 @@ const ConversationOptions = ({ type, participant }: Props) => {
     handleExitGroup,
     handleToggleConversationMoreOptions
   }: any & { handleToggleUserReport: () => void } = useMessage("ConversationOptions");
-  const { account } = useActiveWeb3React()
-  console.log(me?.role,"KLLK")
+  const { account } = useActiveWeb3React();
+  console.log(me?.role, "KLLK");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -56,23 +57,24 @@ const ConversationOptions = ({ type, participant }: Props) => {
           <CircleX className="size-5" /> <span> Close chat</span>
         </DropdownMenuItem>
 
-        {/* <DropdownMenuItem
-          className="flex gap-1    p-2  hover:bg-slate-600"
-          onClick={handleToggleUserReport}
-        >
-          <CircleAlert className="size-5" />
-          <span> Block </span>
-        </DropdownMenuItem> */}
-        {
-          type == "group" &&  me?.role != 'admin' &&
+        {type == "dm" && (
           <DropdownMenuItem
             className="flex gap-1    p-2  hover:bg-slate-600"
-            onClick={() => handleExitGroup((account)?.toLocaleLowerCase())}
+            onClick={handleToggleUserReport}
+          >
+            <CircleAlert className="size-5" />
+            <span> Block </span>
+          </DropdownMenuItem>
+        )}
+        {type == "group" && me?.role != "admin" && (
+          <DropdownMenuItem
+            className="flex gap-1    p-2  hover:bg-slate-600"
+            onClick={() => handleExitGroup(account?.toLocaleLowerCase())}
           >
             <ExitIcon className="size-5" />
             <span> Exist Group </span>
           </DropdownMenuItem>
-        }
+        )}
 
         <DropdownMenuItem
           className="flex gap-1    p-2  hover:bg-slate-600"

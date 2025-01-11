@@ -136,7 +136,7 @@ export const UserOptions = ({ user }: any) => {
   ) ?? {};
   const { account } = useActiveWeb3React()
   console.log('account:00',account, me)
-  const isMeAdmin = (user.address)?.toLocaleLowerCase() == (me?.participant?.address).toLocaleLowerCase() ? true : false
+  const isMeAdmin = (user.address)?.toLocaleLowerCase() == (me?.participant?.address)?.toLocaleLowerCase() ? true : false
   console.log('isMeAdmin:',isMeAdmin)
   const handleBlockUserOrGroup = async () => {
     if (me?.role != "admin") {

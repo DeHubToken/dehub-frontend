@@ -28,10 +28,11 @@ export const SocketEvent = {
   pong: "pong",
   createAndStart: "createAndStart",
   sendMessage: "sendMessage",
-  onCreateChat:'onCreateChat',
+  onCreateChat: "onCreateChat",
   reConnect: "reConnect",
-  error:"error",
-  ReValidateMessage:'ReValidateMessage',
-  jobMessageId:'jobMessageId',
-  deleteMessage:'deleteMessage',
+  error: "error",
+  ReValidateMessage: "ReValidateMessage",
+  jobMessageId: "jobMessageId",
+  deleteMessage: "deleteMessage",
+  tipUpdate: "tipUpdate"
 };

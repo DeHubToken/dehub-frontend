@@ -73,7 +73,8 @@ export function MessageInput() {
             reportedId: list._id,
             msg: (
               <div>
-                You block this Group <Button onClick={()=>handleUnBlock(list._id)}>Un-Block Now</Button>
+                You block this Group{" "}
+                <Button onClick={() => handleUnBlock(list._id)}>Un-Block Now</Button>
               </div>
             )
           };
@@ -88,7 +89,7 @@ export function MessageInput() {
           };
           break; // Exit early as the status is determined
         }
-      } else {
+      } else if (message.conversationType === "dm") {
         // Check for non-group chat blocking logic
         if (reportedByAddress === accountLower) {
           chatStatus = {
@@ -96,20 +97,18 @@ export function MessageInput() {
             reportedId: list._id,
             msg: (
               <div>
-                You Block This Chat <Button onClick={()=>handleUnBlock(list._id)}>Un-Block Now</Button>
+                You Block This Chat{" "}
+                <Button onClick={() => handleUnBlock(list._id)}>Un-Block Now</Button>
               </div>
             )
           };
           break; // Exit early as the status is determined
-        }
-
-        if (reportedUserAddress === accountLower) {
+        } else {
           chatStatus = {
             allow: false,
             reportedId: list._id,
             msg: <div>You are Blocked by the user.</div>
           };
-          break; // Exit early as the status is determined
         }
       }
     }
@@ -117,8 +116,6 @@ export function MessageInput() {
     // If no blocking is detected, default status
     setChatStatus(chatStatus);
   }, [message]);
-
-
 
   if (!chatStatus.allow) {
     return (

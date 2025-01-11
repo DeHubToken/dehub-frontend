@@ -51,7 +51,7 @@ export const NETWORK_URLS: {
   [ChainId.GORLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
   [ChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
   [ChainId.BSC_MAINNET]: "https://binance.nodereal.io",
-  [ChainId.BSC_TESTNET]: `https://data-seed-prebsc-1-s2.binance.org:8545`,
+  [ChainId.BSC_TESTNET]: `https://data-seed-prebsc-1-s2.binance.org:8545`,//'https://bsc-testnet-rpc.publicnode.com',//`
   [ChainId.POLYGON_MAINNET]: "https://polygon-rpc.co",
   [ChainId.BASE_MAINNET]: `https://base-sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
 };

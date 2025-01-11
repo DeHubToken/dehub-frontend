@@ -318,7 +318,7 @@ export function UploadForm(props: Props) {
             [],
             1000,
             `${result.createdTokenId}.json`,
-            { gasLimit: "500000" } // Set a reasonable limit
+            { gasLimit: "3" } // Set a reasonable limit
           );
           console.log("here though 2", tx);
 

@@ -77,7 +77,7 @@ export const useBuySubscription = (
       // Interact with smart contract
       //@ts-ignore
       const txResponse: any = await subcontract.buySubscription(creator, subscriptionId, duration, {
-        gasLimit: "5000000"
+        gasLimit: "3"
       });
       setHash(txResponse.hash); // Set transaction hash for tracking
 

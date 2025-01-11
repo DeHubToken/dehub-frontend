@@ -39,7 +39,7 @@ const TipModal = () => {
   const token = supportedTokens?.find((t) => t.address === selectedToken);
   const [amount, setAmount] = useState(0);
   const { account, chainId } = useActiveWeb3React();
-  const [selectAddress, setSelectAddress] = useState("");
+  const [selectAddress, setSelectAddress] = useState(""); 
   const [isProcessing, setIsProcessing] = useState(false);
   const tokenContract: any = useERC20Contract(selectedToken);
   const [tnx, setTnx] = useState<any>();
@@ -52,8 +52,7 @@ const TipModal = () => {
     }
     setAmount(value);
   };
-  const { participants, conversationType, _id: dmId } = selectedMessage;
-
+  const { participants, conversationType,_id: dmId  } = selectedMessage; 
   useEffect(() => {
     setSelectAddress(participants[0].participant.address);
   }, [conversationType]);
@@ -67,11 +66,11 @@ const TipModal = () => {
         toast.error("Unable to fetch token decimals.");
         return;
       }
-      if (amount <= 0) {
+      if (amount<=0) {
         toast.error("Enter Valid Amount.");
         return;
       }
-
+      
       setIsProcessing(true);
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
       const data = await tokenContract.transfer(selectAddress, adjustedAmount, {
@@ -107,7 +106,6 @@ const TipModal = () => {
       const obj = {
         tnxId,
         status: data.status,
-        dmId,
         tnxHash: data.transactionHash
       };
       updateDMTnx(obj)
@@ -116,8 +114,6 @@ const TipModal = () => {
           if (!success) {
             toast.error(error);
           }
-          handleToggleTipModal()
-          toast.success("Tip Sent.")
           setIsProcessing(false);
         })
         .catch((err) => {
@@ -186,7 +182,7 @@ const TipModal = () => {
               </SelectTrigger>
               <SelectContent>
                 {supportedTokens
-                  .filter((t) => t.chainId == chainId && t.symbol == "DHB")
+                  .filter((t) => t.chainId == chainId)
                   .map((token, i: number) => {
                     const network = supportedNetworks.find((net) => net.chainId == token.chainId);
                     return (

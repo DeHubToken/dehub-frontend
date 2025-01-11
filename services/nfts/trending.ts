@@ -99,8 +99,7 @@ export async function getNFTs(params?: SearchParams) {
   const res = await api<{ result: GetNFTsResult[] }>(url, {
     method: "GET",
     next: { revalidate: 2 * 60, tags: ["nfts"] }
-  });
-  console.log('res:',res)
+  }); 
   return res;
 }
 
