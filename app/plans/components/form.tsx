@@ -83,7 +83,7 @@ export default function Form({ plan, getTiers }: any) {
     register,
     control,
     watch,
-   
+   reset,
     formState: { errors,isDirty }
   } = form;
 
@@ -106,11 +106,13 @@ export default function Form({ plan, getTiers }: any) {
       } 
       if (planId) {
         setSaved(true);
+        reset()
         toast.success("plan Updated");
         router.push("/plans")
         return;
       }
       toast.success("plan created");  
+      reset()
       await getTiers()
       return;  
     } catch (error: any) {
@@ -135,7 +137,7 @@ export default function Form({ plan, getTiers }: any) {
               <div className="flex w-full items-stretch justify-center sm:w-auto"></div>
               <SubscriptionModalPreView tiers={[tier]} />
               <Button variant="gradientOne" size="sratch">
-                {plan?.id ? "Edit" : "Save"}
+                {plan?.id ? "Save Edit" : "Save"}
               </Button>
             </div>
           </div>

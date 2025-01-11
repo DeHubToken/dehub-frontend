@@ -134,10 +134,13 @@ export function UploadForm(props: Props) {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedTokenAddress, setSelectedTokenAddress] = useState("");
   const [plans, setPlans] = useState([]);
-  const transformedPlans = plans.map((plan: any) => ({
+  const transformedPlans = plans
+  .map((plan: any) => ({
     value: plan.id,
-    label: <span className="text-gray-500">Tier {plan.tier} </span>
-  }));
+    label: <span className="text-gray-500">Tier {plan.tier}</span>,
+    tier: plan.tier, // Include tier for sorting purposes
+  }))
+  .sort((a, b) => a.tier - b.tier);
   const streamCollectionContract = useStreamCollectionContract();
   const streamController = useStreamControllerContract();
   const addTransaction = useAddRecentTransaction();
@@ -165,7 +168,7 @@ export function UploadForm(props: Props) {
   const selectedToken = form.watch("token");
   const network = form.watch("network");
   const amount = form.watch("lockContentAmount");
-  console.log("formPlans", form.watch("plans"));
+  // console.log("formPlans", form.watch("plans"));
   const tokens = getDistinctTokens(supportedTokensForLockContent, chainId);
   const token = tokens.find((t: any) => t.value === selectedToken);
   const networksForAToken = token
@@ -539,7 +542,6 @@ export function UploadForm(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bountyAmount, chainId, firstXComment, firstXViewer, isBounty, supportedTokensForChain]);
 
-  console.log("plans22222222222", plans);
   return (
     <main className="h-auto min-h-screen w-full">
       <Form {...form}>
