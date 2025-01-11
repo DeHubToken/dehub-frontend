@@ -64,7 +64,7 @@ const ConversationOptions = ({ type, participant }: Props) => {
           <span> Block </span>
         </DropdownMenuItem> */}
         {
-          type == "group" &&  me.role != 'admin' &&
+          type == "group" &&  me?.role != 'admin' &&
           <DropdownMenuItem
             className="flex gap-1    p-2  hover:bg-slate-600"
             onClick={() => handleExitGroup((account)?.toLocaleLowerCase())}

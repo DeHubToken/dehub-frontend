@@ -75,6 +75,7 @@ export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolea
       const response: any | undefined = await searchUserOrGroup({ q: searchTerm });
       if (response?.success && response.data?.users) {
         setSearchResults(response.data.users);
+        setSearchTerm('')
       } else {
         setSearchResults([]);
         setError("No users found.");
