@@ -8,7 +8,7 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { createContext } from "@/libs/context";
 
-import { fetchContacts, fetchDmMessages } from "@/services/dm";
+import { exitGroup, fetchContacts, fetchDmMessages } from "@/services/dm";
 import { blockDM, unBlockUser } from "@/services/user-report";
 
 import { messages, SocketEvent, TMessage } from "../utils";
@@ -45,6 +45,7 @@ type State = {
   handleToggleConversationMoreOptions: (input: boolean) => void;
   blockChatHandler: (input: string) => Promise<any>;
   reValidateMessage: (messageId: string, dmId: string) => void;
+  handleExitGroup: (userAddress: string) => void;
   setChatStatus: (data: any) => void;
   chatStatus: any;
   toggleMedia: boolean;
@@ -348,6 +349,25 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       });
     });
   };
+  const handleExitGroup = async(userAddress:string  ) => {
+    if(!account)
+      return 
+     const response = await exitGroup({
+          conversationId:message._id,
+          address:account,
+          userAddress
+        });
+        if(response.success){
+          //@ts-ignore
+          toast.success(response.data.message)
+          fetchMyContacts();
+        }
+        if(!response.success){
+          toast.success(response.error)
+        }
+        
+
+  }
   const handleToggleEmoji = () => {
     setToggleEmoji((b) => !b);
     setToggleGif(false);
@@ -405,6 +425,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       handleUnBlock={handleUnBlock}
       blockChatHandler={blockChatHandler}
       reValidateMessage={reValidateMessage}
+      handleExitGroup={handleExitGroup}
       permissions={{}}
     >
       {props.children}

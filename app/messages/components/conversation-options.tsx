@@ -8,9 +8,9 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { CircleAlert, CircleEllipsis, CircleX, EllipsisVertical, User } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-
 import { useMessage } from "./provider";
+import { ExitIcon } from "@radix-ui/react-icons";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 type Props = {
   type: "dm" | "group";
@@ -24,9 +24,13 @@ const ConversationOptions = ({ type, participant }: Props) => {
   const router = useRouter();
   const {
     setSelectedMessageId,
+    me,
     handleToggleUserReport,
+    handleExitGroup,
     handleToggleConversationMoreOptions
   }: any & { handleToggleUserReport: () => void } = useMessage("ConversationOptions");
+  const { account } = useActiveWeb3React()
+  console.log(me?.role,"KLLK")
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -52,13 +56,24 @@ const ConversationOptions = ({ type, participant }: Props) => {
           <CircleX className="size-5" /> <span> Close chat</span>
         </DropdownMenuItem>
 
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           className="flex gap-1    p-2  hover:bg-slate-600"
           onClick={handleToggleUserReport}
         >
           <CircleAlert className="size-5" />
           <span> Block </span>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
+        {
+          type == "group" &&  me.role != 'admin' &&
+          <DropdownMenuItem
+            className="flex gap-1    p-2  hover:bg-slate-600"
+            onClick={() => handleExitGroup((account)?.toLocaleLowerCase())}
+          >
+            <ExitIcon className="size-5" />
+            <span> Exist Group </span>
+          </DropdownMenuItem>
+        }
+
         <DropdownMenuItem
           className="flex gap-1    p-2  hover:bg-slate-600"
           onClick={handleToggleConversationMoreOptions}

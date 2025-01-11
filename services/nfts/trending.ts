@@ -78,7 +78,7 @@ export async function getNFTs(params?: SearchParams) {
       method: "GET",
       next: { revalidate: 2 * 60, tags: ["nfts"] }
     });
-    console.log('res:',res)
+
     return res;
   }
 
@@ -100,8 +100,6 @@ export async function getNFTs(params?: SearchParams) {
     method: "GET",
     next: { revalidate: 2 * 60, tags: ["nfts"] }
   });
-  //@ts-ignore
-  console.log('res:',res.data.result)
   return res;
 }
 
