@@ -403,3 +403,10 @@ export const DHB_ADDRESSESS: { [chainId: number]: string } = {
   [ChainId.OKEX_MAINNET]: "0xdf4CDd4b8F1790f62a91Bcc4cb793159c641B1bd",
   [ChainId.POLYGON_MAINNET]: "0x6051e59eb50BB568415B6C476Fbd394EEF83834D"
 };
+
+export enum StreamStatus {
+  OFFLINE = 'OFFLINE',
+  LIVE = 'LIVE',
+  ENDED = 'ENDED',
+  SCHEDULED = 'SCHEDULED',
+}

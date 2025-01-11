@@ -122,3 +122,8 @@ function formatTime(date: Date) {
   const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
   return `${formattedHours}:${formattedMinutes}${ampm}`;
 }
+
+export const formatDateToInputValue = (date: Date): string => {
+  const pad = (num: number) => num.toString().padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};

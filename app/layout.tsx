@@ -38,15 +38,15 @@ export default function RootLayout({ children }: Props) {
           enableSystem
           disableTransitionOnChange
         >
-          <Providers>
-            <AvatarWalletProvider>
-              <WebsocketProvider>
+          <AvatarWalletProvider>
+            <WebsocketProvider>
+              <Providers>
                 <StreamProvider>
                   <Layout>{children}</Layout>
                 </StreamProvider>
-              </WebsocketProvider>
-            </AvatarWalletProvider>
-          </Providers>
+              </Providers>
+            </WebsocketProvider>
+          </AvatarWalletProvider>
         </ThemeProvider>
         <TailwindIndicator />
       </body>

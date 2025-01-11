@@ -36,3 +36,15 @@ export const getSignInfo = async (library: any, account: string) => {
   }
   return { error: false, sig, timestamp };
 };
+
+export const getAuthParams = async (Library: any, account: string) =>{
+  const sigData = await getSignInfo(Library, account)
+  const { sig, timestamp } = sigData
+  return `?address=${account?.toLowerCase()}&sig=${sig}&timestamp=${timestamp}`
+}
+
+export const getAuthObject = async (Library: any, account: string) =>{
+  const sigData = await getSignInfo(Library, account)
+  const { error, ...data } = sigData
+  return { address: account.toLocaleLowerCase(), ...data}
+}

@@ -9,6 +9,7 @@ import { Leaderboard, LeaderboardSkeleton } from "./components/leaderborad";
 import { LikedFeed } from "./components/liked";
 import { Stream } from "./components/stream";
 import { StreamLoader } from "./components/stream-skeleton";
+import { LiveFeed } from "./live/components/live";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -47,6 +48,15 @@ export default async function Page(props: Props) {
         <div className="mt-8 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
           <Suspense key={key} fallback={<StreamLoader />}>
             {type === "feed" && <FeedList />}
+            {type === "live" && (
+              <LiveFeed
+                title={type.toUpperCase()}
+                category={category}
+                range={range}
+                type={type}
+                q={q}
+              />
+            )}
             {type === "liked" && (
               <LikedFeed
                 title={type.toUpperCase()}
@@ -56,7 +66,7 @@ export default async function Page(props: Props) {
                 q={q}
               />
             )}
-            {type !== "feed" && type !== "liked" && (
+            {type !== "feed" && type !== "liked" && type !== "live" && (
               <Stream
                 title={type.toUpperCase()}
                 category={category}
