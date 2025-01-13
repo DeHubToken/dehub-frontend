@@ -21,6 +21,7 @@ import { cn, createAvatarName } from "@/libs/utils";
 import { getAvatarUrl } from "@/web3/utils/url";
 
 import { useMessage } from "./provider";
+import { AddUserInChatModal } from "./add-user-in-group-modal";
 
 type Props = {};
 
@@ -28,15 +29,13 @@ const ConversationMoreOptionsModal = (props: Props) => {
   const {
     toggleConversationMoreOptions = false,
     handleToggleConversationMoreOptions,
+    me={role:"member"},
     selectedMessage: message
   }: any = useMessage("ConversationMoreOptions");
 
-  const { conversationType, me = {} } = message;
+  const { conversationType } = message;
   const { role = "member" } = me;
-  const handleUpdateGroup = () => {
-    // console.log("Update Group clicked");
-    // Add navigation or logic for updating the group
-  };
+ 
 
   return (
     <Dialog open={toggleConversationMoreOptions} onOpenChange={handleToggleConversationMoreOptions}>
@@ -45,19 +44,17 @@ const ConversationMoreOptionsModal = (props: Props) => {
           <DialogTitle>Options</DialogTitle>
         </DialogHeader>
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem", padding: "1rem" }}>
-          <MemberListModal />
-          {conversationType == "group" && role == "admin" && (
-            <Button onClick={handleUpdateGroup}>Update Group</Button>
+          {conversationType === "group" && role == "admin" && (
+            <AddUserInChatModal/>
           )}
-          {/* {admin && <Button onClick={handleAddAdmin}>Add Admin</Button>} */}
+          <MemberListModal /> 
         </div>
       </DialogContent>
     </Dialog>
   );
 };
 
-export default ConversationMoreOptionsModal;
-
+export default ConversationMoreOptionsModal; 
 export const MemberListModal = () => {
   const [toggleMembersListModal, setToggleMembersListModal] = useState<boolean>(false);
   const { selectedMessage: message }: any = useMessage("MemberListModal");
@@ -125,19 +122,25 @@ export const UserOptions = ({ user }: any) => {
   }: any = useMessage("UserOptions");
   const router = useRouter();
   const { blockList } = message;
-  const { isBlocked = false, reportId = null } = blockList?.reduce(
-    (acc: boolean, item: any) => {
-      if (item?.reportedUserDetails?.[0]?.address?.toLowerCase() === user?.address?.toLowerCase()) {
-        return { isBlocked: true, reportId: item._id };
-      }
-      return acc;
-    },
-    { isBlocked: false, reportId: "" }
-  ) ?? {};
-  const { account } = useActiveWeb3React()
-  console.log('account:00',account, me)
-  const isMeAdmin = (user.address)?.toLocaleLowerCase() == (me?.participant?.address)?.toLocaleLowerCase() ? true : false
-  console.log('isMeAdmin:',isMeAdmin)
+  const { isBlocked = false, reportId = null } =
+    blockList?.reduce(
+      (acc: boolean, item: any) => {
+        if (
+          item?.reportedUserDetails?.[0]?.address?.toLowerCase() === user?.address?.toLowerCase()
+        ) {
+          return { isBlocked: true, reportId: item._id };
+        }
+        return acc;
+      },
+      { isBlocked: false, reportId: "" }
+    ) ?? {};
+  const { account } = useActiveWeb3React();
+  console.log("account:00", account, me);
+  const isMeAdmin =
+    user.address?.toLocaleLowerCase() == me?.participant?.address?.toLocaleLowerCase()
+      ? true
+      : false;
+  console.log("isMeAdmin:", isMeAdmin);
   const handleBlockUserOrGroup = async () => {
     if (me?.role != "admin") {
       toast.error("only admin can Block users.");
@@ -155,8 +158,8 @@ export const UserOptions = ({ user }: any) => {
     handleUnBlock(reportId);
   };
   const handleRemove = async () => {
-    handleExitGroup((user.address).toLowerCase())
-  }
+    handleExitGroup(user.address.toLowerCase());
+  };
 
   return (
     <DropdownMenu>

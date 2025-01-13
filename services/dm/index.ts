@@ -225,7 +225,7 @@ export async function joinGroup(data: JoinGroupData) {
       throw new Error("An unexpected error occurred while joining the group.");
     }
   }
-}
+} 
 
 interface ExitGroupData {
   conversationId: string;

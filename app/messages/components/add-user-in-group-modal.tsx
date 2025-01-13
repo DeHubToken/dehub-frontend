@@ -12,7 +12,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
-import { searchUserOrGroup } from "@/services/dm";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
+
+import { joinGroup, searchUserOrGroup } from "@/services/dm";
 
 import { getAvatarUrl } from "@/web3/utils/url";
 
@@ -21,7 +23,7 @@ import { useMessage } from "./provider";
 // Interface for the API response
 interface SearchUserResponse {
   success: boolean;
-  data?: { users: User[],message?: string };
+  data?: { users: User[]; message?: string };
   message?: string;
 }
 
@@ -51,13 +53,18 @@ interface User {
   youtubeLink?: string | null;
 }
 
-export const NewChatModal = ({ open, setOpen }: { open: boolean; setOpen: (d:boolean) => void }) => {
+export const AddUserInChatModal = () => {
+  const [toggleAddMembersListModal, setToggleAddMembersListModal] = useState<boolean>(false);
+  const handleToggleAddMembersListModal = () => {
+    setToggleAddMembersListModal((prev: boolean) => !prev);
+  };
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const { startNewChat } = useMessage("NewChatModal");
-  // State for dialog open/close
+  const { account }: any = useActiveWeb3React();
+  const {refresh, selectedMessage: message } = useMessage("AddUserInChatModal");
+  const { _id:dmId }:any = message;
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
     setIsLoading(true);
@@ -77,22 +84,30 @@ export const NewChatModal = ({ open, setOpen }: { open: boolean; setOpen: (d:boo
       setIsLoading(false);
     }
   };
-  const handleStartNewChat = (user: any) => {
-    startNewChat(user);
-    setOpen(false);
+  const handleAddNewUserInGroup = (user: any) => {
+    if (!account && !user?.address) {
+      return;
+    }
+    joinGroup({
+      address: account,
+      userAddress: user?.address,
+      groupId: dmId,
+      planId: ""
+    }).then(() => {
+      handleToggleAddMembersListModal();
+      refresh()
+    });
   };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      {/* <DialogTrigger asChild>
-        <Button className="gap-2 py-5">
-          <CirclePlus className="size-5" /> New DM
-        </Button>
-      </DialogTrigger> */}
+    <Dialog open={toggleAddMembersListModal} onOpenChange={handleToggleAddMembersListModal}>
+      <DialogTrigger className="w-full">
+        <Button className="w-full">Add Member</Button>
+      </DialogTrigger>
       <DialogContent className="max-w-[1400px] sm:rounded-3xl">
         <DialogTitle className="sr-only">New DM</DialogTitle>
         <DialogDescription className="sr-only">Start a direct message</DialogDescription>
         <DialogHeader className="flex flex-row gap-4">
-          <h3>Start a new dm.</h3>
+          <h3>Add new member</h3>
         </DialogHeader>
         <div className="mt-8 flex flex-col gap-6">
           <div className="flex gap-2">
@@ -110,10 +125,7 @@ export const NewChatModal = ({ open, setOpen }: { open: boolean; setOpen: (d:boo
             {isLoading && <p className="text-gray-500">Loading...</p>}
             {searchResults.length > 0
               ? searchResults.map((user) => (
-                  <div
-                    key={user._id}
-                    className="flex items-center gap-4 rounded p-2"
-                  >
+                  <div key={user._id} className="flex items-center gap-4 rounded p-2">
                     <img
                       src={getAvatarUrl(user?.avatarImageUrl || "")}
                       alt={`${user.displayName || user.username}'s avatar`}
@@ -126,9 +138,9 @@ export const NewChatModal = ({ open, setOpen }: { open: boolean; setOpen: (d:boo
                     <Button
                       variant="outline"
                       className="ml-auto"
-                      onClick={() => handleStartNewChat(user)}
+                      onClick={() => handleAddNewUserInGroup(user)}
                     >
-                      DM
+                      Add
                     </Button>
                   </div>
                 ))

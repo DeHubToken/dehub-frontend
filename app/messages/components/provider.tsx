@@ -47,6 +47,7 @@ type State = {
   reValidateMessage: (messageId: string, dmId: string) => void;
   handleExitGroup: (userAddress: string) => void;
   setChatStatus: (data: any) => void;
+  refresh: () => void;
   chatStatus: any;
   toggleMedia: boolean;
   toggleEmoji: boolean;
@@ -121,7 +122,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
 
     setMessages((prevState: any) => {
       return prevState.map((state: any) => {
-        if (state._id === dmId) { 
+        if (state._id === dmId) {
           return {
             ...state,
             tips
@@ -371,25 +372,22 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       });
     });
   };
-  const handleExitGroup = async(userAddress:string  ) => {
-    if(!account)
-      return 
-     const response = await exitGroup({
-          conversationId:message._id,
-          address:account,
-          userAddress
-        });
-        if(response.success){
-          //@ts-ignore
-          toast.success(response.data.message)
-          fetchMyContacts();
-        }
-        if(!response.success){
-          toast.success(response.error)
-        }
-        
-
-  }
+  const handleExitGroup = async (userAddress: string) => {
+    if (!account) return;
+    const response = await exitGroup({
+      conversationId: message._id,
+      address: account,
+      userAddress
+    });
+    if (response.success) {
+      //@ts-ignore
+      toast.success(response.data.message);
+      fetchMyContacts();
+    }
+    if (!response.success) {
+      toast.success(response.error);
+    }
+  };
   const handleToggleEmoji = () => {
     setToggleEmoji((b) => !b);
     setToggleGif(false);
@@ -414,6 +412,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const handleToggleTipModal = () => {
     setToggleTipModal((b) => !b);
   };
+
   return (
     <Provider
       chatStatus={chatStatus}
@@ -449,6 +448,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       reValidateMessage={reValidateMessage}
       handleExitGroup={handleExitGroup}
       permissions={{}}
+      refresh={fetchMyContacts}
     >
       {props.children}
     </Provider>

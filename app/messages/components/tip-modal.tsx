@@ -182,7 +182,7 @@ const TipModal = () => {
               </SelectTrigger>
               <SelectContent>
                 {supportedTokens
-                  .filter((t) => t.chainId == chainId)
+                  .filter((t) => t.chainId == chainId&&t.symbol=="DHB")
                   .map((token, i: number) => {
                     const network = supportedNetworks.find((net) => net.chainId == token.chainId);
                     return (

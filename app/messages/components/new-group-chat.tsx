@@ -202,7 +202,7 @@ export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolea
                   return (
                     <div
                       key={user._id}
-                      className={`flex items-center gap-4 rounded p-2 hover:bg-gray-100 ${
+                      className={`flex items-center gap-4 rounded p-2 ${
                         isSelected ? "bg-blue-100" : ""
                       }`}
                       onClick={() => toggleUserSelection(user)}
