@@ -1,3 +1,4 @@
+
 import type { NFT } from "@/services/nfts";
 
 import { Suspense } from "react";
@@ -17,6 +18,8 @@ import { defaultChainId, streamInfoKeys } from "@/configs";
 import { ActionPanel } from "./action-panel";
 import { CommentsPanel } from "./comments";
 import ImageCarousel from "./image-carousel"; 
+import BlurTextView from "./blur-text-view";
+
 
 function FeedInfo(props: { nft: NFT }) {
   const { nft } = props;
@@ -51,7 +54,9 @@ function FeedInfo(props: { nft: NFT }) {
           minutes
         </p> */}
         <p className="text-sm">
-          <span className="font-semibold">Description :</span> {nft.description}
+          <span className="font-semibold">Description :</span>  
+          <BlurTextView nft={nft}/>
+          {/* <span className={true ? 'blur-sm' : ''}>{nft.description}</span> */}
         </p>
         <div className="w-full">
           <span className="font-semibold">Categories :</span>{" "}

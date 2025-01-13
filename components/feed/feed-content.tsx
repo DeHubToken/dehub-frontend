@@ -14,7 +14,7 @@ export function FeedContent({ name, description, feed }: Props) {
   const user = useAtomValue(userAtom);
   const { chainId } = useActiveWeb3React();
   const streamStatus = getStreamStatus(feed, user, chainId);
-const blur =   streamStatus?.streamStatus?.isLockedWithPPV
+  const blur = streamStatus?.streamStatus?.isLockedWithPPV
   return (
     <div className="flex flex-col gap-3">
       <p>{name}</p>
