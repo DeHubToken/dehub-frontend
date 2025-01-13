@@ -187,6 +187,7 @@ export function PPVModal(props: Props) {
   ]);
 
   if (!streamStatus?.streamStatus?.isLockedWithPPV) {
+ 
     return null;
   }
 

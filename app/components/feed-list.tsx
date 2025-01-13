@@ -35,6 +35,10 @@ import TipModal from "../feeds/[id]/components/tip-modal";
 import { savePost } from "@/services/nfts/savePost";
 import { getSignInfo } from "@/web3/utils/web3-actions";
 import { toast } from "sonner";
+import { PPVModal } from "../feeds/[id]/components/ppv-modal";
+import { getStreamStatus } from "@/web3/utils/validators";
+import { userAtom } from "@/stores";
+import { useAtomValue } from "jotai";
 
 
 type FeedProps = {
@@ -50,10 +54,12 @@ export function FeedList(props: FeedProps) {
   const [selectedFeed, setSelectedFeed] = useState<{ open: boolean; tokenId?: number }>({ open: false });
 
   const { category, range, type, q } = props;
-  const { account, library } = useActiveWeb3React();
-  const [feeds, setFeeds] = useState([]);
+  const { account, library ,chainId} = useActiveWeb3React();
+  const [feeds, setFeeds] = useState<any>([]);
   const [feed, setFeed] = useState<any>(null);
   const searchParams = useSearchParams();
+ 
+
 
   const handleSavePost = async (id: number) => {
     if (!account) {
@@ -100,6 +106,7 @@ export function FeedList(props: FeedProps) {
 
     if (response.data.result) setFeed(response.data.result);
   };
+
   useEffect(() => {
     fetchFeed();
   }, [selectedFeed]);
@@ -124,6 +131,9 @@ export function FeedList(props: FeedProps) {
                 <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                   <TipModal tokenId={feed.tokenId} to={feed.minter} />
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+                   <PPVModal nft={feed} />
+                </DropdownMenuItem>
                 <DropdownMenuItem>
                   <BugIcon className="size-5" />&nbsp;&nbsp;Report
                 </DropdownMenuItem>
@@ -132,7 +142,7 @@ export function FeedList(props: FeedProps) {
 
           </FeedHeader>
           <Link href={`/feeds/${feed?.tokenId}`}>
-            <FeedContent name={feed.name} description={feed.description} />
+            <FeedContent name={feed.name} description={feed.description} feed={feed}/>
             <FeedImageGallary
               images={feed.imageUrls.map((i: any) => ({
                 url: getImageUrlApiSimple(i),

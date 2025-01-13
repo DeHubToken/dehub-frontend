@@ -119,7 +119,7 @@ interface StreamStatus {
   bountyToken?: unknown;
 }
 
-export const getStreamStatus = (nftMetadata: NFT, userInfo: User | null, chainId: number) => {
+export const getStreamStatus = (nftMetadata: any, userInfo: User | null, chainId: number) => {
   if (!nftMetadata) return { streamStatus: null, lockTokenWithLockContent: null, ppvToken: null };
   const streamStatus: StreamStatus = {
     isFree: true,
