@@ -27,7 +27,6 @@ export async function getStakingAmount(account: string | undefined) {
     const stakedAmount = await stakingContract.userTotalStakedAmount(account);
     if (stakedAmount.toString() === "0") return 0;
     return parseFloat(ethers.utils.formatUnits(stakedAmount, 18));
-    
   } catch (e) {
     return 0;
   }
@@ -62,16 +61,15 @@ export async function usersSearch(searchParam: string) {
       ...response,
       data: {
         ...response.data,
-        result: response.data.result.map(user => ({
-          ...user,
+        result: response.data.result.map((user) => ({
+          ...user
           // Optionally include additional processing here if needed
-        })),
-      },
+        }))
+      }
     };
   }
   return response;
 }
-
 
 export async function updateProfile(data: FormData) {
   const url = "/update_profile";
@@ -101,10 +99,42 @@ export async function commentOnNFT(params: {
     return { success: false, error: "Failed to comment." };
   }
 }
+export async function commentOnNFTWithImage(params: {
+  streamTokenId: number;
+  account: string;
+  content: string;
+  commentId?: number;
+  timestamp: number;
+  sig: string;
+  file: File;
+}): Promise<ApiResponse<{ result: unknown }>> {
+  const { streamTokenId, sig, timestamp, account, content, commentId, file } = params;
+
+  const formData = new FormData();
+  formData.append("address", account.toLowerCase());
+  formData.append("sig", sig);
+  formData.append("timestamp", timestamp.toString());
+  formData.append("streamTokenId", streamTokenId.toString());
+  formData.append("content", content);
+  if (commentId) {
+    formData.append("commentId", commentId.toString());
+  }
+  formData.append("file", file);
+
+  try {
+    const response = await api<{ result: unknown }>("/request_comment", {
+      method: "POST",
+      body: formData
+    });
+    return response;
+  } catch (error) {
+    return { success: false, error: "Failed to comment." };
+  }
+}
 
 export async function follow(params: {
   account: string;
-  library: any
+  library: any;
   to: string;
 }): Promise<ApiResponse<{ result: unknown }>> {
   const { account, library, to } = params;
@@ -128,7 +158,7 @@ export async function follow(params: {
 
 export async function unFollow(params: {
   account: string;
-  library: any
+  library: any;
   to: string;
 }): Promise<ApiResponse<{ result: unknown }>> {
   const { account, library, to } = params;
@@ -150,7 +180,7 @@ export async function unFollow(params: {
   }
 }
 
-type LibraryType = any
+type LibraryType = any;
 
 export type TLeaderboard = {
   read: boolean;
@@ -183,7 +213,7 @@ export async function getNotifications(params: {
 
 export async function requestMarkAsRead(params: {
   account: `0x${string}` | undefined | string;
-  library: any
+  library: any;
   id: number | string;
 }): Promise<ApiResponse<{ result: unknown }>> {
   const { account, library, id } = params;

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImagePlus, SendHorizonal } from "lucide-react";
@@ -19,21 +19,25 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { createAvatarName } from "@/libs/utils";
 
+import { commentOnNFTWithImage } from "@/services/user";
+
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { Spinner } from "../ui/spinner";
+import Image from "next/image";
+import { commentImageUrl } from "@/web3/utils/url";
 
 /* ----------------------------------------------------------------------------------------------- */
 
-type TComment = { id: string; avatar: string; name: string; time: string; content: string };
+type TComment = { id: string; avatar: string; name: string; time: string; content: string,imageUrl:string };
 type Props = React.ComponentProps<typeof Dialog> & {
   comments: Array<TComment>;
   tokenId: number;
-  fetchFeed:()=>void;
+  fetchFeed: () => void;
 };
 
 export function FeedReplyDialog(props: Props) {
-  const { children,fetchFeed, tokenId, comments, ...rest } = props;
+  const { children, fetchFeed, tokenId, comments, ...rest } = props;
   const [parent] = useAutoAnimate();
   return (
     <Dialog {...rest}>
@@ -44,9 +48,10 @@ export function FeedReplyDialog(props: Props) {
           {children}
 
           <div ref={parent} className="flex max-h-52 flex-col gap-6 overflow-y-scroll px-5">
-            {comments.map((comment) => (
-              <Comment key={comment.id} {...comment} />
-            ))}
+            {comments.map((comment) => {
+              console.log("comment", comment);
+              return <Comment key={comment.id} {...comment} />;
+            })}
           </div>
 
           <ReplyInput fetchFeed={fetchFeed} tokenId={tokenId} />
@@ -57,7 +62,7 @@ export function FeedReplyDialog(props: Props) {
 }
 
 function Comment(props: TComment) {
-  const { avatar, name, time, content } = props;
+  const { avatar, name, time, content,imageUrl } = props;
   return (
     <div className="flex gap-3">
       <Avatar>
@@ -72,6 +77,7 @@ function Comment(props: TComment) {
           </div>
           <span className="text-xs text-gray-500">{time}</span>
         </div>
+        {imageUrl&&<Image src={commentImageUrl(imageUrl)} alt="comment-image" height={200} width={200} quality={100}/>}
         <p className="text-base dark:text-gray-300">{content}</p>
       </div>
     </div>
@@ -92,7 +98,7 @@ type TCommentSchema = z.infer<typeof commentSchema>;
 
 function ReplyInput(props: any) {
   const { fetchFeed, tokenId } = props;
-
+  const [file, setFile] = useState<File | null>(null);
 
   const { account, library } = useActiveWeb3React();
 
@@ -113,22 +119,44 @@ function ReplyInput(props: any) {
     try {
       const sigData = await getSignInfo(library, account);
 
+      if (file) {
+        const res = await commentOnNFTWithImage({
+          streamTokenId: tokenId,
+          content: comment,
+          account,
+          sig: sigData.sig,
+          timestamp: sigData.timestamp,
+          file
+        });
+
+        if (!res.success) {
+          toast.error(res.error);
+          return;
+        }
+        fetchFeed();
+        toast.success("Commented successfully.");
+        commentForm.reset();
+        return;
+      }
+
       const res = await postComment({
         streamTokenId: tokenId,
         content: comment,
         account,
         sig: sigData.sig,
         timestamp: sigData.timestamp
+        // file
       });
 
       if (!res.success) {
         toast.error(res.error);
         return;
       }
-      fetchFeed()
+      fetchFeed();
       toast.success("Commented successfully.");
       commentForm.reset();
     } catch (err) {
+      console.log("object", err);
       toast.error("An error occurred while commenting.");
     }
   });
@@ -152,6 +180,7 @@ function ReplyInput(props: any) {
       }
       // File is valid; you can process or save it as needed
       console.log("Selected file:", file);
+      setFile(file);
     }
   };
 
@@ -183,7 +212,7 @@ function ReplyInput(props: any) {
             id="file-input"
             onChange={(event) => {
               // Call react-hook-form's onChange handler
-              commentForm.register("file").onChange(event); 
+              commentForm.register("file").onChange(event);
               // Call custom file change handler
               handleFileChange(event);
             }}

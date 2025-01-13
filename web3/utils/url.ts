@@ -55,3 +55,6 @@ export function getCoverUrl(url: string) {
 export function dmMediaUrl(url: string) {   
   return `${env.cdnBaseUrl}${url}`;
 }
+export function commentImageUrl(url: string) {   
+  return `${env.cdnBaseUrl}${url}`;
+}

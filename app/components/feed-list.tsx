@@ -25,7 +25,7 @@ import { useSearchParams } from 'next/navigation';
 import { getFeedNFTs } from "@/services/feeds";
 import { getNFT } from "@/services/nfts";
 
-import { getImageUrlApiSimple } from "@/web3/utils/url";
+import { commentImageUrl, getImageUrl, getImageUrlApiSimple } from "@/web3/utils/url";
 
 import { LikeButton } from "../feeds/[id]/components/stream-actions";
 import Link from "next/link";
@@ -190,6 +190,7 @@ export function FeedList(props: FeedProps) {
             time: new Date(c.createdAt).toString(),
             name: c?.writor?.username,
             content: c.content,
+            imageUrl:c.imageUrl,
             avatar: c.avatar
           })) || []
         }

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { voteNFT } from "@/services/nfts";
-import { commentOnNFT } from "@/services/user";
+import { commentOnNFT, commentOnNFTWithImage } from "@/services/user";
 
 export async function postComment(params: {
   streamTokenId: number;
@@ -12,10 +12,12 @@ export async function postComment(params: {
   commentId?: number;
   timestamp: number;
   sig: string;
+  file?: any;
 }) {
-  const { streamTokenId, timestamp, sig, account, content, commentId } = params;
+  const { streamTokenId, timestamp, sig, account, content, commentId, file } = params;
   if (!account) return { success: false, error: "Please connect your wallet." };
   revalidatePath(`/stream/${streamTokenId}`);
+ 
   return commentOnNFT({
     streamTokenId,
     account,
