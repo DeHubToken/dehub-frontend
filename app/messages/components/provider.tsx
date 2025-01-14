@@ -223,22 +223,25 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       return;
     }
     const reportedId = data.reportedId;
-    setChatStatus({
-      allow: false,
-      reportedId: reportedId,
-      msg: (
-        <div>
-          You Block This Chat{" "}
-          <Button
-            onClick={() => {
-              handleUnBlock(reportedId);
-            }}
-          >
-            Un-Block Now
-          </Button>
-        </div>
-      )
-    });
+    if (userAddress == account?.toLowerCase()) {
+      setChatStatus({
+        allow: false,
+        reportedId: reportedId,
+        msg: (
+          <div>
+            You Block This Chat{" "}
+            <Button
+              onClick={() => {
+                handleUnBlock(reportedId);
+              }}
+            >
+              Un-Block Now
+            </Button>
+          </div>
+        )
+      });
+    }
+
     toast.success(data?.message || data?.msg);
   };
   const fetchMyContacts = async () => {
