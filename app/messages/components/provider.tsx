@@ -210,8 +210,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     if (!account) {
       toast.error("please connect to wallet.");
       return;
-    }
-    toast.info("blocking...");
+    } 
     const { data, error }: any = await blockDM({
       conversationId: message._id,
       reason,
@@ -222,8 +221,8 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       toast.error(error);
       return;
     }
-    const reportedId = data.reportedId;
-    if (userAddress == account?.toLowerCase()) {
+    const reportedId = data.reportedId; 
+    if (!userAddress) {
       setChatStatus({
         allow: false,
         reportedId: reportedId,
