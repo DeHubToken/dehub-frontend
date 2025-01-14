@@ -30,8 +30,7 @@ const ConversationOptions = ({ type, participant }: Props) => {
     handleExitGroup,
     handleToggleConversationMoreOptions
   }: any & { handleToggleUserReport: () => void } = useMessage("ConversationOptions");
-  const { account } = useActiveWeb3React();
-  console.log(me?.role, "KLLK");
+  const { account } = useActiveWeb3React(); 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

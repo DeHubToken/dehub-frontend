@@ -7,17 +7,20 @@ import { useAtomValue } from 'jotai';
 import React from 'react'
 
 const BlurTextView = ({nft}:any) => {  
-      const { account, chainId } = useActiveWeb3React();  
-      const isOwner = nft.owner === account?.toLowerCase();
-      const isFreeStream =
-        !nft?.streamInfo ||
-        !(
-          nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
-          nft?.streamInfo?.[streamInfoKeys?.isPayPerView]
-        )
-          ? true
-          : false;
-      const blur = !isOwner || !isFreeStream ||!isAnySubscribed(nft?.plansDetails);
+    const { account, chainId } = useActiveWeb3React();
+    const isOwner =
+      nft?.minter?.toLowerCase() === account?.toLowerCase() ||
+      nft?.owner?.toLowerCase() === account?.toLowerCase();
+    const isFreeStream =
+      !nft?.streamInfo ||
+      !(
+        nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
+        nft?.streamInfo?.[streamInfoKeys?.isPayPerView]
+      )
+        ? true
+        : false;
+  
+    const blur = !isOwner && !isFreeStream! && !isAnySubscribed(nft?.plansDetails);
   return (
     <span className={blur ? 'blur-sm' : ''}>{nft.description}</span>
   )

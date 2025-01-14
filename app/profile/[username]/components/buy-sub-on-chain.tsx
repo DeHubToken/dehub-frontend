@@ -48,6 +48,7 @@ const BuySubOnChain: React.FC<BuySubOnChainProps> = ({
   }, []);
   // Initialize subscription contract dynamically based on chainId
   const subcontract: any = useSubscriptionContract(SB_ADDRESS[chainId]);
+ 
   const { account } = useActiveWeb3React();
   const getFee = async () => {
     const fee = await subcontract._checkFeeByBadges(creator, account, duration);

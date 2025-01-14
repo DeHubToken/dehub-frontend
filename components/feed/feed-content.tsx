@@ -17,10 +17,11 @@ interface Props {
   name: string;
   feed: NFT;
 }
-export function FeedContent({ name, description, feed }: Props) {
-  const user = useAtomValue(userAtom);
-  const { account, chainId } = useActiveWeb3React();  
-  const isOwner = feed.owner === account?.toLowerCase();
+export function FeedContent({ name, description, feed }: Props) { 
+  const { account, chainId } = useActiveWeb3React();
+  const isOwner =
+    feed?.minter?.toLowerCase() === account?.toLowerCase() ||
+    feed?.owner?.toLowerCase() === account?.toLowerCase();
   const isFreeStream =
     !feed?.streamInfo ||
     !(
@@ -29,10 +30,12 @@ export function FeedContent({ name, description, feed }: Props) {
     )
       ? true
       : false;
-  const blur = !isOwner || !isFreeStream ||!isAnySubscribed(feed?.plansDetails);
+
+  const blur = !isOwner && !isFreeStream! && !isAnySubscribed(feed?.plansDetails);
   return (
     <div className="flex flex-col gap-3">
       <p>{name}</p>
+
       <p
         className={`text-theme-monochrome-300 max-h-40 overflow-scroll text-base ${blur ? "blur-sm" : null}`}
       >
@@ -41,7 +44,6 @@ export function FeedContent({ name, description, feed }: Props) {
     </div>
   );
 }
-
 
 function isAnySubscribed(array: any) {
   // Check if any object in the array has alreadySubscribed set to true

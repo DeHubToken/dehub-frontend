@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { th } from "@faker-js/faker";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { ImagePlus, Info, Upload } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useDropzone } from "react-dropzone";
@@ -62,7 +62,12 @@ import { filteredStreamInfo } from "@/web3/utils/format";
 import { getIpfsHashFromFile } from "@/web3/utils/ipfs";
 import { multicallRead } from "@/web3/utils/multicall";
 import { getDistinctTokens, getNetworksForToken } from "@/web3/utils/tokens";
-import { approveToken, mintWithBounty } from "@/web3/utils/transaction";
+import {
+  approveToken,
+  calculateGasMargin,
+  GAS_MARGIN,
+  mintWithBounty
+} from "@/web3/utils/transaction";
 import { isValidDataForMinting } from "@/web3/utils/validators";
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
@@ -135,12 +140,12 @@ export function UploadForm(props: Props) {
   const [selectedTokenAddress, setSelectedTokenAddress] = useState("");
   const [plans, setPlans] = useState([]);
   const transformedPlans = plans
-  .map((plan: any) => ({
-    value: plan.id,
-    label: <span className="text-gray-500">Tier {plan.tier}</span>,
-    tier: plan.tier, // Include tier for sorting purposes
-  }))
-  .sort((a, b) => a.tier - b.tier);
+    .map((plan: any) => ({
+      value: plan.id,
+      label: <span className="text-gray-500">Tier {plan.tier}</span>,
+      tier: plan.tier // Include tier for sorting purposes
+    }))
+    .sort((a, b) => a.tier - b.tier);
   const streamCollectionContract = useStreamCollectionContract();
   const streamController = useStreamControllerContract();
   const addTransaction = useAddRecentTransaction();
@@ -248,8 +253,8 @@ export function UploadForm(props: Props) {
         formData.append("address", account.toLowerCase());
         formData.append("sig", sigData.sig);
         formData.append("chainId", chainId.toString());
-        formData.append("timestamp", sigData.timestamp); 
-        if(data.isRequireSubscription){ 
+        formData.append("timestamp", sigData.timestamp);
+        if (data.isRequireSubscription) {
           formData.append("plans", JSON.stringify(data.plans));
         }
 
@@ -305,10 +310,23 @@ export function UploadForm(props: Props) {
           } catch (err) {
             throw new Error("NFT mint has failed!");
           }
-        }
-        console.log("r", result.r, res);
+        } 
         if (streamCollectionContract) {
-          console.log("here though");
+          const estimatedGasPrice = await library.getGasPrice(); 
+          const adjustedGasPrice = estimatedGasPrice
+            .mul(BigNumber.from(110))
+            .div(BigNumber.from(100)); 
+          // Estimate gas limit
+          const estimatedGasLimit = await streamCollectionContract.estimateGas.mint(
+            result.createdTokenId,
+            result.timestamp,
+            result.v,
+            result.r,
+            result.s,
+            [],
+            1000,
+            `${result.createdTokenId}.json`
+          ); 
           const tx = await streamCollectionContract.mint(
             result.createdTokenId,
             result.timestamp,
@@ -317,8 +335,11 @@ export function UploadForm(props: Props) {
             result.s,
             [],
             1000,
-            `${result.createdTokenId}.json`,
-            { gasLimit: "3" } // Set a reasonable limit
+            `${result.createdTokenId}.json`, 
+            {
+              gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
+              gasPrice: adjustedGasPrice
+            }
           );
           console.log("here though 2", tx);
 
@@ -336,8 +357,8 @@ export function UploadForm(props: Props) {
         } else {
           router.push(`/?type=feed/${result.createdTokenId}`);
         }
-      } catch (err:any) {
-        console.log("err-mint:",err)
+      } catch (err: any) {
+        console.log("err-mint:", err);
         if (err instanceof Error) {
           if (err.message.includes("user rejected transaction")) {
             setUploading(false);
@@ -346,7 +367,7 @@ export function UploadForm(props: Props) {
 
           setUploading(false);
           throw new Error(err.message);
-        } 
+        }
         setUploading(false);
         throw new Error(err.message);
       }
@@ -484,8 +505,9 @@ export function UploadForm(props: Props) {
     const lockContentToken = { [streamInfoKeys.lockContentTokenSymbol]: token?.symbol || "" };
 
     const lockContentChainIds = {
-      [streamInfoKeys.lockContentChainIds]:[
-        networksForAToken.find((t) => t.value === network)?.chainId || ""]
+      [streamInfoKeys.lockContentChainIds]: [
+        networksForAToken.find((t) => t.value === network)?.chainId || ""
+      ]
     };
     const lockContentAmount = { [streamInfoKeys.lockContentAmount]: amount || 0 };
     form.setValue("streamInfo", {
@@ -505,8 +527,9 @@ export function UploadForm(props: Props) {
       [streamInfoKeys.payPerViewTokenSymbol]: networkForPPVToken?.symbol || ""
     };
     const payPerViewChainIds = {
-      [streamInfoKeys.payPerViewChainIds]:[
-        networksForPPVToken.find((t) => t.value === ppvNetwork)?.chainId || ""]
+      [streamInfoKeys.payPerViewChainIds]: [
+        networksForPPVToken.find((t) => t.value === ppvNetwork)?.chainId || ""
+      ]
     };
     const payPerViewAmount = { [streamInfoKeys.payPerViewAmount]: ppvAmount || 0 };
     form.setValue("streamInfo", {

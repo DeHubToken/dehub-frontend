@@ -23,6 +23,7 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 import { saveDMTnx, updateDMTnx } from "@/services/dm";
 
 import { supportedNetworks } from "@/web3/configs";
+import { calculateGasMargin, GAS_MARGIN } from "@/web3/utils/transaction";
 import { getAvatarUrl } from "@/web3/utils/url";
 
 import { supportedTokens } from "@/configs";
@@ -38,8 +39,8 @@ const TipModal = () => {
   const [selectedToken, setSelectedToken] = useState<string>("");
   const token = supportedTokens?.find((t) => t.address === selectedToken);
   const [amount, setAmount] = useState(0);
-  const { account, chainId } = useActiveWeb3React();
-  const [selectAddress, setSelectAddress] = useState(""); 
+  const { account, chainId, library } = useActiveWeb3React();
+  const [selectAddress, setSelectAddress] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const tokenContract: any = useERC20Contract(selectedToken);
   const [tnx, setTnx] = useState<any>();
@@ -52,7 +53,7 @@ const TipModal = () => {
     }
     setAmount(value);
   };
-  const { participants, conversationType,_id: dmId  } = selectedMessage; 
+  const { participants, conversationType, _id: dmId } = selectedMessage;
   useEffect(() => {
     setSelectAddress(participants[0].participant.address);
   }, [conversationType]);
@@ -66,15 +67,24 @@ const TipModal = () => {
         toast.error("Unable to fetch token decimals.");
         return;
       }
-      if (amount<=0) {
+      if (amount <= 0) {
         toast.error("Enter Valid Amount.");
         return;
       }
-      
+
       setIsProcessing(true);
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
+      // Estimate gas price with a 10% increase
+      const estimatedGasPrice = await library.getGasPrice();
+      const adjustedGasPrice = estimatedGasPrice.mul(BigNumber.from(110)).div(BigNumber.from(100)); 
+      // Estimate gas limit
+      const estimatedGasLimit = await tokenContract.estimateGas.transfer(
+        selectAddress,
+        adjustedAmount
+      );
       const data = await tokenContract.transfer(selectAddress, adjustedAmount, {
-        gasLimit: "50000"
+        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
+        gasPrice: adjustedGasPrice
       });
       setTnx(data);
       const transactionData = {
@@ -182,7 +192,7 @@ const TipModal = () => {
               </SelectTrigger>
               <SelectContent>
                 {supportedTokens
-                  .filter((t) => t.chainId == chainId&&t.symbol=="DHB")
+                  .filter((t) => t.chainId == chainId && t.symbol == "DHB")
                   .map((token, i: number) => {
                     const network = supportedNetworks.find((net) => net.chainId == token.chainId);
                     return (

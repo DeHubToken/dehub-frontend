@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import { BigNumber } from "ethers";
 import { toast } from "sonner";
 import { useWaitForTransaction } from "wagmi";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { buyPlan } from "@/services/subscription-plans";
+
+import { calculateGasMargin, GAS_MARGIN } from "@/web3/utils/transaction";
 
 // Define type for the subcontract's method
 interface SubscriptionContract {
@@ -13,6 +16,13 @@ interface SubscriptionContract {
     subscriptionId: string | number,
     duration: number
   ) => Promise<{ hash: string }>;
+  estimateGas: {
+    buySubscription: (
+      address: string,
+      subscriptionId: string | number,
+      duration: number
+    ) => Promise<BigNumber>;
+  };
 }
 
 // Define hook return type
@@ -22,6 +32,7 @@ interface UseBuySubscription {
   isTransactionPending: boolean;
   isTransactionSuccess: boolean;
   isTransactionError: boolean;
+  
 }
 
 export const useBuySubscription = (
@@ -33,7 +44,8 @@ export const useBuySubscription = (
   const [hash, setHash] = useState<`0x${string}` | undefined>(undefined);
 
   // Use web3-react active account
-  const { account }: { account: `0x${string}` | undefined } = useActiveWeb3React();
+  const { account, library }: { account: `0x${string}` | undefined; library: any } =
+    useActiveWeb3React();
 
   // Track transaction status
   const {
@@ -74,10 +86,18 @@ export const useBuySubscription = (
         return;
       }
 
-      // Interact with smart contract
+      // Estimate gas price with a 10% increase
+      const estimatedGasPrice = await library.getGasPrice();
+      const adjustedGasPrice = estimatedGasPrice.mul(BigNumber.from(110)).div(BigNumber.from(100));  
+      const estimatedGasLimit =await subcontract?.estimateGas?.buySubscription(
+        creator,
+        subscriptionId,
+        duration
+      );
       //@ts-ignore
       const txResponse: any = await subcontract.buySubscription(creator, subscriptionId, duration, {
-        gasLimit: "3"
+        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
+        gasPrice: adjustedGasPrice
       });
       setHash(txResponse.hash); // Set transaction hash for tracking
 

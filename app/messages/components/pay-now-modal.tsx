@@ -12,6 +12,7 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 import { saveDMTnx, updateDMTnx } from "@/services/dm";
 
 import { supportedNetworks } from "@/web3/configs";
+import { calculateGasMargin, GAS_MARGIN } from "@/web3/utils/transaction";
 
 import { supportedTokens } from "@/configs";
 
@@ -47,7 +48,7 @@ const PayNowModal = (props: Props) => {
   const [selectedToken, setSelectedToken] = useState<null | string>(null);
   const tokenContract: any = useERC20Contract(selectedToken);
   const [tnx, setTnx] = useState<any>();
-  const { account, chainId } = useActiveWeb3React();
+  const { account, chainId, library } = useActiveWeb3React();
   const [tnxId, setTnxId] = useState(null);
 
   useWaitForTransaction({
@@ -115,8 +116,19 @@ const PayNowModal = (props: Props) => {
 
       setIsProcessing(true);
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
+      // Estimate gas price with a 10% increase
+      const estimatedGasPrice = await library.getGasPrice();
+      const adjustedGasPrice = estimatedGasPrice.mul(BigNumber.from(110)).div(BigNumber.from(100));
+
+      // Estimate gas limit
+      const estimatedGasLimit = await tokenContract.estimateGas.transfer(
+        sender?.address,
+        adjustedAmount
+      );
+
       const data = await tokenContract.transfer(sender?.address, adjustedAmount, {
-        gasLimit: "300000" // Adjusted gas limit
+        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
+        gasPrice: adjustedGasPrice
       });
 
       setTnx(data);
