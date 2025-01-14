@@ -32,8 +32,7 @@ export function StreamVideoSkeleton() {
 }
 
 export function StreamVideoProvider(props: { nft: NFT }) {
-  const { nft } = props;
-  console.log('943062:')
+  const { nft } = props; 
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<Player | null>(null);
 

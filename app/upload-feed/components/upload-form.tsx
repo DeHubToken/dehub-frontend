@@ -336,7 +336,8 @@ export function UploadForm(props: Props) {
         } else {
           router.push(`/?type=feed/${result.createdTokenId}`);
         }
-      } catch (err) {
+      } catch (err:any) {
+        console.log("err-mint:",err)
         if (err instanceof Error) {
           if (err.message.includes("user rejected transaction")) {
             setUploading(false);
@@ -345,10 +346,9 @@ export function UploadForm(props: Props) {
 
           setUploading(false);
           throw new Error(err.message);
-        }
-
+        } 
         setUploading(false);
-        throw new Error("Upload failed");
+        throw new Error(err.message);
       }
     }
 

@@ -30,6 +30,7 @@ export type NFT = {
   minterDisplayName: string;
   minterStaked: number;
   mintername: string;
+  owner?:string;
   isHidden: boolean;
   imageUrls?:string[];
   postType:string;

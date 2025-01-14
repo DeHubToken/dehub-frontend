@@ -106,8 +106,7 @@ async function StreamVideo(props: { tokenId: number; address: string }) {
     return null;
   }
 
-  const nft = response.data.result;
-  console.log('nft:', nft)
+  const nft = response.data.result; 
   // Checking for transcoding status
   const isTranscodingVideo = nft?.transcodingStatus === "on";
   if (isTranscodingVideo) {

@@ -150,13 +150,13 @@ export default function Form({ plan, getTiers }: any) {
 
               <div className="flex w-full flex-wrap items-stretch justify-start border-b border-gray-300/25">
                 <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
-                  <h1 className="text-xl">tiers Name</h1>
+                  <h1 className="text-xl">Tiers Name</h1>
                 </div>
                 <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%]  ">
                   <input
                     placeholder="Basic tier"
                     className=" w-full border-none bg-theme-background px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
-                    {...register(`tier.name`, { required: "tier name is required" })}
+                    {...register(`tier.name`, { required: "Tier Name is Required" })}
                   />
                   {errors.tier?.name?.message && (
                     <p className="text-red-500">
@@ -178,7 +178,7 @@ export default function Form({ plan, getTiers }: any) {
                     className="  w-full resize-none border-none bg-theme-background px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0"
                     rows={2}
                     {...register(`tier.description`, {
-                      required: "tier description is required"
+                      required: "Tier Description Is Required"
                     })}
                   />
                   {errors.tier?.description?.message && (
@@ -350,7 +350,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId,i
       {/* Chain List Section */}
       <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_60%]">
         {tier?.chains?.map((field: any, index: number) => (
-          <div className="mb-4 ml-5 flex w-full items-center justify-between gap-5" key={field.id}>
+          <div className="mb-4 ml-5 flex-wrap flex w-full items-center justify-between gap-5" key={field.id}>
             {/* Chain ID or Label */}
             <div className="w-full flex-shrink-0 text-center sm:w-auto sm:text-left">
               {field.chainId}) {supportedNetworks.find((c) => c.chainId == field.chainId)?.label}
@@ -373,12 +373,13 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId,i
                 <input
                   type="number"
                   min={0}
+                  style={{minWidth:100}}
                   placeholder="Enter price"
                   disabled={field.isPublished}
                   className="w-full rounded-md border bg-gray-100 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   {...register(`tier.chains.${index}.price`, {
                     valueAsNumber: true,
-                    required: "Amount is required",
+                    required: "Amount is Required",
                     validate: value => {
                       if (value <= 0) {
                         toast.error("Amount should be greater than 0");

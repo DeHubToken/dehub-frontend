@@ -204,7 +204,7 @@ export function FeedList(props: FeedProps) {
             />
             <FeedSettingsButton />
           </FeedHeader>
-          <FeedContent name={feed?.name} description={feed?.description} />
+          <FeedContent name={feed?.name} description={feed?.description}  feed={feed}/>
           <FeedImageGallary
             images={
               feed?.imageUrls.map((i: string) => ({
