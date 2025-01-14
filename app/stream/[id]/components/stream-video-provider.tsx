@@ -50,7 +50,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     !nft?.streamInfo ||
       !(
         nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
-        nft?.streamInfo?.[streamInfoKeys?.isPayPerView]
+        nft?.streamInfo?.[streamInfoKeys?.isPayPerView]|| nft?.plansDetails?.length>0
       )
       ? true
       : false;
@@ -66,8 +66,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
       videoRef.current.onloadedmetadata = () => setLoading(false);
     }
   }, [account, chainId, nft.videoUrl, sig, timestamp]);
-
-  // Effect to check if video is free or locked
+ 
   useEffect(() => {
     async function createUrl() {
       if (isFreeStream || isAnySubscribed(nft.plansDetails) || isOwner(nft, account || "")) {
