@@ -51,9 +51,7 @@ type FormValues = {
 export default function Form({ plan, getTiers }: any) {
   const { account, chainId } = useActiveWeb3React();
   const router = useRouter();
-  const planId = plan != undefined ? plan.id : null;
-  const [saved, setSaved] = useState(false);
-  const planFocusRef: any = useRef(null);
+  const planId = plan != undefined ? plan.id : null; 
 
   useEffect(() => {
     if (plan?.address && plan?.address != account?.toLowerCase()) {
@@ -104,8 +102,7 @@ export default function Form({ plan, getTiers }: any) {
         toast.error(data?.error)
         return
       } 
-      if (planId) {
-        setSaved(true);
+      if (planId) { 
         reset()
         toast.success("plan Updated");
         router.push("/plans")

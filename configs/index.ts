@@ -472,5 +472,5 @@ export const durations = [
   { title: "3 months", value: 3, tier: 2 },
   { title: "6 months", value: 6, tier: 3 },
   { title: "1 year", value: 12, tier: 4 },
-  { title: "lifetime", value: 999, tier: 5 }
+  { title: "lifetime", value: 0, tier: 5 }
 ];
