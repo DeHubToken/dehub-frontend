@@ -84,11 +84,9 @@ export const useBuySubscription = (
         toast.error("Subscription creation failed, missing subscription ID.");
         return;
       }
-      console.log("console.log",{
-        creator, subscriptionId, duration
-      })
+    
       // Estimate gas price with a 10% increase
-      const dur=duration==999?0:duration
+      const dur=duration>12?0:duration   
       const estimatedGasPrice = await library.getGasPrice();
       const adjustedGasPrice = estimatedGasPrice.mul(BigNumber.from(110)).div(BigNumber.from(100));  
       const estimatedGasLimit =await subcontract?.estimateGas?.buySubscription(
@@ -97,7 +95,7 @@ export const useBuySubscription = (
         dur
       );
 
-     
+   
       //@ts-ignore
       const txResponse: any = await subcontract.buySubscription(creator, subscriptionId, dur, {
         gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
