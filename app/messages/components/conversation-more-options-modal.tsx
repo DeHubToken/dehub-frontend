@@ -183,7 +183,7 @@ export const UserOptions = ({ user }: any) => {
             <CircleMinus /> <span> Remove</span>
           </DropdownMenuItem>
         )}{" "}
-        {me?.role == "admin" && (
+        {me?.role == "admin"&& !isMeAdmin  && (
           <DropdownMenuItem
             className="flex gap-1 p-2 hover:bg-slate-600"
             onClick={isBlocked ? handleUnBlockUser : handleBlockUserOrGroup}
