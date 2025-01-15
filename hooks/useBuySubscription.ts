@@ -32,7 +32,6 @@ interface UseBuySubscription {
   isTransactionPending: boolean;
   isTransactionSuccess: boolean;
   isTransactionError: boolean;
-  
 }
 
 export const useBuySubscription = (
@@ -73,29 +72,28 @@ export const useBuySubscription = (
       }
 
       // API Call to create subscription
-      const { data }: any = await buyPlan({ planId, account });
+      const { data, error }: any = await buyPlan({ planId, account });
 
-      if (!data.success) {
-        toast.error(data.error || "Failed to create subscription.");
+      if (!data?.success) {
+        toast.error(error || "Failed to Buy subscription.");
         return;
-      } 
+      }
       const subscriptionId = data?.data?.id;
       if (!subscriptionId) {
         toast.error("Subscription creation failed, missing subscription ID.");
         return;
       }
-    
+
       // Estimate gas price with a 10% increase
-      const dur=duration>12?0:duration   
+      const dur = duration > 12 ? 0 : duration;
       const estimatedGasPrice = await library.getGasPrice();
-      const adjustedGasPrice = estimatedGasPrice.mul(BigNumber.from(110)).div(BigNumber.from(100));  
-      const estimatedGasLimit =await subcontract?.estimateGas?.buySubscription(
+      const adjustedGasPrice = estimatedGasPrice.mul(BigNumber.from(130)).div(BigNumber.from(100));
+      const estimatedGasLimit = await subcontract?.estimateGas?.buySubscription(
         creator,
         subscriptionId,
         dur
       );
 
-   
       //@ts-ignore
       const txResponse: any = await subcontract.buySubscription(creator, subscriptionId, dur, {
         gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
@@ -105,9 +103,12 @@ export const useBuySubscription = (
 
       toast.success(`Transaction submitted. Hash: ${txResponse.hash}`);
       console.log("Transaction submitted. Waiting for confirmation...");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error during subscription purchase:", error);
-      toast.error("An error occurred during the subscription purchase. Check console for details.");
+      toast.error(
+        error.message ||
+          "An error occurred during the subscription purchase. Check console for details."
+      );
     }
   };
 

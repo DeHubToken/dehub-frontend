@@ -56,14 +56,14 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
     try {
       // Fetch token decimals
       const decimals = await token.decimals();
-
+      const dur = duration > 12 ? 0 : duration;
       // Adjust the amount using BigNumber
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
 
       // Send the transaction
       const txResponse = await subcontract.createPlan(
         planId,
-        duration,
+        dur,
         title,
         description,
         adjustedAmount,
