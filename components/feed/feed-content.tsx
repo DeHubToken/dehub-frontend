@@ -19,10 +19,7 @@ interface Props {
 }
 export function FeedContent({ name, description, feed }: Props) { 
   const { account, chainId } = useActiveWeb3React();
-  const isOwner =
-  account &&
-  feed?.owner &&
-  feed?.minter &&
+  const isOwner =!!(account) &&
   (feed?.minter?.toLowerCase() === account?.toLowerCase() ||
     feed?.owner?.toLowerCase() === account?.toLowerCase())
   const isFreeStream =
