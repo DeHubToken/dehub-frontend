@@ -86,6 +86,11 @@ export const useBuySubscription = (
 
       // Estimate gas price with a 10% increase
       const dur = duration > 12 ? 0 : duration;
+      console.log("ssssssssssss", {
+        creator,
+        subscriptionId,
+        dur
+      });
       const estimatedGasPrice = await library.getGasPrice();
       const adjustedGasPrice = estimatedGasPrice.mul(BigNumber.from(130)).div(BigNumber.from(100));
       const estimatedGasLimit = await subcontract?.estimateGas?.buySubscription(
