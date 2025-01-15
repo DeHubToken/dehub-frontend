@@ -13,10 +13,7 @@ import { streamInfoKeys } from "@/configs";
 
 const BlurTextView = ({ nft }: any) => {
   const { account, chainId } = useActiveWeb3React();
-  const isOwner =
-    account &&
-    nft?.owner &&
-    nft?.minter &&
+  const isOwner = !!(account) &&
     (nft?.minter?.toLowerCase() === account?.toLowerCase() ||
       nft?.owner?.toLowerCase() === account?.toLowerCase());
   const isFreeStream =
