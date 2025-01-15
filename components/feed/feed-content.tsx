@@ -20,13 +20,16 @@ interface Props {
 export function FeedContent({ name, description, feed }: Props) { 
   const { account, chainId } = useActiveWeb3React();
   const isOwner =
-    feed?.minter?.toLowerCase() === account?.toLowerCase() ||
-    feed?.owner?.toLowerCase() === account?.toLowerCase();
+  account &&
+  feed?.owner &&
+  feed?.minter &&
+  (feed?.minter?.toLowerCase() === account?.toLowerCase() ||
+    feed?.owner?.toLowerCase() === account?.toLowerCase())
   const isFreeStream =
     !feed?.streamInfo ||
     !(
       feed?.streamInfo?.[streamInfoKeys?.isLockContent] ||
-      feed?.streamInfo?.[streamInfoKeys?.isPayPerView]
+      feed?.streamInfo?.[streamInfoKeys?.isPayPerView]||feed?.plansDetails
     )
       ? true
       : false;
