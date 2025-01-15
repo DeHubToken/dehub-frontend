@@ -463,8 +463,8 @@ export const DHB_ADDRESSESS: { [chainId: number]: string } = {
 };
 export const SB_ADDRESS: { [chainId: number]: string } = {
   [ChainId.BSC_TESTNET]: "0xEbCea2213AE6c69c74F6f648fcFF6A27842c78F1", //'0x3A76858fb35520c3CA20E826901c7cB73F715251',
-  [ChainId.BSC_MAINNET]: "0xEbCea2213AE6c69c74F6f648fcFF6A27842c78F1",
-  [ChainId.BASE_MAINNET]: "0xEbCea2213AE6c69c74F6f648fcFF6A27842c78F1"
+  [ChainId.BSC_MAINNET]: "0x64eD1cEf5ba5655DAe565Ee592b6eb229e8CB05C",
+  [ChainId.BASE_MAINNET]: "0x91Cb5e924285484Ec666fF969D3941414fcE15d1"
 };
 
 export const durations = [
