@@ -16,7 +16,8 @@ export const useTokenApproval = (
   const approveToken = async () => {
     try { 
       const decimals = await token.decimals(); // Replace with dynamic token decimals if needed 
-      const adjustedPrice = BigNumber.from(price +1).mul(BigNumber.from(10).pow(decimals)).add(fees); 
+      const tenPercent=Math.ceil(price/12)
+      const adjustedPrice = BigNumber.from(price+tenPercent).mul(BigNumber.from(10).pow(decimals)).add(fees); 
       console.log("Initiating token approval...");
       const approvalTx = await token.approve(spenderAddress, adjustedPrice);
       setHash(approvalTx.hash); // Set approval transaction hash 
