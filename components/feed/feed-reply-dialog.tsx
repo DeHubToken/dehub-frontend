@@ -152,6 +152,7 @@ function ReplyInput(props: any) {
         toast.error(res.error);
         return;
       }
+      setFile(null)
       fetchFeed();
       toast.success("Commented successfully.");
       commentForm.reset();

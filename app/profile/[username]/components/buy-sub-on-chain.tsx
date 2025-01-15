@@ -75,7 +75,8 @@ const BuySubOnChain: React.FC<BuySubOnChainProps> = ({
   useEffect(() => {
     if (isTransactionSuccess && hash) {
       onPurchase(field); // Trigger callback
-      console.log(`Transaction successful: ${hash}`);
+      window.location.reload()
+      console.log(`Transaction Sent: ${hash}`);
     }
   }, [isTransactionSuccess, hash, onPurchase, field]);
 
