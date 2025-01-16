@@ -133,7 +133,7 @@ const mainNetworks = [
     value: "Base",
     label: "Base",
     customAbbreviation: "base",
-    iconUrl:""
+    iconUrl:"https://basescan.org/assets/base/images/svg/logos/chain-light.svg?v=25.1.2.0"
   }
   
 ];

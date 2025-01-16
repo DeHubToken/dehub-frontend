@@ -446,7 +446,9 @@ const AddChainDropdown: React.FC<any> = ({ tier, control }) => {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent>
-          {supportedNetworks.map((network) => (
+          {supportedNetworks
+           .filter((network) => [56, 8453,97].includes(network.chainId))
+          .map((network) => (
             <DropdownMenuItem
               key={network.chainId}
               onClick={() => {
@@ -518,7 +520,8 @@ export const CurrencySelect = ({
             </SelectTrigger>
             <SelectContent>
               {supportedTokens
-                .filter((t) => t.chainId == chainId)
+              .filter((chain) => [56, 8453,97].includes(chain.chainId))
+                .filter((t) => t.chainId == chainId &&t.isSubscriptionSupported)
                 .map((token, i: number) => (
                   <SelectItem key={i} value={token.address}>
                     <div className="flex items-center gap-4">
