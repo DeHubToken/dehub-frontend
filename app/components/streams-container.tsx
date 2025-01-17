@@ -46,8 +46,8 @@ export function StreamsContainer(props: Props) {
     isInfiniteScroll = true
   } = props;
 
-  initialData.forEach((nft) => {
-    streamsMap.set(`${nft.tokenId}`, nft);
+  initialData?.forEach((nft) => {
+    streamsMap?.set(`${nft.tokenId}`, nft);
   });
 
   const [data, setData] = useState(initialData);

@@ -32,8 +32,7 @@ export function StreamVideoSkeleton() {
 }
 
 export function StreamVideoProvider(props: { nft: NFT }) {
-  const { nft } = props;
-
+  const { nft } = props; 
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<Player | null>(null);
 
@@ -49,12 +48,17 @@ export function StreamVideoProvider(props: { nft: NFT }) {
 
   const isFreeStream =
     !nft?.streamInfo ||
-    !(
-      nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
-      nft?.streamInfo?.[streamInfoKeys?.isPayPerView]
-    )
+      !(
+        nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
+        nft?.streamInfo?.[streamInfoKeys?.isPayPerView]|| nft?.plansDetails?.length>0
+      )
       ? true
       : false;
+
+  function isAnySubscribed(array: any) {
+    // Check if any object in the array has alreadySubscribed set to true
+    return array.some((item: any) => item.alreadySubscribed === true);
+  }
 
   // Effect to check if video is loaded or not
   useEffect(() => {
@@ -62,11 +66,10 @@ export function StreamVideoProvider(props: { nft: NFT }) {
       videoRef.current.onloadedmetadata = () => setLoading(false);
     }
   }, [account, chainId, nft.videoUrl, sig, timestamp]);
-
-  // Effect to check if video is free or locked
+ 
   useEffect(() => {
     async function createUrl() {
-      if (isFreeStream || isOwner(nft, account || "")) {
+      if (isFreeStream || isAnySubscribed(nft.plansDetails) || isOwner(nft, account || "")) {
         setShowControl(true);
         return;
       }
@@ -131,12 +134,12 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     );
   }
 
-  if (
-    nft.videoUrl &&
-    !isTranscodingVideo &&
-    !streamStatus?.streamStatus?.isLockedWithLockContent &&
-    !streamStatus?.streamStatus?.isLockedWithPPV
-  ) {
+  // nft.videoUrl &&
+  // !isTranscodingVideo &&
+  // !streamStatus?.streamStatus?.isLockedWithLockContent &&
+  // !streamStatus?.streamStatus?.isLockedWithPPV
+
+  if (isFreeStream || isAnySubscribed(nft.plansDetails) || isOwner(nft, account || "")) {
     return (
       <div className="relative h-auto w-full overflow-hidden rounded-2xl">
         {loading && <StreamVideoSkeleton />}
@@ -158,25 +161,39 @@ export function StreamVideoProvider(props: { nft: NFT }) {
       </div>
     );
   }
-
   if (
     streamStatus?.streamStatus?.isLockedWithLockContent ||
     streamStatus?.streamStatus?.isLockedWithPPV ||
-    error
+    error ||
+    !isAnySubscribed(nft.plansDetails)
   ) {
     return (
       <div className="flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl p-3">
+        {/* Check if stream is locked with content */}
         <p>
           {streamStatus?.streamStatus?.isLockedWithLockContent
             ? `Please hold at least ${nft.streamInfo?.[streamInfoKeys?.lockContentAmount]} ${nft.streamInfo?.[streamInfoKeys?.lockContentTokenSymbol]} to unlock.`
-            : streamStatus?.streamStatus?.isLockedWithPPV
-              ? `Unlock PPV stream with ${nft.streamInfo?.[streamInfoKeys?.payPerViewAmount]}  ${nft.streamInfo?.[streamInfoKeys?.payPerViewTokenSymbol]}`
-              : `Error, please report by sending link to tech@dehub.net`}
+            : null}
         </p>
+        {/* Check if stream is locked with PPV */}
+        <p>
+          {streamStatus?.streamStatus?.isLockedWithPPV
+            ? `Unlock PPV stream with ${nft.streamInfo?.[streamInfoKeys?.payPerViewAmount]} ${nft.streamInfo?.[streamInfoKeys?.payPerViewTokenSymbol]}`
+            : null}
+        </p>
+
+        {/* Check if no subscription is active */}
+        <p>
+          {!isAnySubscribed(nft.plansDetails) && nft.plansDetails.length > 0
+            ? "Buy a subscription"
+            : null}
+        </p>
+
+        {/* Check if there is an error */}
+        <p>{error ? "Error, please report by sending link to tech@dehub.net" : null}</p>
       </div>
     );
   }
-
   return (
     <div className="flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl p-3">
       <p>Something went wrong</p>

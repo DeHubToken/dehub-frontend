@@ -1,4 +1,7 @@
+import objectToGetParams from "@/libs/utils";
+
 import { env } from "@/configs";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 export function getImageUrl(url: string, width?: number, height?: number) {
   if (!url) return "";
@@ -18,6 +21,14 @@ export function getImageUrl(url: string, width?: number, height?: number) {
     return url + q; // Fallback to the original URL
   }
 }
+export function getImageUrlApi(tokenId: string | number,address?:string,width?: number, height?: number) {
+ 
+  const q = width && height ? `&w=${width}&h=${height}` : "";
+  return env.apiBaseUrl + "/nfts/images/"+ + tokenId + "?address"+address+q;
+}
+export function getImageUrlApiSimple(url: string) {
+  return env.apiBaseUrl + "/" + url;
+}
 
 export function getAvatarUrl(url: string) {
   if (!url) return "/images/default-avatar.png";
@@ -27,10 +38,23 @@ export function getAvatarUrl(url: string) {
   return `${env.cdnBaseUrl}avatars/${fileName}`;
 }
 
-export function getCoverUrl(url: string) {
-  if (!url) return "/images/default-banner.png";
+export function getGroupAvatarUrl(url: string) {
+  if (!url) return "/icons/team.png";
 
   const fileName = url.split("/").pop();
 
+  return `${env.cdnBaseUrl}avatars/${fileName}`;
+}
+
+export function getCoverUrl(url: string) {
+  if (!url) return "/images/default-banner.png"; 
+  const fileName = url.split("/").pop(); 
+
   return `${env.cdnBaseUrl}covers/${fileName}`;
+}
+export function dmMediaUrl(url: string) {   
+  return `${env.cdnBaseUrl}${url}`;
+}
+export function commentImageUrl(url: string) {   
+  return `${env.cdnBaseUrl}${url}`;
 }

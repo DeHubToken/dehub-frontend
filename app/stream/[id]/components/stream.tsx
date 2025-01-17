@@ -86,7 +86,6 @@ export async function Stream(props: { tokenId: number }) {
   }
 
   const nft = response.data.result;
-
   return (
     <div className="h-auto min-h-screen w-full px-4 py-20 xl:max-w-[75%] xl:flex-[0_0_75%]">
       <Suspense fallback={<StreamVideoSkeleton />}>
@@ -107,8 +106,7 @@ async function StreamVideo(props: { tokenId: number; address: string }) {
     return null;
   }
 
-  const nft = response.data.result;
-
+  const nft = response.data.result; 
   // Checking for transcoding status
   const isTranscodingVideo = nft?.transcodingStatus === "on";
   if (isTranscodingVideo) {
@@ -117,12 +115,11 @@ async function StreamVideo(props: { tokenId: number; address: string }) {
 
   // Is free stream
   let isFreeStream = false;
-  if (!nft?.streamInfo) isFreeStream = true;
-  if (
-    nft.streamInfo &&
-    !nft?.streamInfo[streamInfoKeys?.isLockContent] &&
-    !nft?.streamInfo[streamInfoKeys?.isPayPerView]
-  ) {
+
+  if (!nft?.streamInfo)
+    isFreeStream = true;
+
+  if (nft.streamInfo && !nft?.streamInfo[streamInfoKeys?.isLockContent] && !nft?.streamInfo[streamInfoKeys?.isPayPerView]) {
     isFreeStream = true;
   }
 

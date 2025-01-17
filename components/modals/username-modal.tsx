@@ -60,13 +60,14 @@ export function UserNameModal() {
 
       if (res.data.error) {
         toast.error(res.data.error_msg || "An error occurred. Please try again later.");
+        setStatus("idle");
         return;
       }
 
       window.location.reload();
     } catch (err) {
       toast.error("An error occurred. Please try again later.");
-      setStatus("error");
+      setStatus("idle");
       return;
     }
   }

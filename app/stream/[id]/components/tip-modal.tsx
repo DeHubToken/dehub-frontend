@@ -22,7 +22,6 @@ import { Input } from "@/components/ui/input";
 import { useContract, useERC20Contract, useStreamControllerContract } from "@/hooks/use-web3";
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
-
 import MULTICALL_ABI from "@/web3/abis/multicall.json";
 import { STREAM_CONTROLLER_CONTRACT_ADDRESSES } from "@/web3/configs";
 import { getReadableNumber } from "@/web3/utils/format";
@@ -149,7 +148,7 @@ export function TipModal(props: Props) {
         </DialogHeader>
         <div className="flex h-auto w-full flex-col items-start justify-start gap-4">
           <p className="text-base">
-            Enter amount of <span className="font-semibold text-theme-orange-500">$BJ :</span>
+            Enter amount of <span className="text-theme-orange-500 font-semibold">$BJ :</span>
           </p>
           <Input
             type="number"
