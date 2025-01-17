@@ -166,17 +166,17 @@ const TEST_NETWORKS = {
 };
 
 const MAIN_NETWORKS = {
-  [ChainId.MAINNET]: {
-    chainId: "0x1",
-    chainName: "Ethereum",
-    nativeCurrency: {
-      name: "Ethereum",
-      symbol: "ETH",
-      decimals: 18,
-    },
-    rpcUrls: [`https://rpc.ankr.com/eth`],
-    blockExplorerUrls: ["https://etherscan.io"],
-  },
+  // [ChainId.MAINNET]: {
+  //   chainId: "0x1",
+  //   chainName: "Ethereum",
+  //   nativeCurrency: {
+  //     name: "Ethereum",
+  //     symbol: "ETH",
+  //     decimals: 18,
+  //   },
+  //   rpcUrls: [`https://rpc.ankr.com/eth`],
+  //   blockExplorerUrls: ["https://etherscan.io"],
+  // },
   [ChainId.FANTOM_MAINNET]: {
     chainId: "0xfa",
     chainName: "Fantom",
@@ -221,17 +221,18 @@ const MAIN_NETWORKS = {
     rpcUrls: ["https://exchainrpc.okex.org"],
     blockExplorerUrls: ["https://www.oklink.com/en/okc"],
   },
-  [ChainId.POLYGON_MAINNET]: {
-    chainId: "0x89",
-    chainName: "Polygon",
-    nativeCurrency: {
-      name: "Matic",
-      symbol: "MATIC",
-      decimals: 18,
-    },
-    rpcUrls: ["https://polygon-rpc.com"],  
-    blockExplorerUrls: ["https://polygonscan.com"],
-  },[ChainId.BASE_MAINNET]: {
+  // [ChainId.POLYGON_MAINNET]: {
+  //   chainId: "0x89",
+  //   chainName: "Polygon",
+  //   nativeCurrency: {
+  //     name: "Matic",
+  //     symbol: "MATIC",
+  //     decimals: 18,
+  //   },
+  //   rpcUrls: ["https://polygon-rpc.com"],  
+  //   blockExplorerUrls: ["https://polygonscan.com"],
+  // },
+  [ChainId.BASE_MAINNET]: {
     chainId: "0x2105",  
     chainName: "Base Mainnet",
     nativeCurrency: {
