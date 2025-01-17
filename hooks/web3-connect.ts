@@ -17,7 +17,13 @@ import {
   useDisconnect,
   useWalletClient
 } from "wagmi";
-import { mainnet, polygon, bsc, bscTestnet, goerli,base } from "@wagmi/chains"; 
+import { 
+  // mainnet,
+  //  polygon,
+    bsc, 
+    bscTestnet,
+     goerli,
+     base } from "@wagmi/chains"; 
 
 
 import { infuraProvider } from "wagmi/providers/infura";
@@ -38,7 +44,10 @@ const providers = [
 ] as any;
 export const { chains, publicClient, webSocketPublicClient } = env.isDevMode
   ? configureChains([bscTestnet, goerli], providers)
-  : configureChains([bsc, mainnet, polygon, base], providers);
+  : configureChains([bsc,
+    //  mainnet,
+      // polygon,
+       base], providers);
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "YOUR_PROJECT_ID";
 const appName = process.env.NEXT_PUBLIC_PROJECT_NAME || "YOUR_PROJECT_NAME";
 
