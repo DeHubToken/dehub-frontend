@@ -39,7 +39,7 @@ export function RecentPanel(props: Props) {
           >
             <figure className="h-32 w-52 overflow-hidden rounded-2xl sm:h-40 sm:w-full sm:max-w-[40%] sm:flex-[0_0_40%] xl:h-28">
               <LazyImage
-                src={getImageUrlApi(item.tokenId, account,256, 256)}
+                src={getImageUrl(item.imageUrl, 256, 256)}
                 alt={item.name || "Upload"}
                 className="size-full object-cover"
               />

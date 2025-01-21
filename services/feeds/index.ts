@@ -70,7 +70,7 @@ export async function getFeedNFTs(params?: SearchParams) {
           range: params.range,
           category: params.category,
           address: params.address,
-          postType:"feed"
+          postType:"feed-all"
         })
       ); 
       const url = `/search_nfts${query}`; 

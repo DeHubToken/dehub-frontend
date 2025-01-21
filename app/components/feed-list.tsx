@@ -87,7 +87,7 @@ export function FeedList(props: FeedProps) {
         range,
         search: q,
         address: account,
-        postType: "feed"
+        postType: "feed-all"
       });
       if (res.success) {
         if (hasSaved) {
