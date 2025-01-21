@@ -9,6 +9,6 @@ export default async function Page() {
   if (categoriesRes.success) {
     categories = categoriesRes.data;
   }
-
+return <>detracted route</>
   return <UploadForm categories={categories} />;
 }

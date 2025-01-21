@@ -34,12 +34,11 @@ export function ImageWithLoader(props: {
     return () => {
       socket.off(props.tokenId);
     };
-  }, []);
-
+  }, []); 
   return (
     <div className="relative h-full overflow-hidden">
       <LazyImage
-        src={getImageUrlApi(props.tokenId?.toString(),props.address, 256, 256)}
+        src={getImageUrl(props.url, 256, 256)}
         alt={props.name || "Upload"}
         className={`absolute inset-0 size-full object-cover transition duration-300 ${
           props.isHidden ? "blur-md" : ""
