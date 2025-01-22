@@ -219,7 +219,7 @@ const PayNowModal = (props: Props) => {
                   }`}
                 >
                   {isProcessing ? <Spinner /> : "Send Fund"}
-                </button>:<div>Switch Chain to {chain?.label}</div>}
+                </button>:<div>Switch Chain to {chain?.label} pay</div>}
               </div>
             );
           })}
@@ -230,7 +230,7 @@ const PayNowModal = (props: Props) => {
           className="mt-6 w-full rounded-lg bg-gray-200 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
         >
           Close
-        </button>
+        </button> 
       </DialogContent>
     </Dialog>
   );
