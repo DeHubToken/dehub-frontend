@@ -75,8 +75,15 @@ const TipModal = () => {
       setIsProcessing(true);
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
       // Estimate gas price with a 10% increase
+      // Check the balance of the sender
+      const balance = await tokenContract.balanceOf(account);
+      if (balance.lt(adjustedAmount)) {
+        toast.error("Insufficient balance to complete the transaction.");
+        setIsProcessing(false);
+        return;
+      }
       const estimatedGasPrice = await library.getGasPrice();
-      const adjustedGasPrice = estimatedGasPrice.mul(BigNumber.from(110)).div(BigNumber.from(100)); 
+      const adjustedGasPrice = estimatedGasPrice.mul(BigNumber.from(110)).div(BigNumber.from(100));
       // Estimate gas limit
       const estimatedGasLimit = await tokenContract.estimateGas.transfer(
         selectAddress,
