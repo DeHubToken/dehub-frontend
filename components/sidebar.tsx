@@ -170,7 +170,7 @@ const groups = [
         id: "upload",
         name: "Upload",
         icon: <Upload />,
-        url: () => "/upload-feed"
+        url: () => "/upload"
       },
       {
         id: "broadcast",

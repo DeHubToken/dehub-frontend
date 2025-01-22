@@ -5,6 +5,7 @@ import type { TMessage } from "../utils";
 import { useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Coins, Images } from "lucide-react";
 
 import { AvatarStar } from "@/components/icons/avatar-star";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -52,7 +53,7 @@ export function ContactList(props: ContactListProps) {
       // First, sort by tip amount (descending)
       if (bTip !== aTip) {
         return bTip - aTip;
-      } 
+      }
       // If tip amounts are equal, then sort by the timestamp of the last message
       return dayjs(a.lastMessageAt).isBefore(dayjs(b.lastMessageAt)) ? 1 : -1;
     });
@@ -156,19 +157,20 @@ const UserInfo = ({ participant, isPro = true, lastOnline, lastMessage, tips }: 
                 className="flex items-center space-x-2 rounded-full  px-3 py-1 text-sm"
               >
                 <span>
-                {tip.totalTip}  Tip by 
+                  {tip.totalTip} Tip by
                   {tip.userDetails.displayName ||
                     tip.userDetails.username ||
                     tip.userDetails.address}{" "}
-                  
                 </span>
               </span>
             ))}
           </div>
         )}
         <div>
-          <p className="text-sm text-gray-500">{lastMessage?.content}</p>
+          <p className="text-sm text-gray-500">{contentWords(lastMessage?.content, 0, 6)}</p>
         </div>
+        <MessageMetaData lastMessage={lastMessage}/>
+
       </div>
     </>
   );
@@ -192,9 +194,29 @@ const GroupInfo = ({ group, isPro = false, lastOnline = true, lastMessage }: any
           <span className="text-xs text-gray-500">{dayjs(lastMessage.createdAt).fromNow()}</span>
         </div>
         <div>
-          <p className="text-sm text-gray-500">{lastMessage?.content}</p>
+          <p className="text-sm text-gray-500">{contentWords(lastMessage?.content, 0, 6)}</p>
         </div>
+        <MessageMetaData lastMessage={lastMessage}/>
       </div>
     </>
+  );
+};
+
+const contentWords = (content: string, start: number, end: number) => {
+  if (!content) {
+    return "";
+  }
+  return (
+    content?.split(" ").slice(start, end).join(" ") +
+    (content?.split(" ").length > end ? "..." : "")
+  );
+};
+
+const MessageMetaData = ({ lastMessage }:any) => {
+  return (
+    <div className="flex gap-5">
+      {lastMessage.msgType == "media" && <Images />}
+      {lastMessage.isPaid && <Coins />}
+    </div>
   );
 };

@@ -116,6 +116,15 @@ const PayNowModal = (props: Props) => {
 
       setIsProcessing(true);
       const adjustedAmount = BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
+
+      // Check the balance of the sender
+      const balance = await tokenContract.balanceOf(account);
+      if (balance.lt(adjustedAmount)) {
+        toast.error("Insufficient balance to complete the transaction.");
+        setIsProcessing(false);
+        return;
+      }
+
       // Estimate gas price with a 10% increase
       const estimatedGasPrice = await library.getGasPrice();
       const adjustedGasPrice = estimatedGasPrice.mul(BigNumber.from(110)).div(BigNumber.from(100));
@@ -155,6 +164,7 @@ const PayNowModal = (props: Props) => {
 
       setTnxId(tnxData._id || tnxData.data._id);
     } catch (error: any) {
+      console.log("dddddddddddd",error)
       toast.error(error.message || "Transaction failed.");
       setIsProcessing(false);
     }
@@ -177,7 +187,7 @@ const PayNowModal = (props: Props) => {
             return (
               <div
                 key={option._id}
-                className="rounded-lg border bg-gray-50 p-4 transition hover:bg-gray-100"
+                className="rounded-lg border  p-4 transition  "
               >
                 <p className="text-sm text-gray-700">
                   Amount:
@@ -198,17 +208,18 @@ const PayNowModal = (props: Props) => {
                 <p className="text-sm text-gray-700">
                   Chain: <span className="font-medium">{chain?.label || "Unknown Chain"}</span>
                 </p>
-                <button
+
+                {chainId===chain?.chainId?<button
                   onClick={() => handleSendFund(option)}
                   disabled={isProcessing}
-                  className={`mt-2 flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white ${
+                  className={`mt-2 flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium   ${
                     isProcessing
-                      ? "cursor-not-allowed bg-gray-400"
+                      ? "cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700"
                   }`}
                 >
                   {isProcessing ? <Spinner /> : "Send Fund"}
-                </button>
+                </button>:<div>Switch Chain to {chain?.label} pay</div>}
               </div>
             );
           })}
@@ -219,7 +230,7 @@ const PayNowModal = (props: Props) => {
           className="mt-6 w-full rounded-lg bg-gray-200 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
         >
           Close
-        </button>
+        </button> 
       </DialogContent>
     </Dialog>
   );
