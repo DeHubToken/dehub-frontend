@@ -1,20 +1,16 @@
 import React from "react";
-import { ImagePlus } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-
+import { ImagePlus } from "lucide-react"; 
+import { Button } from "@/components/ui/button"; 
 import { cn } from "@/libs/utils";
 import { useDropzone } from "react-dropzone";
-import Image from "next/image";
-
+import Image from "next/image"; 
 const ImageCover = ({
   form,
   thumbnailFile,
   setThumbnailFile,
   setThumbnailPreview, 
   thumbnailPreview, 
-}: any) => {
-
+}: any) => { 
   const {
     getRootProps,
     getInputProps,

@@ -1,13 +1,9 @@
 "use client";
-
 import { Upload } from "lucide-react";
 import { useDropzone } from "react-dropzone";
-
 import { Button } from "@/components/ui/button";
-
 import { getVideoCover } from "@/libs/canvas-preview";
 import { cn } from "@/libs/utils";
-
 const VideoUploadTab = ({
   videoFile,
   setVideoPreview,
@@ -58,7 +54,6 @@ const VideoUploadTab = ({
           </Button>
         )}
       </div>
-
       <div
         {...getRootProps()}
         className={cn(
@@ -83,7 +78,7 @@ const VideoUploadTab = ({
             />
           </>
         )}
-
+       removing blank spaces and unwanted line. 
         {videoPreview && (
           <video
             className="size-full rounded-3xl object-cover"
@@ -98,5 +93,4 @@ const VideoUploadTab = ({
     </>
   );
 };
-
 export default VideoUploadTab;
