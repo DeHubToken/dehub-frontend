@@ -121,7 +121,7 @@ export const NewChatModal = ({ open, setOpen }: { open: boolean; setOpen: (d:boo
                     />
                     <div className="flex flex-col">
                       <span className="font-bold">{user.displayName || user.username}</span>
-                      <span className="text-sm text-gray-500">{user.address}</span>
+                      <span className="text-sm text-gray-500">{`${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}</span>
                     </div>
                     <Button
                       variant="outline"
