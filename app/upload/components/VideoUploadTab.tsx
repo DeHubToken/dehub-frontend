@@ -77,8 +77,7 @@ const VideoUploadTab = ({
               {...getInputProps()}
             />
           </>
-        )}
-       removing blank spaces and unwanted line. 
+        )} 
         {videoPreview && (
           <video
             className="size-full rounded-3xl object-cover"

@@ -211,7 +211,9 @@ export function UploadForm(props: Props) {
   };
   const handleMint = async (data: Form) => {
     if (uploading) return;
+
     setUploading(true);
+
     async function _upload() {
       if (!account) {
         toast.error("Please connect your wallet");
@@ -421,6 +423,125 @@ export function UploadForm(props: Props) {
       toast.error(error);
     }
   }; 
+  useEffect(() => {
+    fetchPlans();
+  }, [account, chainId]);
+  // Update bounty Token address
+  useEffect(() => {
+    const chain = supportedTokensForChain.find((t) => t.value === selectedBountyChain);
+    if (chain) {
+      setSelectedTokenAddress(chain.address);
+    }
+  }, [selectedBountyChain, supportedTokensForChain]);
+  // update isApproved
+  useEffect(() => {
+    const updateIsapproved = async () => {
+      const callDataArray = [];
+      callDataArray.push({
+        contract: bountyTokenContract,
+        functionName: "balanceOf",
+        param: [account],
+        returnKey: `wallet`
+      });
+      callDataArray.push({
+        contract: bountyTokenContract,
+        functionName: "allowance",
+        param: [account, streamControllerContractAddress],
+        returnKey: `allowance`
+      });
+      const bountyToken = supportedTokensForChain.find((t) => t.value === selectedBountyChain);
+      // @ts-expect-error Fix types later
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const multicallResult: any = await multicallRead(multicallContract, callDataArray);
+      if (
+        multicallResult &&
+        bountyAmount &&
+        multicallResult.allowance &&
+        Number(bountyAmount) <
+          Number(ethers.utils.formatUnits(multicallResult.allowance, bountyToken?.decimals))
+      ) {
+        setIsApproved(true);
+      } else {
+        setIsApproved(false);
+      }
+    };
+    updateIsapproved();
+  }, [
+    account,
+    bountyAmount,
+    bountyTokenContract,
+    multicallContract,
+    selectedBountyChain,
+    streamControllerContractAddress,
+    supportedTokensForChain
+  ]);
+  // Lock content
+  useEffect(() => {
+    const streamInfo = form.getValues("streamInfo");
+    const lockContent = { [streamInfoKeys.isLockContent]: isLockedContent };
+    const lockContentToken = { [streamInfoKeys.lockContentTokenSymbol]: token?.symbol || "" };
+
+    const lockContentChainIds = {
+      [streamInfoKeys.lockContentChainIds]: [
+        networksForAToken.find((t) => t.value === network)?.chainId || ""
+      ]
+    };
+    const lockContentAmount = { [streamInfoKeys.lockContentAmount]: amount || 0 };
+    form.setValue("streamInfo", {
+      ...streamInfo,
+      ...lockContent,
+      ...lockContentToken,
+      ...lockContentChainIds,
+      ...lockContentAmount
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLockedContent, token?.symbol, network, amount, networksForAToken]);
+  // Pay per view
+  useEffect(() => {
+    const streamInfo = form.getValues("streamInfo");
+    const payPerView = { [streamInfoKeys.isPayPerView]: isPayPerView };
+    const payPerViewToken = {
+      [streamInfoKeys.payPerViewTokenSymbol]: networkForPPVToken?.symbol || ""
+    };
+    const payPerViewChainIds = {
+      [streamInfoKeys.payPerViewChainIds]: [
+        networksForPPVToken.find((t) => t.value === ppvNetwork)?.chainId || ""
+      ]
+    };
+    const payPerViewAmount = { [streamInfoKeys.payPerViewAmount]: ppvAmount || 0 };
+    form.setValue("streamInfo", {
+      ...streamInfo,
+      ...payPerView,
+      ...payPerViewToken,
+      ...payPerViewChainIds,
+      ...payPerViewAmount
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amount, isPayPerView, network, networkForPPVToken?.symbol, networksForPPVToken]);
+  // Bounty
+  useEffect(() => {
+    const streamInfo = form.getValues("streamInfo");
+    const bounty = { [streamInfoKeys.isAddBounty]: isBounty };
+    const chain = supportedTokensForChain.find((t) => t.value === selectedBountyChain);
+    const bountyToken = { [streamInfoKeys.addBountyTokenSymbol]: chain?.symbol || "" };
+    const bountyChainIds = {
+      [streamInfoKeys.addBountyChainId]: chainId
+    };
+    const bountyFirstXViewer = { [streamInfoKeys.addBountyFirstXViewers]: firstXViewer || 0 };
+    const bountyFirstXComment = { [streamInfoKeys.addBountyFirstXComments]: firstXComment || 0 };
+    const amount = { [streamInfoKeys.addBountyAmount]: bountyAmount || 0 };
+    form.setValue("streamInfo", {
+      ...streamInfo,
+      ...bounty,
+      ...bountyToken,
+      ...bountyChainIds,
+      ...bountyFirstXViewer,
+      ...bountyFirstXComment,
+      ...amount
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bountyAmount, chainId, firstXComment, firstXViewer, isBounty, supportedTokensForChain]);
+
   useEffect(() => {
     fetchPlans();
   }, [account, chainId]);
