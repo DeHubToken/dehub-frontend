@@ -3,8 +3,7 @@ import React from "react";
 interface TabsProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
-}
-
+} 
 const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab }) => {
   return (
     <div className="flex justify-center gap-6 w-full   pb-4">

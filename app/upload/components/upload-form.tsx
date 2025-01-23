@@ -168,7 +168,6 @@ export function UploadForm(props: Props) {
     () => supportedTokens.filter((e) => e.chainId === chainId),
     [chainId]
   );
-
   const isLockedContent = form.watch("lockContent");
   const selectedToken = form.watch("token");
   const network = form.watch("network");
@@ -189,7 +188,6 @@ export function UploadForm(props: Props) {
   const networksForPPVToken = networkForPPVToken
     ? getNetworksForToken(networkForPPVToken.symbol, supportedTokensForPPV)
     : supportedNetworks;
-
   const isBounty = form.watch("bounty");
   const firstXViewer = form.watch("bountyFirstXViewer");
   const firstXComment = form.watch("bountyFirstXComment");
@@ -221,14 +219,11 @@ export function UploadForm(props: Props) {
         toast.error("Please connect your wallet");
         return;
       }
-
       try {
         const sigData = await getSignInfo(library, account);
-
         const formData = new FormData();
         formData.append("name", data.title);
         formData.append("description", data.description);
-
         if (activeTab === "Feed" && imagePreviews.length > 0) {
           formData.append("postType", "feed-images");
           imagePreviews.map((feedImage: PreviewFile) => {
@@ -245,7 +240,6 @@ export function UploadForm(props: Props) {
 
         data.streamInfo &&
           formData.append("streamInfo", JSON.stringify(filteredStreamInfo(data.streamInfo)));
-
         formData.append(
           "category",
           data.category?.length > 0 ? JSON.stringify(data.category.map((e) => e)) : ""
@@ -257,7 +251,6 @@ export function UploadForm(props: Props) {
         if (data.isRequireSubscription) {
           formData.append("plans", JSON.stringify(data.plans));
         }
-
         const res = await minNft(formData);
         if (!res.success) {
           setUploading(false);
@@ -265,12 +258,10 @@ export function UploadForm(props: Props) {
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result: any = res.data;
-
         if (result?.error) {
           setUploading(false);
           throw new Error(result?.error_msg || "NFT mint has failed!");
-        }
-
+        } 
         if (data.streamInfo?.[streamInfoKeys?.isAddBounty]) {
           try {
             const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
@@ -295,15 +286,12 @@ export function UploadForm(props: Props) {
             if (tx?.hash) {
               addTransaction({ hash: tx.hash, description: "Mint With Bounty", confirmations: 3 });
             }
-            await tx.wait(1);
-
-            form.reset();
-
+            await tx.wait(1); 
+            form.reset(); 
             // if (!resultFromModal) {
             //   setUploading(false);
             //   throw new Error("NFT mint has failed!");
-            // }
-
+            // } 
             await invalidateUpload();
             setUploading(false);
             return;
@@ -342,15 +330,12 @@ export function UploadForm(props: Props) {
             }
           );
           console.log("here though 2", tx);
-
           if (tx?.hash) {
             addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
           }
-
           await tx.wait(1);
           form.reset();
         }
-
         await invalidateUpload();
         if (activeTab == "video") {
           router.push(`/stream/${result.createdTokenId}`);
@@ -372,7 +357,6 @@ export function UploadForm(props: Props) {
         throw new Error(err.message);
       }
     }
-
     toast.promise(_upload(), {
       loading: "Uploading...",
       success: () => "Upload confirmed",
@@ -385,12 +369,10 @@ export function UploadForm(props: Props) {
       toast.error("Please connect your wallet");
       return;
     }
-
     if (!user) {
       toast.error("Please connect your wallet");
       return;
     }
-
     const isValid = isValidDataForMinting(
       data.title,
       data.description,
@@ -409,12 +391,10 @@ export function UploadForm(props: Props) {
         return;
       }
     }
-
     if (isValid.isError) {
       toast.error(isValid.error);
       return;
     }
-
     if (isBounty) {
       const addBountyTotalAmount = getTotalBountyAmount(data.streamInfo, true);
       if (data.streamInfo) {
@@ -426,12 +406,10 @@ export function UploadForm(props: Props) {
       }
       return;
     }
-
     const description = `Are you sure the details are correct and you wish to proceed? NFT uploads can't be edited and it's on chain forever`;
     setModalDescription(description);
     setShowConfirmationModal(true);
-  };
-
+  }; 
   const fetchPlans = async () => {
     const obj = {
       address: account?.toLowerCase()
@@ -444,7 +422,125 @@ export function UploadForm(props: Props) {
     if (error) {
       toast.error(error);
     }
-  };
+  }; 
+  useEffect(() => {
+    fetchPlans();
+  }, [account, chainId]);
+  // Update bounty Token address
+  useEffect(() => {
+    const chain = supportedTokensForChain.find((t) => t.value === selectedBountyChain);
+    if (chain) {
+      setSelectedTokenAddress(chain.address);
+    }
+  }, [selectedBountyChain, supportedTokensForChain]);
+  // update isApproved
+  useEffect(() => {
+    const updateIsapproved = async () => {
+      const callDataArray = [];
+      callDataArray.push({
+        contract: bountyTokenContract,
+        functionName: "balanceOf",
+        param: [account],
+        returnKey: `wallet`
+      });
+      callDataArray.push({
+        contract: bountyTokenContract,
+        functionName: "allowance",
+        param: [account, streamControllerContractAddress],
+        returnKey: `allowance`
+      });
+      const bountyToken = supportedTokensForChain.find((t) => t.value === selectedBountyChain);
+      // @ts-expect-error Fix types later
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const multicallResult: any = await multicallRead(multicallContract, callDataArray);
+      if (
+        multicallResult &&
+        bountyAmount &&
+        multicallResult.allowance &&
+        Number(bountyAmount) <
+          Number(ethers.utils.formatUnits(multicallResult.allowance, bountyToken?.decimals))
+      ) {
+        setIsApproved(true);
+      } else {
+        setIsApproved(false);
+      }
+    };
+    updateIsapproved();
+  }, [
+    account,
+    bountyAmount,
+    bountyTokenContract,
+    multicallContract,
+    selectedBountyChain,
+    streamControllerContractAddress,
+    supportedTokensForChain
+  ]);
+  // Lock content
+  useEffect(() => {
+    const streamInfo = form.getValues("streamInfo");
+    const lockContent = { [streamInfoKeys.isLockContent]: isLockedContent };
+    const lockContentToken = { [streamInfoKeys.lockContentTokenSymbol]: token?.symbol || "" };
+
+    const lockContentChainIds = {
+      [streamInfoKeys.lockContentChainIds]: [
+        networksForAToken.find((t) => t.value === network)?.chainId || ""
+      ]
+    };
+    const lockContentAmount = { [streamInfoKeys.lockContentAmount]: amount || 0 };
+    form.setValue("streamInfo", {
+      ...streamInfo,
+      ...lockContent,
+      ...lockContentToken,
+      ...lockContentChainIds,
+      ...lockContentAmount
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLockedContent, token?.symbol, network, amount, networksForAToken]);
+  // Pay per view
+  useEffect(() => {
+    const streamInfo = form.getValues("streamInfo");
+    const payPerView = { [streamInfoKeys.isPayPerView]: isPayPerView };
+    const payPerViewToken = {
+      [streamInfoKeys.payPerViewTokenSymbol]: networkForPPVToken?.symbol || ""
+    };
+    const payPerViewChainIds = {
+      [streamInfoKeys.payPerViewChainIds]: [
+        networksForPPVToken.find((t) => t.value === ppvNetwork)?.chainId || ""
+      ]
+    };
+    const payPerViewAmount = { [streamInfoKeys.payPerViewAmount]: ppvAmount || 0 };
+    form.setValue("streamInfo", {
+      ...streamInfo,
+      ...payPerView,
+      ...payPerViewToken,
+      ...payPerViewChainIds,
+      ...payPerViewAmount
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amount, isPayPerView, network, networkForPPVToken?.symbol, networksForPPVToken]);
+  // Bounty
+  useEffect(() => {
+    const streamInfo = form.getValues("streamInfo");
+    const bounty = { [streamInfoKeys.isAddBounty]: isBounty };
+    const chain = supportedTokensForChain.find((t) => t.value === selectedBountyChain);
+    const bountyToken = { [streamInfoKeys.addBountyTokenSymbol]: chain?.symbol || "" };
+    const bountyChainIds = {
+      [streamInfoKeys.addBountyChainId]: chainId
+    };
+    const bountyFirstXViewer = { [streamInfoKeys.addBountyFirstXViewers]: firstXViewer || 0 };
+    const bountyFirstXComment = { [streamInfoKeys.addBountyFirstXComments]: firstXComment || 0 };
+    const amount = { [streamInfoKeys.addBountyAmount]: bountyAmount || 0 };
+    form.setValue("streamInfo", {
+      ...streamInfo,
+      ...bounty,
+      ...bountyToken,
+      ...bountyChainIds,
+      ...bountyFirstXViewer,
+      ...bountyFirstXComment,
+      ...amount
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bountyAmount, chainId, firstXComment, firstXViewer, isBounty, supportedTokensForChain]);
 
   useEffect(() => {
     fetchPlans();
@@ -607,8 +703,7 @@ export function UploadForm(props: Props) {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
-
+              /> 
               <div className="flex h-auto w-full flex-col items-start justify-start gap-2 sm:flex-row sm:items-center sm:justify-start">
                 <p className="min-w-[20%] text-lg">Category</p>
 
@@ -835,7 +930,6 @@ export function UploadForm(props: Props) {
                     </Select>
                   )}
                 />
-
                 <Controller
                   name="payPerViewNetwork"
                   control={form.control}
@@ -858,7 +952,6 @@ export function UploadForm(props: Props) {
                     </Select>
                   )}
                 />
-
                 <Input
                   disabled={!isPayPerView}
                   type="text"
@@ -871,7 +964,6 @@ export function UploadForm(props: Props) {
 
             <div className="relative flex size-auto flex-wrap items-start justify-start border-b-2 border-gray-300/5 pb-8 sm:flex-nowrap sm:border-b-0 sm:pb-0 2xl:items-center">
               <p className="w-1/2 text-lg sm:w-[240px] lg:min-w-[15%]">Watch2Earn</p>
-
               <div className="flex size-auto w-1/2 items-center justify-end gap-4 sm:w-auto">
                 <Controller
                   name="bounty"
@@ -880,7 +972,6 @@ export function UploadForm(props: Props) {
                     <Switch checked={field.value} onCheckedChange={field.onChange} />
                   )}
                 />
-
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -903,7 +994,6 @@ export function UploadForm(props: Props) {
                   </Tooltip>
                 </TooltipProvider>
               </div>
-
               <div className="ml-0 mt-6 flex w-full flex-wrap items-center justify-between gap-y-3 sm:ml-6 sm:mt-0 sm:size-auto sm:gap-6">
                 <Controller
                   name="bountyChain"
@@ -929,14 +1019,12 @@ export function UploadForm(props: Props) {
                     </Select>
                   )}
                 />
-
                 <Button
                   disabled
                   className="h-8 w-[30%] rounded-full px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm"
                 >
                   {supportedNetworks.find((e) => e.chainId === chainId)?.value}
                 </Button>
-
                 <Input
                   disabled={!isBounty}
                   type="text"
@@ -944,7 +1032,6 @@ export function UploadForm(props: Props) {
                   className="h-8 w-[40%] rounded-full border-none px-2 text-xs sm:h-10 sm:w-[110px] sm:px-5 sm:text-sm"
                   {...form.register("bountyFirstXViewer")}
                 />
-
                 <Input
                   disabled={!isBounty}
                   type="text"
@@ -952,7 +1039,6 @@ export function UploadForm(props: Props) {
                   className="h-8 w-[48.5%] rounded-full border-none px-2 text-xs sm:h-10 sm:w-[110px] sm:px-5 sm:text-sm"
                   {...form.register("bountyFirstXComment")}
                 />
-
                 <Input
                   disabled={!isBounty}
                   type="text"
@@ -962,10 +1048,8 @@ export function UploadForm(props: Props) {
                 />
               </div>
             </div>
-
             <div className="relative flex size-auto flex-wrap items-start justify-start border-b-2 border-gray-300/5 pb-8 sm:flex-nowrap sm:border-b-0 sm:pb-0 2xl:items-center">
               <p className="w-1/2 text-lg sm:w-[240px] lg:min-w-[15%]">Add Subscription</p>
-
               <div className="flex size-auto w-1/2 items-center justify-end gap-4 sm:w-auto">
                 <Controller
                   name="isRequireSubscription"
@@ -974,7 +1058,6 @@ export function UploadForm(props: Props) {
                     <Switch checked={field.value} onCheckedChange={field.onChange} />
                   )}
                 />
-
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -997,7 +1080,6 @@ export function UploadForm(props: Props) {
                   </Tooltip>
                 </TooltipProvider>
               </div>
-
               <div className="ml-0 mt-6 flex w-full flex-wrap items-center justify-between gap-y-3 sm:ml-6 sm:mt-0 sm:size-auto sm:gap-6">
                 <Controller
                   name="plans"
@@ -1040,7 +1122,6 @@ export function UploadForm(props: Props) {
                 />
               </div>
             </div>
-
             <Button
               className="relative h-auto w-full overflow-hidden rounded-md py-4 text-2xl sm:text-4xl"
               size="lg"
@@ -1059,7 +1140,6 @@ export function UploadForm(props: Props) {
           </div>
         </div>
       </Form>
-
       <Dialog open={showConfirmationModal} onOpenChange={setShowConfirmationModal}>
         <DialogContent>
           <DialogHeader>
@@ -1085,8 +1165,7 @@ export function UploadForm(props: Props) {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
-
+      </Dialog> 
       {/* Bounty upload modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent>

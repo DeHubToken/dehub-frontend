@@ -289,13 +289,13 @@ export function BenefitList({ control, tierIndex }: any) {
         {benefitFields.map((field: { id: string; value: string }, n: number) => (
           <div
             key={field.id}
-            className="relative flex select-none justify-center gap-1 rounded-lg bg-theme-background px-8 py-6 text-center text-lg text-gray-500 outline-none sm:py-2"
+            className="relative flex select-none justify-center gap-1 rounded-lg bg-theme-background px-8 py-6  text-lg text-gray-500 outline-none sm:py-2"
           >
-            <CheckCircle />
+            <CheckCircle className=" absolute left-1" />
             {field.value}
             <span
               onClick={() => removeBenefit(n)}
-              className="absolute -right-1 -top-2 cursor-pointer text-red-600"
+              className="absolute right-1 -top-2 cursor-pointer text-red-600"
             >
               <CrossCircled />
             </span>
@@ -347,14 +347,14 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId,i
       {/* Chain List Section */}
       <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_60%]">
         {tier?.chains?.map((field: any, index: number) => (
-          <div className="mb-4 ml-5 flex-wrap flex w-full items-center justify-between gap-5" key={field.id}>
+          <div className="mb-4 pl-5 pr-5 flex-wrap flex w-full items-center  gap-5 mt-5" key={field.id}>
             {/* Chain ID or Label */}
-            <div className="w-full flex-shrink-0 text-center sm:w-auto sm:text-left">
+            <div className="w-auto flex-shrink-0  sm:w-auto sm:text-left">
               {field.chainId}) {supportedNetworks.find((c) => c.chainId == field.chainId)?.label}
             </div>
 
             {/* Currency Select */}
-            <div className="w-full sm:w-40 md:w-48">
+            <div className="w-auto md:[w-auto] sm:w-40 md:w-48 focus:[box-shadow:none]">
               <CurrencySelect
                 control={control}
                 chainId={field.chainId}
@@ -364,7 +364,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId,i
             </div>
 
             {/* Price Input */}
-            <div className="w-full sm:w-40 md:w-48">
+            <div className="w-auto sm:w-40 md:w-48">
               <div className="flex items-center justify-center gap-5 align-middle">
                 <label> Amount: </label>
                 <input
@@ -373,7 +373,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId,i
                   style={{minWidth:100}}
                   placeholder="Enter price"
                   disabled={field.isPublished}
-                  className="w-full rounded-md border bg-gray-100 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-md border bg-gray-100 px-4 py-2  text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   {...register(`tier.chains.${index}.price`, {
                     valueAsNumber: true,
                     required: "Amount is Required",
@@ -515,7 +515,7 @@ export const CurrencySelect = ({
             }} // Update the field value on change
             disabled={disabled}
           >
-            <SelectTrigger className="h-full min-w-32 rounded-none bg-transparent dark:bg-transparent">
+            <SelectTrigger className="h-full min-w-32 rounded-none bg-transparent dark:bg-transparent text-base">
               <SelectValue placeholder="Select token" />
             </SelectTrigger>
             <SelectContent>
@@ -527,10 +527,10 @@ export const CurrencySelect = ({
                     <div className="flex items-center gap-4">
                       <Image
                         src={token.iconUrl}
-                        width={24}
-                        height={24}
+                        width={15}
+                        height={15}
                         alt={token.address}
-                        className="size-10"
+                        className="size-6"
                       />
                       <span className="text-lg">{token.label}</span>
                     </div>
