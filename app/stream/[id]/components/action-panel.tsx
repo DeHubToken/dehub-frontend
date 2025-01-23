@@ -60,7 +60,7 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
           <PPVModal nft={nft} />
           <TipModal tokenId={tokenId} to={nft.minter} />
           <ClaimAsViewer nft={nft} tokenId={tokenId} />
-          <SubscriptionModal plans={nft?.plansDetails} avatarImageUrl={nft.minterAvatarUrl} displayName={nft.mintername || nft.minter}/>
+          <SubscriptionModal plans={nft?.plansDetails} avatarImageUrl={nft.minterAvatarUrl} aboutMe={nft?.minterAboutMe} displayName={nft.mintername || nft.minter}/>
           <ClaimAsCommentor nft={nft} tokenId={tokenId} />
           <div className="absolute right-0 top-0 size-auto sm:hidden">
             <Share />
