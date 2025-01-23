@@ -37,7 +37,7 @@ export function SubscriptionModal({ avatarImageUrl, displayName, plans = [] }: a
           <CirclePlus className="size-5" /> Subscribe
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[1400px] sm:rounded-3xl">
+      <DialogContent className="max-w-[1200px] sm:rounded-3xl max-h-[80vh] overflow-auto">
         <DialogTitle className="sr-only">Subscribe</DialogTitle>
         <DialogDescription className="sr-only">Subscribe to my premium plans</DialogDescription>
         <DialogHeader className="flex flex-row gap-4">
@@ -93,7 +93,7 @@ export function SubscriptionCard(props: React.HTMLAttributes<HTMLDivElement>) {
     <div
       {...props}
       className={cn(
-        "flex max-h-fit min-w-[calc((250/16)*1rem)] max-w-[calc((250/16)*1rem)] flex-col items-center gap-8 rounded-lg border bg-theme-mine-shaft-dark py-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft"
+        "flex max-h-fit min-w-[calc((250/16)*1rem)] max-w-[calc((250/16)*1rem)] flex-col items-center gap-8 rounded-lg border bg-theme-mine-shaft-dark py-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft  mt-0 mr-auto ml-auto md:m-0"
       )}
     />
   );
@@ -104,7 +104,7 @@ export function SubscriptionCardHeader(props: React.HTMLAttributes<HTMLDivElemen
     <div
       {...props}
       className={cn(
-        "border-theme-monochrome-600 flex max-w-[calc((170/16)*1rem)] flex-col items-center gap-4 border-b px-5",
+        "border-theme-monochrome-600 flex  flex-col items-center gap-4 border-b px-5",
         props.className
       )}
     >
@@ -189,10 +189,10 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
 export function SubscriptionBenefits(props: { benefits: string[] }) {
   const { benefits } = props;
   return (
-    <ul className="flex flex-col gap-3">
+    <ul className="flex flex-col gap-3 relative">
       {benefits.map((benefit) => (
-        <li key={benefit} className="flex items-center gap-4">
-          <CheckCircle />
+        <li key={benefit} className="flex items-center gap-4 relative pl-8">
+          <CheckCircle className=" absolute left-1 top-1" />
           <span className="text-xs">{benefit}</span>
         </li>
       ))}
