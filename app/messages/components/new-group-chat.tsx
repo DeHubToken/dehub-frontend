@@ -9,7 +9,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
@@ -24,7 +24,7 @@ import { useMessage } from "./provider";
 
 interface SearchUserResponse {
   success: boolean;
-  data?: { users: User[],message?: string };
+  data?: { users: User[]; message?: string };
   message?: string;
 }
 
@@ -53,7 +53,13 @@ interface User {
   youtubeLink?: string | null;
 }
 
-export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolean)=>void}) => {
+export const NewGroupChatModal = ({
+  open,
+  setOpen
+}: {
+  open: boolean;
+  setOpen: (d: boolean) => void;
+}) => {
   const { account } = useActiveWeb3React();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<User[]>([]);
@@ -64,7 +70,6 @@ export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolea
   const [selectedPlansIds, setSelectedPlansIds] = useState<number[]>([]);
   const [plans, setPlans] = useState([]);
   const { handleAddNewChat } = useMessage("NewGroupChatModal");
- 
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
@@ -75,7 +80,7 @@ export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolea
       const response: any | undefined = await searchUserOrGroup({ q: searchTerm });
       if (response?.success && response.data?.users) {
         setSearchResults(response.data.users);
-        setSearchTerm('')
+        setSearchTerm("");
       } else {
         setSearchResults([]);
         setError("No users found.");
@@ -128,7 +133,7 @@ export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolea
       groupName,
       users: selectedUsers.map((user) => user._id),
       plans: selectedPlansIds,
-      address: account?.toLowerCase(),
+      address: account?.toLowerCase()
     });
     const { success, error } = response;
     const data = response.data;
@@ -139,10 +144,10 @@ export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolea
     }
 
     handleAddNewChat(data);
-    setGroupName('')
-    setSearchTerm('')
-    setSelectedUsers([])
-    setSearchResults([])
+    setGroupName("");
+    setSearchTerm("");
+    setSelectedUsers([]);
+    setSearchResults([]);
     // Close dialog after successful creation
     setOpen(false);
     toast.success("Group chat created successfully!");
@@ -202,9 +207,7 @@ export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolea
                   return (
                     <div
                       key={user._id}
-                      className={`flex items-center gap-4 rounded p-2 ${
-                        isSelected ? "bg-blue-100" : ""
-                      }`}
+                      className={`flex items-center gap-4 rounded p-2 `}
                       onClick={() => toggleUserSelection(user)}
                     >
                       <img
@@ -214,7 +217,7 @@ export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolea
                       />
                       <div className="flex flex-col">
                         <span className="font-bold">{user.displayName || user.username}</span>
-                        <span className="text-sm text-gray-500">{user.address}</span>
+                        <span className="text-sm text-gray-500">{`${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}</span>
                       </div>
                       {isSelected && <span className="ml-auto text-blue-500">Selected</span>}
                     </div>
@@ -222,14 +225,28 @@ export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolea
                 })
               : !isLoading && <p className="text-gray-500">No users found</p>}
           </div>
+          {/* Selected Users */}
           {selectedUsers.length > 0 && (
-            <div className="flex flex-col gap-2">
-              <h4 className="font-semibold">Selected Users:</h4>
-              <ul className="list-disc pl-5 text-gray-700">
+            <div className="shadow mt-4 rounded">
+              <h4 className="mb-2 font-semibold">Selected Users:</h4>
+              <div className="flex flex-wrap gap-2">
                 {selectedUsers.map((user) => (
-                  <li key={user._id}>{user.displayName || user.username}</li>
+                  <div key={user._id} className="flex items-center gap-2 rounded-full">
+                    <img
+                      src={getAvatarUrl(user?.avatarImageUrl || "")}
+                      alt={`${user.displayName || user.username}'s avatar`}
+                      className="h-6 w-6 rounded-full object-cover"
+                    />
+                    <span className="text-sm">{user.displayName || user.username}</span>
+                    <button
+                      onClick={() => toggleUserSelection(user)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      &times;
+                    </button>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
           <div className="gap-2 py-5">
@@ -251,15 +268,26 @@ export const NewGroupChatModal = ({open,setOpen}:{open:boolean,setOpen:(d:boolea
           </div>
 
           {selectedPlansIds.length > 0 && (
-            <div className="mt-4">
-              <h6 className="font-semibold">Selected Tiers:</h6>
-              <ul className="list-disc pl-5 text-gray-700">
+            <div className="shadow mt-6 rounded  p-4">
+              <h6 className="mb-2 font-semibold ">Selected Tiers:</h6>
+              <div className="flex flex-wrap gap-2">
                 {plans
                   .filter((plan: any) => selectedPlansIds.includes(plan.id))
                   .map((plan: any) => (
-                    <li key={plan.id}>{plan.tier} Tier</li>
+                    <div
+                      key={plan.id}
+                      className="flex items-center gap-2 rounded-full  px-3 py-1 text-green-800"
+                    >
+                      <span>{plan.tier} Tier</span>
+                      <button
+                        onClick={() => togglePlanSelection(plan.id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        &times;
+                      </button>
+                    </div>
                   ))}
-              </ul>
+              </div>
             </div>
           )}
 
