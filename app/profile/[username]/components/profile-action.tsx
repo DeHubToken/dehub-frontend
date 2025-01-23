@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 type Props = {
   user: User;
   username: string;
+  aboutMe?:string
 };
 
 type FollowButtonProps = { user: User };
@@ -68,7 +69,7 @@ export async function ProfileAction(props: Props) {
 
   return (
     <div className="flex w-full max-w-screen-xs flex-wrap items-start justify-start gap-3 overflow-hidden sm:gap-4">
-      <SubscriptionModal plans={plans} displayName={user.displayName} avatarImageUrl={user.avatarImageUrl}/>
+      <SubscriptionModal plans={plans} displayName={user.displayName} aboutMe={user?.aboutMe} avatarImageUrl={user.avatarImageUrl}/>
       <TipModal tokenId={0} to={user.address!} />
 
       {isFollowing && <UnfollowButton user={user} />}
