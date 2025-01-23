@@ -74,7 +74,7 @@ export function RecentPanel(props: Props) {
           <div className="flex h-auto w-full flex-col items-start justify-start gap-1 p-4">
             <div className="h-auto w-full">
               <div className="flex size-auto items-center justify-start gap-2">
-                <Link href={`/${item.mintername || item.minter}`}>
+                <Link href={`/profile/${item.mintername || item.minter}`}>
                   <Avatar className="size-8">
                     <AvatarFallback>{createAvatarName(item.minterDisplayName)}</AvatarFallback>
                     <AvatarImage src={getAvatarUrl(item.minterAvatarUrl)} />
@@ -85,7 +85,7 @@ export function RecentPanel(props: Props) {
                   <div className="flex size-auto flex-col items-start justify-start">
                     <p className="text-[11px] font-bold">{truncate(item.name, 26)}</p>
                     <div className="flex items-start gap-1">
-                      <Link href={`/${item.mintername || item.minter}`} className="text-[11px]">
+                      <Link href={`/profile/${item.mintername || item.minter}`} className="text-[11px]">
                         {truncate(item.minterDisplayName || item.mintername || item.minter, 26)}
                       </Link>
                     </div>
