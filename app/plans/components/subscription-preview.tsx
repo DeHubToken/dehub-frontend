@@ -34,7 +34,7 @@ export function SubscriptionModalPreView({ tiers = [] }: Props) {
           Preview
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[1400px] sm:rounded-3xl">
+      <DialogContent className="max-w-[900px] sm:rounded-3xl max-h-[80vh] overflow-auto">
         <DialogTitle className="sr-only">Subscribe</DialogTitle>
         <DialogDescription className="sr-only">Subscribe to my premium plans</DialogDescription>
         <DialogHeader className="flex flex-row gap-4">
@@ -73,7 +73,7 @@ export function SubscriptionCard(props: React.HTMLAttributes<HTMLDivElement>) {
     <div
       {...props}
       className={cn(
-        "flex max-h-fit min-w-[calc((250/16)*1rem)] max-w-[calc((250/16)*1rem)] flex-col items-center gap-8 rounded-lg border bg-theme-mine-shaft-dark py-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft"
+        "flex max-w-full m-auto  flex-col items-center gap-8 rounded-lg border bg-theme-mine-shaft-dark py-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft"
       )}
     />
   );
@@ -84,7 +84,7 @@ export function SubscriptionCardHeader(props: React.HTMLAttributes<HTMLDivElemen
     <div
       {...props}
       className={cn(
-        "border-theme-monochrome-600 flex max-w-[calc((170/16)*1rem)] flex-col items-center gap-4 border-b px-5",
+        "border-theme-monochrome-600 flex  w-full flex-col items-center gap-4 border-b px-5",
         props.className
       )}
     >
@@ -109,7 +109,7 @@ export function SubscriptionPricing(
     <div {...rest} className={cn("flex w-full flex-col items-center gap-3 px-5", rest.className)}>
       <h1 className="text-3xl">{price}</h1>
       <h2 className="text-theme-monochrome-200 text-sm">{tier}</h2>
-      <Button className="w-full" variant="gradientOne">
+      <Button className="w-3xs" variant="gradientOne">
         Subscribe
       </Button>
     </div>
@@ -119,10 +119,10 @@ export function SubscriptionPricing(
 export function SubscriptionBenefits(props: { benefits: string[] }) {
   const { benefits } = props;
   return (
-    <ul className="flex flex-col gap-3">
+    <ul className="flex flex-col gap-3 relative">
       {benefits?.map(({ value }: any, index: number) => (
-        <li key={index} className="flex items-center gap-4">
-          <CheckCircle />
+        <li key={index} className="flex items-center gap-4 pl-8 relative ">
+          <CheckCircle className=" absolute left-1 top-1" />
           <span className="text-xs">{value}</span>
         </li>
       ))}

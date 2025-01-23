@@ -35,7 +35,7 @@ const Tiers = (props: Props) => {
   },[plans])
   return (
     <div ref={planFocusRef} tabIndex={-1}
-      className="mt-8 flex flex-wrap gap-6">
+      className="mt-8 flex flex-wrap gap-6 ">
       {plans.map((tier: any) => {
         return (
           <SubscriptionCard>
@@ -65,10 +65,10 @@ export function SubscriptionCard(props: React.HTMLAttributes<HTMLDivElement>) {
     <div
       {...props}
       className={cn(
-        "flex max-h-fit min-w-[calc((250/16)*1rem)] max-w-[calc((250/16)*1rem)] flex-col items-center gap-8 rounded-lg border bg-theme-mine-shaft-dark py-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft"
+        "flex max-h-fit min-w-[calc((250/16)*1rem)] max-w-[calc((250/16)*1rem)] flex-col items-center gap-8 rounded-lg border bg-theme-mine-shaft-dark py-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft mt-0 mr-auto ml-auto md:m-0"
       )}
     />
-  );
+  );  
 }
 
 export function SubscriptionCardHeader(props: React.HTMLAttributes<HTMLDivElement>) {
@@ -76,7 +76,7 @@ export function SubscriptionCardHeader(props: React.HTMLAttributes<HTMLDivElemen
     <div
       {...props}
       className={cn(
-        "border-theme-monochrome-600 flex max-w-[calc((170/16)*1rem)] flex-col items-center gap-4 border-b px-5",
+        "border-theme-monochrome-600 flex max-w-[calc((170/16)*1rem)] flex-col items-center gap-4 border-b px-1",
         props.className
       )}
     >
@@ -156,10 +156,10 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
 export function SubscriptionBenefits(props: { benefits: string[] }) {
   const { benefits } = props;
   return (
-    <ul className="flex flex-col gap-3">
+    <ul className="flex flex-col gap-3 relative">
       {benefits?.map((value: any, index: number) => (
-        <li key={index} className="flex items-center gap-4">
-          <CheckCircle />
+        <li key={index} className="flex items-center gap-4 relative pl-8">
+          <CheckCircle className=" absolute left-1 top-1" />
           <span className="text-xs">{value}</span>
         </li>
       ))}

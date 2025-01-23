@@ -41,8 +41,8 @@ const page = (props: any) => {
               <p className="text-lg">Hare is the list of your Tiers</p>
             </div>
           </div>
-          <div className=" items-center justify-center gap-6 sm:flex-nowrap sm:justify-end">
-            <div className="  w-full items-stretch justify-center sm:w-auto">
+          <div className="w-full items-center justify-center gap-6 sm:flex-nowrap ">
+            <div className="  w-full items-stretch justify-center sm:w-auto ">
 
               <Tiers plans={plans} />
 
