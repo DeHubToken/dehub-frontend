@@ -52,6 +52,7 @@ export default function Form({ plan, getTiers }: any) {
   const { account, chainId } = useActiveWeb3React();
   const router = useRouter();
   const planId = plan != undefined ? plan.id : null; 
+  const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
     if (plan?.address && plan?.address != account?.toLowerCase()) {
@@ -97,6 +98,7 @@ export default function Form({ plan, getTiers }: any) {
     } 
     plan = { ...tier, benefits };
     try { 
+      setIsPending(true);
       const data: any = planId !== null ? await updatePlan(plan, planId) : await createPlan(plan);  
       if (data?.error) {
         toast.error(data?.error)
@@ -104,16 +106,20 @@ export default function Form({ plan, getTiers }: any) {
       } 
       if (planId) { 
         reset()
+        setIsPending(false);
         toast.success("plan Updated");
         router.push("/plans")
         return;
       }
       toast.success("plan created");  
+      setIsPending(false);
       reset()
       await getTiers()
       return;  
     } catch (error: any) {
       toast.error(error.message);
+      setIsPending(false);
+
       console.error("Submission error:", error);
     }
   };
@@ -133,8 +139,8 @@ export default function Form({ plan, getTiers }: any) {
             <div className="flex flex-wrap items-center justify-center gap-6 sm:flex-nowrap sm:justify-end">
               <div className="flex w-full items-stretch justify-center sm:w-auto"></div>
               <SubscriptionModalPreView tiers={[tier]} />
-              <Button variant="gradientOne" size="sratch">
-                {plan?.id ? "Save Edit" : "Save"}
+              <Button disabled={isPending} variant="gradientOne" size="sratch">
+                {isPending ? "Submitting..." : plan?.id ? "Save Edit" : "Save"}
               </Button>
             </div>
           </div>
