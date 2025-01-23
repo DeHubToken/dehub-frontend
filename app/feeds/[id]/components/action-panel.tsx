@@ -29,7 +29,7 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
       <p className="text-sm">
         Uploaded by{" "}
         <Link
-          href={`/${nft.mintername || nft.minter}`}
+          href={`/profile/${nft.mintername || nft.minter}`}
           className="flex items-center gap-2 text-classic-purple"
         >
           <span>{nft.minterDisplayName || nft.mintername}</span>
