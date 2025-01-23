@@ -38,7 +38,7 @@ const page = (props: any) => {
           <div className="flex h-auto w-full flex-wrap items-center justify-center gap-6 text-center md:flex-nowrap md:justify-between md:gap-0 md:text-left">
             <div className="h-auto w-full space-y-2">
               <h1 className="text-4xl sm:text-5xl">My Subscription Tiers </h1>
-              <p className="text-lg">Hare is the list of your Tiers</p>
+              <p className="text-lg">Here is the list of your Tiers</p>
             </div>
           </div>
           <div className=" items-center justify-center gap-6 sm:flex-nowrap sm:justify-end">
