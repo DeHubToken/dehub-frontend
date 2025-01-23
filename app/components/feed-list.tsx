@@ -332,7 +332,8 @@ const DropDownItemSubscriptionModal = ({ post }: { post: NFT }) => {
     <DropdownMenuItem onClick={(e) => e.preventDefault()}>
       <SubscriptionModal
         plans={post?.plansDetails}
-        avatarImageUrl={null}
+        avatarImageUrl={post?.minterAvatarUrl} 
+        aboutMe={post?.minterAboutMe}
         displayName={post.mintername || post.minter}
       />
     </DropdownMenuItem>
