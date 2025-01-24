@@ -239,7 +239,7 @@ export function HambMenu() {
               : "translate-x-full")
           }
         >
-          <div className="h-screen w-full overflow-y-scroll py-10">
+          <div className="side_menu h-screen w-full overflow-y-scroll py-10 mr-2">
             <div className="flex size-full flex-col items-start justify-start">
               {links.map((link,key) => {
                 if (link.id === "notifications") {

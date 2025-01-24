@@ -63,8 +63,8 @@ export const AddUserInChatModal = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const { account }: any = useActiveWeb3React();
-  const {refresh, selectedMessage: message } = useMessage("AddUserInChatModal");
-  const { _id:dmId }:any = message;
+  const { refresh, selectedMessage: message } = useMessage("AddUserInChatModal");
+  const { _id: dmId }: any = message;
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
     setIsLoading(true);
@@ -125,25 +125,25 @@ export const AddUserInChatModal = () => {
             {isLoading && <p className="text-gray-500">Loading...</p>}
             {searchResults.length > 0
               ? searchResults.map((user) => (
-                  <div key={user._id} className="flex items-center gap-4 rounded p-2">
-                    <img
-                      src={getAvatarUrl(user?.avatarImageUrl || "")}
-                      alt={`${user.displayName || user.username}'s avatar`}
-                      className="h-10 w-10 rounded-full object-cover"
-                    />
-                    <div className="flex flex-col">
-                      <span className="font-bold">{user.displayName || user.username}</span>
-                      <span className="text-sm text-gray-500">{user.address}</span>
-                    </div>
-                    <Button
-                      variant="outline"
-                      className="ml-auto"
-                      onClick={() => handleAddNewUserInGroup(user)}
-                    >
-                      Add
-                    </Button>
+                <div key={user._id} className="flex items-center gap-4 rounded p-2">
+                  <img
+                    src={getAvatarUrl(user?.avatarImageUrl || "")}
+                    alt={`${user.displayName || user.username}'s avatar`}
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+                  <div className="flex flex-col">
+                    <span className="font-bold">{user.displayName || user.username}</span>
+                    <span className="text-sm text-gray-500 min-w-24 break-all"> {`${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}</span>
                   </div>
-                ))
+                  <Button
+                    variant="outline"
+                    className="ml-auto"
+                    onClick={() => handleAddNewUserInGroup(user)}
+                  >
+                    Add
+                  </Button>
+                </div>
+              ))
               : !isLoading && <p className="text-gray-500">No users found</p>}
           </div>
         </div>

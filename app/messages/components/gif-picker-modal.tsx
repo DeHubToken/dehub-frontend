@@ -17,7 +17,7 @@ export function GifPickerModal() {
   const {theme} =   useTheme()
   return (
     toggleGif && (
-      <div className="Gif-Modal">
+      <div className="Gif-Modal absolute bottom-[62px] w-full" >
         <button  onClick={handleToggleGif}>
           <CircleX />
         </button>

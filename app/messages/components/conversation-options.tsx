@@ -34,12 +34,12 @@ const ConversationOptions = ({ type, participant }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <EllipsisVertical className="size-6 text-gray-600 dark:text-gray-300" />
+        <EllipsisVertical className="size-6 " />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="flex flex-col gap-2   rounded-md bg-slate-500 ">
+      <DropdownMenuContent className="flex flex-col gap-2   rounded-md border border-solid dark:border-theme-mine-shaft-dark dark:bg-theme-background">
         {type == "dm" && (
           <DropdownMenuItem
-            className="flex gap-1 p-2 hover:bg-slate-600"
+            className="flex gap-1 p-2 "
             onClick={() => {
               router.push(`/profile/${participant.username || participant.address}`);
             }}
@@ -48,7 +48,7 @@ const ConversationOptions = ({ type, participant }: Props) => {
           </DropdownMenuItem>
         )}
         <DropdownMenuItem
-          className="flex gap-1 p-2 hover:bg-slate-600"
+          className="flex gap-1 p-2 "
           onClick={() => {
             setSelectedMessageId(null);
           }}
@@ -58,7 +58,7 @@ const ConversationOptions = ({ type, participant }: Props) => {
 
         {type == "dm" && (
           <DropdownMenuItem
-            className="flex gap-1    p-2  hover:bg-slate-600"
+            className="flex gap-1    p-2  "
             onClick={handleToggleUserReport}
           >
             <CircleAlert className="size-5" />
@@ -67,7 +67,7 @@ const ConversationOptions = ({ type, participant }: Props) => {
         )}
         {type == "group" && me?.role != "admin" && (
           <DropdownMenuItem
-            className="flex gap-1    p-2  hover:bg-slate-600"
+            className="flex gap-1    p-2  "
             onClick={() => handleExitGroup(account?.toLocaleLowerCase())}
           >
             <ExitIcon className="size-5" />
@@ -76,7 +76,7 @@ const ConversationOptions = ({ type, participant }: Props) => {
         )}
 
         <DropdownMenuItem
-          className="flex gap-1    p-2  hover:bg-slate-600"
+          className="flex gap-1    p-2 "
           onClick={handleToggleConversationMoreOptions}
         >
           <CircleEllipsis />

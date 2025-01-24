@@ -85,7 +85,7 @@ export const User = ({ participant }: any) => {
   return (
     <div
       className={cn(
-        "relative flex cursor-pointer items-center gap-2 rounded-lg p-3 transition-colors duration-300 hover:bg-gray-200 hover:dark:bg-theme-mine-shaft"
+        " flex cursor-pointer items-center gap-2 rounded-lg p-3 transition-colors duration-300 hover:bg-gray-200 hover:dark:bg-theme-mine-shaft"
       )}
     >
       <>
@@ -164,11 +164,11 @@ export const UserOptions = ({ user }: any) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <EllipsisVertical className="size-6 text-gray-600 dark:text-gray-300" />
+        <EllipsisVertical className="size-6" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="flex flex-col gap-2   rounded-md bg-slate-500 ">
+      <DropdownMenuContent className="flex flex-col gap-2  rounded-md border border-solid dark:border-theme-mine-shaft-dark dark:bg-theme-background ">
         <DropdownMenuItem
-          className="flex gap-1 p-2 hover:bg-slate-600"
+          className="flex gap-1 p-2"
           onClick={() => {
             router.push(`/profile/${user.username || user.address}`);
           }}
@@ -177,7 +177,7 @@ export const UserOptions = ({ user }: any) => {
         </DropdownMenuItem>
         {me?.role == "admin" && !isMeAdmin && (
           <DropdownMenuItem
-            className="flex gap-1 p-2 hover:bg-slate-600"
+            className="flex gap-1 p-2"
             onClick={() => handleRemove()}
           >
             <CircleMinus /> <span> Remove</span>
@@ -185,7 +185,7 @@ export const UserOptions = ({ user }: any) => {
         )}{" "}
         {me?.role == "admin"&& !isMeAdmin  && (
           <DropdownMenuItem
-            className="flex gap-1 p-2 hover:bg-slate-600"
+            className="flex gap-1 p-2"
             onClick={isBlocked ? handleUnBlockUser : handleBlockUserOrGroup}
           >
             <UserRoundMinus /> <span>{isBlocked ? "UnBlock" : "Block"}</span>
