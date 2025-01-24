@@ -18,6 +18,9 @@ import { useUser } from "@/hooks/use-user";
 import { cn } from "@/libs/utils";
 
 import { getAvatarUrl } from "@/web3/utils/url";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
+import { supportedTokens } from "@/configs";
+import { supportedNetworks } from "@/web3/configs";
 
 /* ----------------------------------------------------------------------------------------------- */
 interface Props {
@@ -25,8 +28,11 @@ interface Props {
 }
 export function SubscriptionModalPreView({ tiers = [] }: Props) {
   const {user}: any = useUser(); 
-  const displayName = user?.result?.displayName;
+  const displayName = user?.result?.displayName??user?.result?.username;
   const avatarImageUrl = user?.result?.avatarImageUrl;
+  const aboutMe=user?.result?.aboutMe; 
+
+  const {chainId}=useActiveWeb3React()
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -47,7 +53,7 @@ export function SubscriptionModalPreView({ tiers = [] }: Props) {
           <div className="flex flex-col">
             <span className="text-2xl">{displayName}</span>
             <span className="text-theme-monochrome-300 text-sm">
-              Hello! Thank you for supporting me!!
+            {aboutMe??"Hello! Thank you for supporting me!!"}
             </span>
           </div>
         </DialogHeader>
@@ -58,7 +64,14 @@ export function SubscriptionModalPreView({ tiers = [] }: Props) {
                 <SubscriptionCardTitle>{tier?.name}</SubscriptionCardTitle>
                 <SubscriptionCardDescription>{tier?.description}</SubscriptionCardDescription>
               </SubscriptionCardHeader>
-              <SubscriptionPricing price={tier?.price} tier={tier?.duration} />
+              <SubscriptionPricing  
+               chainId={chainId}
+               chains={tier?.chains}
+               tier={tier?.tier}
+               duration={tier?.duration}
+               planId={tier.id}
+               creator={tier?.address}
+              /> 
               <SubscriptionBenefits benefits={tier?.benefits} />
             </SubscriptionCard>
           ))}
@@ -101,21 +114,59 @@ export function SubscriptionCardDescription(props: React.HTMLAttributes<HTMLPara
   return <p {...props} className={cn("text-theme-monochrome-300 text-xs", props.className)} />;
 }
 
-export function SubscriptionPricing(
-  props: React.HTMLAttributes<HTMLDivElement> & { price: string; tier: string }
-) {
-  const { price, tier, ...rest } = props;
+interface SubscriptionPricingProps extends React.HTMLAttributes<HTMLDivElement> {
+  chainId?: number;
+  chains: any;
+  tier: number;
+  duration: number;
+  planId: string;
+  creator: string;
+}
+
+export function SubscriptionPricing(props: SubscriptionPricingProps) {
+  const { chains, tier, planId, duration, creator, chainId, ...rest } = props;
   return (
-    <div {...rest} className={cn("flex w-full flex-col items-center gap-3 px-5", rest.className)}>
-      <h1 className="text-3xl">{price}</h1>
-      <h2 className="text-theme-monochrome-200 text-sm">{tier}</h2>
-      <Button className="w-3xs" variant="gradientOne">
-        Subscribe
-      </Button>
+    <div {...rest} className={cn(" items-center gap-5 px-5", rest.className)}>
+      <div className=" mb-5 flex max-h-80 w-full flex-col gap-5 overflow-scroll">
+        {chains.map((chain: any) => {
+          const token: any = supportedTokens.find(
+            (token) => token?.chainId === chain?.chainId && token?.address === chain?.token
+          );
+          const network = supportedNetworks?.find((n) => n.chainId == token?.chainId);
+          if (!token) {
+            return (
+              <div
+                key={chain?.chainId}
+                className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
+              >
+                <h2 className="text-lg font-bold">Chain {chain?.chainId}</h2>
+                <p className="text-center text-sm text-red-500">Not supported (switch chain)</p>
+              </div>
+            );
+          }
+
+          return (
+            <div
+              key={chain.chainId}
+              className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
+            >
+              <h2 className="text-lg font-bold">
+                {token.label} ({network?.label})
+              </h2>
+              <div className="flex items-center gap-2">
+                <span> Price:</span>
+                <img src={token.iconUrl} alt={`${token.label} Icon`} className="h-6 w-6" />
+                <p className="text-theme-monochrome-200 text-sm">
+                  {chain.price} {token.symbol}
+                </p>
+              </div>  
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
-
 export function SubscriptionBenefits(props: { benefits: string[] }) {
   const { benefits } = props;
   return (

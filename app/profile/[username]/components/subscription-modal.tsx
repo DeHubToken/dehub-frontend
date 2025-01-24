@@ -28,7 +28,7 @@ import BuySubOnChain from "./buy-sub-on-chain";
 
 /* ----------------------------------------------------------------------------------------------- */
 
-export function SubscriptionModal({ avatarImageUrl, displayName, plans = [] }: any) {
+export function SubscriptionModal({ avatarImageUrl, displayName,aboutMe="", plans = [] }: any) {
   const { account, chainId } = useActiveWeb3React();
   return (
     <Dialog>
@@ -50,7 +50,8 @@ export function SubscriptionModal({ avatarImageUrl, displayName, plans = [] }: a
           <div className="flex flex-col">
             <span className="text-2xl">{displayName}</span>
             <span className="text-theme-monochrome-300 text-sm">
-              Hello! Thank you for supporting me!!
+            {aboutMe??"Hello! Thank you for supporting me!!"}
+
             </span>
           </div>
         </DialogHeader>
