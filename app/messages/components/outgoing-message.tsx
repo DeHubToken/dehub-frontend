@@ -80,7 +80,7 @@ export function OutgoingMessage(props: {
         <DropdownMenuTrigger asChild>
           <EllipsisVertical className="size-6 text-gray-600 dark:text-gray-300" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="flex flex-wrap gap-2">
+        <DropdownMenuContent className="flex flex-wrap gap-2 border border-solid dark:border-theme-mine-shaft-dark dark:bg-theme-background">
           <DropdownMenuItem onClick={() => deleteMessage(message._id,dmId)}>
             <Trash className="size-5" /> Delete
           </DropdownMenuItem>

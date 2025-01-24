@@ -173,7 +173,7 @@ export const NewGroupChatModal = ({
           <CirclePlus className="size-5" /> New Group Chat
         </Button> */}
       </DialogTrigger>
-      <DialogContent className="max-w-[1400px] sm:rounded-3xl">
+      <DialogContent className="max-w-[1400px] sm:rounded-3xl max-h-[80vh] overflow-auto w-[96%] rounded-xl">
         <DialogTitle className="sr-only">New Group Chat</DialogTitle>
         <DialogDescription className="sr-only">Start a group chat</DialogDescription>
         <DialogHeader className="flex flex-row gap-4">
@@ -217,9 +217,9 @@ export const NewGroupChatModal = ({
                       />
                       <div className="flex flex-col">
                         <span className="font-bold">{user.displayName || user.username}</span>
-                        <span className="text-sm text-gray-500">{`${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}</span>
+                        <span className="text-sm text-gray-500 min-w-24 break-all">{`${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}</span>
                       </div>
-                      {isSelected && <span className="ml-auto text-blue-500">Selected</span>}
+                      {isSelected && <span className="ml-auto text-blue-500 ">Selected</span>}
                     </div>
                   );
                 })

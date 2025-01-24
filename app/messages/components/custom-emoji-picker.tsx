@@ -32,7 +32,7 @@ const pickerTheme = theme === "light" || theme === "dark" ? theme : "auto";
   }, [toggleEmoji]);
 
   return (
-    <div style={{ position: "relative", width: "100%" }}>
+    <div style={{ position: "absolute", width: "100%", bottom:"62px" }}>
       <div>
         {toggleEmoji && (
            <button  onClick={handleToggleEmoji}>
