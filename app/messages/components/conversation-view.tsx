@@ -115,8 +115,9 @@ export function ConversationView() {
           </div>
         ))}
 
-        <ExtraInputsAndNotice />
+       
       </ChatContainer>
+      <ExtraInputsAndNotice />
       <MessageInput />
     </div>
   );

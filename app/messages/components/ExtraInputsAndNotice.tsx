@@ -13,7 +13,7 @@ type Props = {};
 
 const ExtraInputsAndNotice = (props: Props) => {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%", position: "relative" }}>
       <CustomEmojiPicker />
       <GifPickerModal />
       <MediaUploader />
