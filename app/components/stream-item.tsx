@@ -93,7 +93,7 @@ export function StreamItem(props: Props) {
             </span>
             <Image
               src="/icons/tokens/DHB.png"
-              alt="BJ"
+              alt="DHB"
               width={20}
               height={20}
               className="size-4 rounded-full bg-black"
@@ -108,7 +108,7 @@ export function StreamItem(props: Props) {
             </span>
             <Image
               src="/icons/tokens/DHB.png"
-              alt="BJ"
+              alt="DHB"
               width={20}
               height={20}
               className="size-4 rounded-full bg-black"
@@ -131,7 +131,7 @@ export function StreamItem(props: Props) {
             </span>
             <Image
               src="/icons/tokens/DHB.png"
-              alt="BJ"
+              alt="DHB"
               width={20}
               height={20}
               className="size-4 rounded-full bg-black"
