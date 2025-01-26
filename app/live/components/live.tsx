@@ -11,7 +11,7 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { safeParseCookie } from "@/libs/cookies";
 
-import { getLikedNFTs } from "@/services/nfts/trending";
+import { getLikedNFTs, getNFTs } from "@/services/nfts/trending";
 
 // import { StreamsContainer } from "./streams-container";
 
@@ -36,13 +36,14 @@ export async function LiveFeed(props: FeedProps) {
   }
 
   // change to get live feed
-  const res = await getLikedNFTs(
-    {
-      page: 1,
-      address: account
-    },
-    library
-  );
+  const res = await getNFTs({
+    sortMode: 'live',
+    unit: q ? 50 : 20,
+    category: category === "All" ? null : category,
+    range,
+    search: q,
+    address: account
+  });
 
   if (!res?.success) {
     return (

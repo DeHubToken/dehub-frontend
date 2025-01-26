@@ -92,6 +92,7 @@
     "ethers-multicall": "^0.2.3",
     "events": "^3.3.0",
     "framer-motion": "^11.2.6",
+    "hls.js": "^1.5.19",
     "input-otp": "^1.2.4",
     "ipfs-api": "^26.1.2",
     "jotai": "^2.8.0",

@@ -1,14 +1,14 @@
 "use client";
 
+import { useWebSockets } from "@/contexts/websocket";
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 
-import { socketUrl } from "@/configs";
 
 export default function TranscodingVideo(props: { tokenId: string }) {
-  const socket = io(socketUrl)
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState("uploading started");
+  const {socket} = useWebSockets()
+  
 
   useEffect(() => {
     socket.on(props.tokenId, (data: { progress: number; stage: string }) => {

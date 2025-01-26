@@ -96,7 +96,6 @@ export default function GoLiveForm({ categories }: Props) {
   });
 
   const createStream = async (data: LiveStreamFormValues) => {
-    console.log("Form Submitted:", data);
     try {
       setIsLoading(true);
       if (!account || !user) {
@@ -111,10 +110,10 @@ export default function GoLiveForm({ categories }: Props) {
       
       const authObject = await getAuthObject(library, account)
       data = {...data, ...authObject}
-      const response = await createLiveStream(data);
+      const response = await createLiveStream(data, thumbnailFile);
   
       if (response.success) {
-        toast.success("Stream created successfully!");
+        toast.success("Stream created successfully! Redirecting...");
         router.push(`/live/${response.data._id}`);
       } else {
         toast.error("Failed to create stream");

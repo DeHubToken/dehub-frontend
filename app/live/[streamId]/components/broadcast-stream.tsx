@@ -9,10 +9,14 @@ import { useUser } from "@/hooks/use-user";
 import { safeParseCookie } from "@/libs/cookies";
 
 import { checkIfBroadcastOwner, getLiveStream } from "@/services/broadcast/broadcast.service";
+
+import { env, StreamStatus } from "@/configs";
+
+import BroadcastActionPanel from "./action-panel";
+import StatusBadge from "./status-badge";
+import BroadcastStreamInfo from "./stream-info";
 import StreamerView from "./streamer-view";
 import ViewerView from "./viewer-view";
-import BroadcastStreamInfo from "./stream-info";
-import BroadcastActionPanel from "./action-panel";
 
 export async function BroadcastStream(props: { streamId: string }) {
   const { streamId } = props;
@@ -39,11 +43,31 @@ export async function BroadcastStream(props: { streamId: string }) {
   return (
     <div className="h-auto min-h-screen w-full px-4 xl:max-w-[75%] xl:flex-[0_0_75%]">
       <Suspense fallback={<div>Loading Stream...</div>}>
-        {isBroadcastOwner
-          ? <StreamerView stream={stream} />
-          : <ViewerView stream={stream} />}
+        {stream.status === StreamStatus.SCHEDULED && (
+          <div
+            className="relative w-full overflow-hidden rounded-2xl bg-black"
+            style={{ aspectRatio: "16/9" }}
+          >
+            <StatusBadge status={stream.status} />
+            <img
+              src={`${env.cdnBaseUrl}${stream.thumbnail}`} // Use the stream's thumbnail as the placeholder
+              alt="Stream Thumbnail"
+              className="h-auto w-full object-cover"
+            />
+            <div className="absolute bottom-4 flex w-full justify-between px-4"></div>
+          </div>
+        )}
+        {stream.status === StreamStatus.LIVE && (
+          <>
+            {isBroadcastOwner ? (
+              <StreamerView stream={stream} isBroadcastOwner={isBroadcastOwner} />
+            ) : (
+              <ViewerView stream={stream} />
+            )}
+          </>
+        )}
       </Suspense>
-      <BroadcastActionPanel streamId={streamId} />
+      <BroadcastActionPanel stream={stream} />
       <BroadcastStreamInfo stream={stream} />
     </div>
   );

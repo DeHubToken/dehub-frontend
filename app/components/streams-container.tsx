@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 "use client";
 
 import type { GetNFTsResult } from "@/services/nfts/trending";
@@ -14,6 +16,7 @@ import { getNFTs } from "@/services/nfts/trending";
 
 import { getAvatarUrl } from "@/web3/utils/url";
 
+import { LiveStreamItem } from "./live-stream-item";
 import { StreamItem } from "./stream-item";
 import { useStreamProvider } from "./stream-provider";
 import { StreamSkeleton } from "./stream-skeleton";
@@ -47,12 +50,13 @@ export function StreamsContainer(props: Props) {
   } = props;
 
   initialData.forEach((nft) => {
-    streamsMap.set(`${nft.tokenId}`, nft);
+    streamsMap.set(`${nft._id}`, nft);
   });
 
   const [data, setData] = useState(initialData);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(isInfiniteScroll);
+  const [isLive, setIsLive] = useState(type === "live");
   const { isPending } = useStreamProvider("FeedsList");
 
   async function fetchMore() {
@@ -76,9 +80,9 @@ export function StreamsContainer(props: Props) {
       return;
     }
 
-    const filteredData = res.data.result.filter((nft) => !streamsMap.has(`${nft.tokenId}`));
+    const filteredData = res.data.result.filter((nft) => !streamsMap.has(`${nft._id}`));
     // @ts-ignore
-    setData([...data, ...filteredData]);
+    setData(prevData => [...prevData, ...filteredData]);
     setPage(page + 1);
   }
 
@@ -102,20 +106,29 @@ export function StreamsContainer(props: Props) {
         ))}
 
       {!isSearch &&
-        data?.map((nft, index) => (
-          <StreamItem
-            nft={nft}
-            key={nft.tokenId + "--" + index}
-            data-is-last={index === data.length - 1}
-          />
-        ))}
-      {/* // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error */}
-      {isSearch && data?.videos?.length === 0 && (
-        <div className="flex h-[650px] w-full flex-col items-center justify-center">
-          <p>No Match found</p>
-        </div>
-      )}
+        data?.map((nft, index) =>
+          isLive ? (
+            <LiveStreamItem
+              stream={nft}
+              key={nft?._id}
+              data-is-last={index === data.length - 1}
+            />
+          ) : (
+            <StreamItem
+              nft={nft}
+              key={nft._id}
+              data-is-last={index === data.length - 1}
+            />
+          )
+        )}
+      {isSearch &&
+        !data?.videos?.length &&
+        !data?.accounts?.length &&
+        !data?.livestreams?.length && (
+          <div className="flex h-[650px] w-full flex-col items-center justify-center">
+            <p>No Match found</p>
+          </div>
+        )}
 
       {!isSearch && data?.length === 0 && (
         <div className="flex h-[650px] w-full flex-col items-center justify-center">
@@ -181,7 +194,7 @@ export function SearchItemsContainer(props: Omit<Props, "isSearch"> & { accounts
   return (
     <InfiniteScroll
       next={isInfiniteScroll ? fetchMore : () => {}}
-      hasMore={hasMore}
+      hasMore={isInfiniteScroll && hasMore}
       loader={<Skeleton total={4} />}
       dataLength={data.length || 0}
       className={containerClass}

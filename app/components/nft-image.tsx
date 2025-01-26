@@ -2,15 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { RxEyeClosed } from "react-icons/rx";
-import io from "socket.io-client";
 
 import { LazyImage } from "@/components/image";
 
 import { getImageUrl } from "@/web3/utils/url";
 
-import { socketUrl } from "@/configs";
-
-const socket = io(socketUrl);
+import { useWebSockets } from "@/contexts/websocket";
 
 export function ImageWithLoader(props: {
   url: string;
@@ -23,8 +20,10 @@ export function ImageWithLoader(props: {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState("uploading started");
+  const {socket} = useWebSockets()
 
   useEffect(() => {
+    if(!socket) return
     socket.on(props.tokenId, (data: { progress: number; stage: string }) => {
       setProgress(data.progress);
       setStage(data.stage);
@@ -33,7 +32,7 @@ export function ImageWithLoader(props: {
     return () => {
       socket.off(props.tokenId);
     };
-  }, []);
+  }, [socket]);
 
   return (
     <div className="relative h-full overflow-hidden">
