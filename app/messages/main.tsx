@@ -2,7 +2,7 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { TabsList } from "@radix-ui/react-tabs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { CirclePlus, Settings, Users } from "lucide-react";
@@ -16,9 +16,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs } from "@/components/ui/tabs";
 
-import { SERVER_URL, useWebSockets } from "@/contexts/websocket";
+import { SERVER_URL } from "@/contexts/websocket";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
@@ -32,7 +32,6 @@ import { NewChatModal } from "./components/new-chat-modal";
 import { NewGroupChatModal } from "./components/new-group-chat";
 import { MessageProvider } from "./components/provider";
 import { SocketEvent } from "./utils";
-import CustomEmojiPicker from "./components/custom-emoji-picker";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -61,15 +60,14 @@ export default function MessagesScreen() {
         query: {
           address: account
         }
-      }; 
+      };
       if (socketConnections?.current?.dm?.disconnect) {
         socketConnections.current.dm.disconnect();
       }
       socketConnections.current.dm = io(`${SERVER_URL}/dm`, socketOptions);
 
       // Handle socket connection events (Optional)
-      socketConnections.current.dm.on(SocketEvent.connect, () => { 
-      });
+      socketConnections.current.dm.on(SocketEvent.connect, () => {});
       // Handle socket connection events (Optional)
       socketConnections.current.dm.on(SocketEvent.reConnect, () => {
         console.log("re-connecting...");
@@ -95,7 +93,7 @@ export default function MessagesScreen() {
     <MessageProvider socketConnections={socketConnections}>
       <ScreenHeight>
         <Messages />
-      </ScreenHeight>  
+      </ScreenHeight>
     </MessageProvider>
   );
 }
@@ -108,13 +106,14 @@ function Messages() {
         <div className="hidden flex-col gap-8 pt-6 lg:flex lg:flex-1">
           <ContactListHeader />
           <div className="grid w-full justify-items-center">
-            <TabsList className="mb-4 flex w-1/2 items-center justify-between gap-5">
+            <TabsList className="flex w-1/2 items-center justify-between gap-5">
               <div className="flax  flex-grow gap-5 "></div>
             </TabsList>
           </div>
           <ContactList />
         </div>
       </Tabs>
+
       <div className="flex flex-1 px-6 pt-2">
         <NoConversation />
         <ConversationView />
