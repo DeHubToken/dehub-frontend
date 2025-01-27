@@ -19,7 +19,7 @@ export function ConversationHeader() {
     return (
       <div className="flex flex-col gap-1">
         <div className="flex justify-between">
-          <div className="flex items-center gap-3 relative z-50">
+          <div className="flex items-center gap-3 relative z-10">
             <Avatar>
               <AvatarFallback>{createAvatarName(user.name)}</AvatarFallback>
               <AvatarImage

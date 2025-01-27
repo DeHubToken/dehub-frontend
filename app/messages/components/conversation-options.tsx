@@ -36,7 +36,7 @@ const ConversationOptions = ({ type, participant }: Props) => {
       <DropdownMenuTrigger asChild>
         <EllipsisVertical className="size-6 " />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="flex flex-col gap-2   rounded-md border border-solid dark:border-theme-mine-shaft-dark dark:bg-theme-background">
+      <DropdownMenuContent className="flex flex-col gap-2 bg-gray-100  rounded-md border border-solid dark:border-theme-mine-shaft-dark dark:bg-theme-background">
         {type == "dm" && (
           <DropdownMenuItem
             className="flex gap-1 p-2 "

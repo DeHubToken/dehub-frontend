@@ -55,7 +55,7 @@ export function MobileContactList(props: MobileContactListProps) {
         </SheetHeader>
         <ContactList
           {...props}
-          className={cn("max-h-[calc(100vh-24px-16px)]", props.className)}
+          className={cn("max-h-[calc(100vh-200px)]", props.className)}
           onMessageSelect={() => setOpen(false)}
         />
       </SheetContent>
