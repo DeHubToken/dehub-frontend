@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CirclePlus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -81,6 +81,15 @@ export const NewChatModal = ({ open, setOpen }: { open: boolean; setOpen: (d:boo
     startNewChat(user);
     setOpen(false);
   };
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchTerm.trim().length > 2) {
+        handleSearch();
+      }
+    }, 300); // 300ms delay
+  
+    return () => clearTimeout(delayDebounce); // Cleanup timeout
+  }, [searchTerm]);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {/* <DialogTrigger asChild>
