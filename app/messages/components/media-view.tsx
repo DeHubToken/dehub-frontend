@@ -11,21 +11,23 @@ type Props = {
     url: string;
     type: string;
     mimeType: string;
-  }[]; 
+  }[];
 };
 
 const MediaView = (props: Props) => {
-  const { mediaUrls } = props;
+  const { mediaUrls} = props;
   const [selectedMedia, setSelectedMedia] = useState<{
     url: string;
     mimeType: string;
   } | null>(null);
 
-  const renderPreview = (media: { url: string; mimeType: string,type:string }) => {
-    const { url, mimeType ,type} = media;
+  const renderPreview = (
+    media: { url: string; mimeType: string; type: string }
+  ) => {
+    const { url, mimeType, type } = media;
 
-    if (mimeType === "image/gif" ||type=="gif") {
-      return <img src={url} alt="Preview"  height={200} width={200} />;
+    if (mimeType === "image/gif" || type == "gif") {
+      return <Image src={url} alt="Preview" height={140} width={140} />;
     }
     return (
       <div
@@ -43,7 +45,7 @@ const MediaView = (props: Props) => {
         onClick={() => setSelectedMedia(media)} // Open full view on click
       >
         {mimeType.startsWith("image/") ? (
-          <Image src={dmMediaUrl(url)} alt="Preview" layout="fill" objectFit="cover" />
+          <Image src={dmMediaUrl(url,200,200)} alt="Preview" layout="fill" objectFit="cover" />
         ) : (
           <ReactPlayer
             url={dmMediaUrl(url)}
