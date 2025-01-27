@@ -39,11 +39,14 @@ export function ContactList(props: ContactListProps) {
   // Filter and sort messages based on search query
   const filteredChats = chats
     .filter((chat: any) => {
-      const { participants, groupName, tips } = chat;
+      const { participants, groupName, conversationType } = chat;
       const user = participants.find((U: any & { address: string }) => {
         return U?.address?.toLowerCase() !== account.toLowerCase();
       });
-      return getChatName(user, groupName)?.toLowerCase()?.includes(searchQuery.toLowerCase());
+      if (conversationType == "group") {
+        return getChatName({}, groupName)?.toLowerCase()?.includes(searchQuery.toLowerCase());
+      }
+      return getChatName(user, null)?.toLowerCase()?.includes(searchQuery.toLowerCase());
     })
     .sort((a: any, b: any) => {
       // Get the latest tip (if exists) for sorting
@@ -58,13 +61,13 @@ export function ContactList(props: ContactListProps) {
       return dayjs(a.lastMessageAt).isBefore(dayjs(b.lastMessageAt)) ? 1 : -1;
     });
 
-  function getChatName(user: any, groupName: string) {
-    return (
-      user?.participant?.displayName ||
-      user?.participant?.username ||
-      user?.participant?.address ||
-      groupName
-    );
+  function getChatName(user: any, groupName: string|null) {
+    if (groupName) {
+      return groupName;
+    }
+    const str =
+      user?.participant?.displayName ?? user?.participant?.username ?? user?.participant?.address;
+    return str;
   }
   return (
     <div
@@ -169,8 +172,7 @@ const UserInfo = ({ participant, isPro = true, lastOnline, lastMessage, tips }: 
         <div>
           <p className="text-sm text-gray-500">{contentWords(lastMessage?.content, 0, 6)}</p>
         </div>
-        <MessageMetaData lastMessage={lastMessage}/>
-
+        <MessageMetaData lastMessage={lastMessage} />
       </div>
     </>
   );
@@ -196,7 +198,7 @@ const GroupInfo = ({ group, isPro = false, lastOnline = true, lastMessage }: any
         <div>
           <p className="text-sm text-gray-500">{contentWords(lastMessage?.content, 0, 6)}</p>
         </div>
-        <MessageMetaData lastMessage={lastMessage}/>
+        <MessageMetaData lastMessage={lastMessage} />
       </div>
     </>
   );
@@ -212,7 +214,7 @@ const contentWords = (content: string, start: number, end: number) => {
   );
 };
 
-const MessageMetaData = ({ lastMessage }:any) => {
+const MessageMetaData = ({ lastMessage }: any) => {
   return (
     <div className="flex gap-5">
       {lastMessage.msgType == "media" && <Images />}

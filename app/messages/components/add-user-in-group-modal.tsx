@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CirclePlus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -95,9 +95,19 @@ export const AddUserInChatModal = () => {
       planId: ""
     }).then(() => {
       handleToggleAddMembersListModal();
-      refresh()
+      refresh();
     });
   };
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchTerm.trim().length > 2) {
+        handleSearch();
+      }
+    }, 300); // 300ms delay
+  
+    return () => clearTimeout(delayDebounce); // Cleanup timeout
+  }, [searchTerm]);
   return (
     <Dialog open={toggleAddMembersListModal} onOpenChange={handleToggleAddMembersListModal}>
       <DialogTrigger className="w-full">
@@ -125,25 +135,28 @@ export const AddUserInChatModal = () => {
             {isLoading && <p className="text-gray-500">Loading...</p>}
             {searchResults.length > 0
               ? searchResults.map((user) => (
-                <div key={user._id} className="flex items-center gap-4 rounded p-2">
-                  <img
-                    src={getAvatarUrl(user?.avatarImageUrl || "")}
-                    alt={`${user.displayName || user.username}'s avatar`}
-                    className="h-10 w-10 rounded-full object-cover"
-                  />
-                  <div className="flex flex-col">
-                    <span className="font-bold">{user.displayName || user.username}</span>
-                    <span className="text-sm text-gray-500 min-w-24 break-all"> {`${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}</span>
+                  <div key={user._id} className="flex items-center gap-4 rounded p-2">
+                    <img
+                      src={getAvatarUrl(user?.avatarImageUrl || "")}
+                      alt={`${user.displayName || user.username}'s avatar`}
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-bold">{user.displayName || user.username}</span>
+                      <span className="min-w-24 break-all text-sm text-gray-500">
+                        {" "}
+                        {`${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}
+                      </span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      className="ml-auto"
+                      onClick={() => handleAddNewUserInGroup(user)}
+                    >
+                      Add
+                    </Button>
                   </div>
-                  <Button
-                    variant="outline"
-                    className="ml-auto"
-                    onClick={() => handleAddNewUserInGroup(user)}
-                  >
-                    Add
-                  </Button>
-                </div>
-              ))
+                ))
               : !isLoading && <p className="text-gray-500">No users found</p>}
           </div>
         </div>

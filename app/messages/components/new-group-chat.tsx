@@ -74,13 +74,12 @@ export const NewGroupChatModal = ({
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
     setIsLoading(true);
-    setError("");
-
+    setError(""); 
     try {
       const response: any | undefined = await searchUserOrGroup({ q: searchTerm });
       if (response?.success && response.data?.users) {
         setSearchResults(response.data.users);
-        setSearchTerm("");
+        // setSearchTerm("");
       } else {
         setSearchResults([]);
         setError("No users found.");
@@ -161,7 +160,15 @@ export const NewGroupChatModal = ({
     }
     setPlans(data?.plans);
   };
-
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchTerm.trim().length > 2) {
+        handleSearch();
+      }
+    }, 300); // 300ms delay
+  
+    return () => clearTimeout(delayDebounce); // Cleanup timeout
+  }, [searchTerm]);
   useEffect(() => {
     fetchMyPlans();
   }, [account]);
