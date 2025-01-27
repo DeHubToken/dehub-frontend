@@ -185,19 +185,20 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
         toast.success(data.message);
 
         // Update the messages state to reflect the unblocked status
-        setMessages((prevMessages: any[]) =>
-          prevMessages.map((msg) => {
-            if (msg._id === message._id) {
-              return {
-                ...msg,
-                blockList: msg.blockList.filter((block: { _id: string }) => {
-                  return block._id != data.reportId;
-                })
-              };
-            }
-            return msg;
-          })
-        );
+        // setMessages((prevMessages: any[]) =>
+        //   prevMessages.map((msg) => {
+        //     if (msg._id === message._id) {
+        //       return {
+        //         ...msg,
+        //         blockList: msg.blockList.filter((block: { _id: string }) => {
+        //           return block._id != data.reportId;
+        //         })
+        //       };
+        //     }
+        //     return msg;
+        //   })
+        // );
+        fetchMyContacts();
       } else {
         toast.error("Unblock action failed, please try again.");
       }
@@ -240,7 +241,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
         )
       });
     }
-
+    fetchMyContacts();
     toast.success(data?.message || data?.msg);
   };
   const fetchMyContacts = async () => {
