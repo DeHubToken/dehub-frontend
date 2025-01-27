@@ -58,8 +58,15 @@ export function getCoverUrl(url: string) {
   return `${env.cdnBaseUrl}covers/${fileName}`;
 }
 export function dmMediaUrl(url: string, h?: number, w?: number) {
-  return `${env.cdnBaseUrl}${url}?=h${h}&w=${w}`;
+  const queryParams = new URLSearchParams();
+  if (h) queryParams.append("h", h.toString());
+  if (w) queryParams.append("w", w.toString());
+
+  return queryParams.toString()
+    ? `${env.cdnBaseUrl}${url}?${queryParams.toString()}`
+    : `${env.cdnBaseUrl}${url}`;
 }
+
 export function commentImageUrl(url: string) {
   return `${env.cdnBaseUrl}${url}`;
 }
