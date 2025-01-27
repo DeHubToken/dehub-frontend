@@ -119,14 +119,14 @@ export function MessageInput() {
 
   if (!chatStatus.allow) {
     return (
-      <div className="sticky bottom-12 flex h-[calc((80/16)*1rem)] w-full items-center gap-5 rounded-lg border px-5 dark:border-theme-mine-shaft-dark dark:bg-theme-background">
+      <div className="sticky bg-gray-100  bottom-12 flex h-[calc((80/16)*1rem)] w-full items-center gap-5 rounded-lg border px-5 dark:border-theme-mine-shaft-dark dark:bg-theme-background">
         {chatStatus.msg}
       </div>
     );
   }
   return (
     <>
-      <div className="sticky bottom-12 flex h-[calc((80/16)*1rem)] w-full items-center gap-5 rounded-lg border px-5 dark:border-theme-mine-shaft-dark dark:bg-theme-background">
+      <div className="sticky bg-gray-100  bottom-12 flex h-[calc((80/16)*1rem)] w-full items-center gap-5 rounded-lg border px-5 dark:border-theme-mine-shaft-dark dark:bg-theme-background">
         <Input
           placeholder="Type here..."
           value={input}

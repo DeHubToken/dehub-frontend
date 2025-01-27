@@ -70,7 +70,7 @@ export function ContactList(props: ContactListProps) {
     <div
       {...rest}
       className={cn(
-        "flex max-h-[calc(100vh-80px-24px-32px)] flex-col gap-3 overflow-y-scroll",
+        "flex max-h-[calc(100vh-80px-24px-179px)] flex-col gap-3 overflow-y-scroll",
         rest.className
       )}
     >
