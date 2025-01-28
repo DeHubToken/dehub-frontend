@@ -36,46 +36,197 @@
 
     --radius: 0.5rem;
 
+    /* TODO: We will remove below tokens after migration */
     --theme-background: 0 0% 100%; /* #ffffff */
     --theme-mine-shaft-dark: 0 0% 97%; /*#f7f7f7 */
     --theme-cloud-burst: 205 100% 93%; /* #d9efff */
     --theme-mine-shaft: 0 0% 7%; /* #111111 */
+
+    /* Our design system related variables */
+
+    /* Colors */
+    --theme-yellow-25: 42 100% 98%; /* #FFFCF5 */
+    --theme-yellow-50: 45 100% 96%; /* #FFFAEB */
+    --theme-yellow-100: 45 96% 89%; /* #FEF0C7 */
+    --theme-yellow-200: 44 98% 77%; /* #FEDF89 */
+    --theme-yellow-300: 42 99% 65%; /* #FEC84B */
+    --theme-yellow-400: 39 98% 56%; /* #FDB022 */
+    --theme-yellow-500: 34 94% 50%; /* #F79009 */
+    --theme-yellow-600: 28 97% 44%; /* #DC6803 */
+    --theme-yellow-700: 22 92% 37%; /* #B54708 */
+    --theme-yellow-800: 19 84% 31%; /* #93370D */
+    --theme-yellow-900: 18 79% 27%; /* #7A2E0E */
+
+    --theme-red-25: 12 100% 99%; /* #FFFBFA */
+    --theme-red-50: 5 86% 97%; /* #FEF3F2 */
+    --theme-red-100: 4 93% 94%; /* #FEE4E2 */
+    --theme-red-200: 3 96% 89%; /* #FECDCA */
+    --theme-red-300: 4 96% 80%; /* #FDA29B */
+    --theme-red-400: 4 92% 69%; /* #F97066 */
+    --theme-red-500: 4 86% 58%; /* #F04438 */
+    --theme-red-600: 4 74% 49%; /* #D92D20 */
+    --theme-red-700: 4 76% 40%; /* #B42318 */
+    --theme-red-800: 4 72% 33%; /* #912018 */
+    --theme-red-900: 8 65% 29%; /* #7A271A */
+
+    --theme-green-25: 142 80% 98%; /* #F6FEF9 */
+    --theme-green-50: 145 81% 96%; /* #ECFDF3 */
+    --theme-green-100: 140 80% 90%; /* #D1FADF */
+    --theme-green-200: 144 78% 80%; /* #A6F4C5 */
+    --theme-green-300: 148 74% 67%; /* #6CE9A6 */
+    --theme-green-400: 150 66% 52%; /* #32D583 */
+    --theme-green-500: 152 82% 39%; /* #12B76A */
+    --theme-green-600: 153 96% 30%; /* #039855 */
+    --theme-green-700: 155 97% 24%; /* #027A48 */
+    --theme-green-800: 155 90% 20%; /* #05603A */
+    --theme-green-900: 156 88% 16%; /* #054F31 */
+
+    --theme-blue-25: 198 100% 98%; /* #F5FCFF */
+    --theme-blue-50: 201 100% 96%; /* #EBF8FF */
+    --theme-blue-100: 203 89% 89%; /* #CCEAFC */
+    --theme-blue-200: 206 88% 83%; /* #AFD9FA */
+    --theme-blue-300: 211 89% 71%; /* #74B4F7 */
+    --theme-blue-400: 217 91% 60%; /* #3B82F6 */
+    --theme-blue-500: 218 70% 52%; /* #306FDB */
+    --theme-blue-600: 220 70% 43%; /* #2153B8 */
+    --theme-blue-700: 222 75% 33%; /* #153B94 */
+    --theme-blue-800: 223 80% 24%; /* #0C286E */
+    --theme-blue-900: 225 87% 15%; /* #051647 */
+
+    --theme-sky-25: 192 100% 99%; /* #FAFEFF */
+    --theme-sky-50: 198 100% 98%; /* #F5FCFF */
+    --theme-sky-100: 199 100% 95%; /* #E6F7FF */
+    --theme-sky-200: 202 100% 92%; /* #D4EFFF */
+    --theme-sky-300: 206 92% 85%; /* #B3DCFC */
+    --theme-sky-400: 212 96% 78%; /* #93C5FD */
+    --theme-sky-500: 213 66% 68%; /* #76A7E3 */
+    --theme-sky-600: 216 45% 53%; /* #517CBD */
+    --theme-sky-700: 218 48% 40%; /* #355996 */
+    --theme-sky-800: 220 59% 28%; /* #1E3A73 */
+    --theme-sky-900: 222 70% 17%; /* #0D1F4A */
+
+    --theme-gray-25: 220 100% 99%; /* #F9FBFF */
+    --theme-gray-50: 210 10% 88%; /* #DDE0E3 */
+    --theme-gray-100: 216 4% 77%; /* #C2C4C7 */
+    --theme-gray-200: 210 3% 66%; /* #A6A9AC */
+    --theme-gray-300: 216 2% 55%; /* #8B8D90 */
+    --theme-gray-400: 216 2% 45%; /* #6F7174 */
+    --theme-gray-500: 216 4% 23%; /* #383A3D */
+    --theme-gray-600: 210 6% 12%; /* #1D1F21 */
+    --theme-gray-700: 210 67% 1%; /* #010305 */
   }
 
+  /* NOTE: Dark mode variables are same as root one. Since our new design system has only dark mode.
+    This is for backward compatibility, so that if someone changes the theme to dark, it should work.
+  */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
 
+    --radius: 0.5rem;
+
+    /* TODO: We will remove below tokens after migration */
     --theme-background: 0 0% 7%; /* #111111 */
     --theme-mine-shaft-dark: 0 0% 16%; /* #292929 */
     --theme-cloud-burst: 215 35% 20%; /* #223146 */
     --theme-mine-shaft: 0 0% 23%; /* #3a3a3a */
     --theme-titan-white: 0 0% 95%; /* #f1f1f1 */
+
+    /* Colors */
+    --theme-yellow-25: 42 100% 98%; /* #FFFCF5 */
+    --theme-yellow-50: 45 100% 96%; /* #FFFAEB */
+    --theme-yellow-100: 45 96% 89%; /* #FEF0C7 */
+    --theme-yellow-200: 44 98% 77%; /* #FEDF89 */
+    --theme-yellow-300: 42 99% 65%; /* #FEC84B */
+    --theme-yellow-400: 39 98% 56%; /* #FDB022 */
+    --theme-yellow-500: 34 94% 50%; /* #F79009 */
+    --theme-yellow-600: 28 97% 44%; /* #DC6803 */
+    --theme-yellow-700: 22 92% 37%; /* #B54708 */
+    --theme-yellow-800: 19 84% 31%; /* #93370D */
+    --theme-yellow-900: 18 79% 27%; /* #7A2E0E */
+
+    --theme-red-25: 12 100% 99%; /* #FFFBFA */
+    --theme-red-50: 5 86% 97%; /* #FEF3F2 */
+    --theme-red-100: 4 93% 94%; /* #FEE4E2 */
+    --theme-red-200: 3 96% 89%; /* #FECDCA */
+    --theme-red-300: 4 96% 80%; /* #FDA29B */
+    --theme-red-400: 4 92% 69%; /* #F97066 */
+    --theme-red-500: 4 86% 58%; /* #F04438 */
+    --theme-red-600: 4 74% 49%; /* #D92D20 */
+    --theme-red-700: 4 76% 40%; /* #B42318 */
+    --theme-red-800: 4 72% 33%; /* #912018 */
+    --theme-red-900: 8 65% 29%; /* #7A271A */
+
+    --theme-green-25: 142 80% 98%; /* #F6FEF9 */
+    --theme-green-50: 145 81% 96%; /* #ECFDF3 */
+    --theme-green-100: 140 80% 90%; /* #D1FADF */
+    --theme-green-200: 144 78% 80%; /* #A6F4C5 */
+    --theme-green-300: 148 74% 67%; /* #6CE9A6 */
+    --theme-green-400: 150 66% 52%; /* #32D583 */
+    --theme-green-500: 152 82% 39%; /* #12B76A */
+    --theme-green-600: 153 96% 30%; /* #039855 */
+    --theme-green-700: 155 97% 24%; /* #027A48 */
+    --theme-green-800: 155 90% 20%; /* #05603A */
+    --theme-green-900: 156 88% 16%; /* #054F31 */
+
+    --theme-blue-25: 198 100% 98%; /* #F5FCFF */
+    --theme-blue-50: 201 100% 96%; /* #EBF8FF */
+    --theme-blue-100: 203 89% 89%; /* #CCEAFC */
+    --theme-blue-200: 206 88% 83%; /* #AFD9FA */
+    --theme-blue-300: 211 89% 71%; /* #74B4F7 */
+    --theme-blue-400: 217 91% 60%; /* #3B82F6 */
+    --theme-blue-500: 218 70% 52%; /* #306FDB */
+    --theme-blue-600: 220 70% 43%; /* #2153B8 */
+    --theme-blue-700: 222 75% 33%; /* #153B94 */
+    --theme-blue-800: 223 80% 24%; /* #0C286E */
+    --theme-blue-900: 225 87% 15%; /* #051647 */
+
+    --theme-sky-25: 192 100% 99%; /* #FAFEFF */
+    --theme-sky-50: 198 100% 98%; /* #F5FCFF */
+    --theme-sky-100: 199 100% 95%; /* #E6F7FF */
+    --theme-sky-200: 202 100% 92%; /* #D4EFFF */
+    --theme-sky-300: 206 92% 85%; /* #B3DCFC */
+    --theme-sky-400: 212 96% 78%; /* #93C5FD */
+    --theme-sky-500: 213 66% 68%; /* #76A7E3 */
+    --theme-sky-600: 216 45% 53%; /* #517CBD */
+    --theme-sky-700: 218 48% 40%; /* #355996 */
+    --theme-sky-800: 220 59% 28%; /* #1E3A73 */
+    --theme-sky-900: 222 70% 17%; /* #0D1F4A */
+
+    --theme-gray-25: 220 100% 99%; /* #F9FBFF */
+    --theme-gray-50: 210 10% 88%; /* #DDE0E3 */
+    --theme-gray-100: 216 4% 77%; /* #C2C4C7 */
+    --theme-gray-200: 210 3% 66%; /* #A6A9AC */
+    --theme-gray-300: 216 2% 55%; /* #8B8D90 */
+    --theme-gray-400: 216 2% 45%; /* #6F7174 */
+    --theme-gray-500: 216 4% 23%; /* #383A3D */
+    --theme-gray-600: 210 6% 12%; /* #1D1F21 */
+    --theme-gray-700: 210 67% 1%; /* #010305 */
   }
 }
 
@@ -93,4 +244,6 @@ body {
   @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent;
 }
 
-.side_menu{ height: calc(100vh - 150px);}
+.side_menu {
+  height: calc(100vh - 150px);
+}
