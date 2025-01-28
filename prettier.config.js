@@ -6,7 +6,11 @@ module.exports = {
   tabWidth: 2,
   importOrderTypeScriptVersion: "5.3.3",
   importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
-  plugins: ["@ianvs/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
+  plugins: [
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-organize-imports",
+    "prettier-plugin-tailwindcss"
+  ],
   importOrder: [
     "",
     "<TYPES>",
