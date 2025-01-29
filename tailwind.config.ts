@@ -151,16 +151,16 @@ const config = {
             800: "hsl(var(--theme-sky-800))",
             900: "hsl(var(--theme-sky-900))"
           },
-          gray: {
-            25: "hsl(var(--theme-gray-25))",
-            50: "hsl(var(--theme-gray-50))",
-            100: "hsl(var(--theme-gray-100))",
-            200: "hsl(var(--theme-gray-200))",
-            300: "hsl(var(--theme-gray-300))",
-            400: "hsl(var(--theme-gray-400))",
-            500: "hsl(var(--theme-gray-500))",
-            600: "hsl(var(--theme-gray-600))",
-            700: "hsl(var(--theme-gray-700))"
+          neutrals: {
+            100: "hsl(var(--theme-neutrals-100))",
+            200: "hsl(var(--theme-neutrals-200))",
+            300: "hsl(var(--theme-neutrals-300))",
+            400: "hsl(var(--theme-neutrals-400))",
+            500: "hsl(var(--theme-neutrals-500))",
+            600: "hsl(var(--theme-neutrals-600))",
+            700: "hsl(var(--theme-neutrals-700))",
+            800: "hsl(var(--theme-neutrals-800))",
+            900: "hsl(var(--theme-neutrals-900))"
           }
         }
       },
