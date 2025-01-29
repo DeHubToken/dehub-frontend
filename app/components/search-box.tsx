@@ -39,7 +39,7 @@ export function SearchBox(props: { category?: string; type?: string; range?: str
       <input
         type="text"
         name="search"
-        className="block h-12 w-full rounded-full border-none bg-theme-mine-shaft-dark px-6 py-2 text-sm outline-none dark:bg-theme-mine-shaft placeholder:dark:text-gray-400"
+        className="block h-12 w-full rounded-full border-none bg-theme-mine-shaft-dark px-6 py-2 text-xl outline-none dark:bg-theme-mine-shaft placeholder:dark:text-gray-400"
         placeholder="Search"
         value={text}
         onChange={(e) => setText(e.target.value)}
