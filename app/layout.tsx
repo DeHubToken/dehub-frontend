@@ -37,6 +37,14 @@ const exo_2 = Exo_2({
   variable: "--font-exo2"
 });
 
+/** Tanker local font: https://www.fontshare.com/?q=Tanker */
+const tanker = localFont({
+  src: "../public/fonts/tanker.woff2",
+  display: "swap",
+  variable: "--font-tanker"
+});
+
+const fontVariables = `${exo_2.variable} ${tanker.variable}`;
 
 /* ------------------------------------------------------------------------------------------ */
 
@@ -46,7 +54,7 @@ export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${exo_2.variable} overflow-x-hidden bg-theme-background text-theme-mine-shaft dark:bg-theme-background dark:text-theme-titan-white`}
+        className={`${fontVariables} overflow-x-hidden bg-theme-background text-theme-mine-shaft dark:bg-theme-background dark:text-theme-titan-white`}
       >
         <Toaster />
         <Toast />
