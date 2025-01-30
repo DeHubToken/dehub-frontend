@@ -1,34 +1,94 @@
-import { Suspense } from "react";
-import { cookies } from "next/headers";
+"use client";
+
+import { Suspense, useEffect, useState } from "react";
+// import { cookies } from "next/headers";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
-import { useUser } from "@/hooks/use-user";
+// import { safeParseCookie } from "@/libs/cookies";
+import { useWebSockets } from "@/contexts/websocket";
 
-import { safeParseCookie } from "@/libs/cookies";
+import { useUser } from "@/hooks/use-user";
 
 import { checkIfBroadcastOwner, getLiveStream } from "@/services/broadcast/broadcast.service";
 
 import { env, StreamStatus } from "@/configs";
 
+import { LivestreamEvents } from "../enums/livestream.enum";
 import BroadcastActionPanel from "./action-panel";
+import PreviousStreams from "./previous-streams";
 import StatusBadge from "./status-badge";
 import BroadcastStreamInfo from "./stream-info";
 import StreamerView from "./streamer-view";
 import ViewerView from "./viewer-view";
 
-export async function BroadcastStream(props: { streamId: string }) {
+export default function BroadcastStream(props: { streamId: string }) {
   const { streamId } = props;
-  const response = await getLiveStream(streamId);
-  const cookie = cookies();
-  const userCookie = cookie.get("user_information");
-  const user = safeParseCookie<{ address: string }>(userCookie?.value);
+  const [stream, setStream] = useState<any>(null);
+  const [isStartingNw, setIsStartingNw] = useState<any>(false);
+  const [isBroadcastOwner, setIsBroadcastOwner] = useState(false);
+  const { socket } = useWebSockets();
+  const { account } = useUser();
 
-  if (!response.success) {
+  // const cookie = cookies();
+  // const userCookie = cookie.get("user_information");
+  // const user = safeParseCookie<{ address: string }>(userCookie?.value);
+
+  useEffect(() => {
+    const fetchStream = async () => {
+      const response = await getLiveStream(streamId);
+      if (response.success) {
+        setStream(response.data);
+        const isOwner = await checkIfBroadcastOwner(account?.toLowerCase(), response.data);
+        setIsBroadcastOwner(isOwner);
+      } else {
+        setStream(response.error);
+      }
+    };
+
+    fetchStream();
+  }, [streamId, account]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleStreamStart = (data: any) => {
+      console.log("Receibed start stream", data);
+      if (data.streamId === streamId) {
+        setStream((prev: any) => ({ ...prev, status: StreamStatus.LIVE }));
+      }
+    };
+
+    const handleStreamEnd = (data: any) => {
+      console.log("Receibed end stream", data);
+      if (data.streamId === streamId) {
+        setStream((prev: any) => ({ ...prev, status: StreamStatus.ENDED }));
+      }
+    };
+
+    socket.on(LivestreamEvents.StartStream, handleStreamStart);
+    socket.on(LivestreamEvents.EndStream, handleStreamEnd);
+
+    return () => {
+      socket.off(LivestreamEvents.StartStream, handleStreamStart);
+      socket.off(LivestreamEvents.EndStream, handleStreamEnd);
+    };
+  }, [socket, streamId]);
+
+
+  if (!stream) {
     return (
       <div className="absolute left-0 top-0 flex size-full h-screen flex-col items-center justify-center gap-4 text-center">
-        <h1 className="font-tanker text-3xl sm:text-6xl">{response.error}</h1>
+        <h1 className="font-tanker text-3xl sm:text-6xl">Loading stream...</h1>
+      </div>
+    );
+  }
+
+  if (stream.error) {
+    return (
+      <div className="absolute left-0 top-0 flex size-full h-screen flex-col items-center justify-center gap-4 text-center">
+        <h1 className="font-tanker text-3xl sm:text-6xl">{stream.error}</h1>
         <Button asChild variant="gradientOne" className="px-6">
           <Link href="/">Go Back</Link>
         </Button>
@@ -36,28 +96,37 @@ export async function BroadcastStream(props: { streamId: string }) {
     );
   }
 
-  const isBroadcastOwner = await checkIfBroadcastOwner(user?.address, response.data);
-
-  const stream = response.data;
-
   return (
     <div className="h-auto min-h-screen w-full px-4 xl:max-w-[75%] xl:flex-[0_0_75%]">
       <Suspense fallback={<div>Loading Stream...</div>}>
-        {stream.status === StreamStatus.SCHEDULED && (
+        {stream.status === StreamStatus.SCHEDULED && !isStartingNw && (
           <div
             className="relative w-full overflow-hidden rounded-2xl bg-black"
             style={{ aspectRatio: "16/9" }}
           >
             <StatusBadge status={stream.status} />
             <img
-              src={`${env.cdnBaseUrl}${stream.thumbnail}`} // Use the stream's thumbnail as the placeholder
+              src={`${env.cdnBaseUrl}${stream.thumbnail}`}
               alt="Stream Thumbnail"
               className="h-auto w-full object-cover"
             />
-            <div className="absolute bottom-4 flex w-full justify-between px-4"></div>
+            <div className="absolute bottom-4 flex w-full justify-between px-4">
+              {isBroadcastOwner && (
+                <Button
+                  onClick={() => {
+                    setIsStartingNw(true);
+                  }}
+                  variant="gradientOne"
+                  className="px-6"
+                >
+                  Go Live Now
+                </Button>
+              )}
+            </div>
           </div>
         )}
-        {stream.status === StreamStatus.LIVE && (
+
+        {(stream.status === StreamStatus.LIVE || isStartingNw) && stream.status !== StreamStatus.ENDED && (
           <>
             {isBroadcastOwner ? (
               <StreamerView stream={stream} isBroadcastOwner={isBroadcastOwner} />
@@ -66,9 +135,25 @@ export async function BroadcastStream(props: { streamId: string }) {
             )}
           </>
         )}
+
+        {stream.status === StreamStatus.ENDED && (
+          <div
+            className="relative w-full overflow-hidden rounded-2xl bg-black p-6"
+            style={{ aspectRatio: "16/9" }}
+          >
+            <div className="flex h-full flex-col items-center justify-center text-center">
+              <h2 className="mb-4 text-2xl font-bold text-white">This stream has ended.</h2>
+              <Button asChild variant="gradientOne" className="px-6">
+                <Link href={`/stream/${streamId}/replay`}>Watch Replay</Link>
+              </Button>
+            </div>
+          </div>
+        )}
       </Suspense>
+
       <BroadcastActionPanel stream={stream} />
       <BroadcastStreamInfo stream={stream} />
+      <PreviousStreams stream={stream} />
     </div>
   );
 }

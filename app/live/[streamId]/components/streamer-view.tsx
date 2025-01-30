@@ -23,6 +23,7 @@ import { getImageUrl } from "@/web3/utils/url";
 import { env, StreamStatus } from "@/configs";
 
 import StatusBadge from "./status-badge";
+import { LivestreamEvents } from "../enums/livestream.enum";
 
 export default function StreamerView(props: { stream: any, isBroadcastOwner: boolean }) {
   const { stream, isBroadcastOwner } = props;
@@ -68,6 +69,7 @@ export default function StreamerView(props: { stream: any, isBroadcastOwner: boo
         mimeType: "video/webm; codecs=vp8"
       });
 
+      socket?.emit(LivestreamEvents.StartStream, { streamId: stream._id })
       recorder.ondataavailable = (event) => {
         console.log("Chunk size:", event.data.size);
         if (event.data.size > 0 && socket && (isAudioEnabled || isVideoEnabled)) {
@@ -90,6 +92,7 @@ export default function StreamerView(props: { stream: any, isBroadcastOwner: boo
       recorderRef.current = recorder;
       recorder.start(500);
       setIsStreaming(true);
+      socket.emit(LivestreamEvents.StartStream, { streamId: stream._id });
     } catch (error) {
       console.error("Error starting stream:", error);
       setIsStreaming(false);
@@ -106,10 +109,26 @@ export default function StreamerView(props: { stream: any, isBroadcastOwner: boo
     if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
-    socket.emit("endStream", { streamId: stream._id });
+    socket.emit(LivestreamEvents.EndStream, { streamId: stream._id });
     setIsStreaming(false);
     console.log("Streaming stopped");
   };
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleStreamEnd = () => {
+      console.log("Receibed start end")
+
+      setIsStreaming(false);
+    };
+
+    socket.on(LivestreamEvents.EndStream, handleStreamEnd);
+
+    return () => {
+      socket.off(LivestreamEvents.EndStream, handleStreamEnd);
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (isStreaming) {

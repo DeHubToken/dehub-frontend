@@ -16,12 +16,49 @@ import { formatToUsDate } from "@/libs/date-time";
 import { cn } from "@/libs/utils";
 
 import { StreamStatus } from "@/configs";
+import { useUser } from "@/hooks/use-user";
+import { useEffect, useState } from "react";
+import { LivestreamEvents } from "../enums/livestream.enum";
+import { toast } from "sonner";
 
 export default function BroadcastActionPanel(props: { stream: any }) {
-  const { stream } = props;
-  const { isUserOnline } = useWebSockets();
+  const { stream: propStream } = props;
+  const [stream, setStream] = useState<any>(propStream)
+  const { socket } = useWebSockets();
   const { theme } = useTheme();
-  console.log(stream)
+  const { account, chainId, library, user } = useUser();
+
+  const likeStream = () =>{
+    if (!socket || !account) throw new Error("WebSocket is not connected.");
+    try{
+      socket.emit(LivestreamEvents.LikeStream, {streamId: stream._id})
+      toast.success("Liked stream");
+    }catch(e:any){
+      toast.error(e.message || "Failed to like stream")
+    }
+  }
+
+  useEffect(() => {
+      if (!socket) return;
+  
+      const handleStreamLike = ({streamId}: any) => {
+        if(streamId === stream._id) setStream((prev: any) => ({ ...prev, likes: stream.likes++ }));
+      };
+
+      const handleViewUpdate = ({viewerCount}: any) => {
+        const payload: any = {totalViews: viewerCount}
+        if(viewerCount > stream.peakViewers) payload.peakViewers = viewerCount
+        setStream((prev: any) => ({ ...prev, ...payload }));
+      };
+  
+      socket.on(LivestreamEvents.LikeStream, handleStreamLike);
+      socket.on(LivestreamEvents.ViewCountUpdate, handleViewUpdate);
+      
+      return () => {
+        socket.off(LivestreamEvents.LikeStream, handleStreamLike);
+        socket.off(LivestreamEvents.ViewCountUpdate, handleViewUpdate);
+      };
+    }, [socket]);
 
   return (
     <div className="mt-3 h-auto w-full">
@@ -37,7 +74,7 @@ export default function BroadcastActionPanel(props: { stream: any }) {
       <div className="mt-3 flex h-auto w-full flex-col items-start justify-start gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
         <div className="relative flex w-full flex-wrap items-center gap-4 pr-20 sm:size-auto sm:pr-0">
           <Button
-            onClick={() => {}}
+            onClick={likeStream}
             className={cn("gap-2 rounded-full")}
             // disabled={status === "loading"}
           >
@@ -53,9 +90,14 @@ export default function BroadcastActionPanel(props: { stream: any }) {
         <div className="flex size-auto items-center justify-start gap-5">
           {stream.status === StreamStatus.LIVE ||
             (stream.status === StreamStatus.ENDED && (
+              <>
               <p className="text-sm">
                 <span className="font-semibold">Viewers :</span> {stream.totalViews || 0}
               </p>
+              <p className="text-sm">
+                <span className="font-semibold">Peak Views :</span> {stream.peakViewers || 0}
+              </p>
+              </>
             ))}
           {stream.status === StreamStatus.SCHEDULED && (
             <p className="text-sm">

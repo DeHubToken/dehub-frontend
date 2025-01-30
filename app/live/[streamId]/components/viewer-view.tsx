@@ -4,12 +4,32 @@ import { env } from "@/configs";
 import { useUser } from "@/hooks/use-user";
 import { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
+import { useWebSockets } from "@/contexts/websocket";
+import { LivestreamEvents } from "../enums/livestream.enum";
 
 export default function ViewerView(props: { stream: any }) {
   const { stream } = props;
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isBuffering, setIsBuffering] = useState(false);
   const { account, chainId, library, user } = useUser();
+  const { socket } = useWebSockets();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleStreamEnd = () => {
+      alert("The stream has ended.");
+    };
+
+    console.log("Joinding")
+    socket.emit(LivestreamEvents.JoinStream, { streamId: stream._id})
+
+    socket.on(LivestreamEvents.EndStream, handleStreamEnd);
+
+    return () => {
+      socket.off(LivestreamEvents.EndStream, handleStreamEnd);
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (!videoRef.current || !stream) return;
@@ -48,13 +68,13 @@ export default function ViewerView(props: { stream: any }) {
 
   return (
     <div className="relative h-auto w-full overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: "16/9" }}>
-      <video
+      {/* <video
         ref={videoRef}
         className="w-full h-full"
         controls
         autoPlay
         muted
-      />
+      /> */}
       {isBuffering && <StreamVideoSkeleton />}
     </div>
   );
