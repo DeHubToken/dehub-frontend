@@ -36,7 +36,33 @@ const nextConfig = bundleAnalyzer({
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**"
+        hostname: process.env.NEXT_PUBLIC_CDN_BASE_URL
+          ? new URL(process.env.NEXT_PUBLIC_CDN_BASE_URL).host
+          : ""
+      },
+      {
+        protocol: "https",
+        hostname: "cryptologos.cc"
+      },
+      {
+        protocol: "https",
+        hostname: "api.dehub.io"
+      },
+      {
+        protocol: "https",
+        hostname: "api.blockjerk.com"
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com"
+      },
+      {
+        protocol: "https",
+        hostname: "tenor.com"
+      },
+      {
+        protocol: "https",
+        hostname: "media.tenor.com"
       }
     ]
   }
