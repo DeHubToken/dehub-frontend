@@ -92,7 +92,7 @@ export default function StreamerView(props: { stream: any, isBroadcastOwner: boo
       };
 
       recorderRef.current = recorder;
-      recorder.start(500);
+      recorder.start(100);
       setIsStreaming(true);
       // socket.emit(LivestreamEvents.StartStream, { streamId: stream._id });
     } catch (error) {
@@ -140,8 +140,9 @@ export default function StreamerView(props: { stream: any, isBroadcastOwner: boo
 
   useEffect(() => {
     if (!socket || !stream._id) return;
-  
     socket.emit(LivestreamEvents.JoinRoom, { streamId: stream._id });
+    if(stream.status === StreamStatus.LIVE) startStreaming()
+  
     return () => {
     };
   }, []);

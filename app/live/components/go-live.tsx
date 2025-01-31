@@ -55,6 +55,21 @@ const liveStreamSchema = z.object({
     schedule: z.boolean().default(false)
   }),
   scheduledFor: z.date().optional()
+  // scheduledFor: z.union([
+  //   z.date(),
+  //   z.null()
+  // ]).refine(
+  //   (date) => {
+  //     // If schedule is true, date must be provided
+  //     if (schedule) {
+  //       return date !== null;
+  //     }
+  //     return true;
+  //   },
+  //   {
+  //     message: "Please select a date and time for scheduled stream"
+  //   }
+  // ),
 });
 
 type LiveStreamFormValues = z.infer<typeof liveStreamSchema>;
@@ -103,13 +118,17 @@ export default function GoLiveForm({ categories }: Props) {
       }
   
       if (data.settings?.schedule) {
-        data.status = StreamStatus.SCHEDULED
-        data.scheduledFor = data.scheduledFor;
+        if (!data.scheduledFor) {
+          return toast.error("Please select a date and time for scheduled stream");
+        }
+        data.status = StreamStatus.SCHEDULED;
+      } else {
+        delete data.scheduledFor;
       }
-
       
       const authObject = await getAuthObject(library, account)
-      data = {...data, ...authObject}
+      let {thumbnail, ...payload} =  data;
+      data = {...payload, ...authObject}
       const response = await createLiveStream(data, thumbnailFile);
   
       if (response.success) {
@@ -263,7 +282,7 @@ export default function GoLiveForm({ categories }: Props) {
                                 onChange={(e) => {
                                   const date = e.target.value
                                     ? new Date(e.target.value)
-                                    : undefined;
+                                    : null;
                                   scheduleField.onChange(date);
                                 }}
                               />
