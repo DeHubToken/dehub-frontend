@@ -27,8 +27,8 @@ const nextConfig = bundleAnalyzer({
   async rewrites() {
     return [
       {
-        source: "/:username",
-        destination: "/profile/:username"
+        source: "/profile/:username",
+        destination: "/:username"
       }
     ];
   },
