@@ -1,6 +1,7 @@
 export enum LivestreamEvents {
     StreamData = 'streamData',
     StartStream = 'stream.start',
+    JoinRoom = 'stream.join.room',
     EndStream = 'stream.end',
     JoinStream = 'stream.join',
     LeaveStream = 'stream.left',
@@ -13,3 +14,14 @@ export enum LivestreamEvents {
     UserMuted = 'stream.user.muted',
     StreamError = 'stream.error',
 }
+
+export enum StreamActivityType {
+    START = 'START',
+    END = 'END',
+    COMMENT = 'COMMENT',
+    MESSAGE = 'MESSAGE',
+    LIKE = 'LIKE',
+    REACTION = 'REACTION',
+    JOINED = 'JOINED',
+    LEFT = 'LEFT',
+  }

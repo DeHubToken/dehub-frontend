@@ -22,6 +22,7 @@ import StatusBadge from "./status-badge";
 import BroadcastStreamInfo from "./stream-info";
 import StreamerView from "./streamer-view";
 import ViewerView from "./viewer-view";
+import ReplayPlayer from "./live-replay";
 
 export default function BroadcastStream(props: { streamId: string }) {
   const { streamId } = props;
@@ -105,6 +106,7 @@ export default function BroadcastStream(props: { streamId: string }) {
             style={{ aspectRatio: "16/9" }}
           >
             <StatusBadge status={stream.status} />
+            <div className="absolute inset-0 bg-black bg-opacity-50" />
             <img
               src={`${env.cdnBaseUrl}${stream.thumbnail}`}
               alt="Stream Thumbnail"
@@ -136,19 +138,7 @@ export default function BroadcastStream(props: { streamId: string }) {
           </>
         )}
 
-        {stream.status === StreamStatus.ENDED && (
-          <div
-            className="relative w-full overflow-hidden rounded-2xl bg-black p-6"
-            style={{ aspectRatio: "16/9" }}
-          >
-            <div className="flex h-full flex-col items-center justify-center text-center">
-              <h2 className="mb-4 text-2xl font-bold text-white">This stream has ended.</h2>
-              <Button asChild variant="gradientOne" className="px-6">
-                <Link href={`/stream/${streamId}/replay`}>Watch Replay</Link>
-              </Button>
-            </div>
-          </div>
-        )}
+        {stream.status === StreamStatus.ENDED && <ReplayPlayer streamId={streamId} />}
       </Suspense>
 
       <BroadcastActionPanel stream={stream} />

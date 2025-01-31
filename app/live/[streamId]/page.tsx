@@ -45,7 +45,9 @@ export default async function Page(props: Props) {
                 <BroadcastStream streamId={streamId} />
               </div>
 
-              <div className="xl:fixed xl:right-2 xl:top-28 xl:h-[80vh]">
+              <div className="xl:fixed xl:right-2 xl:top-28 xl:w-[20%]"  
+              style={{ aspectRatio: "9/16" }}
+              >
                 <BroadcastChatPanel streamId={streamId} />
               </div>
             </div>

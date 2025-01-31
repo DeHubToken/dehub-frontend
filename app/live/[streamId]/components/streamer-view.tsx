@@ -69,7 +69,9 @@ export default function StreamerView(props: { stream: any, isBroadcastOwner: boo
         mimeType: "video/webm; codecs=vp8"
       });
 
-      socket?.emit(LivestreamEvents.StartStream, { streamId: stream._id })
+      if(stream.status !== StreamStatus.LIVE){
+        socket?.emit(LivestreamEvents.StartStream, { streamId: stream._id })
+      }
       recorder.ondataavailable = (event) => {
         console.log("Chunk size:", event.data.size);
         if (event.data.size > 0 && socket && (isAudioEnabled || isVideoEnabled)) {
@@ -92,7 +94,7 @@ export default function StreamerView(props: { stream: any, isBroadcastOwner: boo
       recorderRef.current = recorder;
       recorder.start(500);
       setIsStreaming(true);
-      socket.emit(LivestreamEvents.StartStream, { streamId: stream._id });
+      // socket.emit(LivestreamEvents.StartStream, { streamId: stream._id });
     } catch (error) {
       console.error("Error starting stream:", error);
       setIsStreaming(false);
@@ -135,6 +137,14 @@ export default function StreamerView(props: { stream: any, isBroadcastOwner: boo
       setupMediaStream();
     }
   }, [isVideoEnabled, isAudioEnabled]);
+
+  useEffect(() => {
+    if (!socket || !stream._id) return;
+  
+    socket.emit(LivestreamEvents.JoinRoom, { streamId: stream._id });
+    return () => {
+    };
+  }, []);
 
   const toggleVideo = () => setIsVideoEnabled((prev) => !prev);
 
