@@ -46,7 +46,7 @@ import { userAtom } from "@/stores";
 import { PPVModal } from "../feeds/[id]/components/ppv-modal";
 import { LikeButton } from "../feeds/[id]/components/stream-actions";
 import TipModal from "../feeds/[id]/components/tip-modal";
-import { SubscriptionModal } from "../profile/[username]/components/subscription-modal";
+import { SubscriptionModal } from "../(user)/[username]/components/subscription-modal";
 import { ClaimAsCommentor, ClaimAsViewer } from "../stream/[id]/components/claims";
 import { useClaimBounty } from "../stream/[id]/hooks/use-claim-bounty";
 
@@ -169,7 +169,7 @@ export function FeedList(props: FeedProps) {
                 <FeedProfile
                   name={feed.mintername}
                   avatar={feed.avatar}
-                  time={new Date(feed.createdAt).toString()}
+                  time={(feed.createdAt).toString()}
                 />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -249,7 +249,7 @@ export function FeedList(props: FeedProps) {
             <FeedProfile
               name={feed?.mintername || ""}
               avatar={feed?.avatar || ""}
-              time={new Date(feed?.createdAt).toString()}
+              time={(feed?.createdAt)?.toString()}
             />
             <FeedSettingsButton />
           </FeedHeader>
