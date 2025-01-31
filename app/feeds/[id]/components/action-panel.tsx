@@ -18,7 +18,7 @@ import { PPVModal } from "./ppv-modal";
 import { Share } from "./share";
 import { LikeButton } from "./stream-actions"; 
 import { TipModal } from "./tip-modal";
-import {SubscriptionModal} from "@/app/profile/[username]/components/subscription-modal"
+import {SubscriptionModal} from "@/app/(user)/[username]/components/subscription-modal"
 export function ActionPanel(props: { nft: NFT; tokenId: number }) {
   const { nft, tokenId } = props;
   const { isUserOnline } = useWebSockets();
@@ -29,7 +29,7 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
       <p className="text-sm">
         Uploaded by{" "}
         <Link
-          href={`/profile/${nft.mintername || nft.minter}`}
+          href={`/${nft.mintername || nft.minter}`}
           className="flex items-center gap-2 text-classic-purple"
         >
           <span>{nft.minterDisplayName || nft.mintername}</span>
