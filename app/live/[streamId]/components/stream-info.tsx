@@ -12,7 +12,7 @@ export default function BroadcastStreamInfo(props: { stream: any }) {
         </p>
         <div className="flex w-full flex-wrap">
           <span className="mr-1 font-semibold">Categories :</span>
-          {stream?.categories?.map((i) => (
+          {stream?.categories?.map((i:any) => (
             <Link key={i} href={`/?category=${i}&type=trends`} className="mr-1">
               <span className="cursor-pointer">#{i}</span>
             </Link>
