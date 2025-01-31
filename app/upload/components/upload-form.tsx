@@ -340,7 +340,7 @@ export function UploadForm(props: Props) {
         if (activeTab == "video") {
           router.push(`/stream/${result.createdTokenId}`);
         } else {
-          router.push(`/?type=feed/${result.createdTokenId}`);
+          router.push(`/?type=feeds/${result.createdTokenId}`);
         }
       } catch (err: any) {
         console.log("err-mint:", err);
