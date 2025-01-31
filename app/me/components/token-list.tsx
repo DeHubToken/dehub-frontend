@@ -132,9 +132,10 @@ function BJ(props: { iconUrl: string; label: string; tokenBalance: number }) {
             variant="ghost"
             className="h-7 rounded-full bg-theme-mine-shaft-dark px-4 text-xs dark:bg-theme-mine-shaft-dark dark:hover:bg-theme-mine-shaft-dark/70"
             asChild
+            disabled
           >
-            <a href="https://bridge.ferrum.network/frm" target="_blank" rel="noreferrer">
-              Bridge
+            <a href="#" target="_blank" rel="noreferrer">
+              Bridge (coming soon)
             </a>
           </Button>
           <Button

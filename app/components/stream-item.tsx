@@ -26,6 +26,7 @@ import { getAvatarUrl } from "@/web3/utils/url";
 
 import { LikeButton } from "../stream/[id]/components/stream-actions";
 import { ImageWithLoader } from "./nft-image";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 type Props = {
   nft: any;
@@ -38,8 +39,8 @@ export function StreamItem(props: Props) {
   const [isHidden, setIsHidden] = useState<boolean>(nft.isHidden);
   const [isHovered, setIsHovered] = useState(false);
   const { isUserOnline } = useWebSockets();
-  const { theme } = useTheme();
-
+  const {account }=useActiveWeb3React()
+  const { theme } = useTheme(); 
   const updateVisibility = async (id: string) => {
     try {
       const res = await updateNftVisibility({ id: nft.tokenId, isHidden: !isHidden });
@@ -52,6 +53,7 @@ export function StreamItem(props: Props) {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  
   return (
     <div
       {...rest}
@@ -72,6 +74,7 @@ export function StreamItem(props: Props) {
               transcodingStatus={nft.transcodingStatus}
               status={nft.status}
               tokenId={nft.tokenId}
+              address={account}
             />
           )}
 
@@ -90,7 +93,7 @@ export function StreamItem(props: Props) {
             </span>
             <Image
               src="/icons/tokens/DHB.png"
-              alt="BJ"
+              alt="DHB"
               width={20}
               height={20}
               className="size-4 rounded-full bg-black"
@@ -105,14 +108,22 @@ export function StreamItem(props: Props) {
             </span>
             <Image
               src="/icons/tokens/DHB.png"
-              alt="BJ"
+              alt="DHB"
               width={20}
               height={20}
               className="size-4 rounded-full bg-black"
             />
           </div>
         )}
-
+   {
+   nft?.plansDetails?.length>0 
+    && (
+          <div className="absolute -left-20 bottom-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-classic-purple px-12 py-0.5 text-center text-xs text-white">
+            <span>
+          Subscribe To Watch 
+            </span> 
+          </div>
+        )}
         {nft?.streamInfo?.isLockContent && (
           <div className="absolute -right-20 bottom-8 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-classic-violet px-12 py-0.5 text-center text-xs text-white">
             <span>
@@ -120,7 +131,7 @@ export function StreamItem(props: Props) {
             </span>
             <Image
               src="/icons/tokens/DHB.png"
-              alt="BJ"
+              alt="DHB"
               width={20}
               height={20}
               className="size-4 rounded-full bg-black"
@@ -132,7 +143,7 @@ export function StreamItem(props: Props) {
       <div className="flex h-auto w-full flex-col items-start justify-start gap-1 p-4">
         <div className="h-auto w-full">
           <div className="flex size-auto items-center justify-start gap-2">
-            <Link href={`/${nft.mintername || nft.minter}`}>
+            <Link href={`/profile/${nft.mintername || nft.minter}`}>
               <Avatar className="size-8">
                 <AvatarFallback>{createAvatarName(nft.minterDisplayName)}</AvatarFallback>
                 <AvatarImage src={getAvatarUrl(nft.minterAvatarUrl)} />
@@ -143,13 +154,13 @@ export function StreamItem(props: Props) {
               <div className="flex size-auto flex-col items-start justify-start">
                 <p className="text-[11px] font-bold">{truncate(nft.name, 26)}</p>
                 <div className="flex items-start gap-1">
-                  <Link href={`/${nft.mintername || nft.minter}`} className="text-[11px]">
+                  <Link href={`/profile/${nft.mintername || nft.minter}`} className="text-[11px]">
                     {truncate(nft.minterDisplayName || nft.mintername || nft.minter, 26)}
                   </Link>
                   <div className="relative h-3 w-3">
                     <Image
                       src={getBadgeUrl(nft.minterStaked, theme)}
-                      alt="User Badge"
+                      alt="User Badge" 
                       layout="fill"
                       className={`object-contain ${!isUserOnline(nft.minter) ? "" : ""}`} // TODO: Add glow effect for when they are online
                     />

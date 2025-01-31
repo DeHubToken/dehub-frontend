@@ -18,18 +18,20 @@ import { PPVModal } from "./ppv-modal";
 import { Share } from "./share";
 import { LikeButton } from "./stream-actions";
 import { TipModal } from "./tip-modal";
+import { SubscriptionModal } from "@/app/profile/[username]/components/subscription-modal";
 
 export function ActionPanel(props: { nft: NFT; tokenId: number }) {
   const { nft, tokenId } = props;
   const { isUserOnline } = useWebSockets();
   const { theme } = useTheme();
 
+
   return (
     <div className="mt-3 h-auto w-full">
       <p className="flex text-sm">
         Uploaded by
         <Link
-          href={`/${nft.mintername || nft.minter}`}
+          href={`/profile/${nft.mintername || nft.minter}`}
           className="ml-2 flex items-center gap-2 text-classic-purple"
         >
           <span>{nft.minterDisplayName || nft.mintername}</span>
@@ -37,7 +39,7 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
             <Image
               src={getBadgeUrl(nft.minterStaked, theme)}
               alt="User Badge"
-              layout="fill"
+              layout="fill" 
               className={`rounded-full object-contain ${
                 isUserOnline(nft.minter)
                   ? "" // TODO: Add glow effect for when they are online
@@ -58,6 +60,7 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
           <PPVModal nft={nft} />
           <TipModal tokenId={tokenId} to={nft.minter} />
           <ClaimAsViewer nft={nft} tokenId={tokenId} />
+          <SubscriptionModal plans={nft?.plansDetails} avatarImageUrl={nft.minterAvatarUrl} aboutMe={nft?.minterAboutMe} displayName={nft.mintername || nft.minter}/>
           <ClaimAsCommentor nft={nft} tokenId={tokenId} />
           <div className="absolute right-0 top-0 size-auto sm:hidden">
             <Share />

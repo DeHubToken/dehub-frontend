@@ -1,4 +1,10 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/bece18c2-2495-4248-a6f6-62792c2ec8f3/deploy-status)](https://app.netlify.com/sites/dehub-frontend/deploys)
+
 ## Dehub Frontend
+
+[Dehub Figma Design System](https://www.figma.com/design/vQyUQzckQ7rQzRYpwBqgaL/Dehub-Design-System)
+
+## Development
 
 ### Commit Message Format
 

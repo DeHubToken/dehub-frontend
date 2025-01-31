@@ -10,7 +10,7 @@ const SocketsContext = createContext<any>({});
 
 export const useWebSockets = () => useContext(SocketsContext);
 
-export const SERVER_URL = env.socketUrl;
+export const SERVER_URL = env.socketUrl;  
 
 export const WebsocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
@@ -27,9 +27,16 @@ export const WebsocketProvider = ({ children }: { children: React.ReactNode }) =
         socketRef.current.disconnect();
       }
 
+      const socketOptions={
+        query: {
+          address: account
+        }, 
+      }
+
       const authObject = account ? await getAuthObject(library, account as string) : {};
       const socketIO = io(SERVER_URL, {
         auth: authObject,
+        ...socketOptions
       });
 
       socketIO.on("update-online-users", (users: string[]) => {

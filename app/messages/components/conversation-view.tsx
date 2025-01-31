@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { toast } from "sonner";
+
+import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { cn } from "@/libs/utils";
 
+import { fetchDmMessages } from "@/services/dm";
+
 import { StartNewConversation } from "./common";
 import { ConversationHeader } from "./conversation-header";
+import ExtraInputsAndNotice from "./ExtraInputsAndNotice";
 import { IncomingMessage } from "./incoming-message";
 import { MessageInput } from "./message-input";
 import { OutgoingMessage } from "./outgoing-message";
@@ -11,15 +18,53 @@ import { useMessage } from "./provider";
 
 export function ConversationView() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("loading");
-  const { messages, selectedMessage: message } = useMessage("MessageList");
+  const { account }: any = useActiveWeb3React();
+  const {
+    messages,
+    selectedMessage: message,
+    setMessages
+  }: { socket: any; setMessages: any; messages: any; selectedMessage: any } = useMessage(
+    "MessageList"
+  );
+  const [parent] = useAutoAnimate();
 
+  const [page, setPage] = useState({
+    q: null,
+    skip: 0,
+    limit: 10,
+    address: account
+  });
   useEffect(() => {
     setStatus("loading");
+    if (page.skip !== 0 || page.limit !== 10) {
+      fetchMessagesApi();
+    }
     setTimeout(() => {
       setStatus("success");
-    }, 3000);
-  }, [message]);
+    }, 1000);
+  }, [page]);
 
+  const fetchMessagesApi = async () => {
+    if (!message?._id) {
+      return;
+    }
+    const { success, data, error = "" }: any = await fetchDmMessages(message._id, page);
+    if (!success) {
+      toast.error(error);
+    }
+    setMessages((privState: any) => {
+      return privState.map((state: any) => {
+        if (state._id === message._id) {
+          return {
+            ...state,
+            messages: data.messages
+          };
+        }
+        return state;
+      });
+    });
+    setStatus("success");
+  };
   if (!messages.length) return null;
   if (!message) return null;
 
@@ -55,33 +100,36 @@ export function ConversationView() {
       </div>
     );
   }
-
   return (
     <div className="w-full">
       <div className="flex justify-between">
         <ConversationHeader />
       </div>
 
-      <ChatContainer>
+      <ChatContainer parent={parent}>
         <StartNewConversation />
-        {message.messages.map((message) => (
-          <div key={message.id} className="mb-4">
-            {message.author === "me" && <OutgoingMessage message={message} />}
-            {message.author !== "me" && <IncomingMessage message={message} />}
+        {message?.messages?.map((message: any) => (
+          <div key={message?.id} className="mb-4">
+            {message?.author === "me" && <OutgoingMessage message={message} />}
+            {message?.author !== "me" && <IncomingMessage message={message} />}
           </div>
         ))}
+
+       
       </ChatContainer>
+      <ExtraInputsAndNotice />
       <MessageInput />
     </div>
   );
 }
 
-function ChatContainer(props: React.ComponentProps<"div">) {
+function ChatContainer(props: React.ComponentProps<"div"> & { parent: any }) {
   const { ...rest } = props;
   const { messages } = useMessage("MessagesContainer");
   return (
     <div
       {...rest}
+      ref={props.parent}
       className={cn(
         "max-h-[calc(100vh-80px-24px-150px)] min-h-[calc(100%-40px-100px)] overflow-y-scroll pb-10",
         messages.length === 0 && "flex flex-col items-center justify-center",

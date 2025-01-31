@@ -1,8 +1,10 @@
-import pinataSDK from "@pinata/sdk";
+import { env } from "@/configs"; // Ensure you have your env variables set 
 
-import { env } from "@/configs";
-
-const pinata = pinataSDK(env.pinataKey!, env.pinataSecretApiKey!);
+// Dynamically import Pinata SDK only on the server-side or with condition
+let pinataSDK:any;
+if (typeof window === "undefined") {
+  pinataSDK = require("@pinata/sdk"); // Dynamically import on the server-side
+}
 
 type IpfsHashResponse = {
   IpfsHash: string;
@@ -10,12 +12,17 @@ type IpfsHashResponse = {
   Timestamp: string;
 };
 
+// Server-side only function for Pinata interaction
 export const getIpfsHash = async (data: Record<string, unknown>) => {
+  if (!pinataSDK) return;
+
+  const pinata = pinataSDK(env.pinataKey!, env.pinataSecretApiKey!);
   const result = await pinata.pinJSONToIPFS(data);
   const hash = result.IpfsHash;
   return hash;
 };
 
+// Function to handle file upload to Pinata
 export const getIpfsHashFromFile = async (...files: File[]) => {
   const headers = new Headers();
   const formData = new FormData();
@@ -37,5 +44,5 @@ export const getIpfsHashFromFile = async (...files: File[]) => {
   return data.IpfsHash;
 };
 
-export const getGatewayUrl = async (ipfsHash: string) =>
-  "https://gateway.pinata.cloud/ipfs/".concat(ipfsHash);
+// Generate gateway URL
+export const getGatewayUrl = async (ipfsHash: string) =>   "https://gateway.pinata.cloud/ipfs/".concat(ipfsHash);

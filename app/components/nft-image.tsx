@@ -5,7 +5,7 @@ import { RxEyeClosed } from "react-icons/rx";
 
 import { LazyImage } from "@/components/image";
 
-import { getImageUrl } from "@/web3/utils/url";
+import { getImageUrl, getImageUrlApi } from "@/web3/utils/url";
 
 import { useWebSockets } from "@/contexts/websocket";
 
@@ -16,6 +16,7 @@ export function ImageWithLoader(props: {
   transcodingStatus?: string;
   status?: string;
   tokenId: string;
+  address?:string;
 }) {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -32,8 +33,7 @@ export function ImageWithLoader(props: {
     return () => {
       socket.off(props.tokenId);
     };
-  }, [socket]);
-
+  }, [socket]); 
   return (
     <div className="relative h-full overflow-hidden">
       <LazyImage
@@ -69,7 +69,7 @@ export function ImageWithLoader(props: {
           </div>
         </div>
       ) : loading ? (
-        <div className="bg-theme-mine-shaft-dark absolute z-[2] size-full">
+        <div className="absolute z-[2] size-full bg-theme-mine-shaft-dark">
           <div className="shimmer size-full" />
         </div>
       ) : props?.status?.toLowerCase() !== "minted" ? (

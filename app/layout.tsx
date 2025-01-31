@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 
+import { Exo_2 } from "next/font/google";
+import localFont from "next/font/local";
+
 import "@rainbow-me/rainbowkit/styles.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import "react-image-crop/dist/ReactCrop.css";
@@ -20,6 +23,29 @@ import { WebsocketProvider } from "@/contexts/websocket";
 
 import { StreamProvider } from "./components/stream-provider";
 
+/**
+ * Next.js font optimization
+ * Docs: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts#with-tailwind-css
+ **/
+
+/** Exo 2 google font: https://fonts.google.com/specimen/Exo+2?vfquery=exo+2 */
+const exo_2 = Exo_2({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
+  variable: "--font-exo2"
+});
+
+/** Tanker local font: https://www.fontshare.com/?q=Tanker */
+const tanker = localFont({
+  src: "../public/fonts/tanker.woff2",
+  display: "swap",
+  variable: "--font-tanker"
+});
+
+const fontVariables = `${exo_2.variable} ${tanker.variable}`;
+
 /* ------------------------------------------------------------------------------------------ */
 
 type Props = { children: React.ReactNode };
@@ -27,7 +53,9 @@ type Props = { children: React.ReactNode };
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="font-nunito overflow-x-hidden bg-theme-background text-theme-mine-shaft dark:bg-theme-background dark:text-theme-titan-white">
+      <body
+        className={`${fontVariables} overflow-x-hidden bg-theme-background text-theme-mine-shaft dark:bg-theme-background dark:text-theme-titan-white`}
+      >
         <Toaster />
         <Toast />
         <ProgressBar />

@@ -19,7 +19,7 @@ import {
 
 import objectToGetParams from "@/libs/utils";
 
-function FacebookShareButton(props: { url: string }) {
+export function FacebookShareButton(props: { url: string }) {
   const { url } = props;
   const fb = "https://www.facebook.com/sharer/sharer.php" + objectToGetParams({ u: url });
 
@@ -35,7 +35,7 @@ function FacebookShareButton(props: { url: string }) {
   );
 }
 
-function TwitterShareButton(props: { url: string }) {
+export function TwitterShareButton(props: { url: string }) {
   const { url } = props;
   const twitter = "https://twitter.com/intent/tweet" + objectToGetParams({ url });
 
@@ -51,7 +51,7 @@ function TwitterShareButton(props: { url: string }) {
   );
 }
 
-function CopyUrl(props: { url: string }) {
+export function CopyUrl(props: { url: string }) {
   const { url } = props;
   const [state, copyToClipboard] = useCopyToClipboard();
 

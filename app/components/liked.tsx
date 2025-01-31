@@ -60,7 +60,7 @@ export async function LikedFeed(props: FeedProps) {
         <StreamsContainer
           address={account}
           isSearch={q ? true : false}
-          data={res?.data?.result}
+          data={res?.data?.result??[]}
           type={type}
           range={range}
           q={q}

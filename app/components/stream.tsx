@@ -56,7 +56,7 @@ export async function Stream(props: FeedProps) {
         {isSearched && (
           <SearchItemsContainer
             // @ts-ignore
-            data={res.data.result.videos}
+            data={res?.data?.result?.videos}
             // @ts-ignore
             accounts={res.data.result.accounts}
             type={type}
@@ -69,7 +69,7 @@ export async function Stream(props: FeedProps) {
           <StreamsContainer
             address={user?.address}
             isSearch={isSearched}
-            data={res.data.result}
+            data={res?.data?.result??[]}
             type={type}
             range={range}
             q={q}

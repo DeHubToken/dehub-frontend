@@ -36,7 +36,7 @@ export async function Profile(props: Props) {
         <div className="mt-5 flex h-auto w-full items-start justify-between sm:mt-10">
           <div className="flex w-full flex-col items-start justify-start gap-6 sm:gap-10">
             <UsernameBox user={user} />
-            <ProfileAction user={user} username={username} />
+            <ProfileAction user={user} username={username} aboutMe={user?.aboutMe}/>
             <UserFollowingInfo user={user} />
             <UserDescription user={user} />
           </div>

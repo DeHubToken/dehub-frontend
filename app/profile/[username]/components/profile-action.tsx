@@ -14,10 +14,13 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 import { useFollow } from "../hooks/use-follow";
 import { useUnFollow } from "../hooks/use-unfollow";
 import { SubscriptionModal } from "./subscription-modal";
+import { getPlans } from "@/services/subscription-plans";
+import { useEffect, useState } from "react";
 
 type Props = {
   user: User;
   username: string;
+  aboutMe?:string
 };
 
 type FollowButtonProps = { user: User };
@@ -44,14 +47,29 @@ function UnfollowButton(props: UnfollowButtonProps) {
   );
 }
 
-export function ProfileAction(props: Props) {
+export async function ProfileAction(props: Props) {
   const { user } = props;
   const { account } = useActiveWeb3React();
   const isFollowing = user.followers?.includes(account?.toLowerCase() || "");
+  const [plans,setPlans] = useState([])
+  const fetchMyPlans = async () => {
+    if(user?.address){
+    const { success, error, data }: any = await getPlans({ address: (user?.address).toLowerCase() });
+    if (!success && !data?.plans) {
+      toast.error(error);
+      return;
+    }
+    setPlans(data.plans)
+  }
+  };
+
+  useEffect(() => {
+    fetchMyPlans()
+  }, [])
 
   return (
     <div className="flex w-full max-w-screen-xs flex-wrap items-start justify-start gap-3 overflow-hidden sm:gap-4">
-      <SubscriptionModal />
+      <SubscriptionModal plans={plans} displayName={user.displayName} aboutMe={user?.aboutMe} avatarImageUrl={user.avatarImageUrl}/>
       <TipModal tokenId={0} to={user.address!} />
 
       {isFollowing && <UnfollowButton user={user} />}

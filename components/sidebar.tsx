@@ -5,6 +5,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Book, MessageCircle, MessageSquareText, Newspaper } from "lucide-react";
 
 // import { MessageSquareText, Newspaper } from "lucide-react";
 
@@ -213,6 +214,18 @@ const groups = [
         component: <NotificationModal />
       },
       {
+        id: "messages",
+        name: "Messages",
+        icon: <MessageCircle />,
+        url: () => "/messages"
+      },
+      {
+        id: "plans",
+        name: "Plans",
+        icon: <Book />,
+        url: () => "/plans"
+      },
+      {
         id: "wallet",
         name: "Wallet",
         icon: <Wallet />,
@@ -223,6 +236,12 @@ const groups = [
         name: "My Uploads",
         icon: <MyUploads />,
         url: () => "/"
+      },
+      {
+        id: "my-saved",
+        name: "Saved Feeds",
+        icon: <MyUploads />,
+        url: () => "?type=feed&saved"
       },
       {
         id: "my-broadcasts",

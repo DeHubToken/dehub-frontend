@@ -15,9 +15,10 @@ import { createAvatarName } from "@/libs/utils";
 
 import { GetNFTsResult } from "@/services/nfts/trending";
 
-import { getAvatarUrl, getImageUrl } from "@/web3/utils/url";
+import { getAvatarUrl, getImageUrl, getImageUrlApi } from "@/web3/utils/url";
 
 import { LikeButton } from "./stream-actions";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 type Props = {
   streams: GetNFTsResult[];
@@ -26,6 +27,7 @@ type Props = {
 export function RecentPanel(props: Props) {
   const { streams } = props;
   const isMobile = useMediaQuery("(max-width: 640px)");
+  const {account}=useActiveWeb3React()
   if (!isMobile) {
     return (
       <>
@@ -72,7 +74,7 @@ export function RecentPanel(props: Props) {
           <div className="flex h-auto w-full flex-col items-start justify-start gap-1 p-4">
             <div className="h-auto w-full">
               <div className="flex size-auto items-center justify-start gap-2">
-                <Link href={`/${item.mintername || item.minter}`}>
+                <Link href={`/profile/${item.mintername || item.minter}`}>
                   <Avatar className="size-8">
                     <AvatarFallback>{createAvatarName(item.minterDisplayName)}</AvatarFallback>
                     <AvatarImage src={getAvatarUrl(item.minterAvatarUrl)} />
@@ -83,7 +85,7 @@ export function RecentPanel(props: Props) {
                   <div className="flex size-auto flex-col items-start justify-start">
                     <p className="text-[11px] font-bold">{truncate(item.name, 26)}</p>
                     <div className="flex items-start gap-1">
-                      <Link href={`/${item.mintername || item.minter}`} className="text-[11px]">
+                      <Link href={`/profile/${item.mintername || item.minter}`} className="text-[11px]">
                         {truncate(item.minterDisplayName || item.mintername || item.minter, 26)}
                       </Link>
                     </div>

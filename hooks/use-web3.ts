@@ -12,11 +12,12 @@ import { calculateGasMargin, GAS_MARGIN } from "@/web3/utils/transaction";
 
 import { DHB_ADDRESSESS, MULTICALL2_ADDRESSES } from "@/configs";
 
-import ERC20_ABI from "../contracts/ERC20.json";
+import * as ERC20_ABI from "../contracts/ERC20.json";
+import SC_ABI from "@/web3/abis/subscription.json"
+import VAULT_ABI from "../web3/abis/vault.json"; 
 import STREAMNFTABI from "../web3/abis/erc1155.json";
 import MULTICALL_ABI from "../web3/abis/multicall.json";
-import STREAM_CONTROLLER_ABI from "../web3/abis/stream-controller.json";
-import VAULT_ABI from "../web3/abis/vault.json";
+import STREAM_CONTROLLER_ABI from "../web3/abis/stream-controller.json"; 
 import { useActiveWeb3React } from "./web3-connect";
 
 export function useContract<T extends Contract = Contract>(
@@ -73,6 +74,10 @@ export const useERC20Contract = (tokenAddress: any) => {
     (ERC20_ABI as any).abi,
     true
   );
+};
+export const useSubscriptionContract = (tokenAddress:any) => {
+  const { account, chainId } = useActiveWeb3React();
+  return useContract(!!account && !!chainId ? tokenAddress : undefined, (SC_ABI as any), true);
 };
 
 export const useVaultContract = () => {
