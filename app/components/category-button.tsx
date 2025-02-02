@@ -31,7 +31,7 @@ export function CategoryButton(props: Props) {
     <button onClick={pushUrl}>
       <Badge
         variant={isActived ? "secondary" : "default"}
-        className="border-gray-200 px-4 text-[11px] dark:border-theme-mine-shaft"
+        className="h-8 bg-neutral-800 px-4 py-2 text-[11px] text-theme-neutrals-400 dark:bg-neutral-800 dark:text-theme-neutrals-400"
       >
         {children}
       </Badge>

@@ -57,10 +57,10 @@ async function CategoriesLoader(props: Props) {
         opts={{
           dragFree: true
         }}
-        className="flex items-center justify-start gap-2"
+        className="relative flex items-center justify-start gap-2"
       >
-        <CarouselPrevious className="scale-75" />
-        <CarouselContent>
+        <CarouselPrevious className="absolute left-0 top-1/2 z-[2] -translate-y-1/2" />
+        <CarouselContent className="relative z-0">
           <CarouselItem className="basis-auto pl-4">
             <FeedRangeFilterMobile
               categories={categories}
@@ -88,7 +88,7 @@ async function CategoriesLoader(props: Props) {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselNext className="scale-75" />
+        <CarouselNext className="absolute right-0 top-1/2 z-[2] -translate-y-1/2" />
       </Carousel>
     </div>
   );

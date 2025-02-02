@@ -235,14 +235,14 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.4s ease-out",
         "accordion-up": "accordion-up 0.4s ease-out"
+      },
+      boxShadow: {
+        default: "0 0 10px 0 hsl(var(--theme-orange-500))",
+        custom: "0 10px 50px 5px hsl(var(--theme-monochrome-700))"
+      },
+      dropShadow: {
+        default: "0 0 10px 0 hsl(var(--theme-orange-500))"
       }
-    },
-    boxShadow: {
-      default: "0 0 10px 0 hsl(var(--theme-orange-500))",
-      custom: "0 10px 50px 5px hsl(var(--theme-monochrome-700))"
-    },
-    dropShadow: {
-      default: "0 0 10px 0 hsl(var(--theme-orange-500))"
     }
   },
   plugins: [

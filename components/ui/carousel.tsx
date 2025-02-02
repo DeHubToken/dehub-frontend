@@ -188,12 +188,16 @@ const CarouselPrevious = React.forwardRef<HTMLButtonElement, React.ComponentProp
       <Button
         ref={ref}
         size={size}
-        className={cn("relative size-6 rounded-full", className)}
+        className={cn(
+          "relative size-10 rounded-full bg-theme-neutrals-900 dark:bg-theme-neutrals-900",
+          canScrollPrev && "bg-theme-neutrals-800 dark:bg-theme-neutrals-800",
+          className
+        )}
         disabled={!canScrollPrev}
         onClick={scrollPrev}
         {...props}
       >
-        <ChevronLeftIcon className="size-4" />
+        <ChevronLeftIcon className="size-6" />
         <span className="sr-only">Previous slide</span>
       </Button>
     );
@@ -209,12 +213,16 @@ const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<ty
       <Button
         ref={ref}
         size={size}
-        className={cn("relative size-6 rounded-full", className)}
+        className={cn(
+          "relative size-10 rounded-full bg-transparent dark:bg-transparent",
+          canScrollNext && "bg-theme-neutrals-800 dark:bg-theme-neutrals-800",
+          className
+        )}
         disabled={!canScrollNext}
         onClick={scrollNext}
         {...props}
       >
-        <ChevronRightIcon className="size-4" />
+        <ChevronRightIcon className="size-6" />
         <span className="sr-only">Next slide</span>
       </Button>
     );
