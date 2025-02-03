@@ -7,13 +7,13 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: var(--color-neutrals-900, 210 67% 1%); /* #010305 */
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: var(--color-neutrals-900, 210 67% 1%); /* #010305 */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: var(--color-neutrals-900, 210 67% 1%); /* #010305 */
 
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
@@ -32,7 +32,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: var(--color-neutrals-900, 210 67% 1%); /* #010305 */
 
     --radius: 0.5rem;
 
@@ -43,13 +43,13 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: var(--color-neutrals-900, 210 67% 1%); /* #010305 */
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: var(--color-neutrals-900, 210 67% 1%); /* #010305 */
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: var(--color-neutrals-900, 210 67% 1%); /* #010305 */
     --popover-foreground: 210 40% 98%;
 
     --primary: 210 40% 98%;
@@ -71,7 +71,7 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
 
-    --theme-background: 0 0% 7%; /* #111111 */
+    --theme-background: var(--color-neutrals-900, 210 67% 1%); /* #010305 */
     --theme-mine-shaft-dark: 0 0% 16%; /* #292929 */
     --theme-cloud-burst: 215 35% 20%; /* #223146 */
     --theme-mine-shaft: 0 0% 23%; /* #3a3a3a */
@@ -93,4 +93,6 @@ body {
   @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent;
 }
 
-.side_menu{ height: calc(100vh - 150px);}
+.side_menu {
+  height: calc(100vh - 150px);
+}
