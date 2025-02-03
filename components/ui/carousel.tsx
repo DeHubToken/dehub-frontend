@@ -189,15 +189,15 @@ const CarouselPrevious = React.forwardRef<HTMLButtonElement, React.ComponentProp
         ref={ref}
         size={size}
         className={cn(
-          "relative size-10 rounded-full bg-theme-neutrals-900 dark:bg-theme-neutrals-900",
-          canScrollPrev && "bg-theme-neutrals-800 dark:bg-theme-neutrals-800",
+          "relative size-10 rounded-full bg-theme-neutrals-800 disabled:opacity-100 dark:bg-theme-neutrals-800",
+          "shadow-[0px_0px_15px_20px_rgba(1,3,5,1.00)]", // I hate this. Need to move to a config file.
           className
         )}
         disabled={!canScrollPrev}
         onClick={scrollPrev}
         {...props}
       >
-        <ChevronLeftIcon className="size-6" />
+        <ChevronLeftIcon className="size-6 text-theme-neutrals-500" />
         <span className="sr-only">Previous slide</span>
       </Button>
     );
@@ -214,15 +214,15 @@ const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<ty
         ref={ref}
         size={size}
         className={cn(
-          "relative size-10 rounded-full bg-transparent dark:bg-transparent",
-          canScrollNext && "bg-theme-neutrals-800 dark:bg-theme-neutrals-800",
+          "relative size-10 rounded-full bg-theme-neutrals-800 disabled:opacity-100 dark:bg-theme-neutrals-800",
+          "shadow-[0px_0px_15px_20px_rgba(1,3,5,1.00)]", // I hate this. Need to move to a config file.
           className
         )}
         disabled={!canScrollNext}
         onClick={scrollNext}
         {...props}
       >
-        <ChevronRightIcon className="size-6" />
+        <ChevronRightIcon className="size-6 text-theme-neutrals-500" />
         <span className="sr-only">Next slide</span>
       </Button>
     );

@@ -60,7 +60,7 @@ async function CategoriesLoader(props: Props) {
         className="relative flex items-center justify-start gap-2"
       >
         <CarouselPrevious className="absolute left-0 top-1/2 z-[2] -translate-y-1/2" />
-        <CarouselContent className="relative z-0">
+        <CarouselContent className="relative z-0 pl-16">
           <CarouselItem className="basis-auto pl-4">
             <FeedRangeFilterMobile
               categories={categories}
