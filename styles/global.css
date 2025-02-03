@@ -74,7 +74,7 @@
     --theme-background: var(--color-neutrals-900, 210 67% 1%); /* #010305 */
     --theme-mine-shaft-dark: 0 0% 16%; /* #292929 */
     --theme-cloud-burst: 215 35% 20%; /* #223146 */
-    --theme-mine-shaft: 0 0% 23%; /* #3a3a3a */
+    --theme-mine-shaft: var(--color-neutrals-800, 220 4% 12%); /* #1D1F21 */
     --theme-titan-white: 0 0% 95%; /* #f1f1f1 */
   }
 }
