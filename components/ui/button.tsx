@@ -17,7 +17,7 @@ const buttonVariants = cva(
         outline:
           "border-2 border-gray-200 bg-transparent shadow-sm hover:bg-gray-100 dark:border-theme-mine-shaft dark:hover:bg-theme-mine-shaft-dark",
         secondary:
-          "bg-theme-monochrome-700 text-theme-monochrome-400 shadow-sm hover:bg-theme-monochrome-400 hover:text-theme-monochrome-200",
+          "bg-theme-neutrals-700 text-theme-neutrals-400 shadow-sm hover:bg-theme-neutrals-400 hover:text-theme-neutrals-200",
         ghost:
           "text-theme-mine-shaft dark:text-theme-titan-white hover:bg-theme-mine-shaft-dark dark:hover:bg-theme-mine-shaft hover:text-theme-titan-white",
         link: "text-theme-mine-shaft underline-offset-4 hover:underline",

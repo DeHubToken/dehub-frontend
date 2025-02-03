@@ -45,14 +45,14 @@ export function SearchBox(props: { category?: string; type?: string; range?: str
         onChange={(e) => setText(e.target.value)}
       />
       <Button
-        variant="gradientOne"
-        size="icon_sm"
-        className="absolute right-3 top-1/2 -translate-y-1/2"
+        variant="secondary"
+        size="lg"
+        className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full"
         type="submit"
         disabled={isPending}
       >
         {isPending && <Spinner />}
-        {!isPending && <Search className="scale-125" />}
+        {!isPending && <Search className="scale-[2]" />}
       </Button>
     </form>
   );
