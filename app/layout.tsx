@@ -27,7 +27,7 @@ type Props = { children: React.ReactNode };
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="font-nunito overflow-x-hidden bg-theme-background text-theme-mine-shaft dark:bg-theme-background dark:text-theme-titan-white">
+      <body className="font-nunito overflow-x-hidden bg-theme-neutrals-900 text-theme-neutrals-200 dark:bg-theme-neutrals-900 dark:text-theme-neutrals-200">
         <Toaster />
         <Toast />
         <ProgressBar />

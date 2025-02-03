@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 
+const flattenColorPalette = require("tailwindcss/lib/util/flattenColorPalette").default;
+
 const config = {
   darkMode: ["class"],
   content: [
@@ -38,6 +40,8 @@ const config = {
     },
     extend: {
       colors: {
+        // REMOVEME: Below are no longer needed.
+        // TODO: Need quick check
         classic: {
           violet: "#2E064D",
           magenta: "#860C93",
@@ -78,11 +82,88 @@ const config = {
           foreground: "hsl(var(--card-foreground))"
         },
         theme: {
+          // REMOVEME: Below will be removed.
           background: "hsl(var(--theme-background))",
           "mine-shaft-dark": "hsl(var(--theme-mine-shaft-dark))",
           "cloud-burst": "hsl(var(--theme-cloud-burst))",
           "mine-shaft": "hsl(var(--theme-mine-shaft))",
-          "titan-white": "hsl(var(--theme-titan-white))"
+          "titan-white": "hsl(var(--theme-titan-white))",
+          yellow: {
+            25: "hsl(var(--theme-yellow-25))",
+            50: "hsl(var(--theme-yellow-50))",
+            100: "hsl(var(--theme-yellow-100))",
+            200: "hsl(var(--theme-yellow-200))",
+            300: "hsl(var(--theme-yellow-300))",
+            400: "hsl(var(--theme-yellow-400))",
+            500: "hsl(var(--theme-yellow-500))",
+            600: "hsl(var(--theme-yellow-600))",
+            700: "hsl(var(--theme-yellow-700))",
+            800: "hsl(var(--theme-yellow-800))",
+            900: "hsl(var(--theme-yellow-900))"
+          },
+          red: {
+            25: "hsl(var(--theme-red-25))",
+            50: "hsl(var(--theme-red-50))",
+            100: "hsl(var(--theme-red-100))",
+            200: "hsl(var(--theme-red-200))",
+            300: "hsl(var(--theme-red-300))",
+            400: "hsl(var(--theme-red-400))",
+            500: "hsl(var(--theme-red-500))",
+            600: "hsl(var(--theme-red-600))",
+            700: "hsl(var(--theme-red-700))",
+            800: "hsl(var(--theme-red-800))",
+            900: "hsl(var(--theme-red-900))"
+          },
+          green: {
+            25: "hsl(var(--theme-green-25))",
+            50: "hsl(var(--theme-green-50))",
+            100: "hsl(var(--theme-green-100))",
+            200: "hsl(var(--theme-green-200))",
+            300: "hsl(var(--theme-green-300))",
+            400: "hsl(var(--theme-green-400))",
+            500: "hsl(var(--theme-green-500))",
+            600: "hsl(var(--theme-green-600))",
+            700: "hsl(var(--theme-green-700))",
+            800: "hsl(var(--theme-green-800))",
+            900: "hsl(var(--theme-green-900))"
+          },
+          blue: {
+            25: "hsl(var(--theme-blue-25))",
+            50: "hsl(var(--theme-blue-50))",
+            100: "hsl(var(--theme-blue-100))",
+            200: "hsl(var(--theme-blue-200))",
+            300: "hsl(var(--theme-blue-300))",
+            400: "hsl(var(--theme-blue-400))",
+            500: "hsl(var(--theme-blue-500))",
+            600: "hsl(var(--theme-blue-600))",
+            700: "hsl(var(--theme-blue-700))",
+            800: "hsl(var(--theme-blue-800))",
+            900: "hsl(var(--theme-blue-900))"
+          },
+          sky: {
+            25: "hsl(var(--theme-sky-25))",
+            50: "hsl(var(--theme-sky-50))",
+            100: "hsl(var(--theme-sky-100))",
+            200: "hsl(var(--theme-sky-200))",
+            300: "hsl(var(--theme-sky-300))",
+            400: "hsl(var(--theme-sky-400))",
+            500: "hsl(var(--theme-sky-500))",
+            600: "hsl(var(--theme-sky-600))",
+            700: "hsl(var(--theme-sky-700))",
+            800: "hsl(var(--theme-sky-800))",
+            900: "hsl(var(--theme-sky-900))"
+          },
+          neutrals: {
+            100: "hsl(var(--theme-neutrals-100))",
+            200: "hsl(var(--theme-neutrals-200))",
+            300: "hsl(var(--theme-neutrals-300))",
+            400: "hsl(var(--theme-neutrals-400))",
+            500: "hsl(var(--theme-neutrals-500))",
+            600: "hsl(var(--theme-neutrals-600))",
+            700: "hsl(var(--theme-neutrals-700))",
+            800: "hsl(var(--theme-neutrals-800))",
+            900: "hsl(var(--theme-neutrals-900))"
+          }
         }
       },
       borderRadius: {
@@ -154,14 +235,14 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.4s ease-out",
         "accordion-up": "accordion-up 0.4s ease-out"
+      },
+      boxShadow: {
+        default: "0 0 10px 0 hsl(var(--theme-orange-500))",
+        custom: "0 10px 50px 5px hsl(var(--theme-monochrome-700))"
+      },
+      dropShadow: {
+        default: "0 0 10px 0 hsl(var(--theme-orange-500))"
       }
-    },
-    boxShadow: {
-      default: "0 0 10px 0 hsl(var(--theme-orange-500))",
-      custom: "0 10px 50px 5px hsl(var(--theme-monochrome-700))"
-    },
-    dropShadow: {
-      default: "0 0 10px 0 hsl(var(--theme-orange-500))"
     }
   },
   plugins: [
@@ -169,8 +250,21 @@ const config = {
     require("@tailwindcss/typography"),
     require("@tailwindcss/forms"),
     require("@tailwindcss/aspect-ratio"),
-    require("@tailwindcss/container-queries")
+    require("@tailwindcss/container-queries"),
+    addVariablesForColors
   ]
 } satisfies Config;
+
+// This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
+function addVariablesForColors({ addBase, theme }: any) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  addBase({
+    ":root": newVars
+  });
+}
 
 export default config;
