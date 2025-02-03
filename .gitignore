@@ -133,3 +133,6 @@ dist
 .DS_Store
 
 app/ui-preview
+
+# ai
+.cursorrules
