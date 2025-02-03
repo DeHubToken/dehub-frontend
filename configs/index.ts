@@ -12,7 +12,7 @@ export const env = {
   socketUrl: process.env.NEXT_PUBLIC_SOCKET_URL,
   pinataUploadUrl: process.env.NEXT_PUBLIC_PINATA_UPLOAD_URL,
   pinataGatwayKey: process.env.NEXT_PUBLIC_PINATA_GATEWAY_KEY,
-  tensor_api_key: process.env.NEXT_PUBLIC_TENSOR_API_KEY,
+  tenor_api_key: process.env.NEXT_PUBLIC_TENOR_API_KEY,
   nodes: {
     1: process.env.NEXT_PUBLIC_NODE_1,
     2: process.env.NEXT_PUBLIC_NODE_2,
@@ -91,7 +91,7 @@ const devTokens = [
     symbol: "DHB",
     customAbbreviation: "dhb",
     chainId: 97,
-    isSubscriptionSupported:true, 
+    isSubscriptionSupported: true,
     address: "0xeb6ACdcfe1F13187126A504d56f7970bf6f3C5E1",
     iconUrl: "/icons/DHB.png", // Update to relevant image URL if needed
     decimals: 18
@@ -122,7 +122,7 @@ const devTokens = [
     symbol: "USDC",
     customAbbreviation: "usdc",
     chainId: 97,
-    isSubscriptionSupported:true,
+    isSubscriptionSupported: true,
     address: "0x4131fd3F1206d48A89410EE610BF1949934e0a72",
     iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
     decimals: 18
@@ -160,7 +160,7 @@ const productionTokens = [
     iconUrl: "/icons/DHB.png", // Update to relevant image URL if needed
     mintBlockNumber: 16428469,
     decimals: 18,
-    isSubscriptionSupported:true
+    isSubscriptionSupported: true
   },
   {
     value: "dhb",
@@ -183,8 +183,7 @@ const productionTokens = [
     iconUrl: "/icons/DHB.png", // Update to relevant image URL if needed
     mintBlockNumber: 24867920,
     decimals: 18,
-    isSubscriptionSupported:true
-
+    isSubscriptionSupported: true
   },
   {
     value: "dhb",
@@ -206,8 +205,7 @@ const productionTokens = [
     address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
     iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
     decimals: 6,
-    isSubscriptionSupported:true
-
+    isSubscriptionSupported: true
   },
   {
     value: "weth",
@@ -239,8 +237,7 @@ const productionTokens = [
     address: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
     iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=002",
     decimals: 6,
-    isSubscriptionSupported:true
-
+    isSubscriptionSupported: true
   },
   {
     value: "usdc",
@@ -250,8 +247,7 @@ const productionTokens = [
     chainId: 1,
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
-    decimals: 6,
-    
+    decimals: 6
   },
   {
     value: "usdc",
@@ -262,8 +258,7 @@ const productionTokens = [
     address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
     iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
     decimals: 18,
-    isSubscriptionSupported:true
-
+    isSubscriptionSupported: true
   },
   {
     value: "usdc",
@@ -294,8 +289,7 @@ const productionTokens = [
     address: "0x55d398326f99059ff775485246999027b3197955",
     iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=024",
     decimals: 18,
-    isSubscriptionSupported:true
-
+    isSubscriptionSupported: true
   },
   {
     value: "usdt",
@@ -316,8 +310,7 @@ const productionTokens = [
     address: "0xbA2aE424d960c26247Dd6c32edC70B295c744C43",
     iconUrl: "https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=024",
     decimals: 8,
-    isSubscriptionSupported:true
-
+    isSubscriptionSupported: true
   },
   {
     value: "floki",
@@ -327,8 +320,7 @@ const productionTokens = [
     chainId: 1,
     address: "0xcf0c122c6b73ff809c693db761e7baebe62b6a2e",
     iconUrl: "https://cryptologos.cc/logos/floki-inu-floki-logo.png?v=024",
-    decimals: 9,
-    
+    decimals: 9
   },
   {
     value: "floki",
@@ -339,8 +331,7 @@ const productionTokens = [
     address: "0xfb5b838b6cfeedc2873ab27866079ac55363d37e",
     iconUrl: "https://cryptologos.cc/logos/floki-inu-floki-logo.png?v=024",
     decimals: 9,
-    isSubscriptionSupported:true
-
+    isSubscriptionSupported: true
   },
 
   {
