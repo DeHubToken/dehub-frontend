@@ -1,13 +1,13 @@
-import { environment } from "@/configs/env";
+import { env } from "./env.mjs";
 
-export { environment as env } from "@/configs/env";
+export { env } from "./env.mjs";
 
-export const isDevMode = environment.NEXT_PUBLIC_DEV === "ON";
+export const isDevMode = env.NEXT_PUBLIC_DEV === "ON";
 
 export const nodes = {
-  1: environment.NEXT_PUBLIC_NODE_1,
-  2: environment.NEXT_PUBLIC_NODE_2,
-  3: environment.NEXT_PUBLIC_NODE_3
+  1: env.NEXT_PUBLIC_NODE_1,
+  2: env.NEXT_PUBLIC_NODE_2,
+  3: env.NEXT_PUBLIC_NODE_3
 };
 
 export enum ChainId {

@@ -1,5 +1,7 @@
 import withBundleAnalyzer from "@next/bundle-analyzer";
 
+import { env } from "./configs/env.mjs";
+
 const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true"
 });
@@ -36,9 +38,7 @@ const nextConfig = bundleAnalyzer({
     remotePatterns: [
       {
         protocol: "https",
-        hostname: process.env.NEXT_PUBLIC_CDN_BASE_URL
-          ? new URL(process.env.NEXT_PUBLIC_CDN_BASE_URL).host
-          : ""
+        hostname: new URL(env.NEXT_PUBLIC_CDN_BASE_URL).host
       },
       {
         protocol: "https",

@@ -7,7 +7,7 @@ import { z } from "zod";
  *
  * @see https://create.t3.gg/en/usage/env-variables
  */
-export const environment = createEnv({
+export const env = createEnv({
   emptyStringAsUndefined: true,
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]).default("development")
