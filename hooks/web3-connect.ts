@@ -7,7 +7,14 @@ import {
   trustWallet,
   walletConnectWallet
 } from "@rainbow-me/rainbowkit/wallets";
- 
+import {
+  base,
+  // mainnet,
+  //  polygon,
+  bsc,
+  bscTestnet,
+  goerli
+} from "@wagmi/chains";
 import {
   configureChains,
   createConfig,
@@ -17,15 +24,6 @@ import {
   useDisconnect,
   useWalletClient
 } from "wagmi";
-import { 
-  // mainnet,
-  //  polygon,
-    bsc, 
-    bscTestnet,
-     goerli,
-     base } from "@wagmi/chains"; 
-
-
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -34,7 +32,7 @@ import {
   rainbowWeb3AuthTwitterConnector
 } from "@/web3/connectors/rainbow-web3-auth-connector";
 
-import { env } from "@/configs";
+import { env, isDevMode } from "@/configs";
 
 import { useEthersProvider, useEthersSigner } from "./wagmi-ethers";
 
@@ -42,14 +40,20 @@ const providers = [
   publicProvider(),
   infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY as string })
 ] as any;
-export const { chains, publicClient, webSocketPublicClient } = env.isDevMode
+export const { chains, publicClient, webSocketPublicClient } = isDevMode
   ? configureChains([bscTestnet, goerli], providers)
-  : configureChains([bsc,
-    //  mainnet,
-      // polygon,
-       base], providers);
-const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "YOUR_PROJECT_ID";
+  : configureChains(
+      [
+        bsc,
+        //  mainnet,
+        // polygon,
+        base
+      ],
+      providers
+    );
+const NEXT_PUBLIC_PROJECT_ID = process.env.NEXT_PUBLIC_PROJECT_ID || "YOUR_PROJECT_ID";
 const appName = process.env.NEXT_PUBLIC_PROJECT_NAME || "YOUR_PROJECT_NAME";
+const projectId = env.NEXT_PUBLIC_PROJECT_ID;
 
 const connectors = connectorsForWallets([
   {

@@ -8,9 +8,9 @@ import { LazyImage } from "@/components/image";
 
 import { getImageUrl, getImageUrlApi } from "@/web3/utils/url";
 
-import { socketUrl } from "@/configs";
+import { NEXT_PUBLIC_SOCKET_URL } from "@/configs";
 
-const socket = io(socketUrl);
+const socket = io(NEXT_PUBLIC_SOCKET_URL);
 
 export function ImageWithLoader(props: {
   url: string;
@@ -19,7 +19,7 @@ export function ImageWithLoader(props: {
   transcodingStatus?: string;
   status?: string;
   tokenId: string;
-  address?:string;
+  address?: string;
 }) {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -34,7 +34,7 @@ export function ImageWithLoader(props: {
     return () => {
       socket.off(props.tokenId);
     };
-  }, []); 
+  }, []);
   return (
     <div className="relative h-full overflow-hidden">
       <LazyImage

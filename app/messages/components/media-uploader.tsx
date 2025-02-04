@@ -157,7 +157,7 @@ const MediaUploader: React.FC = () => {
         return newStatus;
       });
 
-      const response = await axios.post(`${env.apiBaseUrl}/dm/upload`, formData, {
+      const response = await axios.post(`${env.NEXT_PUBLIC_API_BASE_URL}/dm/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         },

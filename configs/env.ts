@@ -23,10 +23,12 @@ export const environment = createEnv({
 
     // Network and Node Configuration
     NEXT_PUBLIC_NETWORK_ID: z.coerce.number(),
+    // TODO: these nodes not directly referenced in the code
     NEXT_PUBLIC_NODE_1: z.string().url(),
     NEXT_PUBLIC_NODE_2: z.string().url(),
     NEXT_PUBLIC_NODE_3: z.string().url(),
     NEXT_PUBLIC_BSC_NODE: z.string().url(),
+    // TODO: this should be used, but only define for the server side
     NEXT_PUBLIC_INFURA_KEY: z.string(),
 
     // Web3 Configuration
@@ -35,7 +37,9 @@ export const environment = createEnv({
     NEXT_PUBLIC_PROJECT_NAME: z.string(),
 
     // Communication Services
+    // TODO: this should be defines for the server side only
     NEXT_PUBLIC_SOCKET_URL: z.string().url(),
+    // TODO: this should be defines for the server side only, but not being used
     NEXT_PUBLIC_PUBNUB_PUBKEY: z.string(),
     NEXT_PUBLIC_PUBNUB_SUBKEY: z.string(),
     NEXT_PUBLIC_TENOR_API_KEY: z.string()

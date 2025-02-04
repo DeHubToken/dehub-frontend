@@ -1,27 +1,14 @@
 import { environment } from "@/configs/env";
 
-export const env = {
-  apiBaseUrl: environment.NEXT_PUBLIC_API_BASE_URL,
-  cdnBaseUrl: environment.NEXT_PUBLIC_CDN_BASE_URL,
-  currentNetwork: environment.NEXT_PUBLIC_NETWORK_ID,
-  isDevMode: environment.NEXT_PUBLIC_DEV === "ON",
-  infuraKey: environment.NEXT_PUBLIC_INFURA_KEY,
-  projectId: environment.NEXT_PUBLIC_PROJECT_ID,
-  projectName: environment.NEXT_PUBLIC_PROJECT_NAME,
-  clientId: environment.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
-  socketUrl: environment.NEXT_PUBLIC_SOCKET_URL,
-  tenor_api_key: environment.NEXT_PUBLIC_TENOR_API_KEY,
-  nodes: {
-    1: environment.NEXT_PUBLIC_NODE_1,
-    2: environment.NEXT_PUBLIC_NODE_2,
-    3: environment.NEXT_PUBLIC_NODE_3
-  },
-  bscNode: environment.NEXT_PUBLIC_BSC_NODE,
-  pubNubKey: environment.NEXT_PUBLIC_PUBNUB_PUBKEY,
-  pubNubSubKey: environment.NEXT_PUBLIC_PUBNUB_SUBKEY
-};
+export { environment as env } from "@/configs/env";
 
-export const isDevMode = env.isDevMode;
+export const isDevMode = environment.NEXT_PUBLIC_DEV === "ON";
+
+export const nodes = {
+  1: environment.NEXT_PUBLIC_NODE_1,
+  2: environment.NEXT_PUBLIC_NODE_2,
+  3: environment.NEXT_PUBLIC_NODE_3
+};
 
 export enum ChainId {
   MAINNET = 1,
@@ -382,7 +369,7 @@ export const ErrMsgEn = {
   }
 };
 
-export const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
+export const NEXT_PUBLIC_SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 export const badges = [
   {

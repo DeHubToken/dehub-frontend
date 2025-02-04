@@ -20,7 +20,7 @@ export const networkConnector = new NetworkConnector({
     56: "https://bscrpc.com",
     97: "https://data-seed-prebsc-1-s2.binance.org:8545"
   },
-  defaultChainId: env.currentNetwork
+  defaultChainId: env.NEXT_PUBLIC_NETWORK_ID
 });
 
 export const injectedConnector = new InjectedConnector({
@@ -38,7 +38,7 @@ export const walletConnector = new WalletConnectConnector({
     137: "https://rpc-mainnet.maticvigil.com",
     56: "https://bscrpc.com"
   },
-  chainId: env.currentNetwork,
+  chainId: env.NEXT_PUBLIC_NETWORK_ID,
   bridge: "https://bridge.walletconnect.org",
   qrcode: true
 });

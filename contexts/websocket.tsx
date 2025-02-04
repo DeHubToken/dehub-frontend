@@ -11,7 +11,7 @@ const SocketsContext = createContext<any>({});
 
 export const useWebSockets = () => useContext(SocketsContext);
 
-export const SERVER_URL = env.socketUrl;  
+export const SERVER_URL = env.NEXT_PUBLIC_SOCKET_URL;
 
 // @ts-ignore
 export const WebsocketProvider = ({ children }) => {
@@ -19,19 +19,17 @@ export const WebsocketProvider = ({ children }) => {
   const { account } = useActiveWeb3React();
 
   useEffect(() => {
-    console.log("SERVER_URL",SERVER_URL)
+    console.log("SERVER_URL", SERVER_URL);
 
-
-
-    const socketOptions={
+    const socketOptions = {
       query: {
         address: account
-      }, 
-    }
+      }
+    };
 
     const socket = io(SERVER_URL, socketOptions);
 
-    socket.on("update-online-users", (users) => { 
+    socket.on("update-online-users", (users) => {
       setOnlineUsers(users);
     });
 
