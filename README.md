@@ -17,6 +17,7 @@ Steps of adding a new environment variable:
 3. Add the environment variable to the `configs/env.ts` file.
 4. Add the environment variable to Netlify environment variables.
 
+**Note:** never reference directly `process.env` in the code, always use the `env` object from `@/configs`.
 
 ### Commit Message Format
 
