@@ -1,26 +1,28 @@
+import { environment } from "@/configs/env";
+
 export const env = {
-  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-  cdnBaseUrl: process.env.NEXT_PUBLIC_CDN_BASE_URL,
-  currentNetwork: process.env.NEXT_PUBLIC_NETWORK_ID,
-  isDevMode: process.env.NEXT_PUBLIC_DEV === "ON",
-  infuraKey: process.env.NEXT_PUBLIC_INFURA_KEY,
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-  projectName: process.env.NEXT_PUBLIC_PROJECT_NAME,
-  clientId: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
-  pinataKey: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-  pinataSecretApiKey: process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
-  socketUrl: process.env.NEXT_PUBLIC_SOCKET_URL,
-  pinataUploadUrl: process.env.NEXT_PUBLIC_PINATA_UPLOAD_URL,
-  pinataGatwayKey: process.env.NEXT_PUBLIC_PINATA_GATEWAY_KEY,
-  tenor_api_key: process.env.NEXT_PUBLIC_TENOR_API_KEY,
+  apiBaseUrl: environment.NEXT_PUBLIC_API_BASE_URL,
+  cdnBaseUrl: environment.NEXT_PUBLIC_CDN_BASE_URL,
+  currentNetwork: environment.NEXT_PUBLIC_NETWORK_ID,
+  isDevMode: environment.NEXT_PUBLIC_DEV === "ON",
+  infuraKey: environment.NEXT_PUBLIC_INFURA_KEY,
+  projectId: environment.NEXT_PUBLIC_PROJECT_ID,
+  projectName: environment.NEXT_PUBLIC_PROJECT_NAME,
+  clientId: environment.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
+  pinataKey: environment.NEXT_PUBLIC_PINATA_API_KEY,
+  pinataSecretApiKey: environment.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+  socketUrl: environment.NEXT_PUBLIC_SOCKET_URL,
+  pinataUploadUrl: environment.NEXT_PUBLIC_PINATA_UPLOAD_URL,
+  pinataGatwayKey: environment.NEXT_PUBLIC_PINATA_GATEWAY_KEY,
+  tenor_api_key: environment.NEXT_PUBLIC_TENOR_API_KEY,
   nodes: {
-    1: process.env.NEXT_PUBLIC_NODE_1,
-    2: process.env.NEXT_PUBLIC_NODE_2,
-    3: process.env.NEXT_PUBLIC_NODE_3
+    1: environment.NEXT_PUBLIC_NODE_1,
+    2: environment.NEXT_PUBLIC_NODE_2,
+    3: environment.NEXT_PUBLIC_NODE_3
   },
-  bscNode: process.env.NEXT_PUBLIC_BSC_NODE,
-  pubNubKey: process.env.NEXT_PUBLIC_PUBNUB_KEY,
-  pubNubSubKey: process.env.NEXT_PUBLIC_PUBNUB_SUB_KEY
+  bscNode: environment.NEXT_PUBLIC_BSC_NODE,
+  pubNubKey: environment.NEXT_PUBLIC_PUBNUB_PUBKEY,
+  pubNubSubKey: environment.NEXT_PUBLIC_PUBNUB_SUBKEY
 };
 
 export const isDevMode = env.isDevMode;

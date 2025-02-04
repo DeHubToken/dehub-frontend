@@ -6,8 +6,6 @@ import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 
 import { env, supportedChainIds } from "@/configs";
 
-const { currentNetwork } = env;
-
 export const networkConnector = new NetworkConnector({
   urls: {
     1: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
@@ -21,7 +19,7 @@ export const networkConnector = new NetworkConnector({
     97: "https://data-seed-prebsc-1-s2.binance.org:8545",
     42161: "https://arb1.arbitrum.io/rpc"
   },
-  defaultChainId: parseInt(currentNetwork!)
+  defaultChainId: env.currentNetwork
 });
 
 export const injectedConnector = new InjectedConnector({
@@ -40,7 +38,7 @@ export const walletConnector = new WalletConnectConnector({
     56: "https://bscrpc.com",
     42161: "https://arb1.arbitrum.io/rpc"
   },
-  chainId: parseInt(currentNetwork!),
+  chainId: env.currentNetwork,
   bridge: "https://bridge.walletconnect.org",
   qrcode: true
 });

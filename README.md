@@ -6,6 +6,18 @@
 
 ## Development
 
+### Environment Variables
+
+The project uses [t3-oss/env-nextjs](https://github.com/t3-oss/env-nextjs) to manage environment variables.
+
+Steps of adding a new environment variable:
+
+1. Add the environment variable to the `.env.example` file.
+2. Add the environment variable to the `.env` file.
+3. Add the environment variable to the `configs/env.ts` file.
+4. Add the environment variable to Netlify environment variables.
+
+
 ### Commit Message Format
 
 The project enforces [Conventional Commits](https://www.conventionalcommits.org/) specification. This means that all your commit messages must be formatted according to the specification. To help you write commit messages, the project uses [Commitizen](https://github.com/commitizen/cz-cli), an interactive CLI that guides you through the commit process. To use it, run the following command:
