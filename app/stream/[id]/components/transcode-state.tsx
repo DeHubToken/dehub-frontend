@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-import { NEXT_PUBLIC_SOCKET_URL } from "@/configs";
+import { env } from "@/configs";
 
 export default function TranscodingVideo(props: { tokenId: string }) {
-  const socket = io(NEXT_PUBLIC_SOCKET_URL);
+  const socket = io(env.NEXT_PUBLIC_SOCKET_URL);
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState("uploading started");
 

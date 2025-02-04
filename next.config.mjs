@@ -3,7 +3,7 @@ import withBundleAnalyzer from "@next/bundle-analyzer";
 import { env } from "./configs/env.mjs";
 
 const bundleAnalyzer = withBundleAnalyzer({
-  enabled: process.env.ANALYZE === "true"
+  enabled: env.ANALYZE === "true"
 });
 
 /** @type {import('next').NextConfig} */

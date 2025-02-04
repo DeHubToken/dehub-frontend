@@ -8,9 +8,9 @@ import { LazyImage } from "@/components/image";
 
 import { getImageUrl, getImageUrlApi } from "@/web3/utils/url";
 
-import { NEXT_PUBLIC_SOCKET_URL } from "@/configs";
+import { env } from "@/configs";
 
-const socket = io(NEXT_PUBLIC_SOCKET_URL);
+const socket = io(env.NEXT_PUBLIC_SOCKET_URL);
 
 export function ImageWithLoader(props: {
   url: string;

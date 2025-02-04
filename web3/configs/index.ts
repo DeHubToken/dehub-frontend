@@ -36,23 +36,19 @@ export const STREAM_COLLECTION_CONTRACT_ADDRESSES = {
   //BSC_TESTNET dummy 0x5ae62df56ff1e68fb1772a337859b856caeefab6
 };
 
-const INFURA_KEY = process.env.NEXT_PUBLIC_INFURA_KEY;
-if (typeof INFURA_KEY === "undefined") {
-  throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`);
-}
-
+const infuraKey = env.NEXT_PUBLIC_INFURA_KEY;
 export const NETWORK_URLS: {
   [chainId: number]: string;
 } = {
-  [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.GORLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
+  [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${infuraKey}`,
+  [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${infuraKey}`,
+  [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${infuraKey}`,
+  [ChainId.GORLI]: `https://goerli.infura.io/v3/${infuraKey}`,
+  [ChainId.KOVAN]: `https://kovan.infura.io/v3/${infuraKey}`,
   [ChainId.BSC_MAINNET]: "https://binance.nodereal.io",
   [ChainId.BSC_TESTNET]: `https://data-seed-prebsc-1-s2.binance.org:8545`, //'https://bsc-testnet-rpc.publicnode.com',//`
   [ChainId.POLYGON_MAINNET]: "https://polygon-rpc.co",
-  [ChainId.BASE_MAINNET]: `https://base-sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`
+  [ChainId.BASE_MAINNET]: `https://base-sepolia.infura.io/v3/${infuraKey}`
 };
 
 const testNetworks = [
@@ -245,5 +241,5 @@ const MAIN_NETWORKS = {
 };
 export const SUPPORTED_NETWORKS = isDevMode ? TEST_NETWORKS : MAIN_NETWORKS;
 export const extraRpcUrls = (chainId: any) => {
-  return chainId === ChainId.BSC_MAINNET ? process.env.NEXT_PUBLIC_BSC_NODE : undefined;
+  return chainId === ChainId.BSC_MAINNET ? env.NEXT_PUBLIC_BSC_NODE : undefined;
 };

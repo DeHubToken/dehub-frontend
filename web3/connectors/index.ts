@@ -6,13 +6,16 @@ import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 
 import { env, supportedChainIds } from "@/configs";
 
+const infuraKey = env.NEXT_PUBLIC_INFURA_KEY;
+
+/** @deprecated please use NETWORK_URLS from configs/index.ts */
 export const networkConnector = new NetworkConnector({
   urls: {
-    1: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    3: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    4: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    5: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    42: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+    1: `https://mainnet.infura.io/v3/${infuraKey}`,
+    3: `https://ropsten.infura.io/v3/${infuraKey}`,
+    4: `https://rinkeby.infura.io/v3/${infuraKey}`,
+    5: `https://goerli.infura.io/v3/${infuraKey}`,
+    42: `https://kovan.infura.io/v3/${infuraKey}`,
     250: "https://rpc.ftm.tools",
     137: "https://rpc-mainnet.maticvigil.com",
     56: "https://bscrpc.com",
@@ -26,13 +29,14 @@ export const injectedConnector = new InjectedConnector({
   supportedChainIds
 });
 
+/** @deprecated please use NETWORK_URLS from configs/index.ts */
 export const walletConnector = new WalletConnectConnector({
   rpc: {
-    1: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    3: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    4: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    5: "https://georli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    42: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+    1: `https://mainnet.infura.io/v3/${infuraKey}`,
+    3: `https://ropsten.infura.io/v3/${infuraKey}`,
+    4: `https://rinkeby.infura.io/v3/${infuraKey}`,
+    5: `https://georli.infura.io/v3/${infuraKey}`,
+    42: `https://kovan.infura.io/v3/${infuraKey}`,
     250: "https://rpc.ftm.tools",
     137: "https://rpc-mainnet.maticvigil.com",
     56: "https://bscrpc.com",

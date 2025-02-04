@@ -13,6 +13,9 @@ export const env = createEnv({
     NODE_ENV: z.enum(["development", "test", "production"]).default("development")
   },
   client: {
+    // Webpack Bundle Analyzer
+    ANALYZE: z.coerce.boolean().default(false),
+
     // Development Mode
     NEXT_PUBLIC_DEV: z.enum(["ON", "OFF"]).default("OFF"),
 
@@ -37,7 +40,6 @@ export const env = createEnv({
     NEXT_PUBLIC_PROJECT_NAME: z.string(),
 
     // Communication Services
-    // TODO: this should be defines for the server side only
     NEXT_PUBLIC_SOCKET_URL: z.string().url(),
     // TODO: this should be defines for the server side only, but not being used
     NEXT_PUBLIC_PUBNUB_PUBKEY: z.string(),
@@ -46,6 +48,9 @@ export const env = createEnv({
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
+
+    // Webpack Bundle Analyzer
+    ANALYZE: process.env.ANALYZE,
 
     // Development Mode
     NEXT_PUBLIC_DEV: process.env.NEXT_PUBLIC_DEV,
