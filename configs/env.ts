@@ -34,12 +34,6 @@ export const environment = createEnv({
     NEXT_PUBLIC_PROJECT_ID: z.string(),
     NEXT_PUBLIC_PROJECT_NAME: z.string(),
 
-    // Storage Services (Optional as not being used)
-    NEXT_PUBLIC_PINATA_API_KEY: z.string().optional(),
-    NEXT_PUBLIC_PINATA_SECRET_API_KEY: z.string().optional(),
-    NEXT_PUBLIC_PINATA_UPLOAD_URL: z.string().optional(),
-    NEXT_PUBLIC_PINATA_GATEWAY_KEY: z.string().optional(),
-
     // Communication Services
     NEXT_PUBLIC_SOCKET_URL: z.string().url(),
     NEXT_PUBLIC_PUBNUB_PUBKEY: z.string(),
@@ -69,12 +63,6 @@ export const environment = createEnv({
     NEXT_PUBLIC_WEB3AUTH_CLIENT_ID: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
     NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
     NEXT_PUBLIC_PROJECT_NAME: process.env.NEXT_PUBLIC_PROJECT_NAME,
-
-    // Storage Services
-    NEXT_PUBLIC_PINATA_API_KEY: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-    NEXT_PUBLIC_PINATA_SECRET_API_KEY: process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
-    NEXT_PUBLIC_PINATA_UPLOAD_URL: process.env.NEXT_PUBLIC_PINATA_UPLOAD_URL,
-    NEXT_PUBLIC_PINATA_GATEWAY_KEY: process.env.NEXT_PUBLIC_PINATA_GATEWAY_KEY,
 
     // Communication Services
     NEXT_PUBLIC_SOCKET_URL: process.env.NEXT_PUBLIC_SOCKET_URL,

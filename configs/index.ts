@@ -9,11 +9,7 @@ export const env = {
   projectId: environment.NEXT_PUBLIC_PROJECT_ID,
   projectName: environment.NEXT_PUBLIC_PROJECT_NAME,
   clientId: environment.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
-  pinataKey: environment.NEXT_PUBLIC_PINATA_API_KEY,
-  pinataSecretApiKey: environment.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
   socketUrl: environment.NEXT_PUBLIC_SOCKET_URL,
-  pinataUploadUrl: environment.NEXT_PUBLIC_PINATA_UPLOAD_URL,
-  pinataGatwayKey: environment.NEXT_PUBLIC_PINATA_GATEWAY_KEY,
   tenor_api_key: environment.NEXT_PUBLIC_TENOR_API_KEY,
   nodes: {
     1: environment.NEXT_PUBLIC_NODE_1,
