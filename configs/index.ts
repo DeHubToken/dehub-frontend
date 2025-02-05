@@ -4,12 +4,6 @@ export { env } from "./env";
 
 export const isDevMode = env.NEXT_PUBLIC_DEV === "ON";
 
-export const nodes = {
-  1: env.NEXT_PUBLIC_NODE_1,
-  2: env.NEXT_PUBLIC_NODE_2,
-  3: env.NEXT_PUBLIC_NODE_3
-};
-
 export enum ChainId {
   MAINNET = 1,
   ROPSTEN = 3,

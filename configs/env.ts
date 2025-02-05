@@ -26,10 +26,6 @@ export const env = createEnv({
 
     // Network and Node Configuration
     NEXT_PUBLIC_NETWORK_ID: z.coerce.number(),
-    // TODO: these nodes not directly referenced in the code
-    NEXT_PUBLIC_NODE_1: z.string().url(),
-    NEXT_PUBLIC_NODE_2: z.string().url(),
-    NEXT_PUBLIC_NODE_3: z.string().url(),
     NEXT_PUBLIC_BSC_NODE: z.string().url(),
 
     // Web3 Configuration
@@ -64,9 +60,6 @@ export const env = createEnv({
 
     // Network and Node Configuration
     NEXT_PUBLIC_NETWORK_ID: process.env.NEXT_PUBLIC_NETWORK_ID,
-    NEXT_PUBLIC_NODE_1: process.env.NEXT_PUBLIC_NODE_1,
-    NEXT_PUBLIC_NODE_2: process.env.NEXT_PUBLIC_NODE_2,
-    NEXT_PUBLIC_NODE_3: process.env.NEXT_PUBLIC_NODE_3,
     NEXT_PUBLIC_BSC_NODE: process.env.NEXT_PUBLIC_BSC_NODE,
 
     // Web3 Configuration
