@@ -14,12 +14,12 @@ const getChainConfig = (chains: any[], chainId: number) => {
   const index = chains.findIndex((c) => c.id == chainId);
   return {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
-    chainId: "0x" + chains[index].id.toString(16),
-    rpcTarget: chains[index].rpcUrls.default.http[0], // This is the public RPC we have added, please pass on your own endpoint while creating an app
-    displayName: chains[index].name,
-    tickerName: chains[index].nativeCurrency?.name,
-    ticker: chains[index].nativeCurrency?.symbol,
-    blockExplorer: chains[index].blockExplorers?.default.url //[0],
+    chainId: "0x" + chains[index]?.id.toString(16),
+    rpcTarget: chains[index]?.rpcUrls.default.http[0], // This is the public RPC we have added, please pass on your own endpoint while creating an app
+    displayName: chains[index]?.name,
+    tickerName: chains[index]?.nativeCurrency?.name,
+    ticker: chains[index]?.nativeCurrency?.symbol,
+    blockExplorer: chains[index]?.blockExplorers?.default.url //[0],
   };
 };
 

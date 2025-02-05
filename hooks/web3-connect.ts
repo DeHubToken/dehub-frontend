@@ -41,7 +41,7 @@ const providers = [
   infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY as string })
 ] as any;
 export const { chains, publicClient, webSocketPublicClient } = env.isDevMode
-  ? configureChains([bscTestnet, base, goerli], providers)
+  ? configureChains([bscTestnet, goerli], providers)
   : configureChains(
       [
         bsc,

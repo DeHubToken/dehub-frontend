@@ -1,13 +1,13 @@
 "use client";
 
 // import dynamic from "next/dynamic";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useAccount } from "wagmi";
 
 import { wagmiConfig } from "@/hooks/web3-connect";
 
 import { supportedNetworks } from "@/web3/configs";
-import { useAccount } from "wagmi";
 
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -61,10 +61,22 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
 const SwitchChainProviderContext = createContext<any>({});
 export const useSwitchChain = () => useContext(SwitchChainProviderContext);
+
 export const SwitchChainProvider = ({ children }: any) => {
-  const [selectedChain, setSelectedChain] = useState(supportedNetworks[0].chainId);
-  const switchChain = () => {
-    selectedChain;
+  // Load the selected chain from localStorage or fallback to the default chain
+  const [selectedChain, setSelectedChain] = useState(() => {
+    return localStorage.getItem("selectedChain")
+      ? Number(localStorage.getItem("selectedChain"))
+      : supportedNetworks[0].chainId;
+  });
+
+  // Update localStorage when selectedChain changes
+  useEffect(() => {
+    localStorage.setItem("selectedChain", String(selectedChain));
+  }, [selectedChain]);
+
+  const switchChain = (chainId: number) => {
+    setSelectedChain(chainId);
   };
 
   const contextValue = {

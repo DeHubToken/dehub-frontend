@@ -1099,7 +1099,7 @@ export function UploadForm(props: Props) {
                       placeholder="Select Plans"
                       classNamePrefix="react-select rounded-full"
                       theme={(base) =>
-                        theme == "light"
+                        theme === "light"||theme== "system"
                           ? base
                           : {
                               ...base,

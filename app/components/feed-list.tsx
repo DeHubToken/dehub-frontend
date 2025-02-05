@@ -257,7 +257,7 @@ export function FeedList(props: FeedProps) {
               avatar={feed?.minterAvatarUrl || ""}
               time={(feed?.createdAt)?.toString()}
               minter={feed?.minter}
-              minterStaked={feed.minterStaked} 
+              minterStaked={feed?.minterStaked} 
             />
             <FeedSettingsButton />
           </FeedHeader>
@@ -272,7 +272,15 @@ export function FeedList(props: FeedProps) {
             }
           />
           <FeedFooter>
-            <FeedLikeButton>{feed?.totalVotes?.for || 0}</FeedLikeButton>
+          <LikeButton
+                  className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+                  vote
+                  tokenId={feed?.tokenId}
+                  votes={feed?.totalVotes?.for || 0}
+                  size="sm"
+                >
+                  <HeartFilledIcon className="size-3 fill-red-400" />
+                </LikeButton>
             <FeedCommentButton>{feed?.comment || 0}</FeedCommentButton>
             <FeedBookmarkButton > 
             <BookmarkIcon 
