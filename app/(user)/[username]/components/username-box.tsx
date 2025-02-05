@@ -17,12 +17,12 @@ export function UsernameBox(props: Props) {
   const { user } = props;
   const { theme } = useTheme();
   const { isUserOnline } = useWebSockets();
-
+console.log("user",user)
   return (
     <div className="w-full space-y-2 overflow-hidden">
       <div className="flex size-auto items-start justify-start gap-1">
         <h1 className="text-2xl font-semibold">
-          {user.displayName || user?.username || "No name"}
+          {user.displayName ?? user?.username ??"No name"}
         </h1>
         <div className="relative h-4 w-4">
           <Image

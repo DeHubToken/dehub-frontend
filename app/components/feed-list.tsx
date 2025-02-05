@@ -191,7 +191,7 @@ export function FeedList(props: FeedProps) {
                 <FeedContent name={feed.name} description={feed.description} feed={feed} />
                 <FeedImageGallary
                   images={feed.imageUrls.map((i: any) => ({
-                    url: `${getImageUrlApiSimple(i)}?address=${account}&sig=${signData?.sig}&timestamp=${signData?.timestamp}`,
+                    url: `${getImageUrlApiSimple(i)}?address=${account??""}&sig=${signData?.sig??""}&timestamp=${signData?.timestamp??""}`,
                     alt: feed.name
                   }))}
                 />
@@ -244,7 +244,7 @@ export function FeedList(props: FeedProps) {
           })) || []
         }
       >
-        <FeedCard>
+        <FeedCard className=" max-h-[80vh]">
           <FeedHeader>
             <FeedProfile
               name={feed?.mintername || ""}
@@ -258,7 +258,7 @@ export function FeedList(props: FeedProps) {
           <FeedImageGallary
             images={
               feed?.imageUrls.map((i: string) => ({
-                url: getImageUrlApiSimple(i),
+                url: `${getImageUrlApiSimple(i)}?address=${account??""}&sig=${signData?.sig??""}&timestamp=${signData?.timestamp??""}`,
                 alt: feed?.url
               })) || []
             }

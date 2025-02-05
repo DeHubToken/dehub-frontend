@@ -12,7 +12,7 @@ import "@/styles/global.css";
 import { Layout } from "@/components/layout";
 import { NoticeModal } from "@/components/modals/notice";
 import { ProgressBar } from "@/components/progress";
-import Providers from "@/components/providers";
+import Providers, { SwitchChainProvider } from "@/components/providers";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -67,6 +67,7 @@ export default function RootLayout({ children }: Props) {
           disableTransitionOnChange
         >
           <Providers>
+            <SwitchChainProvider>
             <AvatarWalletProvider>
               <WebsocketProvider>
                 <StreamProvider>
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: Props) {
                 </StreamProvider>
               </WebsocketProvider>
             </AvatarWalletProvider>
+            </SwitchChainProvider>
           </Providers>
         </ThemeProvider>
         <TailwindIndicator />

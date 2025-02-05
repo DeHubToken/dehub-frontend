@@ -18,7 +18,8 @@ export const networkConnector = new NetworkConnector({
     250: "https://rpc.ftm.tools",
     137: "https://rpc-mainnet.maticvigil.com",
     56: "https://bscrpc.com",
-    97: "https://data-seed-prebsc-1-s2.binance.org:8545"
+    97: "https://data-seed-prebsc-1-s2.binance.org:8545",
+    8453:"https://base-mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
   },
   defaultChainId: parseInt(env.currentNetwork || "")
 });
@@ -36,7 +37,8 @@ export const walletConnector = new WalletConnectConnector({
     42: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
     250: "https://rpc.ftm.tools",
     137: "https://rpc-mainnet.maticvigil.com",
-    56: "https://bscrpc.com"
+    56: "https://bscrpc.com",
+    8453:"https://base-mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
   },
   chainId: parseInt(env.currentNetwork || ""),
   bridge: "https://bridge.walletconnect.org",

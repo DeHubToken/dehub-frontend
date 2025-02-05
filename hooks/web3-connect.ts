@@ -7,7 +7,14 @@ import {
   trustWallet,
   walletConnectWallet
 } from "@rainbow-me/rainbowkit/wallets";
- 
+import {
+  base,
+  // mainnet,
+  //  polygon,
+  bsc,
+  bscTestnet,
+  goerli
+} from "@wagmi/chains";
 import {
   configureChains,
   createConfig,
@@ -17,15 +24,6 @@ import {
   useDisconnect,
   useWalletClient
 } from "wagmi";
-import { 
-  // mainnet,
-  //  polygon,
-    bsc, 
-    bscTestnet,
-     goerli,
-     base } from "@wagmi/chains"; 
-
-
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -43,36 +41,45 @@ const providers = [
   infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY as string })
 ] as any;
 export const { chains, publicClient, webSocketPublicClient } = env.isDevMode
-  ? configureChains([bscTestnet, goerli], providers)
-  : configureChains([bsc,
-    //  mainnet,
-      // polygon,
-       base], providers);
+  ? configureChains([bscTestnet, base, goerli], providers)
+  : configureChains(
+      [
+        bsc,
+        //  mainnet,
+        // polygon,
+        base
+      ],
+      providers
+    );
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "YOUR_PROJECT_ID";
 const appName = process.env.NEXT_PUBLIC_PROJECT_NAME || "YOUR_PROJECT_NAME";
 
-const connectors = connectorsForWallets([
-  {
-    groupName: "Recommended",
-    wallets: [
-      metaMaskWallet({ projectId, chains }),
-      walletConnectWallet({ projectId, chains }),
-      trustWallet({ projectId, chains }),
-      rainbowWallet({ projectId, chains }),
-      coinbaseWallet({ appName, chains }),
-      rainbowWeb3AuthConnector({ chains }) as any,
-      rainbowWeb3AuthTwitterConnector({ chains })
-    ]
-  }
-]);
+const connectors = (chainId: number) => {
+  console.log('chainId:++',chainId)
+  return connectorsForWallets([
+    {
+      groupName: "Recommended",
+      wallets: [
+        metaMaskWallet({ projectId, chains }),
+        walletConnectWallet({ projectId, chains }),
+        trustWallet({ projectId, chains }),
+        rainbowWallet({ projectId, chains }),
+        coinbaseWallet({ appName, chains }),
+        rainbowWeb3AuthConnector({ chains, chainId: chainId ?? chains[0].id }) as any,
+        rainbowWeb3AuthTwitterConnector({ chains, chainId: chainId ?? chains[0].id })
+      ]
+    }
+  ]);
+};
 
-export const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-  webSocketPublicClient
-});
-
+export const wagmiConfig = (chainId: number) => {
+  return createConfig({
+    autoConnect: true,
+    connectors: connectors(chainId),
+    publicClient,
+    webSocketPublicClient
+  });
+};
 export function useActiveWeb3React() {
   const { address: account } = useAccount();
   const { error } = useWalletClient();
@@ -82,7 +89,7 @@ export function useActiveWeb3React() {
   const chainId = useChainId();
   const { connect: activate, isSuccess: active } = useConnect();
   const { disconnect: deactivate } = useDisconnect();
-
+ 
   return useMemo(() => {
     return {
       account,

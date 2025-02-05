@@ -81,6 +81,19 @@ const testNetworks = [
     label: "Goerli Testnet",
     customAbbreviation: "goerli",
   },
+  {
+    id: ChainId.BASE_MAINNET,
+    chainId: ChainId.BASE_MAINNET,
+    ticker: "ETH",
+    name: "Base",
+    shortName: "Base",
+    rpcUrl: NETWORK_URLS[ChainId.BASE_MAINNET],
+    explorerUrl: "https://basescan.org/",
+    value: "Base",
+    label: "Base",
+    customAbbreviation: "base",
+    iconUrl:"https://basescan.org/assets/base/images/svg/logos/chain-light.svg?v=25.1.2.0"
+  }
 ];
 
 const mainNetworks = [
@@ -162,6 +175,19 @@ const TEST_NETWORKS = {
     },
     rpcUrls: [NETWORK_URLS[ChainId.BSC_TESTNET]],
     blockExplorerUrls: ["https://testnet.bscscan.com/"],
+  },
+  [ChainId.BASE_MAINNET]: {
+    chainId: "0x2105",  
+    chainName: "Base Mainnet",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18, 
+    },
+    rpcUrls: [
+      "https://mainnet.base.org", 
+    ],
+    blockExplorerUrls: ["https://basescan.org"], 
   },
 };
 

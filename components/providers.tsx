@@ -1,7 +1,13 @@
 "use client";
 
 // import dynamic from "next/dynamic";
+import { createContext, useContext, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import { wagmiConfig } from "@/hooks/web3-connect";
+
+import { supportedNetworks } from "@/web3/configs";
+import { useAccount } from "wagmi";
 
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -52,3 +58,24 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     </>
   );
 }
+
+const SwitchChainProviderContext = createContext<any>({});
+export const useSwitchChain = () => useContext(SwitchChainProviderContext);
+export const SwitchChainProvider = ({ children }: any) => {
+  const [selectedChain, setSelectedChain] = useState(supportedNetworks[0].chainId);
+  const switchChain = () => {
+    selectedChain;
+  };
+
+  const contextValue = {
+    switchChain,
+    setSelectedChain,
+    selectedChain
+  };
+
+  return (
+    <SwitchChainProviderContext.Provider value={contextValue}>
+      {children}
+    </SwitchChainProviderContext.Provider>
+  );
+};

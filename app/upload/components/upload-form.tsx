@@ -221,6 +221,7 @@ export function UploadForm(props: Props) {
       }
       try {
         const sigData = await getSignInfo(library, account);
+        console.log("sigData",sigData)
         const formData = new FormData();
         formData.append("name", data.title);
         formData.append("description", data.description);
