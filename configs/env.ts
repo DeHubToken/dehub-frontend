@@ -36,9 +36,6 @@ export const env = createEnv({
 
     // Communication Services
     NEXT_PUBLIC_SOCKET_URL: z.string().url(),
-    // TODO: this should be defines for the server side only, but not being used
-    NEXT_PUBLIC_PUBNUB_PUBKEY: z.string(),
-    NEXT_PUBLIC_PUBNUB_SUBKEY: z.string(),
     NEXT_PUBLIC_TENOR_API_KEY: z.string()
   },
   runtimeEnv: {
@@ -70,8 +67,6 @@ export const env = createEnv({
 
     // Communication Services
     NEXT_PUBLIC_SOCKET_URL: process.env.NEXT_PUBLIC_SOCKET_URL,
-    NEXT_PUBLIC_PUBNUB_PUBKEY: process.env.NEXT_PUBLIC_PUBNUB_PUBKEY,
-    NEXT_PUBLIC_PUBNUB_SUBKEY: process.env.NEXT_PUBLIC_PUBNUB_SUBKEY,
     NEXT_PUBLIC_TENOR_API_KEY: process.env.NEXT_PUBLIC_TENOR_API_KEY
   },
   /**
