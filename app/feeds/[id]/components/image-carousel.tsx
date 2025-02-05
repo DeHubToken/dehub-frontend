@@ -63,7 +63,7 @@ const ImageCarousel = ({ images }: Props) => {
             <img
               src={`${getImageUrlApiSimple(image)}?address=${account}&sig=${signData?.sig}&timestamp=${signData?.timestamp}`}
               alt={`Slide ${index + 1}`}
-              className="h-auto w-full rounded-lg object-cover"
+              className="w-full rounded-lg object-contain max-h-[500px]"
             />
           </CarouselItem>
         ))}
