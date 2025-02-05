@@ -20,7 +20,8 @@ import { getAvatarUrl, getImageUrl } from "@/web3/utils/url";
 import { isUsernameSetAtom } from "@/stores";
 
 import { useSwitchChain } from "./providers";
-import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTrigger,DialogClose } from "./ui/dialog";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 export type Props = React.ComponentProps<typeof RaninbowConnectButton>;
 
@@ -343,20 +344,23 @@ export const Web3AuthChainSwitchModal = ({
           )}
         </DialogTrigger>
 
-        <DialogContent>
-          <DialogHeader>Switch Networks</DialogHeader>
+        <DialogContent className="rounded-2xl border  border-[#242424ca] bg-[#1a1b1f] max-w-[370px]">
+        <DialogClose className="good absolute z-10 right-[15px] top-[14px] w-[22px] h-[22px] p-[3px] text-[#979dac] rounded-full bg-[#38393c] ">
+        <Cross2Icon/>
+        </DialogClose>
+          <DialogHeader className="text-white  font-bold">Switch Networks</DialogHeader>
           {chains.map((chain) => (
             <button
               key={chain.id}
               onClick={() => setSelectedChain(chain.id)}
-              className="flex w-full items-center justify-between rounded-lg p-2"
+              className={`flex w-full h-[50px] items-center justify-between rounded-full p-3 text-white hover:bg-[#2e3036]  ${chain.id==chainId?"bg-[#860c93] hover:bg-[#860c93]":""}`}
             >
-              <div className="flex items-center gap-2">
-                <img src="/bsc-icon.png" alt="BSC" className="h-6 w-6" />
-                <span>{chain.id}</span>
+              <div className="flex items-center gap-2 leading-[90%] text-left">
+                <img src="https://images.mirror-media.xyz/publication-images/cgqxxPdUFBDjgKna_dDir.png?height=1200&width=1200" alt="BSC" className="h-6 w-6" />
+                <span className=" font-bold">{chain.name}</span> 
               </div>
               {chainId == chain.id && (
-                <span className="text-sm">
+                <span className="text-sm flex gap-1 font-bold">
                   Connected <span className="text-green-500">●</span>
                 </span>
               )}

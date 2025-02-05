@@ -78,7 +78,7 @@ export const SwitchChainProvider = ({ children }: any) => {
   const switchChain = (chainId: number) => {
     setSelectedChain(chainId);
   };
-
+console.log("selectedChain",selectedChain)
   const contextValue = {
     switchChain,
     setSelectedChain,

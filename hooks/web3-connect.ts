@@ -55,7 +55,7 @@ const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "YOUR_PROJECT_ID";
 const appName = process.env.NEXT_PUBLIC_PROJECT_NAME || "YOUR_PROJECT_NAME";
 
 const connectors = (chainId: number) => {
-  console.log('chainId:++',chainId)
+  console.log('chainId:++',chainId,chains)
   return connectorsForWallets([
     {
       groupName: "Recommended",
@@ -73,6 +73,7 @@ const connectors = (chainId: number) => {
 };
 
 export const wagmiConfig = (chainId: number) => {
+  console.log("wagmiConfig",{chainId})
   return createConfig({
     autoConnect: true,
     connectors: connectors(chainId),
