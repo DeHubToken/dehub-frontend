@@ -8,7 +8,7 @@ import { MessageSquareText, Plus } from "lucide-react";
 import { leaderboardColumns } from "@/app/components/leaderboard-modal";
 
 import { Home, LeaderBoard, Profile } from "@/components/icons";
-import { Sidebar } from "@/components/sidebar";
+import { Sidebar } from "@/components/sidebar.new";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -150,5 +150,5 @@ export function MobileOnlyBottomBar() {
 export function DesktopSidebar() {
   const isSmallScreen = useMediaQuery("(max-width: 960px)");
   if (isSmallScreen) return null;
-  return <Sidebar className="md:max-w-[7%] md:flex-[0_0_7%] lg:max-w-[13%] lg:flex-[0_0_13%]" />;
+  return <Sidebar />;
 }
