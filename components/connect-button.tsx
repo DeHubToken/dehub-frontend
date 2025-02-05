@@ -22,7 +22,8 @@ import { isUsernameSetAtom } from "@/stores";
 import { useSwitchChain } from "./providers";
 import { Dialog, DialogContent, DialogHeader, DialogTrigger,DialogClose } from "./ui/dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
-
+import { chainIcons } from "@/configs";
+ 
 export type Props = React.ComponentProps<typeof RaninbowConnectButton>;
 
 type AuthenticationStatus = "loading" | "unauthenticated" | "authenticated";
@@ -356,7 +357,7 @@ export const Web3AuthChainSwitchModal = ({
               className={`flex w-full h-[50px] items-center justify-between rounded-full p-3 text-white hover:bg-[#2e3036]  ${chain.id==chainId?"bg-[#860c93] hover:bg-[#860c93]":""}`}
             >
               <div className="flex items-center gap-2 leading-[90%] text-left">
-                <img src="https://images.mirror-media.xyz/publication-images/cgqxxPdUFBDjgKna_dDir.png?height=1200&width=1200" alt="BSC" className="h-6 w-6" />
+                <img src={chainIcons[chain.id]} alt="BSC" className="h-6 w-6" />
                 <span className=" font-bold">{chain.name}</span> 
               </div>
               {chainId == chain.id && (

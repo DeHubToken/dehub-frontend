@@ -364,7 +364,11 @@ const productionTokens = [
     decimals: 18
   }
 ];
-
+export const chainIcons:any={
+  [ChainId.BASE_MAINNET]:"https://images.mirror-media.xyz/publication-images/cgqxxPdUFBDjgKna_dDir.png?height=1200&width=1200",
+  [ChainId.BSC_MAINNET]:"https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040",
+  [ChainId.BSC_TESTNET]:"https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040"
+}
 export const supportedTokens = isDevMode ? devTokens : productionTokens;
 
 export const supportedTokensForLockContent = supportedTokens.filter((e) => e.symbol === "DHB");
