@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-import { env } from "@/configs";
+import { isDevMode } from "@/configs";
 
 export const profileModeAtom = atom<"view" | "edit">("view");
 export const showCropperAtom = atom<boolean>(false);
@@ -69,7 +69,7 @@ export const getFilesAtom = atom((get) => {
   return { avatarFile, bannerFile };
 });
 
-if (env.NODE_ENV !== "production") {
+if (isDevMode) {
   profileModeAtom.debugLabel = "profileModeAtom";
   showCropperAtom.debugLabel = "showCropperAtom";
   pickedAvatarAtom.debugLabel = "pickedAvatarAtom";

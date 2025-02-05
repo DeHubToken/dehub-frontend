@@ -1,6 +1,6 @@
-import { env } from "./env.mjs";
+import { env } from "./env";
 
-export { env } from "./env.mjs";
+export { env } from "./env";
 
 export const isDevMode = env.NEXT_PUBLIC_DEV === "ON";
 

@@ -14,7 +14,7 @@ export const env = createEnv({
   },
   client: {
     // Webpack Bundle Analyzer
-    ANALYZE: z.coerce.boolean().default(false),
+    NEXT_PUBLIC_ANALYZE: z.coerce.boolean().default(false),
 
     // Development Mode
     NEXT_PUBLIC_DEV: z.enum(["ON", "OFF"]).default("OFF"),
@@ -31,13 +31,12 @@ export const env = createEnv({
     NEXT_PUBLIC_NODE_2: z.string().url(),
     NEXT_PUBLIC_NODE_3: z.string().url(),
     NEXT_PUBLIC_BSC_NODE: z.string().url(),
-    // TODO: this should be used, but only define for the server side
-    NEXT_PUBLIC_INFURA_KEY: z.string(),
 
     // Web3 Configuration
     NEXT_PUBLIC_WEB3AUTH_CLIENT_ID: z.string(),
     NEXT_PUBLIC_PROJECT_ID: z.string(),
     NEXT_PUBLIC_PROJECT_NAME: z.string(),
+    NEXT_PUBLIC_INFURA_KEY: z.string(),
 
     // Communication Services
     NEXT_PUBLIC_SOCKET_URL: z.string().url(),
@@ -47,10 +46,13 @@ export const env = createEnv({
     NEXT_PUBLIC_TENOR_API_KEY: z.string()
   },
   runtimeEnv: {
+    // SERVER ENVIRONMENT VARIABLES
     NODE_ENV: process.env.NODE_ENV,
 
+    // CLIENT ENVIRONMENT VARIABLES
+
     // Webpack Bundle Analyzer
-    ANALYZE: process.env.ANALYZE,
+    NEXT_PUBLIC_ANALYZE: process.env.ANALYZE,
 
     // Development Mode
     NEXT_PUBLIC_DEV: process.env.NEXT_PUBLIC_DEV,
@@ -66,17 +68,33 @@ export const env = createEnv({
     NEXT_PUBLIC_NODE_2: process.env.NEXT_PUBLIC_NODE_2,
     NEXT_PUBLIC_NODE_3: process.env.NEXT_PUBLIC_NODE_3,
     NEXT_PUBLIC_BSC_NODE: process.env.NEXT_PUBLIC_BSC_NODE,
-    NEXT_PUBLIC_INFURA_KEY: process.env.NEXT_PUBLIC_INFURA_KEY,
 
     // Web3 Configuration
     NEXT_PUBLIC_WEB3AUTH_CLIENT_ID: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
     NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
     NEXT_PUBLIC_PROJECT_NAME: process.env.NEXT_PUBLIC_PROJECT_NAME,
+    NEXT_PUBLIC_INFURA_KEY: process.env.NEXT_PUBLIC_INFURA_KEY,
 
     // Communication Services
     NEXT_PUBLIC_SOCKET_URL: process.env.NEXT_PUBLIC_SOCKET_URL,
     NEXT_PUBLIC_PUBNUB_PUBKEY: process.env.NEXT_PUBLIC_PUBNUB_PUBKEY,
     NEXT_PUBLIC_PUBNUB_SUBKEY: process.env.NEXT_PUBLIC_PUBNUB_SUBKEY,
     NEXT_PUBLIC_TENOR_API_KEY: process.env.NEXT_PUBLIC_TENOR_API_KEY
+  },
+  /**
+   * Default error handler for invalid environment variables.
+   * docs: https://env.t3.gg/docs/customization#overriding-the-default-error-handler
+   */
+
+  // Called when the schema validation fails.
+  onValidationError: (issues) => {
+    console.error("❌ Invalid environment variables:", issues);
+    throw new Error("Invalid environment variables");
+  },
+  // Called when server variables are accessed on the client.
+  onInvalidAccess: (variable) => {
+    throw new Error(
+      `❌ Attempted to access a server-side environment variable on the client: ${variable}`
+    );
   }
 });
