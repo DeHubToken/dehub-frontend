@@ -287,9 +287,9 @@ export const Web3AuthChainSwitchModal = ({
   const { chainId } = useActiveWeb3React();
   const { setSelectedChain } = useSwitchChain();
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger>
-        <div className="flex items-center justify-end gap-0 md:gap-4">
+    <div className="flex items-center justify-end gap-0 md:gap-4">
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger>
           {!isSmallScreen || fixed ? (
             <>
               <Button className="h-10 gap-2 rounded-full px-4" size="lg">
@@ -316,38 +316,6 @@ export const Web3AuthChainSwitchModal = ({
                   : chain.name}
                 <ChevronDown className="size-4" />
               </Button>
-              <Button
-                onClick={openAccountModal}
-                variant="gradientOne"
-                size="lg"
-                className="hidden h-10 w-max gap-2 overflow-hidden px-0 md:flex"
-              >
-                <div className="bg-theme-orange-500 grid size-full place-items-center px-4">
-                  {account.displayBalance ? account.displayBalance : ""}
-                </div>
-                {user ? (
-                  <Image
-                    src={
-                      user.result.avatarImageUrl
-                        ? getAvatarUrl(user.result.avatarImageUrl)
-                        : "/images/avatar.png"
-                    }
-                    height={300}
-                    width={300}
-                    alt="avatar"
-                    className="size-6 rounded-full"
-                  />
-                ) : (
-                  <Image
-                    src={account.ensAvatar ? account.ensAvatar : "/images/avatar.png"}
-                    alt="avatar"
-                    height={200}
-                    width={200}
-                    className="size-6 rounded-full"
-                  />
-                )}
-                <span className="pr-6">{user ? user.result?.username : account.displayName}</span>
-              </Button>
             </>
           ) : (
             <>
@@ -371,29 +339,70 @@ export const Web3AuthChainSwitchModal = ({
                   </div>
                 )}
               </Button>
-              <Button
-                onClick={openAccountModal}
-                size="icon_sm"
-                className="rounded-full"
-                variant="ghost"
-              >
-                <Wallet className="scale-125" />
-              </Button>
             </>
           )}
-        </div>
-      </DialogTrigger>
+        </DialogTrigger>
 
-      <DialogContent>
-        <DialogHeader>Switch Networks</DialogHeader>
-        <div>
+        <DialogContent>
+          <DialogHeader>Switch Networks</DialogHeader>
           {chains.map((chain) => (
-            <div>
-              <Button onClick={() => setSelectedChain(chain.id)}> {chain.id}</Button>
-            </div>
+            <button
+              key={chain.id}
+              onClick={() => setSelectedChain(chain.id)}
+              className="flex w-full items-center justify-between rounded-lg p-2"
+            >
+              <div className="flex items-center gap-2">
+                <img src="/bsc-icon.png" alt="BSC" className="h-6 w-6" />
+                <span>{chain.id}</span>
+              </div>
+              {chainId == chain.id && (
+                <span className="text-sm">
+                  Connected <span className="text-green-500">●</span>
+                </span>
+              )}
+            </button>
           ))}
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      {!isSmallScreen || fixed ? (
+        <Button
+          onClick={openAccountModal}
+          variant="gradientOne"
+          size="lg"
+          className="hidden h-10 w-max gap-2 overflow-hidden px-0 md:flex"
+        >
+          <div className="bg-theme-orange-500 grid size-full place-items-center px-4">
+            {account.displayBalance ? account.displayBalance : ""}
+          </div>
+          {user ? (
+            <Image
+              src={
+                user.result.avatarImageUrl
+                  ? getAvatarUrl(user.result.avatarImageUrl)
+                  : "/images/avatar.png"
+              }
+              height={300}
+              width={300}
+              alt="avatar"
+              className="size-6 rounded-full"
+            />
+          ) : (
+            <Image
+              src={account.ensAvatar ? account.ensAvatar : "/images/avatar.png"}
+              alt="avatar"
+              height={200}
+              width={200}
+              className="size-6 rounded-full"
+            />
+          )}
+          <span className="pr-6">{user ? user.result?.username : account.displayName}</span>
+        </Button>
+      ) : (
+        <Button onClick={openAccountModal} size="icon_sm" className="rounded-full" variant="ghost">
+          <Wallet className="scale-125" />
+        </Button>
+      )}
+    </div>
   );
 };

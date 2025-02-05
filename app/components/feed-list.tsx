@@ -115,6 +115,10 @@ export function FeedList(props: FeedProps) {
           item.tokenId === id ? { ...item, isSaved: !item.isSaved } : item
         )
       );
+
+      if(feed){
+        setFeed({...feed,isSaved: !feed.isSaved })
+      }
     }
   };
 
@@ -168,8 +172,10 @@ export function FeedList(props: FeedProps) {
               <FeedHeader>
                 <FeedProfile
                   name={feed.mintername}
-                  avatar={feed.avatar}
-                  time={(feed.createdAt).toString()}
+                  avatar={feed?.minterAvatarUrl}
+                  time={(feed?.createdAt).toString()}
+                  minter={feed?.minter}
+                  minterStaked={feed.minterStaked}
                 />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -248,8 +254,10 @@ export function FeedList(props: FeedProps) {
           <FeedHeader>
             <FeedProfile
               name={feed?.mintername || ""}
-              avatar={feed?.avatar || ""}
+              avatar={feed?.minterAvatarUrl || ""}
               time={(feed?.createdAt)?.toString()}
+              minter={feed?.minter}
+              minterStaked={feed.minterStaked} 
             />
             <FeedSettingsButton />
           </FeedHeader>
@@ -266,7 +274,15 @@ export function FeedList(props: FeedProps) {
           <FeedFooter>
             <FeedLikeButton>{feed?.totalVotes?.for || 0}</FeedLikeButton>
             <FeedCommentButton>{feed?.comment || 0}</FeedCommentButton>
-            <FeedBookmarkButton />
+            <FeedBookmarkButton > 
+            <BookmarkIcon 
+              onClick={(e) => {
+                handleSavePost(feed.tokenId);
+              }}
+            className={`size-4 ${feed?.isSaved ? "fill-white" : "#8a8b8d"}`} 
+            
+            />
+            </FeedBookmarkButton>
             <FeedShareButton tokenId={feed?.tokenId} />
           </FeedFooter>
         </FeedCard>
