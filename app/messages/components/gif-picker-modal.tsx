@@ -30,7 +30,7 @@ export function GifPickerModal() {
             handleToggleGif(false);
             setInput("");
           }}
-          tenorApiKey={env.tensor_api_key || ""}
+          tenorApiKey={env.tenor_api_key || ""}
         />
       </div>
     )
