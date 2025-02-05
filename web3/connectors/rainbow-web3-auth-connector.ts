@@ -1,13 +1,15 @@
 import { CHAIN_NAMESPACES } from "@web3auth/base";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { OpenloginAdapter, OpenloginAdapterOptions } from "@web3auth/openlogin-adapter";
+import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
+
+import { env } from "@/configs";
 
 const name = "Google";
 const iconUrl = "/icons/google.svg";
 
-const getChainConfig = (chains:any) => {
+const getChainConfig = (chains: any) => {
   return {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
     chainId: "0x" + chains[0].id.toString(16),
@@ -15,16 +17,16 @@ const getChainConfig = (chains:any) => {
     displayName: chains[0].name,
     tickerName: chains[0].nativeCurrency?.name,
     ticker: chains[0].nativeCurrency?.symbol,
-    blockExplorer: chains[0].blockExplorers?.default.url, //[0],
+    blockExplorer: chains[0].blockExplorers?.default.url //[0],
   };
 };
 
-const createWeb3AuthNoModal = (chainConfig:any) => {
+const createWeb3AuthNoModal = (chainConfig: any) => {
   return new Web3AuthNoModal({
-    clientId: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID as string,
+    clientId: env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
     chainConfig,
     web3AuthNetwork: "sapphire_mainnet",
-    enableLogging: true,
+    enableLogging: true
   });
 };
 
@@ -32,19 +34,19 @@ const adapterSettings: OpenloginAdapterOptions["adapterSettings"] = {
   network: "sapphire_mainnet",
   uxMode: "popup",
   whiteLabel: {
-    appName: "Dehub.io",
+    appName: env.NEXT_PUBLIC_PROJECT_NAME,
     defaultLanguage: "en",
-    mode: "dark",
-  },
+    mode: "dark"
+  }
 };
 
-export const rainbowWeb3AuthConnector = ({ chains }:any) => {
+export const rainbowWeb3AuthConnector = ({ chains }: any) => {
   const chainConfig = getChainConfig(chains);
   const web3AuthInstance = createWeb3AuthNoModal(chainConfig);
   const privateKeyProvider: any = new EthereumPrivateKeyProvider({ config: { chainConfig } });
   const openloginAdapterInstance = new OpenloginAdapter({
     adapterSettings,
-    privateKeyProvider,
+    privateKeyProvider
   });
 
   web3AuthInstance.configureAdapter(openloginAdapterInstance);
@@ -54,9 +56,9 @@ export const rainbowWeb3AuthConnector = ({ chains }:any) => {
     options: {
       web3AuthInstance,
       loginParams: {
-        loginProvider: "google",
-      },
-    },
+        loginProvider: "google"
+      }
+    }
   });
 
   return {
@@ -66,11 +68,11 @@ export const rainbowWeb3AuthConnector = ({ chains }:any) => {
     iconBackground: "#fff",
     createConnector: () => {
       return { connector };
-    },
+    }
   };
 };
 
-export const rainbowWeb3AuthTwitterConnector = ({ chains }:any) => {
+export const rainbowWeb3AuthTwitterConnector = ({ chains }: any) => {
   // Create Web3Auth Instance
   const chainConfig = getChainConfig(chains);
   const web3AuthInstance = createWeb3AuthNoModal(chainConfig);
@@ -79,7 +81,7 @@ export const rainbowWeb3AuthTwitterConnector = ({ chains }:any) => {
   const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig } });
   const openloginAdapterInstance = new OpenloginAdapter({
     privateKeyProvider,
-    adapterSettings,
+    adapterSettings
   });
   web3AuthInstance.configureAdapter(openloginAdapterInstance);
   const connector = new Web3AuthConnector({
@@ -87,9 +89,9 @@ export const rainbowWeb3AuthTwitterConnector = ({ chains }:any) => {
     options: {
       web3AuthInstance,
       loginParams: {
-        loginProvider: "twitter",
-      },
-    },
+        loginProvider: "twitter"
+      }
+    }
   });
 
   return {
@@ -99,6 +101,6 @@ export const rainbowWeb3AuthTwitterConnector = ({ chains }:any) => {
     iconBackground: "#ffffff00",
     createConnector: () => {
       return { connector };
-    },
+    }
   };
 };

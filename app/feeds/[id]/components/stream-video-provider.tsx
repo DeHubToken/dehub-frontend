@@ -9,11 +9,14 @@ import { useAtomValue } from "jotai";
 import { toast } from "sonner";
 
 import { Video } from "@/components/video";
+
 import { useActiveWeb3React } from "@/hooks/web3-connect";
+
 import { getStreamStatus, isOwner, isTranscoding } from "@/web3/utils/validators";
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { userAtom } from "@/stores";
+
 import { env, ErrMsgEn, streamInfoKeys } from "@/configs";
 
 /* ----------------------------------------------------------------------------------------------- */
@@ -42,8 +45,6 @@ export function StreamVideoProvider(props: { nft: NFT }) {
   const isTranscodingVideo = isTranscoding(nft);
   const streamStatus = getStreamStatus(nft, user, chainId);
 
-  
-
   const isFreeStream =
     !nft?.streamInfo ||
     !(
@@ -58,7 +59,6 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     if (videoRef.current) {
       videoRef.current.onloadedmetadata = () => setLoading(false);
     }
-    
   }, [account, chainId, nft.videoUrl, sig, timestamp]);
 
   // Effect to check if video is free or locked
@@ -93,7 +93,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
       }
 
       const result = await getSignInfo(library, account);
-      
+
       if (!result.sig || result.timestamp === "0") {
         setShowControl(false);
         return;
@@ -119,14 +119,21 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     streamStatus?.streamStatus?.isLockedWithLockContent,
     streamStatus?.streamStatus?.isLockedWithPPV
   ]);
-  console.log(nft, "nft")
-  if (nft.videoUrl && !isTranscodingVideo && !streamStatus?.streamStatus?.isLockedWithLockContent && !streamStatus?.streamStatus?.isLockedWithPPV) {
+  console.log(nft, "nft");
+  if (
+    nft.videoUrl &&
+    !isTranscodingVideo &&
+    !streamStatus?.streamStatus?.isLockedWithLockContent &&
+    !streamStatus?.streamStatus?.isLockedWithPPV
+  ) {
     return (
       <div className="relative h-auto w-full overflow-hidden rounded-2xl">
         {loading && <StreamVideoSkeleton />}
-       <Video
+        <Video
           options={{
-            sources: [{ src: `${env.cdnBaseUrl}videos/${nft.tokenId}.mp4`, type: "video/mp4" }]
+            sources: [
+              { src: `${env.NEXT_PUBLIC_CDN_BASE_URL}videos/${nft.tokenId}.mp4`, type: "video/mp4" }
+            ]
           }}
           onReady={(player) => {
             playerRef.current = player;
@@ -142,7 +149,11 @@ export function StreamVideoProvider(props: { nft: NFT }) {
     );
   }
 
-  if (streamStatus?.streamStatus?.isLockedWithLockContent || streamStatus?.streamStatus?.isLockedWithPPV || error) {
+  if (
+    streamStatus?.streamStatus?.isLockedWithLockContent ||
+    streamStatus?.streamStatus?.isLockedWithPPV ||
+    error
+  ) {
     return (
       <div className="flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl p-3">
         <p>
@@ -158,9 +169,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
 
   return (
     <div className="flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl p-3">
-      <p>
-        Something went wrong
-      </p>
+      <p>Something went wrong</p>
     </div>
   );
 }

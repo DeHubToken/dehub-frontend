@@ -1,29 +1,8 @@
-export const env = {
-  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-  cdnBaseUrl: process.env.NEXT_PUBLIC_CDN_BASE_URL,
-  currentNetwork: process.env.NEXT_PUBLIC_NETWORK_ID,
-  isDevMode: process.env.NEXT_PUBLIC_DEV === "ON",
-  infuraKey: process.env.NEXT_PUBLIC_INFURA_KEY,
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-  projectName: process.env.NEXT_PUBLIC_PROJECT_NAME,
-  clientId: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
-  pinataKey: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-  pinataSecretApiKey: process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
-  socketUrl: process.env.NEXT_PUBLIC_SOCKET_URL,
-  pinataUploadUrl: process.env.NEXT_PUBLIC_PINATA_UPLOAD_URL,
-  pinataGatwayKey: process.env.NEXT_PUBLIC_PINATA_GATEWAY_KEY,
-  tenor_api_key: process.env.NEXT_PUBLIC_TENOR_API_KEY,
-  nodes: {
-    1: process.env.NEXT_PUBLIC_NODE_1,
-    2: process.env.NEXT_PUBLIC_NODE_2,
-    3: process.env.NEXT_PUBLIC_NODE_3
-  },
-  bscNode: process.env.NEXT_PUBLIC_BSC_NODE,
-  pubNubKey: process.env.NEXT_PUBLIC_PUBNUB_KEY,
-  pubNubSubKey: process.env.NEXT_PUBLIC_PUBNUB_SUB_KEY
-};
+import { env } from "./env";
 
-export const isDevMode = env.isDevMode;
+export { env } from "./env";
+
+export const isDevMode = env.NEXT_PUBLIC_DEV === "ON";
 
 export enum ChainId {
   MAINNET = 1,
@@ -372,7 +351,7 @@ export const defaultWatchTimeForPPV = 2 * 60 * 60; // second unit
 export const devFee = 0.1;
 export const publicChatChannelId = "public_chn_prod_1";
 export const limitTip = 1_000_000_000;
-export const expireSignTime = process.env.NET_PUBLIC_DEV ? 60 * 60 * 2 : 60 * 60 * 24; // 2 hours
+export const expireSignTime = env.NEXT_PUBLIC_DEV ? 60 * 60 * 2 : 60 * 60 * 24; // 2 hours
 
 export const ErrMsgEn = {
   lockContent: {},
@@ -383,8 +362,6 @@ export const ErrMsgEn = {
     connect_to_wallet_to_deposit: "Connect wallet to deposit"
   }
 };
-
-export const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 export const badges = [
   {
