@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Book, MessageCircle, MessageSquareText, Newspaper } from "lucide-react";
+import { Book, MessageCircle } from "lucide-react";
 
 import { leaderboardColumns } from "@/app/components/leaderboard-modal";
 
@@ -47,7 +47,6 @@ import {
 import NotificationModal from "./modals/notification-modal";
 
 type Props = React.HTMLAttributes<HTMLDivElement>;
-
 type Link = {
   id: string;
   name: string;
