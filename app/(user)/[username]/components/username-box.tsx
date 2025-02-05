@@ -17,7 +17,6 @@ export function UsernameBox(props: Props) {
   const { user } = props;
   const { theme } = useTheme();
   const { isUserOnline } = useWebSockets();
-console.log("user",user)
   return (
     <div className="w-full space-y-2 overflow-hidden">
       <div className="flex size-auto items-start justify-start gap-1">

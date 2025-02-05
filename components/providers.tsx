@@ -63,26 +63,39 @@ const SwitchChainProviderContext = createContext<any>({});
 export const useSwitchChain = () => useContext(SwitchChainProviderContext);
 
 export const SwitchChainProvider = ({ children }: any) => {
-  // Load the selected chain from localStorage or fallback to the default chain
-  const [selectedChain, setSelectedChain] = useState(() => {
-    return localStorage.getItem("selectedChain")
-      ? Number(localStorage.getItem("selectedChain"))
-      : supportedNetworks[0].chainId;
-  });
+  // Ensure we only access localStorage on the client-side
+  const [selectedChain, setSelectedChain] = useState<number | null>(null);
 
-  // Update localStorage when selectedChain changes
   useEffect(() => {
-    localStorage.setItem("selectedChain", String(selectedChain));
+    if (typeof window !== 'undefined') {
+      // Check localStorage only if it's the client-side
+      const storedChain = localStorage.getItem('selectedChain');
+      if (storedChain) {
+        setSelectedChain(Number(storedChain));
+      } else {
+        // If no selectedChain in localStorage, use default
+        setSelectedChain(supportedNetworks[0].chainId);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedChain !== null && typeof window !== 'undefined') {
+      // Update localStorage when selectedChain changes
+      localStorage.setItem('selectedChain', String(selectedChain));
+    }
   }, [selectedChain]);
 
   const switchChain = (chainId: number) => {
     setSelectedChain(chainId);
   };
-console.log("selectedChain",selectedChain)
+
+  console.log("selectedChain", selectedChain);
+
   const contextValue = {
     switchChain,
     setSelectedChain,
-    selectedChain
+    selectedChain,
   };
 
   return (
