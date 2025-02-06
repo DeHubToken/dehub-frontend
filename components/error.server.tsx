@@ -2,6 +2,8 @@ import { XCircleIcon } from "lucide-react";
 
 import { cn } from "@/libs/utils";
 
+import { env } from "@/configs";
+
 type ErrorProps = {
   title?: string;
   error: string;
@@ -26,7 +28,7 @@ export function Error({ error, title }: ErrorProps) {
               access it.
             </p>
 
-            {process.env.NODE_ENV === "development" && (
+            {env.NODE_ENV === "development" && (
               <div className="my-4 rounded border border-gray-200 bg-theme-mine-shaft-dark p-3 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
                 <pre className="text-xs text-red-600">{error}</pre>
               </div>

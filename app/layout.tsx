@@ -21,6 +21,8 @@ import { Toaster as Toast } from "@/components/ui/toaster";
 import { AvatarWalletProvider } from "@/contexts/avatar-wallet";
 import { WebsocketProvider } from "@/contexts/websocket";
 
+import { env } from "@/configs";
+
 import { StreamProvider } from "./components/stream-provider";
 
 /**
@@ -107,7 +109,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: process.env.NEXT_PUBLIC_URL,
+    url: env.NEXT_PUBLIC_URL,
     title: "DeHub - The Decentralised Entertainment Hub",
     description: "The decentralised entertainment hub, watch, shop &amp; play on-chain today.",
     siteName: "DeHub",

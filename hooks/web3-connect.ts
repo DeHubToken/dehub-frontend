@@ -32,15 +32,12 @@ import {
   rainbowWeb3AuthTwitterConnector
 } from "@/web3/connectors/rainbow-web3-auth-connector";
 
-import { env } from "@/configs";
+import { env, isDevMode } from "@/configs";
 
 import { useEthersProvider, useEthersSigner } from "./wagmi-ethers";
 
-const providers = [
-  publicProvider(),
-  infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY as string })
-] as any;
-export const { chains, publicClient, webSocketPublicClient } = env.isDevMode
+const providers = [publicProvider(), infuraProvider({ apiKey: env.NEXT_PUBLIC_INFURA_KEY })] as any;
+export const { chains, publicClient, webSocketPublicClient } = isDevMode
   ? configureChains([bscTestnet, goerli], providers)
   : configureChains(
       [
@@ -51,8 +48,9 @@ export const { chains, publicClient, webSocketPublicClient } = env.isDevMode
       ],
       providers
     );
-const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "YOUR_PROJECT_ID";
-const appName = process.env.NEXT_PUBLIC_PROJECT_NAME || "YOUR_PROJECT_NAME";
+
+const appName = env.NEXT_PUBLIC_PROJECT_NAME;
+const projectId = env.NEXT_PUBLIC_PROJECT_ID;
 
 const connectors = (chainId: number) => {
   console.log('chainId:++',chainId,chains)

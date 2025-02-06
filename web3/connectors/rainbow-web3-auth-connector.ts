@@ -4,9 +4,9 @@ import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { OpenloginAdapter, OpenloginAdapterOptions } from "@web3auth/openlogin-adapter";
 import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
 
-import { env } from "@/configs";
+import { isDevMode ,env} from "@/configs";
 
-const web3AuthNetwork = env.isDevMode ? "sapphire_devnet" : "sapphire_mainnet";
+const web3AuthNetwork = isDevMode ? "sapphire_devnet" : "sapphire_mainnet";
 const name = "Google";
 const iconUrl = "/icons/google.svg";
 
@@ -25,7 +25,7 @@ const getChainConfig = (chains: any[], chainId: number) => {
 
 const createWeb3AuthNoModal = (chainConfig: any) => {
   return new Web3AuthNoModal({
-    clientId: process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID as string,
+    clientId: env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
     chainConfig,
     web3AuthNetwork: web3AuthNetwork,
     enableLogging: true
@@ -36,7 +36,7 @@ const adapterSettings: OpenloginAdapterOptions["adapterSettings"] = {
   network: web3AuthNetwork,
   uxMode: "popup",
   whiteLabel: {
-    appName: "Dehub.io",
+    appName: env.NEXT_PUBLIC_PROJECT_NAME,
     defaultLanguage: "en",
     mode: "dark"
   }
