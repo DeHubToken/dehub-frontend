@@ -39,6 +39,9 @@ const nextConfig = bundleAnalyzer({
         hostname: process.env.NEXT_PUBLIC_CDN_BASE_URL
           ? new URL(process.env.NEXT_PUBLIC_CDN_BASE_URL).host
           : ""
+      },{
+        protocol:"http",
+        hostname:"localhost"
       },
       {
         protocol: "https",

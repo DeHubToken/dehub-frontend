@@ -29,7 +29,7 @@ function FeedInfo(props: { nft: NFT }) {
         <div className="flex h-auto w-full flex-col items-start justify-between gap-2 sm:flex-row">
           <div className="flex items-center gap-1">
             <p className="text-sm">
-              <span className="font-semibold">Views  :</span> {nft.views || 0}
+              <span className="font-semibold">Views :</span> {nft.views || 0}
             </p>
           </div>
           <p className="text-sm">
@@ -38,7 +38,7 @@ function FeedInfo(props: { nft: NFT }) {
             {getTransactionLink(nft.chainId || defaultChainId, nft.mintTxHash) && (
               <a
                 href={getTransactionLink(nft.chainId || defaultChainId, nft.mintTxHash)!}
-                className="whitespace-pre text-white"
+                className="whitespace-pre "
                 target="_blank"
                 rel="noreferrer"
               >

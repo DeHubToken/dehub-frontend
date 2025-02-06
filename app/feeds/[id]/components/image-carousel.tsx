@@ -60,11 +60,13 @@ const ImageCarousel = ({ images }: Props) => {
       <CarouselContent className="flex h-auto space-x-4">
         {images.map((image, index) => (
           <CarouselItem key={index} className="relative w-full">
+           
             <img
               src={`${getImageUrlApiSimple(image)}?address=${account}&sig=${signData?.sig}&timestamp=${signData?.timestamp}`}
               alt={`Slide ${index + 1}`}
-              className="w-full rounded-lg object-contain max-h-[500px]"
+              className="w-full  object-contain max-h-[500px] overflow-hidden"
             />
+          
           </CarouselItem>
         ))}
       </CarouselContent>
