@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ImagePlay, ImagePlus, Paperclip, PiggyBank, SendHorizonal, Smile } from "lucide-react";
+import { ImagePlay, ImagePlus, Paperclip, Coins, SendHorizonal, Smile } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -154,7 +154,7 @@ export function MessageInput() {
               </DropdownMenuItem>
               {isDmChat && (
                 <DropdownMenuItem onClick={handleToggleTipModal}>
-                  <PiggyBank className="size-5" />
+                  <Coins className="size-5" />
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>

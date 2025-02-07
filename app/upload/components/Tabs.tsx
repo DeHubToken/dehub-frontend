@@ -21,7 +21,7 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab }) => {
         }`}
         onClick={() => setActiveTab("Feed")}
       >
-        Upload Feed's
+         Feed Upload
       </button>
     </div>
   );

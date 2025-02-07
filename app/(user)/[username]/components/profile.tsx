@@ -23,7 +23,8 @@ export async function Profile(props: Props) {
   const res = await getNFTs({
     minter: user.address,
     unit: 40,
-    address: user.address
+    address: user.address,
+    postType:"video"
   });
 
   return (

@@ -28,7 +28,7 @@ function StreamInfo(props: { nft: NFT }) {
         <div className="flex h-auto w-full flex-col items-start justify-between gap-2 sm:flex-row">
           <div className="flex items-center gap-1">
             <p className="text-sm">
-              <span className="font-semibold">Views :</span> {nft.views || 0}
+              <span className="font-semibold">Views  :</span> {nft.views || 0}
             </p>
           </div>
           <p className="text-sm">

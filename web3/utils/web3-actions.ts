@@ -3,7 +3,7 @@
 
 import { getCookie, setCookie } from "@/libs/cookie";
 
-import { env, expireSignTime } from "@/configs";
+import { env, expireSignTime, isDevMode } from "@/configs";
 
 import { performPersonalSign } from "./sign";
 
@@ -49,7 +49,7 @@ import { performPersonalSign } from "./sign";
 // };
 
 export const getSignInfo = async (library: any, account: string) => {
-  const cookieKey = env.isDevMode ? "data_dev" : "data_v2";
+  const cookieKey = isDevMode ? "data_dev" : "data_v2";
   const curTime = Math.floor(Date.now() / 1000);
 
   // Helper to safely parse JSON
@@ -111,4 +111,3 @@ export const getAuthObject = async (Library: any, account: string) =>{
   const { error, ...data } = sigData
   return { address: account.toLocaleLowerCase(), ...data}
 }
-

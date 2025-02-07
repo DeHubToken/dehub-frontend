@@ -56,7 +56,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     openGraph: {
       title: `${userData?.username || userData.displayName} - Profile on Dehub`,
       description: `View ${userData?.username || userData.displayName}'s profile and collections on Dehub.`,
-      url: `https://dehub.io/profile/${userData?.username}`,
+      url: `https://dehub.io/${userData?.username}`,
       siteName: "Dehub",
       images: [
         {
@@ -75,6 +75,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 }
 
 export default async function Page(props: Props) {
+  console.log("props",props)
   const { username } = props.params;
   const res = await getAccount(username);
 

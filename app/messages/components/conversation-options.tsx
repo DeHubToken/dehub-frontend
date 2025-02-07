@@ -41,7 +41,7 @@ const ConversationOptions = ({ type, participant }: Props) => {
           <DropdownMenuItem
             className="flex gap-1 p-2 "
             onClick={() => {
-              router.push(`/profile/${participant.username || participant.address}`);
+              router.push(`/${participant.username || participant.address}`);
             }}
           >
             <User className="size-5" /> <span> Profile</span>

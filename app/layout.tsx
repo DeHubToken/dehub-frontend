@@ -12,7 +12,7 @@ import "@/styles/global.css";
 import { Layout } from "@/components/layout";
 import { NoticeModal } from "@/components/modals/notice";
 import { ProgressBar } from "@/components/progress";
-import Providers from "@/components/providers";
+import Providers, { SwitchChainProvider } from "@/components/providers";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -20,6 +20,8 @@ import { Toaster as Toast } from "@/components/ui/toaster";
 
 import { AvatarWalletProvider } from "@/contexts/avatar-wallet";
 import { WebsocketProvider } from "@/contexts/websocket";
+
+import { env } from "@/configs";
 
 import { StreamProvider } from "./components/stream-provider";
 
@@ -66,15 +68,17 @@ export default function RootLayout({ children }: Props) {
           enableSystem
           disableTransitionOnChange
         >
-          <AvatarWalletProvider>
-            <WebsocketProvider>
-              <Providers>
+          <Providers>
+            <SwitchChainProvider>
+            <AvatarWalletProvider>
+              <WebsocketProvider>
                 <StreamProvider>
                   <Layout>{children}</Layout>
                 </StreamProvider>
-              </Providers>
-            </WebsocketProvider>
-          </AvatarWalletProvider>
+              </WebsocketProvider>
+            </AvatarWalletProvider>
+            </SwitchChainProvider>
+          </Providers>
         </ThemeProvider>
         <TailwindIndicator />
       </body>
@@ -105,7 +109,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: process.env.NEXT_PUBLIC_URL,
+    url: env.NEXT_PUBLIC_URL,
     title: "DeHub - The Decentralised Entertainment Hub",
     description: "The decentralised entertainment hub, watch, shop &amp; play on-chain today.",
     siteName: "DeHub",

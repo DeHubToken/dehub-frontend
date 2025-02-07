@@ -19,8 +19,8 @@ export default function TranscodingVideo(props: { tokenId: string }) {
     return () => {
       socket.off(props.tokenId);
     };
-  }, [])
-  
+  }, []);
+
   return (
     <div className="shimmer relative flex size-full h-auto max-h-[700px] min-h-[480px] flex-col items-center justify-center overflow-hidden rounded-2xl bg-gray-800 p-3">
       {/* Centered Progress Text */}
@@ -33,7 +33,7 @@ export default function TranscodingVideo(props: { tokenId: string }) {
       {/* Loading Bar at the Bottom */}
       <div className="absolute bottom-0 left-0 h-2 w-full overflow-hidden rounded-b-2xl bg-gray-200">
         <div
-          className="shimmer h-full bg-gradient-to-r from-theme-orange-500 to-theme-orange-300 transition-all duration-500"
+          className="shimmer from-theme-orange-500 to-theme-orange-300 h-full bg-gradient-to-r transition-all duration-500"
           style={{ width: "80%" }}
         />
       </div>

@@ -32,7 +32,7 @@ export function StreamVideoSkeleton() {
 }
 
 export function StreamVideoProvider(props: { nft: NFT }) {
-  const { nft } = props; 
+  const { nft } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<Player | null>(null);
 
@@ -48,10 +48,11 @@ export function StreamVideoProvider(props: { nft: NFT }) {
 
   const isFreeStream =
     !nft?.streamInfo ||
-      !(
-        nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
-        nft?.streamInfo?.[streamInfoKeys?.isPayPerView]|| nft?.plansDetails?.length>0
-      )
+    !(
+      nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
+      nft?.streamInfo?.[streamInfoKeys?.isPayPerView] ||
+      nft?.plansDetails?.length > 0
+    )
       ? true
       : false;
 
@@ -66,7 +67,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
       videoRef.current.onloadedmetadata = () => setLoading(false);
     }
   }, [account, chainId, nft.videoUrl, sig, timestamp]);
- 
+
   useEffect(() => {
     async function createUrl() {
       if (isFreeStream || isAnySubscribed(nft.plansDetails) || isOwner(nft, account || "")) {
@@ -145,7 +146,12 @@ export function StreamVideoProvider(props: { nft: NFT }) {
         {loading && <StreamVideoSkeleton />}
         <Video
           options={{
-            sources: [{ src: `${env.cdnBaseUrl}videos/${nft.tokenId}.mp4`, type: "video/mp4" }]
+            sources: [
+              {
+                src: `${env.NEXT_PUBLIC_CDN_BASE_URL}/videos/${nft.tokenId}.mp4`,
+                type: "video/mp4"
+              }
+            ]
           }}
           onPlay={recordView}
           onReady={(player) => {

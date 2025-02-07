@@ -143,7 +143,7 @@ export function StreamItem(props: Props) {
       <div className="flex h-auto w-full flex-col items-start justify-start gap-1 p-4">
         <div className="h-auto w-full">
           <div className="flex size-auto items-center justify-start gap-2">
-            <Link href={`/profile/${nft.mintername || nft.minter}`}>
+            <Link href={`/${nft.mintername || nft.minter}`}>
               <Avatar className="size-8">
                 <AvatarFallback>{createAvatarName(nft.minterDisplayName)}</AvatarFallback>
                 <AvatarImage src={getAvatarUrl(nft.minterAvatarUrl)} />
@@ -154,7 +154,7 @@ export function StreamItem(props: Props) {
               <div className="flex size-auto flex-col items-start justify-start">
                 <p className="text-[11px] font-bold">{truncate(nft.name, 26)}</p>
                 <div className="flex items-start gap-1">
-                  <Link href={`/profile/${nft.mintername || nft.minter}`} className="text-[11px]">
+                  <Link href={`/${nft.mintername || nft.minter}`} className="text-[11px]">
                     {truncate(nft.minterDisplayName || nft.mintername || nft.minter, 26)}
                   </Link>
                   <div className="relative h-3 w-3">

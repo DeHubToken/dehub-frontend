@@ -59,7 +59,6 @@ import MULTICALL_ABI from "@/web3/abis/multicall.json";
 import { STREAM_CONTROLLER_CONTRACT_ADDRESSES, supportedNetworks } from "@/web3/configs";
 import { getTotalBountyAmount } from "@/web3/utils/calc";
 import { filteredStreamInfo } from "@/web3/utils/format";
-import { getIpfsHashFromFile } from "@/web3/utils/ipfs";
 import { multicallRead } from "@/web3/utils/multicall";
 import { getDistinctTokens, getNetworksForToken } from "@/web3/utils/tokens";
 import {
@@ -221,6 +220,7 @@ export function UploadForm(props: Props) {
       }
       try {
         const sigData = await getSignInfo(library, account);
+        console.log("sigData",sigData)
         const formData = new FormData();
         formData.append("name", data.title);
         formData.append("description", data.description);
@@ -261,7 +261,7 @@ export function UploadForm(props: Props) {
         if (result?.error) {
           setUploading(false);
           throw new Error(result?.error_msg || "NFT mint has failed!");
-        } 
+        }
         if (data.streamInfo?.[streamInfoKeys?.isAddBounty]) {
           try {
             const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
@@ -286,24 +286,24 @@ export function UploadForm(props: Props) {
             if (tx?.hash) {
               addTransaction({ hash: tx.hash, description: "Mint With Bounty", confirmations: 3 });
             }
-            await tx.wait(1); 
-            form.reset(); 
+            await tx.wait(1);
+            form.reset();
             // if (!resultFromModal) {
             //   setUploading(false);
             //   throw new Error("NFT mint has failed!");
-            // } 
+            // }
             await invalidateUpload();
             setUploading(false);
             return;
           } catch (err) {
             throw new Error("NFT mint has failed!");
           }
-        } 
+        }
         if (streamCollectionContract) {
-          const estimatedGasPrice = await library.getGasPrice(); 
+          const estimatedGasPrice = await library.getGasPrice();
           const adjustedGasPrice = estimatedGasPrice
             .mul(BigNumber.from(110))
-            .div(BigNumber.from(100)); 
+            .div(BigNumber.from(100));
           // Estimate gas limit
           const estimatedGasLimit = await streamCollectionContract.estimateGas.mint(
             result.createdTokenId,
@@ -314,7 +314,7 @@ export function UploadForm(props: Props) {
             [],
             1000,
             `${result.createdTokenId}.json`
-          ); 
+          );
           const tx = await streamCollectionContract.mint(
             result.createdTokenId,
             result.timestamp,
@@ -323,7 +323,7 @@ export function UploadForm(props: Props) {
             result.s,
             [],
             1000,
-            `${result.createdTokenId}.json`, 
+            `${result.createdTokenId}.json`,
             {
               gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
               gasPrice: adjustedGasPrice
@@ -340,7 +340,7 @@ export function UploadForm(props: Props) {
         if (activeTab == "video") {
           router.push(`/stream/${result.createdTokenId}`);
         } else {
-          router.push(`/?type=feed/${result.createdTokenId}`);
+          router.push(`/?type=feeds/${result.createdTokenId}`);
         }
       } catch (err: any) {
         console.log("err-mint:", err);
@@ -409,7 +409,7 @@ export function UploadForm(props: Props) {
     const description = `Are you sure the details are correct and you wish to proceed? NFT uploads can't be edited and it's on chain forever`;
     setModalDescription(description);
     setShowConfirmationModal(true);
-  }; 
+  };
   const fetchPlans = async () => {
     const obj = {
       address: account?.toLowerCase()
@@ -422,7 +422,7 @@ export function UploadForm(props: Props) {
     if (error) {
       toast.error(error);
     }
-  }; 
+  };
   useEffect(() => {
     fetchPlans();
   }, [account, chainId]);
@@ -703,7 +703,7 @@ export function UploadForm(props: Props) {
                     <FormMessage />
                   </FormItem>
                 )}
-              /> 
+              />
               <div className="flex h-auto w-full flex-col items-start justify-start gap-2 sm:flex-row sm:items-center sm:justify-start">
                 <p className="min-w-[20%] text-lg">Category</p>
 
@@ -1098,7 +1098,7 @@ export function UploadForm(props: Props) {
                       placeholder="Select Plans"
                       classNamePrefix="react-select rounded-full"
                       theme={(base) =>
-                        theme == "light"
+                        theme === "light"||theme== "system"
                           ? base
                           : {
                               ...base,
@@ -1165,7 +1165,7 @@ export function UploadForm(props: Props) {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog> 
+      </Dialog>
       {/* Bounty upload modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent>

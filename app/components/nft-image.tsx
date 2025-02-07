@@ -16,7 +16,7 @@ export function ImageWithLoader(props: {
   transcodingStatus?: string;
   status?: string;
   tokenId: string;
-  address?:string;
+  address?: string;
 }) {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);

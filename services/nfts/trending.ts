@@ -13,6 +13,7 @@ type SearchParams = {
   range?: string | number;
   category?: string | null;
   address?: string;
+  postType?:string;
 };
 
 export type GetNFTsResult = {
@@ -71,7 +72,8 @@ export async function getNFTs(params?: SearchParams) {
         range: params.range,
         category: params.category,
         address: params.address,
-        page: params.page
+        page: params.page,
+        postType:params.postType
       })
     );
     const url = `/search_nfts${query}`;

@@ -170,7 +170,7 @@ export const UserOptions = ({ user }: any) => {
         <DropdownMenuItem
           className="flex gap-1 p-2"
           onClick={() => {
-            router.push(`/profile/${user.username || user.address}`);
+            router.push(`/${user.username || user.address}`);
           }}
         >
           <UserCircle /> <span> Profile</span>

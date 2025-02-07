@@ -10,7 +10,7 @@ const SocketsContext = createContext<any>({});
 
 export const useWebSockets = () => useContext(SocketsContext);
 
-export const SERVER_URL = env.socketUrl;  
+export const SERVER_URL = env.NEXT_PUBLIC_SOCKET_URL;
 
 export const WebsocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
