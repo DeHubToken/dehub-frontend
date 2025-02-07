@@ -21,6 +21,7 @@ export function InformationPanel(props: Props) {
   const { user } = props;
   const { theme } = useTheme();
   const { isUserOnline } = useWebSockets();
+  const maxStaked = (user?.balanceData?.reduce((max, item) => Math.max(max, item.staked), 0)) ?? 0; 
   return (
     <div className="mt-8 flex h-auto w-full flex-col items-start justify-between gap-6 md:flex-row md:gap-0">
       <div className="flex size-auto flex-col items-start justify-start gap-8">
@@ -29,7 +30,7 @@ export function InformationPanel(props: Props) {
             <h1 className="text-2xl font-semibold sm:w-auto flex gap-2">
               {user.displayName || user?.username || "No name"}{" "}
               {user.displayName && <span className="text-sm">({user?.username})</span>} <Image
-                src={getBadgeUrl(user?.badge?.name as string, theme)}
+                src={getBadgeUrl(maxStaked, theme)}
                 alt="User Badge"
                 layout="fill"
                 className={`object-contain prof_le ${

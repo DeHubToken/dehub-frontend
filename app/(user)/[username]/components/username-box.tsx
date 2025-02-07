@@ -16,7 +16,8 @@ type Props = {
 export function UsernameBox(props: Props) {
   const { user } = props;
   const { theme } = useTheme();
-  const { isUserOnline } = useWebSockets();
+  const { isUserOnline } = useWebSockets(); 
+  const maxStaked = (user?.balanceData?.reduce((max, item) => Math.max(max, item.staked), 0)) ?? 0; 
   return (
     <div className="w-full space-y-2 overflow-hidden">
       <div className="flex size-auto items-start justify-start gap-1">
@@ -25,7 +26,7 @@ export function UsernameBox(props: Props) {
         </h1>
         <div className="relative h-4 w-4">
           <Image
-            src={getBadgeUrl(user?.badge?.name as string, theme)}
+            src={getBadgeUrl(maxStaked, theme)}
             alt="User Badge" 
             layout="fill"
             className={`object-contain ${
