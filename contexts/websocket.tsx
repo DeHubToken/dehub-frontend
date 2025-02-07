@@ -33,31 +33,33 @@ export const WebsocketProvider = ({ children }: { children: React.ReactNode }) =
         }, 
       }
 
-      const authObject = account ? await getAuthObject(library, account as string) : {};
-      const socketIO = io(SERVER_URL, {
-        auth: authObject,
-        ...socketOptions
-      });
+      // Disable this until mux is settled
+      // TODO: update for stream chat
+      // const authObject = account ? await getAuthObject(library, account as string) : {};
+      // const socketIO = io(SERVER_URL, {
+      //   auth: authObject,
+      //   ...socketOptions
+      // });
 
-      socketIO.on("update-online-users", (users: string[]) => {
-        if (isMounted) {
-          setOnlineUsers(users);
-        }
-      });
+      // socketIO.on("update-online-users", (users: string[]) => {
+      //   if (isMounted) {
+      //     setOnlineUsers(users);
+      //   }
+      // });
 
-      if (account) {
-        socketIO.emit("join", account);
-        socketIO.io.on("reconnect", () => {
-          socketIO.emit("join", account);
-        });
-      }
+      // if (account) {
+      //   socketIO.emit("join", account);
+      //   socketIO.io.on("reconnect", () => {
+      //     socketIO.emit("join", account);
+      //   });
+      // }
 
-      if (isMounted) {
-        socketRef.current = socketIO;
-        setSocket(socketIO);
-      } else {
-        socketIO.disconnect();
-      }
+      // if (isMounted) {
+      //   socketRef.current = socketIO;
+      //   setSocket(socketIO);
+      // } else {
+      //   socketIO.disconnect();
+      // }
     };
 
     setUpSockets();
