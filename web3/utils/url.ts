@@ -17,7 +17,7 @@ export function getImageUrl(url: string, width?: number, height?: number) {
   }
 
   try {
-    return env.NEXT_PUBLIC_CDN_BASE_URL + "images/" + fileName + q; // Use the extracted filename
+    return env.NEXT_PUBLIC_CDN_BASE_URL + "/images/" + fileName + q; // Use the extracted filename
   } catch (err) {
     return url + q; // Fallback to the original URL
   }
@@ -63,10 +63,10 @@ export function dmMediaUrl(url: string, h?: number, w?: number) {
   if (w) queryParams.append("w", w.toString());
 
   return queryParams.toString()
-    ? `${env.NEXT_PUBLIC_CDN_BASE_URL}${url}?${queryParams.toString()}`
-    : `${env.NEXT_PUBLIC_CDN_BASE_URL}${url}`;
+    ? `${env.NEXT_PUBLIC_CDN_BASE_URL}/${url}?${queryParams.toString()}`
+    : `${env.NEXT_PUBLIC_CDN_BASE_URL}/${url}`;
 }
 
 export function commentImageUrl(url: string) {
-  return `${env.NEXT_PUBLIC_CDN_BASE_URL}${url}`;
+  return `${env.NEXT_PUBLIC_CDN_BASE_URL}/${url}`;
 }
