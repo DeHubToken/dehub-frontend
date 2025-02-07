@@ -92,3 +92,4 @@ body {
 }
 
 .side_menu{ height: calc(100vh - 150px);}
+.prof_le{ position:relative !important; width: 20px !important; height: 20px !important;}

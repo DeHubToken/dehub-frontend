@@ -56,7 +56,7 @@ export const leaderboardColumns: ColumnDef<LeaderboradResponse["result"]["byWall
               </AvatarFallback>
               <AvatarImage src={getAvatarUrl(user.avatarUrl || "")} />
             </Avatar>
-            <Link href={`/profile/${user?.username || user.account}`}>
+            <Link href={`/${user?.username || user.account}`}>
               {truncate(user?.username || user.userDisplayName || user.account, 14)}
             </Link>
           </div>

@@ -220,6 +220,7 @@ export function UploadForm(props: Props) {
       }
       try {
         const sigData = await getSignInfo(library, account);
+        console.log("sigData",sigData)
         const formData = new FormData();
         formData.append("name", data.title);
         formData.append("description", data.description);
@@ -339,7 +340,7 @@ export function UploadForm(props: Props) {
         if (activeTab == "video") {
           router.push(`/stream/${result.createdTokenId}`);
         } else {
-          router.push(`/?type=feed/${result.createdTokenId}`);
+          router.push(`/?type=feeds/${result.createdTokenId}`);
         }
       } catch (err: any) {
         console.log("err-mint:", err);
@@ -1097,7 +1098,7 @@ export function UploadForm(props: Props) {
                       placeholder="Select Plans"
                       classNamePrefix="react-select rounded-full"
                       theme={(base) =>
-                        theme == "light"
+                        theme === "light"||theme== "system"
                           ? base
                           : {
                               ...base,

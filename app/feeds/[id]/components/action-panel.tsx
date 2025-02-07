@@ -18,18 +18,18 @@ import { PPVModal } from "./ppv-modal";
 import { Share } from "./share";
 import { LikeButton } from "./stream-actions"; 
 import { TipModal } from "./tip-modal";
-import {SubscriptionModal} from "@/app/profile/[username]/components/subscription-modal"
+import {SubscriptionModal} from "@/app/(user)/[username]/components/subscription-modal"
 export function ActionPanel(props: { nft: NFT; tokenId: number }) {
   const { nft, tokenId } = props;
   const { isUserOnline } = useWebSockets();
   const { theme } = useTheme();
 
   return (
-    <div className="mt-3 h-auto w-full">
-      <p className="text-sm">
+    <div className="mt-3 h-auto ">
+      <p className="flex text-sm">
         Uploaded by{" "}
         <Link
-          href={`/profile/${nft.mintername || nft.minter}`}
+          href={`/${nft.mintername || nft.minter}`}
           className="flex items-center gap-2 text-classic-purple"
         >
           <span>{nft.minterDisplayName || nft.mintername}</span>

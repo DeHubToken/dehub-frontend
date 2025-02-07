@@ -26,7 +26,7 @@ export function FeedContent({ name, description, feed }: Props) {
     !feed?.streamInfo ||
     !(
       feed?.streamInfo?.[streamInfoKeys?.isLockContent] ||
-      feed?.streamInfo?.[streamInfoKeys?.isPayPerView]||feed?.plansDetails
+      feed?.streamInfo?.[streamInfoKeys?.isPayPerView]||feed?.plansDetails.length>0
     )
       ? true
       : false;

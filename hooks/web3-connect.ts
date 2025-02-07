@@ -52,28 +52,33 @@ export const { chains, publicClient, webSocketPublicClient } = isDevMode
 const appName = env.NEXT_PUBLIC_PROJECT_NAME;
 const projectId = env.NEXT_PUBLIC_PROJECT_ID;
 
-const connectors = connectorsForWallets([
-  {
-    groupName: "Recommended",
-    wallets: [
-      metaMaskWallet({ projectId, chains }),
-      walletConnectWallet({ projectId, chains }),
-      trustWallet({ projectId, chains }),
-      rainbowWallet({ projectId, chains }),
-      coinbaseWallet({ appName, chains }),
-      rainbowWeb3AuthConnector({ chains }) as any,
-      rainbowWeb3AuthTwitterConnector({ chains })
-    ]
-  }
-]);
+const connectors = (chainId: number) => {
+  console.log('chainId:++',chainId,chains)
+  return connectorsForWallets([
+    {
+      groupName: "Recommended",
+      wallets: [
+        metaMaskWallet({ projectId, chains }),
+        walletConnectWallet({ projectId, chains }),
+        trustWallet({ projectId, chains }),
+        rainbowWallet({ projectId, chains }),
+        coinbaseWallet({ appName, chains }),
+        rainbowWeb3AuthConnector({ chains, chainId: chainId ?? chains[0].id }) as any,
+        rainbowWeb3AuthTwitterConnector({ chains, chainId: chainId ?? chains[0].id })
+      ]
+    }
+  ]);
+};
 
-export const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-  webSocketPublicClient
-});
-
+export const wagmiConfig = (chainId: number) => {
+  console.log("wagmiConfig",{chainId})
+  return createConfig({
+    autoConnect: true,
+    connectors: connectors(chainId),
+    publicClient,
+    webSocketPublicClient
+  });
+};
 export function useActiveWeb3React() {
   const { address: account } = useAccount();
   const { error } = useWalletClient();
@@ -83,7 +88,7 @@ export function useActiveWeb3React() {
   const chainId = useChainId();
   const { connect: activate, isSuccess: active } = useConnect();
   const { disconnect: deactivate } = useDisconnect();
-
+ 
   return useMemo(() => {
     return {
       account,

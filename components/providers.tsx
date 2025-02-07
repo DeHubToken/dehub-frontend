@@ -1,7 +1,13 @@
 "use client";
 
 // import dynamic from "next/dynamic";
+import { createContext, useContext, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useAccount } from "wagmi";
+
+import { wagmiConfig } from "@/hooks/web3-connect";
+
+import { supportedNetworks } from "@/web3/configs";
 
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -52,3 +58,49 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     </>
   );
 }
+
+const SwitchChainProviderContext = createContext<any>({});
+export const useSwitchChain = () => useContext(SwitchChainProviderContext);
+
+export const SwitchChainProvider = ({ children }: any) => {
+  // Ensure we only access localStorage on the client-side
+  const [selectedChain, setSelectedChain] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Check localStorage only if it's the client-side
+      const storedChain = localStorage.getItem('selectedChain');
+      if (storedChain) {
+        setSelectedChain(Number(storedChain));
+      } else {
+        // If no selectedChain in localStorage, use default
+        setSelectedChain(supportedNetworks[0].chainId);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedChain !== null && typeof window !== 'undefined') {
+      // Update localStorage when selectedChain changes
+      localStorage.setItem('selectedChain', String(selectedChain));
+    }
+  }, [selectedChain]);
+
+  const switchChain = (chainId: number) => {
+    setSelectedChain(chainId);
+  };
+
+  console.log("selectedChain", selectedChain);
+
+  const contextValue = {
+    switchChain,
+    setSelectedChain,
+    selectedChain,
+  };
+
+  return (
+    <SwitchChainProviderContext.Provider value={contextValue}>
+      {children}
+    </SwitchChainProviderContext.Provider>
+  );
+};

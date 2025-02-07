@@ -43,10 +43,10 @@ import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { userAtom } from "@/stores";
 
+import { SubscriptionModal } from "../(user)/[username]/components/subscription-modal";
 import { PPVModal } from "../feeds/[id]/components/ppv-modal";
 import { LikeButton } from "../feeds/[id]/components/stream-actions";
 import TipModal from "../feeds/[id]/components/tip-modal";
-import { SubscriptionModal } from "../profile/[username]/components/subscription-modal";
 import { ClaimAsCommentor, ClaimAsViewer } from "../stream/[id]/components/claims";
 import { useClaimBounty } from "../stream/[id]/hooks/use-claim-bounty";
 
@@ -82,18 +82,21 @@ export function FeedList(props: FeedProps) {
       window.location.reload();
       return;
     }
-    if (storedAccount !== account) {
+    if (storedAccount !== account|| !signData?.sig || !signData?.timestamp) {
       syncSigData();
     }
   }, [account]);
-
+  console.log("signData", signData);
   const syncSigData = async () => {
+    console.log("signData result", 3333);
     if (!account) {
       setSignData({ sig: "", timestamp: "" });
       return;
     }
     const result = await getSignInfo(library, account);
+    console.log("signData result", result);
     if (result && result.sig && result.timestamp) {
+      console.log("signData seting sig data");
       setSignData({ sig: result.sig, timestamp: result.timestamp });
     } else {
       setSignData({ sig: "", timestamp: "" });
@@ -115,6 +118,10 @@ export function FeedList(props: FeedProps) {
           item.tokenId === id ? { ...item, isSaved: !item.isSaved } : item
         )
       );
+
+      if (feed) {
+        setFeed({ ...feed, isSaved: !feed.isSaved });
+      }
     }
   };
 
@@ -168,8 +175,10 @@ export function FeedList(props: FeedProps) {
               <FeedHeader>
                 <FeedProfile
                   name={feed.mintername}
-                  avatar={feed.avatar}
-                  time={new Date(feed.createdAt).toString()}
+                  avatar={feed?.minterAvatarUrl}
+                  time={(feed?.createdAt).toString()}
+                  minter={feed?.minter}
+                  minterStaked={feed.minterStaked}
                 />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -191,7 +200,7 @@ export function FeedList(props: FeedProps) {
                 <FeedContent name={feed.name} description={feed.description} feed={feed} />
                 <FeedImageGallary
                   images={feed.imageUrls.map((i: any) => ({
-                    url: `${getImageUrlApiSimple(i)}?address=${account}&sig=${signData?.sig}&timestamp=${signData?.timestamp}`,
+                    url: `${getImageUrlApiSimple(i)}?address=${account ?? ""}&sig=${signData?.sig ?? ""}&timestamp=${signData?.timestamp ?? ""}`,
                     alt: feed.name
                   }))}
                 />
@@ -244,28 +253,46 @@ export function FeedList(props: FeedProps) {
           })) || []
         }
       >
-        <FeedCard>
+        <FeedCard className=" max-h-[80vh]">
           <FeedHeader>
             <FeedProfile
               name={feed?.mintername || ""}
-              avatar={feed?.avatar || ""}
-              time={new Date(feed?.createdAt).toString()}
+              avatar={feed?.minterAvatarUrl || ""}
+              time={feed?.createdAt?.toString()}
+              minter={feed?.minter}
+              minterStaked={feed?.minterStaked}
             />
             <FeedSettingsButton />
           </FeedHeader>
+
           <FeedContent name={feed?.name} description={feed?.description} feed={feed} />
           <FeedImageGallary
             images={
               feed?.imageUrls.map((i: string) => ({
-                url: getImageUrlApiSimple(i),
+                url: `${getImageUrlApiSimple(i)}?address=${account ?? ""}&sig=${signData?.sig ?? ""}&timestamp=${signData?.timestamp ?? ""}`,
                 alt: feed?.url
               })) || []
             }
           />
           <FeedFooter>
-            <FeedLikeButton>{feed?.totalVotes?.for || 0}</FeedLikeButton>
+            <LikeButton
+              className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+              vote
+              tokenId={feed?.tokenId}
+              votes={feed?.totalVotes?.for || 0}
+              size="sm"
+            >
+              <HeartFilledIcon className="size-3 fill-red-400" />
+            </LikeButton>
             <FeedCommentButton>{feed?.comment || 0}</FeedCommentButton>
-            <FeedBookmarkButton />
+            <FeedBookmarkButton>
+              <BookmarkIcon
+                onClick={(e) => {
+                  handleSavePost(feed.tokenId);
+                }}
+                className={`size-4 ${feed?.isSaved ? "fill-white" : "#8a8b8d"}`}
+              />
+            </FeedBookmarkButton>
             <FeedShareButton tokenId={feed?.tokenId} />
           </FeedFooter>
         </FeedCard>
@@ -332,7 +359,7 @@ const DropDownItemSubscriptionModal = ({ post }: { post: NFT }) => {
     <DropdownMenuItem onClick={(e) => e.preventDefault()}>
       <SubscriptionModal
         plans={post?.plansDetails}
-        avatarImageUrl={post?.minterAvatarUrl} 
+        avatarImageUrl={post?.minterAvatarUrl}
         aboutMe={post?.minterAboutMe}
         displayName={post.mintername || post.minter}
       />

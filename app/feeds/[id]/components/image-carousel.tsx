@@ -36,18 +36,21 @@ const ImageCarousel = ({ images }: Props) => {
       window.location.reload();
       return;
     }
-    if (storedAccount !== account) {
+    if (storedAccount !== account|| !signData?.sig || !signData?.timestamp) {
       syncSigData();
     }
   }, [account]);
-
+  console.log("signData", signData);
   const syncSigData = async () => {
+    console.log("signData result", 3333);
     if (!account) {
       setSignData({ sig: "", timestamp: "" });
       return;
     }
     const result = await getSignInfo(library, account);
+    console.log("signData result", result);
     if (result && result.sig && result.timestamp) {
+      console.log("signData seting sig data");
       setSignData({ sig: result.sig, timestamp: result.timestamp });
     } else {
       setSignData({ sig: "", timestamp: "" });
@@ -60,11 +63,13 @@ const ImageCarousel = ({ images }: Props) => {
       <CarouselContent className="flex h-auto space-x-4">
         {images.map((image, index) => (
           <CarouselItem key={index} className="relative w-full">
+           
             <img
               src={`${getImageUrlApiSimple(image)}?address=${account}&sig=${signData?.sig}&timestamp=${signData?.timestamp}`}
               alt={`Slide ${index + 1}`}
-              className="h-auto w-full rounded-lg object-cover"
+              className="w-full  object-contain max-h-[500px] overflow-hidden"
             />
+          
           </CarouselItem>
         ))}
       </CarouselContent>

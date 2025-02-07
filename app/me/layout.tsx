@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
         openGraph: {
           title: `${userData?.username || userData.displayName} - Profile on Dehub`,
           description: `View ${userData?.username}'s profile and collections on Dehub.`,
-          url: `https://dehub.io/profile/${userData?.username}`,
+          url: `https://dehub.io/${userData?.username}`,
           siteName: "Dehub",
           images: [
             {

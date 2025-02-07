@@ -80,19 +80,6 @@ const testNetworks = [
 
 const mainNetworks = [
   {
-    id: ChainId.MAINNET,
-    chainId: ChainId.MAINNET,
-    ticker: "ETH",
-    name: "Ethereum",
-    shortName: "Ethereum",
-    rpcUrl: NETWORK_URLS[ChainId.MAINNET],
-    explorerUrl: "https://etherscan.io/",
-    value: "Ethereum",
-    label: "Ethereum",
-    customAbbreviation: "ethereum",
-    iconUrl: ""
-  },
-  {
     id: ChainId.BSC_MAINNET,
     chainId: ChainId.BSC_MAINNET,
     ticker: "BNB",
@@ -103,7 +90,31 @@ const mainNetworks = [
     value: "BNB Chain",
     label: "BNB Chain",
     customAbbreviation: "bnb_chain",
-    iconUrl: ""
+    iconUrl:""
+  },{
+    id: ChainId.BASE_MAINNET,
+    chainId: ChainId.BASE_MAINNET,
+    ticker: "ETH",
+    name: "Base",
+    shortName: "Base",
+    rpcUrl: NETWORK_URLS[ChainId.BASE_MAINNET],
+    explorerUrl: "https://basescan.org/",
+    value: "Base",
+    label: "Base",
+    customAbbreviation: "base",
+    iconUrl:"https://basescan.org/assets/base/images/svg/logos/chain-light.svg?v=25.1.2.0"
+  },  {
+    id: ChainId.MAINNET,
+    chainId: ChainId.MAINNET,
+    ticker: "ETH",
+    name: "Ethereum",
+    shortName: "Ethereum",
+    rpcUrl: NETWORK_URLS[ChainId.MAINNET],
+    explorerUrl: "https://etherscan.io/",
+    value: "Ethereum",
+    label: "Ethereum",
+    customAbbreviation: "ethereum",
+    iconUrl:""
   },
   {
     id: ChainId.POLYGON_MAINNET,
@@ -116,37 +127,24 @@ const mainNetworks = [
     value: "Polygon",
     label: "Polygon",
     customAbbreviation: "polygon",
-    iconUrl: ""
-  },
-  {
-    id: ChainId.BASE_MAINNET,
-    chainId: ChainId.BASE_MAINNET,
-    ticker: "ETH",
-    name: "Base",
-    shortName: "Base",
-    rpcUrl: NETWORK_URLS[ChainId.BASE_MAINNET],
-    explorerUrl: "https://basescan.org/",
-    value: "Base",
-    label: "Base",
-    customAbbreviation: "base",
-    iconUrl: "https://basescan.org/assets/base/images/svg/logos/chain-light.svg?v=25.1.2.0"
+    iconUrl:""
   }
 ];
 
 export const supportedNetworks = isDevMode ? testNetworks : mainNetworks;
 
 const TEST_NETWORKS = {
-  [ChainId.GORLI]: {
-    chainId: "0x5",
-    chainName: "Goerli",
-    nativeCurrency: {
-      name: "Ethereum",
-      symbol: "ETH",
-      decimals: 18
-    },
-    rpcUrls: [NETWORK_URLS[ChainId.GORLI]],
-    blockExplorerUrls: ["https://etherscan.io"]
-  },
+  // [ChainId.GORLI]: {
+  //   chainId: "0x5",
+  //   chainName: "Goerli",
+  //   nativeCurrency: {
+  //     name: "Ethereum",
+  //     symbol: "ETH",
+  //     decimals: 18,
+  //   },
+  //   rpcUrls: [NETWORK_URLS[ChainId.GORLI]],
+  //   blockExplorerUrls: ["https://etherscan.io"],
+  // },
   [ChainId.BSC_TESTNET]: {
     chainId: "0x61",
     chainName: "BSC Testnet",
@@ -156,8 +154,9 @@ const TEST_NETWORKS = {
       decimals: 18
     },
     rpcUrls: [NETWORK_URLS[ChainId.BSC_TESTNET]],
-    blockExplorerUrls: ["https://testnet.bscscan.com/"]
-  }
+    blockExplorerUrls: ["https://testnet.bscscan.com/"],
+  },
+  
 };
 
 const MAIN_NETWORKS = {
