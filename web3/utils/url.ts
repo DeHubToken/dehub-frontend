@@ -40,7 +40,7 @@ export function getAvatarUrl(url: string) {
 
   const fileName = url.split("/").pop();
 
-  return `${env.NEXT_PUBLIC_API_BASE_URL}/avatars/${fileName}`;
+  return `${env.NEXT_PUBLIC_CDN_BASE_URL}/avatars/${fileName}`;
 }
 
 export function getGroupAvatarUrl(url: string) {
