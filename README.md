@@ -23,6 +23,7 @@ Steps of adding a new environment variable:
 - Never reference directly `process.env` in the code, always use the `env` object from `@/configs`.
 - If the environment variable is a client-side variable, add it to the `NEXT_PUBLIC_` prefix.
 - If you import server-side variables on the client and try access, you will get a runtime error.
+- If you add new url environment variable be sure not to include the ending slash `/` in the variable.
 
 ### Commit Message Format
 
