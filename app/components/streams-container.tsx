@@ -81,7 +81,6 @@ export function StreamsContainer(props: Props) {
     }
 
     const filteredData = res.data.result.filter((nft) => !streamsMap.has(`${nft._id}`));
-    // @ts-ignore
     setData(prevData => [...prevData, ...filteredData]);
     setPage(page + 1);
   }
@@ -173,15 +172,12 @@ export function SearchItemsContainer(props: Omit<Props, "isSearch"> & { accounts
       return;
     }
 
-    // @ts-ignore
     if (res.data.result.videos.length === 0 && res.data.result.accounts.length === 0) {
       setHasMore(false);
       return;
     }
 
-    // @ts-ignore
     setData([...data, ...res.data.result.videos]);
-    // @ts-ignore
     setAccounts([...accounts, ...res.data.result.accounts]);
 
     setPage(page + 1);

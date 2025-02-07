@@ -163,7 +163,7 @@ const groups = [
       },
       {
         id: "live",
-        name: "LIve",
+        name: "Live",
         icon: <Broadcast />,
         url: () => {
           const query = new URLSearchParams();
