@@ -355,7 +355,8 @@ export const defaultWatchTimeForPPV = 2 * 60 * 60; // second unit
 export const devFee = 0.1;
 export const publicChatChannelId = "public_chn_prod_1";
 export const limitTip = 1_000_000_000;
-export const expireSignTime = env.NEXT_PUBLIC_DEV ? 60 * 60 * 2 : 60 * 60 * 24; // 2 hours
+export const expireSignTime = env.NEXT_PUBLIC_DEV ? 60 * 60 * 24 : 60 * 60 * 24; // 24 hours
+// export const expireSignTime = env.NEXT_PUBLIC_DEV ? 60 * 60 * 2 : 60 * 60 * 24; // Ideal case, 2hrs for dev, 24 for prod
 
 export const ErrMsgEn = {
   lockContent: {},

@@ -61,7 +61,7 @@ export default function ViewerView({stream}: { stream: any }) {
 
     let hls: Hls | null = null;
     const video = videoRef.current;
-    const streamUrl = `${env.cdnBaseUrl}live/hls/${stream._id}/playlist.m3u8`;
+    const streamUrl = `${env.NEXT_PUBLIC_CDN_BASE_URL}live/hls/${stream._id}/playlist.m3u8`;
 
     if (Hls.isSupported()) {
       hls = new Hls();
