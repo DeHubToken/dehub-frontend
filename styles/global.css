@@ -114,6 +114,10 @@
     --theme-neutrals-700: 216 4% 23%; /* #383A3D */
     --theme-neutrals-800: 210 6% 12%; /* #1D1F21 */
     --theme-neutrals-900: 210 67% 1%; /* #010305 */
+
+    --navbar-height: calc((80 / 16) * 1rem);
+    --leaderboard-width: calc((400 / 16) * 1rem);
+    --sidebar-width: calc((88 / 16) * 1rem);
   }
 
   /* NOTE: Dark mode variables are same as root one. Since our new design system has only dark mode.

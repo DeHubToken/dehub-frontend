@@ -295,14 +295,14 @@ export function Sidebar(props: Props) {
     <div
       {...props}
       className={cn(
-        "sticky left-0 top-0 h-screen w-full overflow-hidden overflow-y-scroll py-20",
+        "sticky left-0 top-[calc(var(--navbar-height)+24px)] h-screen w-full overflow-hidden overflow-y-scroll",
         "min-w-[calc((88/16)*1rem)] max-w-[calc((88/16)*1rem)]",
         "flex flex-col",
         props.className
       )}
     >
-      {groups.map((group) => (
-        <div key={group.label} className="py-5">
+      {groups.map((group, index) => (
+        <div key={group.label} className={cn(index !== 0 ? "py-5" : "")}>
           {group.links.map((link) => {
             const isActive = type?.toLowerCase() === link.id.toLowerCase();
 

@@ -33,8 +33,8 @@ export default async function Page(props: Props) {
   const key = category + "-" + range + "-" + type + "-" + q;
 
   return (
-    <main className="flex h-auto min-h-screen w-full items-start justify-between">
-      <div className="h-auto min-h-screen w-full px-6 py-20 md:max-w-[75%] md:flex-[0_0_75%]">
+    <div className="flex h-auto min-h-screen w-full items-start justify-between">
+      <div className="h-auto min-h-screen w-full max-w-[calc(100%-var(--leaderboard-width))] flex-1 px-6">
         <Categories
           title={type.toUpperCase()}
           category={category}
@@ -80,6 +80,6 @@ export default async function Page(props: Props) {
       <Suspense fallback={<LeaderboardSkeleton />}>
         <Leaderboard />
       </Suspense>
-    </main>
+    </div>
   );
 }
