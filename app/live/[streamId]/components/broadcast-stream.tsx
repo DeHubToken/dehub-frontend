@@ -128,15 +128,15 @@ export default function BroadcastStream(props: { streamId: string }) {
           </div>
         )}
 
-        {(stream.status === StreamStatus.LIVE || isStartingNw) && stream.status !== StreamStatus.ENDED && (
-          <>
+        {/* {(stream.status === StreamStatus.LIVE || isStartingNw) && stream.status !== StreamStatus.ENDED && (
+          <> */}
             {isBroadcastOwner ? (
               <StreamerView stream={stream} isBroadcastOwner={isBroadcastOwner} />
             ) : (
               <ViewerView stream={stream} />
             )}
-          </>
-        )}
+          {/* </>
+        )} */}
 
         {stream.status === StreamStatus.ENDED && <ReplayPlayer streamId={streamId} />}
       </Suspense>

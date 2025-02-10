@@ -10,7 +10,8 @@ import { z } from "zod";
 export const env = createEnv({
   emptyStringAsUndefined: true,
   server: {
-    NODE_ENV: z.enum(["development", "test", "production"]).default("development")
+    NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+    LIVEPEER_API_KEY: z.string(),
   },
   client: {
     // Webpack Bundle Analyzer
@@ -67,7 +68,10 @@ export const env = createEnv({
 
     // Communication Services
     NEXT_PUBLIC_SOCKET_URL: process.env.NEXT_PUBLIC_SOCKET_URL,
-    NEXT_PUBLIC_TENOR_API_KEY: process.env.NEXT_PUBLIC_TENOR_API_KEY
+    NEXT_PUBLIC_TENOR_API_KEY: process.env.NEXT_PUBLIC_TENOR_API_KEY,
+
+    // Livepeer
+    LIVEPEER_API_KEY: process.env.LIVEPEER_API_KEY
   },
   /**
    * Default error handler for invalid environment variables.
