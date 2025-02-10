@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 
 import { useWebSockets } from "@/contexts/websocket";
 
+import { useActiveWeb3React } from "@/hooks/web3-connect";
+
 import { truncate } from "@/libs/strings";
 import { createAvatarName } from "@/libs/utils";
 
@@ -26,7 +28,6 @@ import { getAvatarUrl } from "@/web3/utils/url";
 
 import { LikeButton } from "../stream/[id]/components/stream-actions";
 import { ImageWithLoader } from "./nft-image";
-import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 type Props = {
   nft: any;
@@ -39,8 +40,8 @@ export function StreamItem(props: Props) {
   const [isHidden, setIsHidden] = useState<boolean>(nft.isHidden);
   const [isHovered, setIsHovered] = useState(false);
   const { isUserOnline } = useWebSockets();
-  const {account }=useActiveWeb3React()
-  const { theme } = useTheme(); 
+  const { account } = useActiveWeb3React();
+  const { theme } = useTheme();
   const updateVisibility = async (id: string) => {
     try {
       const res = await updateNftVisibility({ id: nft.tokenId, isHidden: !isHidden });
@@ -53,11 +54,11 @@ export function StreamItem(props: Props) {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  
+
   return (
     <div
       {...rest}
-      className="relative flex h-auto w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
+      className="relative flex h-auto w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
     >
       <div className="relative flex h-0 w-full overflow-hidden rounded-2xl pt-[56.25%] text-sm font-semibold sm:h-[225px] sm:pt-0 xl:h-[175px] 2xl:h-[235px]">
         <Link
@@ -115,13 +116,9 @@ export function StreamItem(props: Props) {
             />
           </div>
         )}
-   {
-   nft?.plansDetails?.length>0 
-    && (
+        {nft?.plansDetails?.length > 0 && (
           <div className="absolute -left-20 bottom-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-classic-purple px-12 py-0.5 text-center text-xs text-white">
-            <span>
-          Subscribe To Watch 
-            </span> 
+            <span>Subscribe To Watch</span>
           </div>
         )}
         {nft?.streamInfo?.isLockContent && (
@@ -141,7 +138,7 @@ export function StreamItem(props: Props) {
       </div>
 
       <div className="flex h-auto w-full flex-col items-start justify-start gap-1 p-4">
-        <div className="h-auto w-full">
+        <div className="h-auto w-full px-2">
           <div className="flex size-auto items-center justify-start gap-2">
             <Link href={`/profile/${nft.mintername || nft.minter}`}>
               <Avatar className="size-8">
@@ -152,15 +149,20 @@ export function StreamItem(props: Props) {
 
             <div className="flex w-full items-center justify-between">
               <div className="flex size-auto flex-col items-start justify-start">
-                <p className="text-[11px] font-bold">{truncate(nft.name, 26)}</p>
-                <div className="flex items-start gap-1">
-                  <Link href={`/profile/${nft.mintername || nft.minter}`} className="text-[11px]">
+                <p className="text-xs font-bold text-theme-neutrals-200">
+                  {truncate(nft.name, 26)}
+                </p>
+                <div className="mt-1 flex items-start gap-1">
+                  <Link
+                    href={`/profile/${nft.mintername || nft.minter}`}
+                    className="text-[10px] text-neutral-400"
+                  >
                     {truncate(nft.minterDisplayName || nft.mintername || nft.minter, 26)}
                   </Link>
                   <div className="relative h-3 w-3">
                     <Image
                       src={getBadgeUrl(nft.minterStaked, theme)}
-                      alt="User Badge" 
+                      alt="User Badge"
                       layout="fill"
                       className={`object-contain ${!isUserOnline(nft.minter) ? "" : ""}`} // TODO: Add glow effect for when they are online
                     />
@@ -173,7 +175,7 @@ export function StreamItem(props: Props) {
                     <CiMenuKebab />
                   </div>
                   {isOpen && (
-                    <div className="shadow-lg absolute right-0 z-50 mt-2 w-48 rounded-md bg-black ring-1 ring-black ring-opacity-5">
+                    <div className="absolute right-0 z-50 mt-2 w-48 rounded-md bg-black shadow-lg ring-1 ring-black ring-opacity-5">
                       <div className="z-50 py-1">
                         <div
                           onClick={() => updateVisibility(nft.id)}
@@ -192,22 +194,20 @@ export function StreamItem(props: Props) {
           </div>
         </div>
         <div className="flex w-full items-center justify-between">
-          <span className="text-[10px]">
-            {formatDistance(new Date(nft.createdAt), new Date(), { addSuffix: true })}
-          </span>
+          <div />
           <div className="flex h-auto items-center justify-end gap-2">
             <LikeButton
-              className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+              className="gap-1 rounded-full bg-theme-neutrals-700 px-3 py-[2px] text-theme-neutrals-400 dark:bg-theme-neutrals-700 dark:text-theme-neutrals-400"
               vote
               tokenId={nft.tokenId}
               votes={nft.totalVotes?.for || 0}
               size="sm"
             >
-              <HeartFilledIcon className="size-3 fill-red-400" />
+              <HeartFilledIcon className="size-3 fill-theme-neutrals-400" />
             </LikeButton>
             <Button
               size="sm"
-              className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+              className="gap-1 rounded-full bg-theme-neutrals-700 px-3 py-[2px] text-theme-neutrals-400 dark:bg-theme-neutrals-700 dark:text-theme-neutrals-400"
             >
               <EyeOpenIcon className="size-3" />
               {nft.views || 0}

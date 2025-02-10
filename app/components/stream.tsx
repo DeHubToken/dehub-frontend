@@ -45,13 +45,6 @@ export async function Stream(props: FeedProps) {
 
   return (
     <div className="h-auto w-full">
-      {/* <div className="flex h-auto w-full items-center justify-between">
-        <Title title={props.type} />
-        <div className="flex size-auto items-center justify-center gap-4">
-          <StreamRangeFilter range={range} />
-        </div>
-      </div> */}
-
       <div className="h-auto w-full">
         {isSearched && (
           <SearchItemsContainer
@@ -69,7 +62,7 @@ export async function Stream(props: FeedProps) {
           <StreamsContainer
             address={user?.address}
             isSearch={isSearched}
-            data={res?.data?.result??[]}
+            data={res?.data?.result ?? []}
             type={type}
             range={range}
             q={q}
@@ -80,16 +73,3 @@ export async function Stream(props: FeedProps) {
     </div>
   );
 }
-
-// function Title(props: { title: string }) {
-//   const { title } = props;
-//   if (title === "trends") {
-//     return <h1 className="text-4xl font-semibold">Most Viewed</h1>;
-//   }
-
-//   if (title === "locked") {
-//     return <h1 className="text-4xl font-semibold">TOKEN GATED</h1>;
-//   }
-
-//   return <h1 className="text-4xl font-semibold capitalize">{title}</h1>;
-// }

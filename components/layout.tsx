@@ -22,7 +22,7 @@ export function Layout(props: Props) {
           <DesktopSidebar />
         </Suspense>
         <MobileOnlyBottomBar />
-        <main className="h-auto w-full max-w-[calc(100vw-var(--sidebar-width))] pt-6">
+        <main className="h-auto w-full max-w-full pt-6 md:max-w-[calc(100vw-var(--sidebar-width))]">
           {props.children}
         </main>
       </div>
