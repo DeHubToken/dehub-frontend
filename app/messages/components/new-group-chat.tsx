@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
+import { miniAddress } from "@/libs/strings";
+
 import { createGroupChat, searchUserOrGroup } from "@/services/dm";
 import { getPlans } from "@/services/subscription-plans";
 
@@ -74,7 +76,7 @@ export const NewGroupChatModal = ({
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
     setIsLoading(true);
-    setError(""); 
+    setError("");
     try {
       const response: any | undefined = await searchUserOrGroup({ q: searchTerm });
       if (response?.success && response.data?.users) {
@@ -166,7 +168,7 @@ export const NewGroupChatModal = ({
         handleSearch();
       }
     }, 300); // 300ms delay
-  
+
     return () => clearTimeout(delayDebounce); // Cleanup timeout
   }, [searchTerm]);
   useEffect(() => {
@@ -224,7 +226,10 @@ export const NewGroupChatModal = ({
                       />
                       <div className="flex flex-col">
                         <span className="font-bold">{user.displayName || user.username}</span>
-                        <span className="text-sm text-gray-500 min-w-24 break-all">{`${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}</span>
+                        <span className="min-w-24 break-all text-sm text-gray-500">
+                          {" "}
+                          {miniAddress(user?.address)}
+                        </span>
                       </div>
                       {isSelected && <span className="ml-auto text-blue-500 ">Selected</span>}
                     </div>

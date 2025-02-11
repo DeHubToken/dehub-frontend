@@ -1,3 +1,8 @@
+import BaseIcon from "@/assets/base-icon.svg";
+import BnbIcon from "@/assets/bnb-icon.png";
+import BnbTestnet from "@/assets/bnb-icon.png"; // Ensure the correct file is used
+import GorliTestnet from "@/assets/gorli-icon.png"; // Ensure the correct file is used
+
 import { env } from "./env";
 
 export { env } from "./env";
@@ -20,6 +25,13 @@ export enum ChainId {
   POLYGON_MAINNET = 137,
   BASE_MAINNET = 8453
 }
+
+export const chainIcons: Record<number, any> = {
+  [ChainId.BASE_MAINNET]: BaseIcon,
+  [ChainId.BSC_MAINNET]: BnbIcon,
+  [ChainId.BSC_TESTNET]: BnbTestnet,
+  [ChainId.GORLI]:GorliTestnet
+};
 
 export const streamInfoKeys = {
   isLockContent: "isLockContent",
@@ -334,11 +346,7 @@ const productionTokens = [
     decimals: 18
   }
 ];
-export const chainIcons:any={
-  [ChainId.BASE_MAINNET]:"https://images.mirror-media.xyz/publication-images/cgqxxPdUFBDjgKna_dDir.png?height=1200&width=1200",
-  [ChainId.BSC_MAINNET]:"https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040",
-  [ChainId.BSC_TESTNET]:"https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040"
-}
+
 export const supportedTokens = isDevMode ? devTokens : productionTokens;
 
 export const supportedTokensForLockContent = supportedTokens.filter((e) => e.symbol === "DHB");
@@ -355,7 +363,7 @@ export const defaultWatchTimeForPPV = 2 * 60 * 60; // second unit
 export const devFee = 0.1;
 export const publicChatChannelId = "public_chn_prod_1";
 export const limitTip = 1_000_000_000;
-export const expireSignTime = env.NEXT_PUBLIC_DEV==="ON" ? 60 * 60 * 2 : 60 * 60 * 24; // 2 hours
+export const expireSignTime = env.NEXT_PUBLIC_DEV === "ON" ? 60 * 60 * 2 : 60 * 60 * 24; // 2 hours
 
 export const ErrMsgEn = {
   lockContent: {},

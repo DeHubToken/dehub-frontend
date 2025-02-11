@@ -5,3 +5,8 @@ export function truncate(str: string, length: number) {
   }
   return str;
 }
+
+export function miniAddress(address: string|null|undefined): string {
+  if (!address) return ""; // Handle undefined or empty input
+  return `${address.substring(0, 6)}...${address.slice(-4)}`;
+}
