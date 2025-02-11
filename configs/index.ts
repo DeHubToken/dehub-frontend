@@ -346,7 +346,6 @@ const productionTokens = [
     decimals: 18
   }
 ];
-
 export const supportedTokens = isDevMode ? devTokens : productionTokens;
 
 export const supportedTokensForLockContent = supportedTokens.filter((e) => e.symbol === "DHB");
