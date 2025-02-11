@@ -19,6 +19,7 @@ import { getAvatarUrl, getGroupAvatarUrl } from "@/web3/utils/url";
 
 import { useMessage } from "./provider";
 import { ContactSkeleton } from "./skeleton";
+import { miniAddress } from "@/libs/strings";
 
 dayjs.extend(relativeTime);
 
@@ -147,7 +148,7 @@ const UserInfo = ({ participant, isPro = true, lastOnline, lastMessage, tips }: 
           <span className="text-base font-bold">
             {user?.displayName ||
               user?.username ||
-              `${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}
+                   miniAddress(user?.address) }
           </span>
           {isPro && <AvatarStar />}
           <span className="text-xs text-gray-500">{dayjs(lastMessage?.createdAt).fromNow()}</span>
