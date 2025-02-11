@@ -12,8 +12,6 @@ const livepeer = new Livepeer({
 export const getPlaybackSource = async (playbackId: string) => {
   const playbackInfo = await livepeer.playback.get(playbackId);
 
-  console.log(playbackInfo)
-  const src = getSrc(playbackInfo.playbackInfo);
-
+  const src = getSrc(playbackInfo.playbackInfo?.meta.source);
   return src;
 };
