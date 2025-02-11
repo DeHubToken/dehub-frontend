@@ -24,14 +24,14 @@ export default function ProfileTabView({
   return (
     <div>
       <div className="flex flex-wrap justify-between align-middle">
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap dark:border-theme-mine-shaft bg-theme-monochrome-600 rounded-full border">
           {tabs.map(({ key, label }) => (
             <Link
               key={key}
               href={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}?tab=${key}`}
-              className={`rounded-t-lg border-b-2 px-6 py-2 ${
+              className={` px-6 py-2 ${
                 activeTab === key
-                  ? "border-blue-500 text-blue-500"
+                  ? "rounded-full dark:bg-theme-mine-shaft bg-theme-mine-shaft-dark"
                   : "border-transparent text-gray-500"
               }`}
             >
