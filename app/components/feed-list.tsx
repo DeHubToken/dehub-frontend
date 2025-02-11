@@ -51,11 +51,13 @@ import { ClaimAsCommentor, ClaimAsViewer } from "../stream/[id]/components/claim
 import { useClaimBounty } from "../stream/[id]/hooks/use-claim-bounty";
 
 type FeedProps = {
-  title: string;
+  title?: string;
   category?: string;
   range?: string;
-  type: string;
+  type?: string;
   q?: string;
+  minter?: string;
+  postType?: string;
 };
 
 export function FeedList(props: FeedProps) {
@@ -63,7 +65,7 @@ export function FeedList(props: FeedProps) {
     open: false
   });
 
-  const { category, range, type, q } = props;
+  const { category, range, type, q, minter, postType } = props;
   const [feeds, setFeeds] = useState<any>([]);
   const [feed, setFeed] = useState<any>(null);
   const searchParams = useSearchParams();
@@ -82,13 +84,11 @@ export function FeedList(props: FeedProps) {
       window.location.reload();
       return;
     }
-    if (storedAccount !== account|| !signData?.sig || !signData?.timestamp) {
+    if (storedAccount !== account || !signData?.sig || !signData?.timestamp) {
       syncSigData();
     }
-  }, [account]);
-  console.log("signData", signData);
+  }, [account]); 
   const syncSigData = async () => {
-    console.log("signData result", 3333);
     if (!account) {
       setSignData({ sig: "", timestamp: "" });
       return;
@@ -135,7 +135,8 @@ export function FeedList(props: FeedProps) {
         range,
         search: q,
         address: account,
-        postType: "feed-all"
+        minter: minter ?? "",
+        postType: postType ?? "feed-all"
       });
       if (res.success) {
         if (hasSaved) {
@@ -145,15 +146,7 @@ export function FeedList(props: FeedProps) {
         }
       }
     })();
-  }, [account, library, hasSaved]);
-  // useEffect(() => {
-  //   (async () => {
-  //     if (account) {
-  //       const data = await getSignInfo(library, account);
-  //       setSignData(data);
-  //     }
-  //   })();
-  // }, [account, library, hasSaved]);
+  }, [account, library, hasSaved]); 
   const fetchFeed = async () => {
     if (!selectedFeed.tokenId) {
       return;
@@ -169,9 +162,9 @@ export function FeedList(props: FeedProps) {
   return (
     <div className="flex w-full flex-col items-center gap-3">
       {feeds && feeds.length > 0 ? (
-        feeds.map((feed: any) => {
+        feeds.map((feed: any,key:number) => {
           return (
-            <FeedCard key={feed.id}>
+            <FeedCard key={key}>
               <FeedHeader>
                 <FeedProfile
                   name={feed.mintername}
@@ -301,7 +294,7 @@ export function FeedList(props: FeedProps) {
   );
 }
 
-const ClaimAsCommentorDropdownItem = ({ post }: { post: NFT }) => {
+export const ClaimAsCommentorDropdownItem = ({ post }: { post: NFT }) => {
   const { claim } = useClaimBounty(post, post.tokenId, 1);
   if (!claim) return null;
   if (claim && !claim.commentor) return null;
@@ -312,7 +305,7 @@ const ClaimAsCommentorDropdownItem = ({ post }: { post: NFT }) => {
   );
 };
 
-const ClaimAsViewerDropdownItem = ({ post }: { post: NFT }) => {
+export const ClaimAsViewerDropdownItem = ({ post }: { post: NFT }) => {
   const { claim } = useClaimBounty(post, post.tokenId, 0);
 
   if (!claim) return null;
@@ -324,7 +317,7 @@ const ClaimAsViewerDropdownItem = ({ post }: { post: NFT }) => {
     </DropdownMenuItem>
   );
 };
-const WithPPVDropdownItem = ({ post }: { post: NFT }) => {
+export const WithPPVDropdownItem = ({ post }: { post: NFT }) => {
   const user = useAtomValue(userAtom);
   const { chainId } = useActiveWeb3React();
   const streamStatus = getStreamStatus(post, user, chainId);
@@ -338,14 +331,14 @@ const WithPPVDropdownItem = ({ post }: { post: NFT }) => {
   );
 };
 
-const DropDownItemTip = ({ post }: { post: NFT }) => {
+export const DropDownItemTip = ({ post }: { post: NFT }) => {
   return (
     <DropdownMenuItem onClick={(e) => e.preventDefault()}>
       <TipModal tokenId={post.tokenId} to={post?.minter} />
     </DropdownMenuItem>
   );
 };
-const DropDownItemReport = ({ post }: { post: NFT }) => {
+export const DropDownItemReport = ({ post }: { post: NFT }) => {
   return (
     <DropdownMenuItem>
       <BugIcon className="size-5" />
@@ -354,7 +347,7 @@ const DropDownItemReport = ({ post }: { post: NFT }) => {
   );
 };
 
-const DropDownItemSubscriptionModal = ({ post }: { post: NFT }) => {
+export const DropDownItemSubscriptionModal = ({ post }: { post: NFT }) => {
   return (
     <DropdownMenuItem onClick={(e) => e.preventDefault()}>
       <SubscriptionModal

@@ -11,6 +11,7 @@ import { ProfileAction } from "./profile-action";
 import { Banner, UserAvater } from "./profile-images";
 import { UserDescription, UserFollowingInfo } from "./user-info";
 import { UsernameBox } from "./username-box";
+import ProfileTabView from "@/app/me/components/ProfileTabs";
 
 type Props = {
   username: string;
@@ -42,7 +43,8 @@ export async function Profile(props: Props) {
             <UserDescription user={user} />
           </div>
         </div>
-        <UserUploads nfts={res.success ? res.data.result : []} />
+        {/* <UserUploads nfts={res.success ? res.data.result : []} /> */}
+        <ProfileTabView user={user} isOwner={false}/>
       </div>
     </main>
   );
