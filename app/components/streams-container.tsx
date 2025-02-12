@@ -53,22 +53,19 @@ export function StreamsContainer(props: Props) {
       page: page.current + 1,
       address: address
     });
-
     if (!res.success) {
       return;
     }
-
     if (res.data.result.length === 0) {
       return;
     }
-
     setData([...data, ...res.data.result]);
     page.current += 1;
   }
 
-  if (isPending) {
-    return <Skeleton />;
-  }
+  //   if (isPending) {
+  //     return <Skeleton />;
+  //   }
 
   // @ts-expect-error
   if (isSearch && data?.videos?.length === 0) {
@@ -91,10 +88,10 @@ export function StreamsContainer(props: Props) {
     <VirtuosoGrid
       ref={virtuoso}
       useWindowScroll
-      initialItemCount={data.length}
       data={data}
       computeItemKey={(i, data) => `${data.tokenId}-${i}`}
       endReached={fetchMore}
+      increaseViewportBy={{ top: 800, bottom: 300 }}
       itemContent={(index, data) => <StreamItem nft={data} key={data.tokenId + "--" + index} />}
     />
   );

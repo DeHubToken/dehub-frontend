@@ -19,7 +19,7 @@ export function ImageWithLoader(props: {
   transcodingStatus?: string;
   status?: string;
   tokenId: string;
-  address?:string;
+  address?: string;
 }) {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -34,7 +34,7 @@ export function ImageWithLoader(props: {
     return () => {
       socket.off(props.tokenId);
     };
-  }, []); 
+  }, []);
   return (
     <div className="relative h-full overflow-hidden">
       <LazyImage

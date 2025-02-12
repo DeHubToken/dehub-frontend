@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { memo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { EyeOpenIcon, HeartFilledIcon } from "@radix-ui/react-icons";
@@ -34,7 +34,7 @@ type Props = {
   isOwner?: Boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export function StreamItem(props: Props) {
+function _StreamItem(props: Props) {
   const { nft, isOwner, ...rest } = props;
   const [isOpen, setIsOpen] = useState(false);
   const [isHidden, setIsHidden] = useState<boolean>(nft.isHidden);
@@ -218,3 +218,5 @@ export function StreamItem(props: Props) {
     </div>
   );
 }
+
+export const StreamItem = memo(_StreamItem, (prev, next) => prev.nft.tokenId === next.nft.tokenId);
