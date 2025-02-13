@@ -28,18 +28,11 @@ export function StreamSkeleton() {
 }
 
 export function StreamLoader() {
-  //   const { range } = props;
   return (
     <div className="h-auto w-full">
-      {/* <div className="flex h-auto w-full items-center justify-between">
-        <h1 className="font-tanker text-5xl">Trending</h1>
-        <div className="flex size-auto items-center justify-center gap-4">
-          <StreamRangeFilter range={range} disabled />
-        </div>
-      </div> */}
       <div className="h-auto w-full">
         <div className="relative grid h-auto w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, index) => (
+          {Array.from({ length: 16 }).map((_, index) => (
             <StreamSkeleton key={index} />
           ))}
         </div>
