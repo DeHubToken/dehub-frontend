@@ -37,11 +37,15 @@ export const env = createEnv({
 
     // Communication Services
     NEXT_PUBLIC_SOCKET_URL: z.string().url(),
-    NEXT_PUBLIC_TENOR_API_KEY: z.string()
+    NEXT_PUBLIC_TENOR_API_KEY: z.string(),
+
+    // SERVER ENVIRONMENT VARIABLES
+    NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   },
   runtimeEnv: {
     // SERVER ENVIRONMENT VARIABLES
     NODE_ENV: process.env.NODE_ENV,
+    NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
 
     // CLIENT ENVIRONMENT VARIABLES
 

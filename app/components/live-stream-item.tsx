@@ -52,7 +52,7 @@ export function LiveStreamItem({ stream, isOwner, ...rest }: Props) {
           className="absolute inset-0"
         >
           <Image
-            src={`${env.cdnBaseUrl}${stream.thumbnail}` || "/default-thumbnail.jpg"}
+            src={`${env.NEXT_PUBLIC_CDN_BASE_URL}${stream.thumbnail}` || "/default-thumbnail.jpg"}
             alt={stream.title}
             layout="fill"
             objectFit="cover"

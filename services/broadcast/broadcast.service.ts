@@ -41,6 +41,16 @@ export const broadcastStream = async (url: string, data: any) => {
   });
 };
 
+export const likeLiveStream = async (id: string, data: any) => {
+  return api<any>(`/live/${id}/like`, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+};
+
 export const getLiveStream = async (streamId: string) => {
   return api<any>(`/live/${streamId}`, {
     method: "GET"

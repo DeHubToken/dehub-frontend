@@ -18,7 +18,7 @@ export default function ReplayPlayer({ streamId }: ReplayPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const playerRef = useRef<Player | null>(null);
-  const videoUrl = `${env.cdnBaseUrl}live/mp4/${streamId}.mp4`;
+  const videoUrl = `${env.NEXT_PUBLIC_CDN_BASE_URL}live/mp4/${streamId}.mp4`;
 
   return (
     <div
@@ -36,28 +36,21 @@ export default function ReplayPlayer({ streamId }: ReplayPlayerProps) {
           </button>
         </div>
       ) : (
-        <Video
-          options={{
-            sources: [{ src: videoUrl, type: "video/mp4" }]
-          }}
-          onReady={(player) => {
-            playerRef.current = player;
-            player.on("loadedmetadata", () => {
-              //   setLoading(false);
-            });
-            player.on("error", () => {
-              //   setError(true);
-            });
-          }}
-        />
-        // <div data-vjs-player>
-        //   <video
-        //     ref={videoRef}
-        //     className="video-js vjs-default-skin vjs-big-play-centered h-full w-full"
-        //   >
-        //     <source src={videoUrl} type="video/mp4" />
-        //   </video>
-        // </div>
+        <div>No playback yet</div>
+        // <Video
+        //   options={{
+        //     sources: [{ src: videoUrl, type: "video/mp4" }]
+        //   }}
+        //   onReady={(player) => {
+        //     playerRef.current = player;
+        //     player.on("loadedmetadata", () => {
+        //       //   setLoading(false);
+        //     });
+        //     player.on("error", () => {
+        //       //   setError(true);
+        //     });
+        //   }}
+        // />
       )}
     </div>
   );

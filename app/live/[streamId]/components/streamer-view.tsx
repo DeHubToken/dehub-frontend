@@ -63,14 +63,6 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
   const { socket } = useWebSockets();
 
   useEffect(() => {
-    if (!socket || !stream._id || !account) return;
-    socket.emit(LivestreamEvents.JoinRoom, { streamId: stream._id });
-    // if (stream.status === StreamStatus.LIVE) startStreaming();
-
-    return () => {};
-  }, []);
-
-  useEffect(() => {
     const fetchIngest = async () => {
       const url = await getIngestUrlForStreamId(stream.livepeerId);
       setIngestUrl(url);
