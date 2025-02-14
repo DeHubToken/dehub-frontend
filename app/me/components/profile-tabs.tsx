@@ -3,12 +3,12 @@ import Link from "next/link";
 
 import { Categories } from "@/app/components/categories";
 
-import ProfileTabViewServer from "./TabView";
+import ProfileTabViewServer from "./tab-view";
 
 const tabs = [
   { key: "video", label: "Videos" },
   { key: "feed-all", label: "Feeds" },
-  { key: "user-reports", label: "User Reports" }
+  { key: "user-activity", label: "activity" }
 ];
 
 export default function ProfileTabView({
@@ -22,7 +22,7 @@ export default function ProfileTabView({
 }) {
   const activeTab = searchParams?.tab ?? "video";
   return (
-    <div>
+    <div className="mt-5">
       <div className="flex flex-wrap justify-between align-middle">
         <div className="flex flex-wrap dark:border-theme-mine-shaft bg-theme-monochrome-600 rounded-full border">
           {tabs.map(({ key, label }) => (

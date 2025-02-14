@@ -3,7 +3,7 @@ import "server-only";
 import type { User } from "@/stores";
 
 import { UserUploads } from "@/app/components/user-uploads";
-import ProfileTabView from "@/app/me/components/ProfileTabs";
+import ProfileTabView from "@/app/me/components/profile-tabs";
 import { SocialLinks } from "@/app/me/components/social-links";
 
 import { getNFTs } from "@/services/nfts/trending";
@@ -42,8 +42,7 @@ export async function Profile(props: Props) {
             <UserFollowingInfo user={user} />
             <UserDescription user={user} />
           </div>
-        </div>
-        {/* <UserUploads nfts={res.success ? res.data.result : []} /> */}
+        </div> 
         <ProfileTabView  searchParams={searchParams} user={user} isOwner={false}  />
       </div>
     </main>

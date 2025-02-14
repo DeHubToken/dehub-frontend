@@ -10,7 +10,7 @@ import { Avatar } from "./avatar";
 import { Banner } from "./banner";
 import { EditProfileButton } from "./edit-profile";
 import { ImageCropperModal } from "./image-cropper-modal";
-import ProfileTabView from "./ProfileTabs";
+import ProfileTabView from "./profile-tabs";
 import { SocialLinks } from "./social-links";
 import { UserInfo } from "./user-info";
 

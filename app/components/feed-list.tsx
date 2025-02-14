@@ -73,7 +73,7 @@ export function FeedList(props: FeedProps) {
     timestamp: "",
     sig: ""
   });
-  const { account, library, chainId } = useActiveWeb3React();
+  const { account, library, chainId }: any = useActiveWeb3React();
   useEffect(() => {
     const storedAccount = sessionStorage.getItem("storedAccount");
     // If no stored account, this is the first time, so just store the account and do nothing else
@@ -85,23 +85,10 @@ export function FeedList(props: FeedProps) {
       return;
     }
     if (storedAccount !== account || !signData?.sig || !signData?.timestamp) {
-      syncSigData();
+      syncSigData(setSignData, account, library);
     }
-  }, [account]); 
-  const syncSigData = async () => {
-    if (!account) {
-      setSignData({ sig: "", timestamp: "" });
-      return;
-    }
-    const result = await getSignInfo(library, account);
-    console.log("signData result", result);
-    if (result && result.sig && result.timestamp) {
-      console.log("signData seting sig data");
-      setSignData({ sig: result.sig, timestamp: result.timestamp });
-    } else {
-      setSignData({ sig: "", timestamp: "" });
-    }
-  };
+  }, [account]);
+
   const handleSavePost = async (id: number) => {
     if (!account) {
       toast.error("Please connect your wallet to like this upload");
@@ -146,13 +133,12 @@ export function FeedList(props: FeedProps) {
         }
       }
     })();
-  }, [account, library, hasSaved]); 
+  }, [account, library, hasSaved]);
   const fetchFeed = async () => {
     if (!selectedFeed.tokenId) {
       return;
     }
-    const response: any = await getNFT(selectedFeed?.tokenId, account as string);
-
+    const response: any = await getNFT(selectedFeed?.tokenId, account as string); 
     if (response.data.result) setFeed(response.data.result);
   };
 
@@ -162,7 +148,7 @@ export function FeedList(props: FeedProps) {
   return (
     <div className="flex w-full flex-col items-center gap-3">
       {feeds && feeds.length > 0 ? (
-        feeds.map((feed: any,key:number) => {
+        feeds.map((feed: any, key: number) => {
           return (
             <FeedCard key={key}>
               <FeedHeader>
@@ -294,10 +280,84 @@ export function FeedList(props: FeedProps) {
   );
 }
 
+const syncSigData = async (setSignData: any, account: `0x${string}`, library: string) => {
+  if (!account) {
+    setSignData({ sig: "", timestamp: "" });
+    return;
+  }
+  const result = await getSignInfo(library, account);
+  console.log("signData result", result);
+  if (result && result.sig && result.timestamp) {
+    console.log("signData seting sig data");
+    setSignData({ sig: result.sig, timestamp: result.timestamp });
+  } else {
+    setSignData({ sig: "", timestamp: "" });
+  }
+};
+export const FeedItem = ({ feed }: any) => {
+  const { account, library, chainId }: any = useActiveWeb3React();
+  const [signData, setSignData] = useState<{ sig: string; timestamp: string }>({
+    timestamp: "",
+    sig: ""
+  });
+  useEffect(() => {
+    syncSigData(setSignData, account, library);
+  }, [account]);
+  return (
+    <FeedCard>
+      <FeedHeader>
+        <FeedProfile
+          name={feed?.mintername}
+          avatar={feed?.minterAvatarUrl}
+          time={(feed?.createdAt)?.toString()}
+          minter={feed?.minter}
+          minterStaked={feed?.minterStaked}
+        />
+        {/* <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <FeedSettingsButton />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="end">
+            <WithPPVDropdownItem post={feed} />
+            <ClaimAsViewerDropdownItem post={feed} />
+            <ClaimAsCommentorDropdownItem post={feed} />
+            <DropDownItemTip post={feed} />
+            <DropDownItemSubscriptionModal post={feed} />
+            <DropDownItemReport post={feed} />
+          </DropdownMenuContent>
+        </DropdownMenu> */}
+      </FeedHeader>
+      <Link href={`/feeds/${feed?.tokenId}`}>
+        <FeedContent name={feed?.name} description={feed?.description} feed={feed} />
+        <FeedImageGallary
+          images={feed?.imageUrls?.map((i: any) => ({
+            url: `${getImageUrlApiSimple(i)}?address=${account ?? ""}&sig=${signData?.sig ?? ""}&timestamp=${signData?.timestamp ?? ""}`,
+            alt: feed.name
+          }))??[]}
+        />
+      </Link>
+      <FeedFooter>
+        <LikeButton
+          className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+          vote
+          tokenId={feed?.tokenId}
+          votes={feed?.totalVotes?.for || 0}
+          size="sm"
+        >
+          <HeartFilledIcon className="size-3 fill-red-400" />
+        </LikeButton>
+        <FeedShareButton tokenId={feed?.tokenId} />
+      </FeedFooter>
+    </FeedCard>
+  );
+};
+
 export const ClaimAsCommentorDropdownItem = ({ post }: { post: NFT }) => {
   const { claim } = useClaimBounty(post, post.tokenId, 1);
   if (!claim) return null;
-  if (claim && !claim.commentor) return null;
+  if (claim && !claim?.commentor) return null;
   return (
     <DropdownMenuItem onClick={(e) => e.preventDefault()}>
       <ClaimAsCommentor nft={post} tokenId={post.tokenId} />

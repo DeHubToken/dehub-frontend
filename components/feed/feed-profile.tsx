@@ -1,7 +1,7 @@
+"use client"
 import Image from "next/image";
 import Link from "next/link";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from "@/libs/dayjs";
 import { useTheme } from "next-themes";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,8 +12,7 @@ import { createAvatarName } from "@/libs/utils";
 
 import { getBadgeUrl } from "@/web3/utils/calc";
 import { getAvatarUrl } from "@/web3/utils/url";
-
-dayjs.extend(relativeTime);
+ 
 
 type Props = {
   avatar: string;

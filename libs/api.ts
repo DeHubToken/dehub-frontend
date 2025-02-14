@@ -21,8 +21,7 @@ export async function api<T>(
 ): Promise<ApiResponse<T>> {
   const { cache = "no-store", tags, ...restConfig } = config || {};
   const url = env.NEXT_PUBLIC_API_BASE_URL + endpoint;
-  try {
-    console.log("fetch-server-side", url);
+  try { 
     const result = await fetch(url, {
       method: "GET",
       ...(cache && !restConfig.next?.revalidate && { cache }),

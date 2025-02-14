@@ -3,8 +3,6 @@
 import type { TMessage } from "../utils";
 
 import { useState } from "react";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { Coins, Images } from "lucide-react";
 
 import { AvatarStar } from "@/components/icons/avatar-star";
@@ -13,15 +11,14 @@ import { Input } from "@/components/ui/input";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
+import dayjs from "@/libs/dayjs";
+import { miniAddress } from "@/libs/strings";
 import { cn, createAvatarName } from "@/libs/utils";
 
 import { getAvatarUrl, getGroupAvatarUrl } from "@/web3/utils/url";
 
 import { useMessage } from "./provider";
 import { ContactSkeleton } from "./skeleton";
-import { miniAddress } from "@/libs/strings";
-
-dayjs.extend(relativeTime);
 
 type ContactListProps = React.ComponentProps<"div"> & {
   onMessageSelect?: (id: string) => void;
@@ -62,7 +59,7 @@ export function ContactList(props: ContactListProps) {
       return dayjs(a.lastMessageAt).isBefore(dayjs(b.lastMessageAt)) ? 1 : -1;
     });
 
-  function getChatName(user: any, groupName: string|null) {
+  function getChatName(user: any, groupName: string | null) {
     if (groupName) {
       return groupName;
     }
@@ -146,9 +143,7 @@ const UserInfo = ({ participant, isPro = true, lastOnline, lastMessage, tips }: 
       <div className="flex flex-col ">
         <div className="flex flex-row items-center gap-2">
           <span className="text-base font-bold">
-            {user?.displayName ||
-              user?.username ||
-                   miniAddress(user?.address) }
+            {user?.displayName || user?.username || miniAddress(user?.address)}
           </span>
           {isPro && <AvatarStar />}
           <span className="text-xs text-gray-500">{dayjs(lastMessage?.createdAt).fromNow()}</span>

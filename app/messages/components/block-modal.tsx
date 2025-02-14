@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import dayjs from "dayjs";
+import dayjs from "@/libs/dayjs";
 
 import { AvatarStar } from "@/components/icons/avatar-star";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

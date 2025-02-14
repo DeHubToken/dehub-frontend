@@ -472,3 +472,19 @@ export const durations = [
   { title: "1 year", value: 12, tier: 4 },
   { title: "lifetime", value: 999, tier: 5 }
 ];
+
+export const ActivityActionType = {
+  UPLOAD_FEED_SIMPLE: 'upload-feed-simple',
+  UPLOAD_FEED_IMAGES: 'upload-feed-images',
+  UPLOAD_VIDEO: 'upload_video',
+  CREATE_PLAN: 'create-plan',
+  PLAN_PUBLISHED: 'plan-published',
+  PURCHASE_PLAN: 'purchase-plan',
+  LIKE: 'like',
+  DIS_LIKE:'dis-like',
+  FOLLOW: 'follow',
+  REPLY_ON_POST: 'reply-on-post',
+  COMMENT_ON_POST: 'comment-on-post',
+  TIP_ON_POST: 'tip-on-post',
+  TIP_ON_CHAT: 'tip-on-chat',
+};
