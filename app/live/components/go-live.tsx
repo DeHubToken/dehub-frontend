@@ -55,21 +55,6 @@ const liveStreamSchema = z.object({
     schedule: z.boolean().default(false)
   }),
   scheduledFor: z.date().optional()
-  // scheduledFor: z.union([
-  //   z.date(),
-  //   z.null()
-  // ]).refine(
-  //   (date) => {
-  //     // If schedule is true, date must be provided
-  //     if (schedule) {
-  //       return date !== null;
-  //     }
-  //     return true;
-  //   },
-  //   {
-  //     message: "Please select a date and time for scheduled stream"
-  //   }
-  // ),
 });
 
 type LiveStreamFormValues = z.infer<typeof liveStreamSchema>;

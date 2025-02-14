@@ -19,7 +19,7 @@ export default function BroadcastStreamInfo(props: { stream: any }) {
           ))}
         </div>
         <p className="text-sm">
-          <span className="font-semibold">Views :</span> {stream.peakViewers || 0}
+          <span className="font-semibold">Views:</span> {stream.peakViewers || 0}
         </p>
         {/* <p className="text-sm">
             <span className="font-semibold">Uploaded :</span>{" "}

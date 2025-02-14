@@ -51,6 +51,7 @@ export default function BroadcastActionPanel(props: { stream: any }) {
         return;
       }
 
+      // @ts-expect-error
       if (response.success && response.error) {
         // @ts-expect-error
         toast.error(response.error || response.message);
@@ -115,9 +116,12 @@ export default function BroadcastActionPanel(props: { stream: any }) {
           {stream.status === StreamStatus.LIVE ||
             (stream.status === StreamStatus.ENDED && (
               <>
+              {
+                stream.status === StreamStatus.LIVE && 
                 <p className="text-sm">
-                  <span className="font-semibold">Viewers :</span> {stream.totalViews || 0}
+                  <span className="font-semibold">Viewers:</span> {stream.totalViews || 0}
                 </p>
+              }
                 <p className="text-sm">
                   <span className="font-semibold">Peak Views :</span> {stream.peakViewers || 0}
                 </p>

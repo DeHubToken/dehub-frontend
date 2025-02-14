@@ -183,7 +183,7 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
 
                   <Broadcast.StatusIndicator className="flex items-center gap-2" matcher="idle">
                     <div className="h-1.5 w-1.5 rounded-full bg-white/80" />
-                    <span className="select-none text-xs">IDLE</span>
+                    <span className="select-none text-xs">OFFLINE</span>
                   </Broadcast.StatusIndicator>
                 </div>
               </Broadcast.LoadingIndicator>

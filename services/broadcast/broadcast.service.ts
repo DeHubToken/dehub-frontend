@@ -1,7 +1,7 @@
 import { api } from "@/libs/api";
 
 export const createLiveStream = async (data: any, coverImage: File) => {
-  // console.log(data, coverImage);
+  console.log("Uploading steam",data, coverImage);
 
   const formData = new FormData();
 
