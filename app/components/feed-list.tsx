@@ -21,6 +21,7 @@ import {
   FeedLikedButton,
   FeedProfile,
   FeedReplyDialog,
+  FeedReportCountButton,
   FeedSettingsButton,
   FeedShareButton
 } from "@/components/feed";
@@ -49,6 +50,8 @@ import { LikeButton } from "../feeds/[id]/components/stream-actions";
 import TipModal from "../feeds/[id]/components/tip-modal";
 import { ClaimAsCommentor, ClaimAsViewer } from "../stream/[id]/components/claims";
 import { useClaimBounty } from "../stream/[id]/hooks/use-claim-bounty";
+import { FeedReportDialog } from "./feed-report-modal";
+import { ReportListModal } from "./report-list-modal";
 
 type FeedProps = {
   title?: string;
@@ -138,7 +141,7 @@ export function FeedList(props: FeedProps) {
     if (!selectedFeed.tokenId) {
       return;
     }
-    const response: any = await getNFT(selectedFeed?.tokenId, account as string); 
+    const response: any = await getNFT(selectedFeed?.tokenId, account as string);
     if (response.data.result) setFeed(response.data.result);
   };
 
@@ -157,7 +160,7 @@ export function FeedList(props: FeedProps) {
                   avatar={feed?.minterAvatarUrl}
                   time={(feed?.createdAt).toString()}
                   minter={feed?.minter}
-                  minterStaked={feed.minterStaked}
+                  minterStaked={feed?.minterStaked}
                 />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -207,6 +210,11 @@ export function FeedList(props: FeedProps) {
                 >
                   <BookmarkIcon className={`size-4 ${feed.isSaved ? "fill-white" : "#8a8b8d"}`} />
                 </FeedBookmarkButton>
+                {feed?.reportCount > 0 && (
+                  <FeedReportCountButton count={feed?.reportCount ?? 0}>
+                    <ReportListModal tokenId={feed?.tokenId ?? null} />
+                  </FeedReportCountButton>
+                )}
                 <FeedShareButton tokenId={feed?.tokenId} />
               </FeedFooter>
             </FeedCard>
@@ -309,7 +317,7 @@ export const FeedItem = ({ feed }: any) => {
         <FeedProfile
           name={feed?.mintername}
           avatar={feed?.minterAvatarUrl}
-          time={(feed?.createdAt)?.toString()}
+          time={feed?.createdAt?.toString()}
           minter={feed?.minter}
           minterStaked={feed?.minterStaked}
         />
@@ -332,10 +340,12 @@ export const FeedItem = ({ feed }: any) => {
       <Link href={`/feeds/${feed?.tokenId}`}>
         <FeedContent name={feed?.name} description={feed?.description} feed={feed} />
         <FeedImageGallary
-          images={feed?.imageUrls?.map((i: any) => ({
-            url: `${getImageUrlApiSimple(i)}?address=${account ?? ""}&sig=${signData?.sig ?? ""}&timestamp=${signData?.timestamp ?? ""}`,
-            alt: feed.name
-          }))??[]}
+          images={
+            feed?.imageUrls?.map((i: any) => ({
+              url: `${getImageUrlApiSimple(i)}?address=${account ?? ""}&sig=${signData?.sig ?? ""}&timestamp=${signData?.timestamp ?? ""}`,
+              alt: feed.name
+            })) ?? []
+          }
         />
       </Link>
       <FeedFooter>
@@ -400,9 +410,8 @@ export const DropDownItemTip = ({ post }: { post: NFT }) => {
 };
 export const DropDownItemReport = ({ post }: { post: NFT }) => {
   return (
-    <DropdownMenuItem>
-      <BugIcon className="size-5" />
-      &nbsp;&nbsp;Report
+    <DropdownMenuItem onClick={(e) => e.preventDefault()}>
+      <FeedReportDialog post={post} />
     </DropdownMenuItem>
   );
 };

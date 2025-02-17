@@ -140,6 +140,7 @@ export function FeedRangeFilterMobile(props: Props) {
             <option value="locked">Exclusive</option>
             <option value="bounty">Watch2Earn</option>
             <option value="ppv">Pay Per View</option>
+            <option value="reports">Users Report</option>
           </select>
         </div>
 

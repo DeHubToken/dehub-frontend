@@ -19,8 +19,9 @@ type Props = {
   name: string;
   time: string;
   minter: string;
-  minterStaked: number;
+  minterStaked: number; 
 };
+
 
 export function FeedProfile(props: Props) {
   const { avatar, name, time, minter, minterStaked } = props;

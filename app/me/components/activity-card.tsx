@@ -40,6 +40,7 @@ export const ActivityCard = ({ data, type, children }: ActivityCardProps) => (
   </FeedCard>
 );
 
+
 const ActivityHeader = ({ data, type }: { data: any; type: keyof typeof ActivityActionType }) => {
   const { user, createdAt, followingUser } = data;
   const username = user?.username;
@@ -48,46 +49,69 @@ const ActivityHeader = ({ data, type }: { data: any; type: keyof typeof Activity
   const activityMap = useMemo(
     () =>
       ({
-        [ActivityActionType.UPLOAD_FEED_SIMPLE]: { icon: <Rss  className=" w-[30px]" />, text:<div> "dropped a post! 🚀"</div> },
-        [ActivityActionType.UPLOAD_FEED_IMAGES]: {
-          icon: <GalleryHorizontal  className=" w-[30px]" />,
-          text: "shared some cool visuals! 📸"
+        [ActivityActionType.UPLOAD_FEED_SIMPLE]: {
+          icon: <Rss className="w-[30px]" />,
+          text: "Dropped a new post! 🚀"
         },
-        [ActivityActionType.UPLOAD_VIDEO]: { icon: <Play  className=" w-[30px]" />, text: "posted an epic video! 🎬" },
+        [ActivityActionType.UPLOAD_FEED_IMAGES]: {
+          icon: <GalleryHorizontal className="w-[30px]" />,
+          text: "Shared some amazing visuals! 📸"
+        },
+        [ActivityActionType.UPLOAD_VIDEO]: {
+          icon: <Play className="w-[30px]" />,
+          text: "Posted an epic video! 🎬"
+        },
         [ActivityActionType.FOLLOW]: {
-          icon: <UserCheck  className=" w-[30px]" />,
+          icon: <UserCheck className="w-[30px]" />,
           text: (
-            <div>
-              start follow  $
-              {followingUser?.username?
+            <span>
+              Started following{" "}
+              {followingUser?.username ? (
                 <Link href={`/${followingUser?.username}`}>
                   @{followingUser?.username}
-                </Link>:"someone"
-              }
+                </Link>
+              ) : (
+                "someone"
+              )}
               ! 👀
-            </div>
+            </span>
           )
         },
         [ActivityActionType.PURCHASE_PLAN]: {
-          icon: <CircleCheck  className=" w-[30px]" />,
-          text: "secured a premium plan! 💳"
+          icon: <CircleCheck className="w-[30px]" />,
+          text: <span>Unlocked a premium plan! 💳</span>
         },
         [ActivityActionType.PLAN_PUBLISHED]: {
-          icon: <CirclePlus  className=" w-[30px]" />,
-          text: "launched a brand new plan! 🚀"
+          icon: <CirclePlus className="w-[30px]" />,
+          text: <span>Launched an exclusive new plan! 🚀</span>
         },
-        [ActivityActionType.LIKE]: { icon: <Heart  className=" w-[30px]" />, text: "showed some love to a post! ❤️" },
-        [ActivityActionType.DIS_LIKE]: { icon: <HeartOff  className=" w-[30px]" />, text: "wasn’t feeling a post. 😬" },
-        [ActivityActionType.REPLY_ON_POST]: { icon: <AtSign  className=" w-[30px]" />, text: "dropped a reply! 💬" },
+        [ActivityActionType.LIKE]: {
+          icon: <Heart className="w-[30px]" />,
+          text: <span>Liked a post! ❤️</span>
+        },
+        [ActivityActionType.DIS_LIKE]: {
+          icon: <HeartOff className="w-[30px]" />,
+          text: <span>Wasn’t feeling this post. 😬</span>
+        },
+        [ActivityActionType.REPLY_ON_POST]: {
+          icon: <AtSign className="w-[30px]" />,
+          text: <span>Dropped a reply! 💬</span>
+        },
         [ActivityActionType.COMMENT_ON_POST]: {
-          icon: <MessageSquare  className=" w-[30px]" />,
-          text: "left a comment! 📝"
+          icon: <MessageSquare className="w-[30px]" />,
+          text: <span>Left a comment! 📝</span>
         },
-        [ActivityActionType.TIP_ON_POST]: { icon: <DollarSign  className=" w-[30px]" />, text: "tipped on a post! 💸" },
-        [ActivityActionType.TIP_ON_CHAT]: { icon: <DollarSign  className=" w-[30px]" />, text: "sent a chat tip! ✨" },
+        [ActivityActionType.TIP_ON_POST]: {
+          icon: <DollarSign className="w-[30px]" />,
+          text: <span>Gave a tip on a post! 💸</span>
+        },
+        [ActivityActionType.TIP_ON_CHAT]: {
+          icon: <DollarSign className="w-[30px]" />,
+          text: <span>Sent a chat tip! ✨</span>
+        },
         [ActivityActionType.CREATE_PLAN]: {
-          icon: <FilePlus  className=" w-[30px]" />,
-          text: "designed a killer new plan! 🔥"
+          icon: <FilePlus className="w-[30px]" />,
+          text: <span>Designed an exciting new plan! 🔥</span>
         }
       }) as const,
     [followingUser]
@@ -98,13 +122,13 @@ const ActivityHeader = ({ data, type }: { data: any; type: keyof typeof Activity
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-2">
-       <div className="w-[30px]"> {activity.icon} </div>
+        <div className="w-[30px]">{activity.icon}</div>
         <h5>
           <Link href={`/${username}`} className="font-bold hover:underline">
             @{username}
-          </Link>  <span>{activity.text}</span>
+          </Link>{" "}
+          <span>{activity.text}</span>
         </h5>
-        
       </div>
       <span className="ml-[35px] text-sm font-normal text-[#8B8D90]">{timeAgo}</span>
     </div>
