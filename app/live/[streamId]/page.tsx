@@ -24,12 +24,12 @@ export default async function Page(props: Props) {
   const cookie = cookies();
   const userCookie = cookie.get("user_information");
   const user = safeParseCookie<{ address: string }>(userCookie?.value);
-  if (!user)
-    return (
-      <div className="px-4 py-28">
-        <ErrorServer error="Not connected" title="Sign in to view stream" />
-      </div>
-    );
+  // if (!user)
+  //   return (
+  //     <div className="px-4 py-28">
+  //       <ErrorServer error="Not connected" title="Sign in to view stream" />
+  //     </div>
+  //   );
 
   return (
     <ErrorBoundary FallbackComponent={Error}>

@@ -27,6 +27,7 @@ import { getSignInfo } from "@/web3/utils/web3-actions";
 import { StreamStatus } from "@/configs";
 
 import { LivestreamEvents } from "../enums/livestream.enum";
+import { GiftModal } from "./gift-modal";
 
 export default function BroadcastActionPanel(props: { stream: any }) {
   const { stream: propStream } = props;
@@ -36,7 +37,7 @@ export default function BroadcastActionPanel(props: { stream: any }) {
   const { account, chainId, library, user } = useUser();
 
   const likeStream = async () => {
-    if (!socket || !account) throw new Error("WebSocket is not connected.");
+    if (!socket || !account || !stream) throw new Error("WebSocket is not connected.");
     try {
       const signData = await getSignInfo(library, account);
       const response = await likeLiveStream(stream._id, {
@@ -66,8 +67,9 @@ export default function BroadcastActionPanel(props: { stream: any }) {
   useEffect(() => {
     if (!socket) return;
 
-    const handleStreamLike = ({ streamId }: any) => {
-      if (streamId === stream._id) setStream((prev: any) => ({ ...prev, likes: stream.likes++ }));
+    const handleStreamLike = (data: any) => {
+      // if (streamId === stream._id)
+      setStream((prev: any) => ({ ...prev, likes: data?.likes }));
     };
 
     const handleViewUpdate = ({ viewerCount }: any) => {
@@ -76,14 +78,26 @@ export default function BroadcastActionPanel(props: { stream: any }) {
       setStream((prev: any) => ({ ...prev, ...payload }));
     };
 
+    const handleStreamStart = (data: any) => {
+      setStream((prev: any) => ({ ...prev, status: StreamStatus.LIVE }));
+    };
+
+    const handleStreamEnd = (data: any) => {
+      setStream((prev: any) => ({ ...prev, status: StreamStatus.ENDED }));
+    };
+
     socket.on(LivestreamEvents.LikeStream, handleStreamLike);
     socket.on(LivestreamEvents.ViewCountUpdate, handleViewUpdate);
+    socket.on(LivestreamEvents.StartStream, handleStreamStart);
+    socket.on(LivestreamEvents.EndStream, handleStreamEnd);
 
     return () => {
       socket.off(LivestreamEvents.LikeStream, handleStreamLike);
       socket.off(LivestreamEvents.ViewCountUpdate, handleViewUpdate);
+      socket.off(LivestreamEvents.StartStream, handleStreamStart);
+      socket.off(LivestreamEvents.EndStream, handleStreamEnd);
     };
-  }, [socket]);
+  }, [socket, stream]);
 
   return (
     <div className="mt-3 h-auto w-full">
@@ -106,27 +120,36 @@ export default function BroadcastActionPanel(props: { stream: any }) {
             <ThumbsUp className="size-5" />
             {stream.likes || 0}
           </Button>
-          <TipModal tokenId={0} to={stream.address} />
+          <GiftModal tokenId={0} to={stream.address} streamId={stream._id} />
           <div className="absolute right-0 top-0 size-auto sm:hidden">
             <Share />
           </div>
         </div>
 
         <div className="flex size-auto items-center justify-start gap-5">
-          {stream.status === StreamStatus.LIVE ||
-            (stream.status === StreamStatus.ENDED && (
-              <>
-              {
-                stream.status === StreamStatus.LIVE && 
+          {(stream.status === StreamStatus.LIVE || stream.status === StreamStatus.ENDED) && (
+            <>
+              {stream.status === StreamStatus.LIVE && (
                 <p className="text-sm">
                   <span className="font-semibold">Viewers:</span> {stream.totalViews || 0}
                 </p>
-              }
-                <p className="text-sm">
-                  <span className="font-semibold">Peak Views :</span> {stream.peakViewers || 0}
-                </p>
-              </>
-            ))}
+              )}
+              <p className="text-sm">
+                <span className="font-semibold">Peak Views :</span> {stream.peakViewers || 0}
+              </p>
+            </>
+          )}
+
+          {/* {(stream.status === StreamStatus.LIVE || stream.status === StreamStatus.ENDED) && (
+            <>
+              <p className="text-sm">
+                <span className="font-semibold">Viewers:</span> {stream.totalViews || 0}
+              </p>
+              <p className="text-sm">
+                <span className="font-semibold">Peak Views :</span> {stream.peakViewers || 0}
+              </p>
+            </>
+          )} */}
           {stream.status === StreamStatus.SCHEDULED && (
             <p className="text-sm">
               <span className="font-semibold">Scheduled for :</span>{" "}

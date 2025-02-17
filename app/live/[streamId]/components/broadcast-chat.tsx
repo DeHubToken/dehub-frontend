@@ -15,6 +15,7 @@ import { getLiveStream } from "@/services/broadcast/broadcast.service";
 import { StreamStatus } from "@/configs";
 
 import { LivestreamEvents, StreamActivityType } from "../enums/livestream.enum";
+import { useUser } from "@/hooks/use-user";
 
 const MessageComponent = ({ activity }: { activity: any }) => {
   return (
@@ -74,6 +75,7 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
   const [activities, setActivities] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
   const { socket } = useWebSockets();
+  const { account } = useUser();
 
   // Fetch initial stream data and activities
   useEffect(() => {
@@ -110,7 +112,8 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
 
     // Handle user joining
     const handleUserJoin = (data: any) => {
-      if (data.streamId !== stream._id) return;
+      console.log("New user joined", data);
+      // if (data.streamId !== stream._id) return;
       if (stream?.status !== StreamStatus.LIVE) return;
       setActivities((prev) => [
         ...prev,
@@ -128,12 +131,12 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
     // Handle user leaving
     const handleUserLeave = (data: any) => {
       if (stream?.status !== StreamStatus.LIVE) return;
-      if (data.streamId !== stream._id) return;
+      // if (data.streamId !== stream._id) return;
       setActivities((prev) => [
         ...prev,
         {
           status: StreamActivityType.LEFT,
-          address: data.address,
+          address: data.user.address,
           meta: {
             username: data.user?.username,
             avatarImageUrl: data.user?.avatarImageUrl
@@ -144,7 +147,7 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
 
     // Handle stream start
     const handleStreamStart = (data: any) => {
-      if (data.streamId !== stream._id) return;
+      // if (data.streamId !== stream._id) return;
       setStream((prev: any) => ({ ...prev, status: StreamStatus.LIVE }));
       setActivities((prev) => [
         ...prev,
@@ -158,7 +161,7 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
 
     // Handle stream end
     const handleStreamEnd = (data: any) => {
-      if (data.streamId !== stream._id) return;
+      // if (data.streamId !== stream._id) return;
       setStream((prev: any) => ({ ...prev, status: StreamStatus.ENDED }));
       setActivities((prev) => [
         ...prev,
@@ -205,6 +208,7 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
       handleSendMessage();
     }
   };
+  if (!account) return null;
   return (
     <div className="relative h-full min-h-full w-full rounded-2xl border border-theme-mine-shaft-dark bg-theme-mine-shaft-dark p-4 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
       <h2 className="mb-2 text-lg font-bold text-white">Chat</h2>

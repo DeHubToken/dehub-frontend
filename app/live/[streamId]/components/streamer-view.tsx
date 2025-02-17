@@ -18,6 +18,9 @@ import {
 } from "@livepeer/react/assets";
 import * as Broadcast from "@livepeer/react/broadcast";
 import { getIngest } from "@livepeer/react/external";
+import { CheckIcon } from "@radix-ui/react-icons";
+import * as RadixPopover from "@radix-ui/react-popover";
+import { ChevronDownIcon, XIcon } from "lucide-react";
 import {
   FaMicrophone,
   FaMicrophoneSlash,
@@ -31,10 +34,13 @@ import { toast } from "sonner";
 import { StreamVideoSkeleton } from "@/app/stream/[id]/components/stream-video-provider";
 
 import { LazyImage } from "@/components/image";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { useWebSockets } from "@/contexts/websocket";
 
 import { useUser } from "@/hooks/use-user";
+
+import { cn } from "@/libs/utils";
 
 import { getIngestUrlForStreamId } from "@/services/broadcast/get-ingest";
 
@@ -44,11 +50,6 @@ import { env, StreamStatus } from "@/configs";
 
 import { LivestreamEvents } from "../enums/livestream.enum";
 import StatusBadge from "./status-badge";
-import { CheckIcon } from "@radix-ui/react-icons";
-import { cn } from "@/libs/utils";
-import { ChevronDownIcon, XIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import * as RadixPopover from "@radix-ui/react-popover";
 
 export default function StreamerView(props: { stream: any; isBroadcastOwner: boolean }) {
   const { stream, isBroadcastOwner } = props;
@@ -59,6 +60,7 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
   const [ingestUrl, setIngestUrl] = useState<any>(null);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
+  const [isWaitingForWebhook, setIsWaitingForWebhook] = useState(false);
   const { account, library } = useUser();
   const { socket } = useWebSockets();
 
@@ -70,6 +72,26 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
 
     fetchIngest();
   }, [stream]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleStreamStart = () => {
+      setIsWaitingForWebhook(false);
+    };
+
+    const handleStreamEnd = () => {
+      setIsWaitingForWebhook(false);
+    };
+
+    socket.on(LivestreamEvents.StartStream, handleStreamStart);
+    socket.on(LivestreamEvents.EndStream, handleStreamEnd);
+
+    return () => {
+      socket.off(LivestreamEvents.StartStream, handleStreamStart);
+      socket.off(LivestreamEvents.EndStream, handleStreamEnd);
+    };
+  }, [socket, stream]);
 
   return (
     <>
@@ -148,19 +170,36 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
                   matcher={false}
                   className="flex flex-1 items-center justify-center"
                 >
-                  <Broadcast.EnabledTrigger className="flex items-center justify-center gap-1 rounded-md bg-black/60 px-4 py-2 hover:bg-black/70">
+                  <Broadcast.EnabledTrigger
+                    className="flex items-center justify-center gap-1 rounded-md bg-black/60 px-4 py-2 hover:bg-black/70"
+                    onClick={() => setIsWaitingForWebhook(true)}
+                  >
                     <EnableVideoIcon className="h-7 w-7" />
-                    <span className="text-sm">Start broadcast</span>
+                    <span className="text-sm">
+                      {isWaitingForWebhook ? "Starting broadcast..." : "Start broadcast"}
+                    </span>
                   </Broadcast.EnabledTrigger>
                 </Broadcast.EnabledIndicator>
                 <Broadcast.EnabledIndicator asChild>
-                  <Broadcast.EnabledTrigger className="absolute right-2 top-1 flex items-center justify-center gap-1 rounded-md bg-white/5 px-4 py-2 hover:bg-white/10">
+                  <Broadcast.EnabledTrigger
+                    className="absolute right-2 top-1 flex items-center justify-center gap-1 rounded-md bg-white/5 px-4 py-2 hover:bg-white/10"
+                    onClick={() => setIsWaitingForWebhook(true)}
+                  >
                     <StopIcon className="h-7 w-7" />
-                    <span className="text-sm">Stop broadcast</span>
+                    <span className="text-sm">
+                      {isWaitingForWebhook ? "Stopping broadcast..." : "Stop broadcast"}
+                    </span>
                   </Broadcast.EnabledTrigger>
                 </Broadcast.EnabledIndicator>
               </Broadcast.Controls>
-
+              {isWaitingForWebhook && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                  <div className="flex flex-col items-center gap-4">
+                    <LoadingIcon className="h-8 w-8 animate-spin" />
+                    <span className="text-sm">Synchronizing broadcast state...</span>
+                  </div>
+                </div>
+              )}
               <Broadcast.LoadingIndicator className="relative h-full w-full">
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                   <LoadingIcon className="h-8 w-8 animate-spin" />
@@ -211,41 +250,36 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
 
 export const BroadcastLoading = ({
   title,
-  description,
+  description
 }: {
   title?: React.ReactNode;
   description?: React.ReactNode;
 }) => (
-  <div className="relative w-full px-3 md:px-3 py-3 gap-3 flex-col-reverse flex aspect-video bg-white/10 overflow-hidden rounded-sm">
+  <div className="aspect-video relative flex w-full flex-col-reverse gap-3 overflow-hidden rounded-sm bg-white/10 px-3 py-3 md:px-3">
     <div className="flex justify-between">
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 animate-pulse bg-white/5 overflow-hidden rounded-lg" />
-        <div className="w-16 h-6 md:w-20 md:h-7 animate-pulse bg-white/5 overflow-hidden rounded-lg" />
+        <div className="h-6 w-6 animate-pulse overflow-hidden rounded-lg bg-white/5" />
+        <div className="h-6 w-16 animate-pulse overflow-hidden rounded-lg bg-white/5 md:h-7 md:w-20" />
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 animate-pulse bg-white/5 overflow-hidden rounded-lg" />
-        <div className="w-6 h-6 animate-pulse bg-white/5 overflow-hidden rounded-lg" />
+        <div className="h-6 w-6 animate-pulse overflow-hidden rounded-lg bg-white/5" />
+        <div className="h-6 w-6 animate-pulse overflow-hidden rounded-lg bg-white/5" />
       </div>
     </div>
-    <div className="w-full h-2 animate-pulse bg-white/5 overflow-hidden rounded-lg" />
+    <div className="h-2 w-full animate-pulse overflow-hidden rounded-lg bg-white/5" />
 
     {title && (
-      <div className="absolute flex flex-col gap-1 inset-10 text-center justify-center items-center">
-        <span className="text-white text-lg font-medium">{title}</span>
-        {description && (
-          <span className="text-sm text-white/80">{description}</span>
-        )}
+      <div className="absolute inset-10 flex flex-col items-center justify-center gap-1 text-center">
+        <span className="text-lg font-medium text-white">{title}</span>
+        {description && <span className="text-sm text-white/80">{description}</span>}
       </div>
     )}
   </div>
 );
 
 export const Settings = React.forwardRef(
-  (
-    { className }: { className?: string },
-    ref: React.Ref<HTMLButtonElement> | undefined
-  ) => {
+  ({ className }: { className?: string }, ref: React.Ref<HTMLButtonElement> | undefined) => {
     return (
       <Popover>
         <PopoverTrigger ref={ref} asChild>
@@ -258,49 +292,38 @@ export const Settings = React.forwardRef(
             <SettingsIcon />
           </button>
         </PopoverTrigger>
-          <PopoverContent
-            className="w-60 rounded-md bg-black/50 border border-white/50 backdrop-blur-md p-3 shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
-            side="top"
-            alignOffset={-70}
-            align="end"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <PopoverContent
+          className="shadow-md w-60 rounded-md border border-white/50 bg-black/50 p-3 outline-none backdrop-blur-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+          side="top"
+          alignOffset={-70}
+          align="end"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex flex-col gap-2">
+            <p className="mb-1 text-sm font-medium text-white/90">Stream settings</p>
+
             <div className="flex flex-col gap-2">
-              <p className="text-white/90 font-medium text-sm mb-1">
-                Stream settings
-              </p>
-
-              <div className="gap-2 flex-col flex">
-                <label
-                  className="text-xs text-white/90 font-medium"
-                  htmlFor="cameraSource"
-                >
-                  Camera ('c' to rotate)
-                </label>
-                <SourceSelectComposed name="cameraSource" type="videoinput" />
-              </div>
-
-              <div className="gap-2 flex-col flex">
-                <label
-                  className="text-xs text-white/90 font-medium"
-                  htmlFor="microphoneSource"
-                >
-                  Microphone ('m' to rotate)
-                </label>
-                <SourceSelectComposed
-                  name="microphoneSource"
-                  type="audioinput"
-                />
-              </div>
+              <label className="text-xs font-medium text-white/90" htmlFor="cameraSource">
+                Camera ('c' to rotate)
+              </label>
+              <SourceSelectComposed name="cameraSource" type="videoinput" />
             </div>
-            <RadixPopover.Close
-              className="rounded-full h-5 w-5 inline-flex items-center justify-center absolute top-2.5 right-2.5 outline-none"
-              aria-label="Close"
-            >
-              <XIcon />
-            </RadixPopover.Close>
-            <RadixPopover.Arrow className="fill-white/50" />
-          </PopoverContent>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-medium text-white/90" htmlFor="microphoneSource">
+                Microphone ('m' to rotate)
+              </label>
+              <SourceSelectComposed name="microphoneSource" type="audioinput" />
+            </div>
+          </div>
+          <RadixPopover.Close
+            className="absolute right-2.5 top-2.5 inline-flex h-5 w-5 items-center justify-center rounded-full outline-none"
+            aria-label="Close"
+          >
+            <XIcon />
+          </RadixPopover.Close>
+          <RadixPopover.Arrow className="fill-white/50" />
+        </PopoverContent>
       </Popover>
     );
   }
@@ -311,7 +334,7 @@ export const SourceSelectComposed = React.forwardRef(
     {
       name,
       type,
-      className,
+      className
     }: { name: string; type: "audioinput" | "videoinput"; className?: string },
     ref: React.Ref<HTMLButtonElement> | undefined
   ) => (
@@ -322,16 +345,14 @@ export const SourceSelectComposed = React.forwardRef(
             <Broadcast.SelectTrigger
               ref={ref}
               className={cn(
-                "flex w-full items-center overflow-hidden justify-between rounded-sm px-1 outline-1 outline-white/50 text-xs leading-none h-7 gap-1 outline-none disabled:opacity-70 disabled:cursor-not-allowed",
+                "flex h-7 w-full items-center justify-between gap-1 overflow-hidden rounded-sm px-1 text-xs leading-none outline-none outline-1 outline-white/50 disabled:cursor-not-allowed disabled:opacity-70",
                 className
               )}
               aria-label={type === "audioinput" ? "Audio input" : "Video input"}
             >
               <Broadcast.SelectValue
                 placeholder={
-                  type === "audioinput"
-                    ? "Select an audio input"
-                    : "Select a video input"
+                  type === "audioinput" ? "Select an audio input" : "Select a video input"
                 }
               />
               <Broadcast.SelectIcon>
@@ -339,14 +360,11 @@ export const SourceSelectComposed = React.forwardRef(
               </Broadcast.SelectIcon>
             </Broadcast.SelectTrigger>
             <Broadcast.SelectPortal>
-              <Broadcast.SelectContent className="overflow-hidden bg-black rounded-sm">
+              <Broadcast.SelectContent className="overflow-hidden rounded-sm bg-black">
                 <Broadcast.SelectViewport className="p-1">
                   <Broadcast.SelectGroup>
                     {devices?.map((device) => (
-                      <RateSelectItem
-                        key={device.deviceId}
-                        value={device.deviceId}
-                      >
+                      <RateSelectItem key={device.deviceId} value={device.deviceId}>
                         {device.friendlyName}
                       </RateSelectItem>
                     ))}
@@ -363,23 +381,22 @@ export const SourceSelectComposed = React.forwardRef(
   )
 );
 
-const RateSelectItem = React.forwardRef<
-  HTMLDivElement,
-  Broadcast.SelectItemProps
->(({ children, className, ...props }, forwardedRef) => {
-  return (
-    <Broadcast.SelectItem
-      className={cn(
-        "text-xs leading-none rounded-sm flex items-center h-7 pr-[35px] pl-[25px] relative select-none data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-white/20",
-        className
-      )}
-      {...props}
-      ref={forwardedRef}
-    >
-      <Broadcast.SelectItemText>{children}</Broadcast.SelectItemText>
-      <Broadcast.SelectItemIndicator className="absolute left-0 w-[25px] inline-flex items-center justify-center">
-        <CheckIcon className="w-4 h-4" />
-      </Broadcast.SelectItemIndicator>
-    </Broadcast.SelectItem>
-  );
-});
+const RateSelectItem = React.forwardRef<HTMLDivElement, Broadcast.SelectItemProps>(
+  ({ children, className, ...props }, forwardedRef) => {
+    return (
+      <Broadcast.SelectItem
+        className={cn(
+          "relative flex h-7 select-none items-center rounded-sm pl-[25px] pr-[35px] text-xs leading-none data-[disabled]:pointer-events-none data-[highlighted]:bg-white/20 data-[highlighted]:outline-none",
+          className
+        )}
+        {...props}
+        ref={forwardedRef}
+      >
+        <Broadcast.SelectItemText>{children}</Broadcast.SelectItemText>
+        <Broadcast.SelectItemIndicator className="absolute left-0 inline-flex w-[25px] items-center justify-center">
+          <CheckIcon className="h-4 w-4" />
+        </Broadcast.SelectItemIndicator>
+      </Broadcast.SelectItem>
+    );
+  }
+);

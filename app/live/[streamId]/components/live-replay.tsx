@@ -9,6 +9,7 @@ import { env } from "@/configs";
 import "video.js/dist/video-js.css";
 
 import { Video } from "@/components/video";
+import Link from "next/link";
 
 interface ReplayPlayerProps {
   streamId: string;
@@ -29,10 +30,10 @@ export default function ReplayPlayer({ streamId }: ReplayPlayerProps) {
         <div className="flex h-full flex-col items-center justify-center text-center">
           <h2 className="mb-4 text-2xl font-bold text-white">This stream has ended.</h2>
           <button
-            onClick={() => setIsPlaying(true)}
+            // onClick={() => setIsPlaying(true)}
             className="rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 font-semibold text-white"
           >
-            Watch Replay
+            <Link href="/?type=live">Go Back</Link>
           </button>
         </div>
       ) : (
