@@ -334,11 +334,12 @@ const productionTokens = [
     decimals: 18
   }
 ];
-export const chainIcons:any={
-  [ChainId.BASE_MAINNET]:"https://images.mirror-media.xyz/publication-images/cgqxxPdUFBDjgKna_dDir.png?height=1200&width=1200",
-  [ChainId.BSC_MAINNET]:"https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040",
-  [ChainId.BSC_TESTNET]:"https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040"
-}
+export const chainIcons: any = {
+  [ChainId.BASE_MAINNET]:
+    "https://images.mirror-media.xyz/publication-images/cgqxxPdUFBDjgKna_dDir.png?height=1200&width=1200",
+  [ChainId.BSC_MAINNET]: "https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040",
+  [ChainId.BSC_TESTNET]: "https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040"
+};
 export const supportedTokens = isDevMode ? devTokens : productionTokens;
 
 export const supportedTokensForLockContent = supportedTokens.filter((e) => e.symbol === "DHB");
@@ -355,8 +356,7 @@ export const defaultWatchTimeForPPV = 2 * 60 * 60; // second unit
 export const devFee = 0.1;
 export const publicChatChannelId = "public_chn_prod_1";
 export const limitTip = 1_000_000_000;
-export const expireSignTime = env.NEXT_PUBLIC_DEV ? 60 * 60 * 24 : 60 * 60 * 24; // 24 hours
-// export const expireSignTime = env.NEXT_PUBLIC_DEV ? 60 * 60 * 2 : 60 * 60 * 24; // Ideal case, 2hrs for dev, 24 for prod
+export const expireSignTime = isDevMode ? 60 * 60 * 2 : 60 * 60 * 24; // 2 hours
 
 export const ErrMsgEn = {
   lockContent: {},
