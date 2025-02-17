@@ -19,7 +19,7 @@ export default function ReplayPlayer({ streamId }: ReplayPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const playerRef = useRef<Player | null>(null);
-  const videoUrl = `${env.NEXT_PUBLIC_CDN_BASE_URL}live/mp4/${streamId}.mp4`;
+  const videoUrl = `${env.NEXT_PUBLIC_CDN_BASE_URL}/live/mp4/${streamId}.mp4`;
 
   return (
     <div

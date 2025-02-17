@@ -138,7 +138,7 @@ export default function BroadcastStream(props: { streamId: string }) {
                 <StatusBadge status={stream.status} />
                 <div className="absolute inset-0 bg-black bg-opacity-50" />
                 <img
-                  src={`${env.NEXT_PUBLIC_CDN_BASE_URL}${stream.thumbnail}`}
+                  src={`${env.NEXT_PUBLIC_CDN_BASE_URL}/${stream.thumbnail}`}
                   alt="Stream Thumbnail"
                   className="h-auto w-full object-cover"
                 />
@@ -176,7 +176,7 @@ export default function BroadcastStream(props: { streamId: string }) {
                           <StatusBadge status={stream.status} />
                           <div className="absolute inset-0 bg-black bg-opacity-50" />
                           <img
-                            src={`${env.NEXT_PUBLIC_CDN_BASE_URL}${stream.thumbnail}`}
+                            src={`${env.NEXT_PUBLIC_CDN_BASE_URL}/${stream.thumbnail}`}
                             alt="Stream Thumbnail"
                             className="h-auto w-full object-cover"
                           />
