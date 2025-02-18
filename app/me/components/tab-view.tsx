@@ -12,9 +12,10 @@ interface Props {
   user?: { address?: string; username?: string };
   isOwner: boolean;
   activeTab?: string;
+  searchParams?: any;
 }
 
-async function TabVideoUploads({ isOwner, user }: Props) {
+async function TabVideoUploads({ isOwner, user, searchParams }: Props) {
   if (!user?.address) {
     return <div>No Uploads</div>;
   }
@@ -23,7 +24,11 @@ async function TabVideoUploads({ isOwner, user }: Props) {
     minter: user.address,
     unit: 40,
     address: user.address,
-    postType: "video"
+    postType: "video",
+    sortMode: searchParams?.type,
+    category: searchParams?.category === "All" ? null : searchParams?.category,
+    range: searchParams?.range,
+    search: searchParams?.q
   });
 
   const data = res.success ? res.data.result : [];
@@ -42,36 +47,57 @@ async function TabVideoUploads({ isOwner, user }: Props) {
     </div>
   );
 }
-async function TabFeedsImagesUploads({ isOwner, user }: Props) {
+async function TabFeedsImagesUploads({ isOwner, user, searchParams }: Props) {
   if (!user?.address) {
     return <div>No Uploads</div>;
   }
 
   return (
     <div className="relative grid h-auto">
-      <FeedList minter={user?.address?.toLowerCase()} postType={"feed-images"} />
+      <FeedList
+        postType={"feed-images"}
+        minter={user?.address?.toLowerCase()}
+        category={searchParams?.category}
+        range={searchParams?.range}
+        type={searchParams?.type}
+        q={searchParams?.q}
+      />
     </div>
   );
 }
-async function TabFeedSimpleUploads({ isOwner, user }: Props) {
+async function TabFeedSimpleUploads({ isOwner, user, searchParams }: Props) {
   if (!user?.address) {
     return <div>No Uploads</div>;
   }
 
   return (
     <div className="relative grid h-auto">
-      <FeedList minter={user?.address?.toLowerCase()} postType={"feed-simple"} />
+      <FeedList
+        postType={"feed-simple"}
+        minter={user?.address?.toLowerCase()}
+        category={searchParams?.category}
+        range={searchParams?.range}
+        type={searchParams?.type}
+        q={searchParams?.q}
+      />
     </div>
   );
 }
-async function TabFeedAllUploads({ isOwner, user }: Props) {
+async function TabFeedAllUploads({ isOwner, user, searchParams }: Props) {
   if (!user?.address) {
     return <div>No Uploads</div>;
   }
 
   return (
     <div className="relative grid h-auto">
-      <FeedList minter={user?.address?.toLowerCase()} postType={"feed-all"} />
+      <FeedList
+        postType={"feed-all"}
+        minter={user?.address?.toLowerCase()}
+        category={searchParams?.category}
+        range={searchParams?.range}
+        type={searchParams?.type}
+        q={searchParams?.q}
+      />
     </div>
   );
 }
@@ -80,13 +106,14 @@ async function TabUserActivity({ isOwner, user }: Props) {
   if (!user?.address) {
     return <div>No Activity</div>;
   }
-  const res: any = await getUserActivity(user?.address); 
+  const res: any = await getUserActivity(user?.address);
   return (
-    <div className="flex flex-col justify-center w-full gap-3">
+    <div className="flex w-full flex-col justify-center gap-3">
       {res?.data?.map((data: any, key: number) => {
         const postType = data.nft[0]?.postType ?? "video";
         const isVideo = data.nft.length > 0 && postType === "video";
-        const isFeed = (data.nft.length > 0 && postType === "feed-simple") || postType === "feed-images";
+        const isFeed =
+          (data.nft.length > 0 && postType === "feed-simple") || postType === "feed-images";
         return (
           <ActivityCard key={key} data={data} type={data.type} isOwner={isOwner}>
             {isVideo && <StreamItem nft={data.nft[0]} isOwner={isOwner} />}
@@ -107,14 +134,19 @@ const tabComponents: Record<string, React.FC<Props>> = {
 };
 
 export default async function ProfileTabViewServer(props: any) {
-  ``;
+ 
   // Extract query parameters from request headers
   const activeTab = props.activeTab ?? "video"; // Default to "video"
   const TabComponent = tabComponents[activeTab] || (() => <div>Invalid Tab</div>);
   return (
     <div className="mt-12 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
       <div className="h-auto w-full">
-        <TabComponent user={props.user} isOwner={props.isOwner} activeTab={activeTab} />
+        <TabComponent
+          user={props.user}
+          isOwner={props.isOwner}
+          activeTab={activeTab}
+          searchParams={props.searchParams}
+        />
       </div>
     </div>
   );

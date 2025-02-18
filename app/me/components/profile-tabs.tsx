@@ -24,14 +24,14 @@ export default function ProfileTabView({
   return (
     <div className="mt-5">
       <div className="flex flex-wrap justify-between align-middle">
-        <div className="flex flex-wrap dark:border-theme-mine-shaft bg-theme-monochrome-600 rounded-full border">
+        <div className="bg-theme-monochrome-600 flex flex-wrap rounded-full border dark:border-theme-mine-shaft">
           {tabs.map(({ key, label }) => (
             <Link
               key={key}
               href={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}?tab=${key}`}
               className={` px-6 py-2 ${
                 activeTab === key
-                  ? "rounded-full dark:bg-theme-mine-shaft bg-theme-mine-shaft-dark"
+                  ? "rounded-full bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft"
                   : "border-transparent text-gray-500"
               }`}
             >
@@ -41,14 +41,18 @@ export default function ProfileTabView({
         </div>
 
         <div className=" max-w-[50vh]">
-          <Categories
-            title={"type.toUpperCase()"}
-            category={"category"}
-            range={"range"}
-            type={"type"}
-            q={"q"}
-            sortBy={"sortBy"}
-          />
+          {["video", "feed-images", "feed-all", "feed-simple"].some((a) => a === activeTab) && (
+            <Categories
+              base={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}`}
+              tab={activeTab}
+              title={searchParams?.type?.toUpperCase() ?? ""} // Removed quotes to use actual variable
+              category={searchParams?.category} // Removed quotes to pass variable
+              range={searchParams?.range}
+              type={searchParams?.type}
+              q={searchParams?.q}
+              sortBy={searchParams?.sortBy}
+            />
+          )}
         </div>
       </div>
 
