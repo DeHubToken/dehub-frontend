@@ -39,20 +39,20 @@ export function SearchBox(props: { category?: string; type?: string; range?: str
       <input
         type="text"
         name="search"
-        className="block h-12 w-full rounded-full border-none bg-theme-mine-shaft-dark px-6 py-2 text-sm outline-none dark:bg-theme-mine-shaft placeholder:dark:text-gray-400"
+        className="block h-12 w-full rounded-full border-none bg-theme-mine-shaft-dark px-6 py-2 text-xl outline-none dark:bg-theme-mine-shaft placeholder:dark:text-gray-400"
         placeholder="Search"
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
       <Button
-        variant="gradientOne"
-        size="icon_sm"
-        className="absolute right-3 top-1/2 -translate-y-1/2"
+        variant="secondary"
+        size="lg"
+        className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full"
         type="submit"
         disabled={isPending}
       >
         {isPending && <Spinner />}
-        {!isPending && <Search className="scale-125" />}
+        {!isPending && <Search className="scale-[2]" />}
       </Button>
     </form>
   );

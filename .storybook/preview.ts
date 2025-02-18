@@ -2,27 +2,26 @@ import type { Preview } from "@storybook/react";
 
 import { withThemeByClassName } from "@storybook/addon-themes";
 
-import "../styles/global.css";
+import { withProviders } from "./decorators";
 
-export const decorators = [
-  withThemeByClassName({
-    themes: {
-      light: "light",
-      dark: "dark"
-    },
-    defaultTheme: "light"
-  })
-];
+import "../styles/global.css";
 
 const preview: Preview = {
   parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i
-      }
-    }
-  }
+    layout: "centered",
+    actions: { argTypesRegex: "^on[A-Z].*" }
+  },
+  decorators: [
+    withProviders,
+    /** https://github.com/storybookjs/storybook/blob/next/code/addons/themes/docs/getting-started/tailwind.md */
+    withThemeByClassName({
+      themes: {
+        light: "",
+        dark: "dark"
+      },
+      defaultTheme: "dark"
+    })
+  ]
 };
 
 export default preview;

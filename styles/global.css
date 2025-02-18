@@ -7,13 +7,13 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: var(--theme-neutrals-900);
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: var(--theme-neutrals-900);
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: var(--theme-neutrals-900);
 
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
@@ -32,7 +32,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: var(--theme-neutrals-900);
 
     --radius: 0.5rem;
 
@@ -124,14 +124,14 @@
     This is for backward compatibility, so that if someone changes the theme to dark, it should work.
   */
   .dark {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: var(--theme-neutrals-900);
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: var(--theme-neutrals-900);
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: var(--theme-neutrals-900);
+    --popover-foreground: 210 40% 98%;
 
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
@@ -158,7 +158,7 @@
     --theme-background: 0 0% 7%; /* #111111 */
     --theme-mine-shaft-dark: 0 0% 16%; /* #292929 */
     --theme-cloud-burst: 215 35% 20%; /* #223146 */
-    --theme-mine-shaft: 0 0% 23%; /* #3a3a3a */
+    --theme-mine-shaft: var(--theme-neutrals-800); /* #1D1F21 */
     --theme-titan-white: 0 0% 95%; /* #f1f1f1 */
 
     /* Colors */
