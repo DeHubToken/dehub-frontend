@@ -66,17 +66,18 @@ export default function BroadcastStream(props: { streamId: string }) {
     if (!socket || !stream || !account) return;
 
     const handleStreamStart = (data: any) => {
+      console.log("Stream started", data);
       setStream((prev: any) => ({ ...prev, status: StreamStatus.LIVE }));
       setIsPendingWebhook(false);
     };
 
     const handleStreamEnd = (data: any) => {
+      console.log("Stream started", data);
       setStream((prev: any) => ({ ...prev, status: StreamStatus.ENDED }));
       setIsPendingWebhook(false);
     };
 
     const handleViewUpdate = ({ viewerCount }: any) => {
-      console.log("Updating views", stream, viewerCount);
       const payload: any = { totalViews: viewerCount };
       if (viewerCount > stream.peakViewers) payload.peakViewers = viewerCount;
       setStream((prev: any) => ({ ...prev, ...payload }));
@@ -91,9 +92,11 @@ export default function BroadcastStream(props: { streamId: string }) {
       socket.off(LivestreamEvents.EndStream, handleStreamEnd);
       socket.off(LivestreamEvents.ViewCountUpdate, handleViewUpdate);
     };
-  }, [socket, streamId]);
+  }, [socket, streamId, stream, account]);
+  console.log('stream',stream)
 
   useEffect(() => {
+    console.log("Joining room", socket , stream?._id , account);
     if (!socket || !stream?._id || !account) return;
     socket.emit(LivestreamEvents.JoinRoom, { streamId: stream?._id });
     return () => {};
