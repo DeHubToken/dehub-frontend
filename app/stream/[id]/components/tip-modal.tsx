@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 import { HandCoins } from "lucide-react";
 import { toast } from "sonner";
 
+import { Tip } from "@/components/icons/tip";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -139,7 +140,7 @@ export function TipModal(props: Props) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="gap-2 rounded-full" variant="gradientOne" {...triggerProps}>
-          <HandCoins className="size-5" /> Tip
+          <Tip /> Tip
         </Button>
       </DialogTrigger>
       <DialogContent>

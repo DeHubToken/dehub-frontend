@@ -11,8 +11,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "text-theme-mine-shaft dark:bg-theme-mine-shaft bg-theme-mine-shaft-dark dark:text-theme-titan-white",
+        default: "bg-theme-neutrals-800 text-neutral-400 font-medium",
         destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
           "border-2 border-gray-200 bg-transparent shadow-sm hover:bg-gray-100 dark:border-theme-mine-shaft dark:hover:bg-theme-mine-shaft-dark",

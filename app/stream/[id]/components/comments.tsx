@@ -3,6 +3,7 @@
 import type { Comment, NFT } from "@/services/nfts";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,22 +12,24 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { Send } from "@/components/icons/send";
+import { VideoChat } from "@/components/icons/video-chat";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { truncate } from "@/libs/strings";
-import { createAvatarName } from "@/libs/utils";
+import { cn, createAvatarName } from "@/libs/utils";
 
 import { getAvatarUrl } from "@/web3/utils/url";
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { postComment } from "../actions";
 import { TipModal } from "./tip-modal";
-import Image from "next/image";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -155,17 +158,27 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
   });
 
   return (
-    <div className="mt-10 flex h-auto w-full flex-col items-start justify-start gap-4">
-      {/* TODO: Make seperate component <CommentForm/> */}
-      <form className="flex w-full flex-col items-end gap-3" action={action}>
-        <div className="w-full">
-          <Textarea placeholder="Type your message here." {...commentForm.register("comment")} />
-          {commentForm.formState.errors.comment && (
-            <p className="text-red-500">{commentForm.formState.errors.comment.message}</p>
-          )}
-        </div>
-        <div className="flex items-center">
-          <SubmitButton className="min-w-[80px]">Comment</SubmitButton>
+    <div className="flex h-auto w-full flex-col items-start justify-start gap-4">
+      <form
+        className="my-8 w-full rounded-3xl border border-theme-neutrals-800 p-4"
+        action={action}
+      >
+        <span className="text-xs font-semibold text-theme-neutrals-500">Add your comment</span>
+        <div className="mt-4 flex items-center gap-2">
+          <Input
+            className={cn(
+              "h-11 rounded-full",
+              commentForm.formState.errors.comment &&
+                "border-red-600 focus-within:border-red-600 focus-within:shadow-none focus:border-red-600 focus:shadow-none"
+            )}
+            placeholder="Type.."
+          />
+          <Button type="button" className="h-10 rounded-full">
+            <VideoChat />
+          </Button>
+          <Button type="submit" className="h-10 rounded-full">
+            <Send />
+          </Button>
         </div>
       </form>
 

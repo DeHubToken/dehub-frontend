@@ -32,7 +32,7 @@ export function StreamVideoSkeleton() {
 }
 
 export function StreamVideoProvider(props: { nft: NFT }) {
-  const { nft } = props; 
+  const { nft } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<Player | null>(null);
 
@@ -48,10 +48,11 @@ export function StreamVideoProvider(props: { nft: NFT }) {
 
   const isFreeStream =
     !nft?.streamInfo ||
-      !(
-        nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
-        nft?.streamInfo?.[streamInfoKeys?.isPayPerView]|| nft?.plansDetails?.length>0
-      )
+    !(
+      nft?.streamInfo?.[streamInfoKeys?.isLockContent] ||
+      nft?.streamInfo?.[streamInfoKeys?.isPayPerView] ||
+      nft?.plansDetails?.length > 0
+    )
       ? true
       : false;
 
@@ -66,7 +67,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
       videoRef.current.onloadedmetadata = () => setLoading(false);
     }
   }, [account, chainId, nft.videoUrl, sig, timestamp]);
- 
+
   useEffect(() => {
     async function createUrl() {
       if (isFreeStream || isAnySubscribed(nft.plansDetails) || isOwner(nft, account || "")) {
@@ -141,7 +142,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
 
   if (isFreeStream || isAnySubscribed(nft.plansDetails) || isOwner(nft, account || "")) {
     return (
-      <div className="relative h-auto w-full overflow-hidden rounded-2xl">
+      <div className="relative h-auto w-full overflow-hidden rounded-3xl">
         {loading && <StreamVideoSkeleton />}
         <Video
           options={{
