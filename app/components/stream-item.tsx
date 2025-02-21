@@ -36,7 +36,7 @@ type Props = {
 export function StreamItem(props: Props) {
   const { nft, isOwner, ...rest } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const [isHidden, setIsHidden] = useState<boolean>(nft.isHidden);
+  const [isHidden, setIsHidden] = useState<boolean>(nft?.isHidden);
   const [isHovered, setIsHovered] = useState(false);
   const { isUserOnline } = useWebSockets();
   const {account }=useActiveWeb3React()

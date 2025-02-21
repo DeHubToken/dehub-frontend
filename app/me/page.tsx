@@ -9,7 +9,8 @@ import { getAccount } from "@/services/user";
 import { NotLinkedAccount } from "./components/not-linked";
 import { Profile } from "./components/profile";
 
-export default async function Page() {
+export default async function Page(props:any) {
+  const {searchParams}=props
   const cookie = cookies();
   const userCookie = cookie.get("user_information");
   const user = safeParseCookie<{ address: string }>(userCookie?.value);
@@ -18,5 +19,5 @@ export default async function Page() {
   const res = await getAccount(user.address);
   if (!res.success) return <div>{res.error}</div>;
 
-  return <Profile user={res.data.result} />;
+  return <Profile user={res.data.result}  searchParams={searchParams} />;
 }

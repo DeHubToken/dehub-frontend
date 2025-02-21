@@ -27,9 +27,12 @@ type Props = {
   type?: string;
   q?: string;
   sortBy?: string;
+  base?:string;
+  tab?:string;
 };
 
 export async function Categories(props: Props) {
+ 
   return (
     <div className="flex h-auto w-full items-center justify-between">
       <Suspense fallback={<CategoriesSkeleton />}>
@@ -41,8 +44,8 @@ export async function Categories(props: Props) {
 
 async function CategoriesLoader(props: Props) {
   const categoriesRes = await getCategories();
-  const { category, type, title, range, sortBy } = props;
-
+  const { category, type, title, range, sortBy, base ,tab} = props;
+ 
   const isActive = (name: string) => category === name;
 
   if (!categoriesRes.success) {
@@ -67,12 +70,14 @@ async function CategoriesLoader(props: Props) {
               type={type}
               range={range}
               sortBy={sortBy}
+              base={base}
+              tab={tab}
             />
           </CarouselItem>
           <CarouselItem className="basis-auto">
             <CategoryButton
               isActive={isActive("All")}
-              url={`/${objectToGetParams({ category: "All", type, title, range })}`}
+              url={`${base??""}/${objectToGetParams({ category: "All", type, title, range,tab })}`}
             >
               All
             </CategoryButton>
@@ -80,7 +85,7 @@ async function CategoriesLoader(props: Props) {
           {categories.map((item, index) => (
             <CarouselItem key={index} className="basis-auto">
               <CategoryButton
-                url={`/${objectToGetParams({ category: item, type, title, range })}`}
+                url={`${base??""}/${objectToGetParams({ category: item, type, title, range ,tab})}`}
                 isActive={isActive(item)}
               >
                 {item}

@@ -13,6 +13,7 @@ import { Profile } from "./components/profile";
 
 type Props = {
   params: { username: string };
+  searchParams:any
 };
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -77,6 +78,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function Page(props: Props) {
   console.log("props",props)
   const { username } = props.params;
+  const {searchParams}=props;
   const res = await getAccount(username);
 
   if (!res.success) {
@@ -103,5 +105,5 @@ export default async function Page(props: Props) {
     }
   }
 
-  return <Profile username={username} user={res.data.result} />;
+  return <Profile username={username} user={res.data.result} searchParams={searchParams} />;
 }

@@ -19,6 +19,7 @@ import { joinGroup, searchUserOrGroup } from "@/services/dm";
 import { getAvatarUrl } from "@/web3/utils/url";
 
 import { useMessage } from "./provider";
+import { miniAddress } from "@/libs/strings";
 
 // Interface for the API response
 interface SearchUserResponse {
@@ -145,7 +146,7 @@ export const AddUserInChatModal = () => {
                       <span className="font-bold">{user.displayName || user.username}</span>
                       <span className="min-w-24 break-all text-sm text-gray-500">
                         {" "}
-                        {`${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}
+                       {miniAddress(user?.address) }
                       </span>
                     </div>
                     <Button

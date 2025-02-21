@@ -1,3 +1,4 @@
+
 import { useRef, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,9 +7,7 @@ import { useFormStatus } from "react-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
+import dayjs from "@/libs/dayjs";
 import { postComment } from "@/app/feeds/[id]/actions";
 
 import { AvatarStar } from "@/components/icons/avatar-star";

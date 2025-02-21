@@ -1,6 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { CirclePlus } from "lucide-react";
+
+import { ChainIconById } from "@/app/components/ChainIconById";
 
 import { CheckCircle } from "@/components/icons/check-circle";
 import { Button } from "@/components/ui/button";
@@ -14,25 +17,26 @@ import {
 } from "@/components/ui/dialog";
 
 import { useUser } from "@/hooks/use-user";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { cn } from "@/libs/utils";
 
-import { getAvatarUrl } from "@/web3/utils/url";
-import { useActiveWeb3React } from "@/hooks/web3-connect";
-import { supportedTokens } from "@/configs";
 import { supportedNetworks } from "@/web3/configs";
+import { getAvatarUrl } from "@/web3/utils/url";
+
+import { chainIcons, supportedTokens } from "@/configs";
 
 /* ----------------------------------------------------------------------------------------------- */
 interface Props {
   tiers: any;
 }
 export function SubscriptionModalPreView({ tiers = [] }: Props) {
-  const {user}: any = useUser(); 
-  const displayName = user?.result?.displayName??user?.result?.username;
+  const { user }: any = useUser();
+  const displayName = user?.result?.displayName ?? user?.result?.username;
   const avatarImageUrl = user?.result?.avatarImageUrl;
-  const aboutMe=user?.result?.aboutMe; 
+  const aboutMe = user?.result?.aboutMe;
 
-  const {chainId}=useActiveWeb3React()
+  const { chainId } = useActiveWeb3React();
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -40,7 +44,7 @@ export function SubscriptionModalPreView({ tiers = [] }: Props) {
           Preview
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[900px] sm:rounded-3xl max-h-[80vh] overflow-auto">
+      <DialogContent className="max-h-[80vh] max-w-[900px] overflow-auto sm:rounded-3xl">
         <DialogTitle className="sr-only">Subscribe</DialogTitle>
         <DialogDescription className="sr-only">Subscribe to my premium plans</DialogDescription>
         <DialogHeader className="flex flex-row gap-4">
@@ -53,7 +57,7 @@ export function SubscriptionModalPreView({ tiers = [] }: Props) {
           <div className="flex flex-col">
             <span className="text-2xl">{displayName}</span>
             <span className="text-theme-monochrome-300 text-sm">
-            {aboutMe??"Hello! Thank you for supporting me!!"}
+              {aboutMe ?? "Hello! Thank you for supporting me!!"}
             </span>
           </div>
         </DialogHeader>
@@ -64,14 +68,14 @@ export function SubscriptionModalPreView({ tiers = [] }: Props) {
                 <SubscriptionCardTitle>{tier?.name}</SubscriptionCardTitle>
                 <SubscriptionCardDescription>{tier?.description}</SubscriptionCardDescription>
               </SubscriptionCardHeader>
-              <SubscriptionPricing  
-               chainId={chainId}
-               chains={tier?.chains}
-               tier={tier?.tier}
-               duration={tier?.duration}
-               planId={tier.id}
-               creator={tier?.address}
-              /> 
+              <SubscriptionPricing
+                chainId={chainId}
+                chains={tier?.chains}
+                tier={tier?.tier}
+                duration={tier?.duration}
+                planId={tier.id}
+                creator={tier?.address}
+              />
               <SubscriptionBenefits benefits={tier?.benefits} />
             </SubscriptionCard>
           ))}
@@ -86,7 +90,7 @@ export function SubscriptionCard(props: React.HTMLAttributes<HTMLDivElement>) {
     <div
       {...props}
       className={cn(
-        "flex max-w-full m-auto  flex-col items-center gap-8 rounded-lg border bg-theme-mine-shaft-dark py-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft"
+        "m-auto flex max-w-full  flex-col items-center gap-8 rounded-lg border bg-theme-mine-shaft-dark py-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft"
       )}
     />
   );
@@ -139,7 +143,9 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
                 key={chain?.chainId}
                 className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
               >
-                <h2 className="text-lg font-bold">Chain {chain?.chainId}</h2>
+                <h2 className="text-lg font-bold">
+                  <ChainIconById chainId={chain.chainId} label={true}/> 
+                </h2>
                 <p className="text-center text-sm text-red-500">Not supported (switch chain)</p>
               </div>
             );
@@ -151,7 +157,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
               className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
             >
               <h2 className="text-lg font-bold">
-                {token.label} ({network?.label})
+                <ChainIconById chainId={chain.chainId} label={true} />
               </h2>
               <div className="flex items-center gap-2">
                 <span> Price:</span>
@@ -159,7 +165,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
                 <p className="text-theme-monochrome-200 text-sm">
                   {chain.price} {token.symbol}
                 </p>
-              </div>  
+              </div>
             </div>
           );
         })}
@@ -170,9 +176,9 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
 export function SubscriptionBenefits(props: { benefits: string[] }) {
   const { benefits } = props;
   return (
-    <ul className="flex flex-col gap-3 relative">
+    <ul className="relative flex flex-col gap-3">
       {benefits?.map(({ value }: any, index: number) => (
-        <li key={index} className="flex items-center gap-4 pl-8 relative ">
+        <li key={index} className="relative flex items-center gap-4 pl-8 ">
           <CheckCircle className=" absolute left-1 top-1" />
           <span className="text-xs">{value}</span>
         </li>

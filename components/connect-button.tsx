@@ -3,10 +3,13 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Cross2Icon } from "@radix-ui/react-icons";
 import { ConnectButton as RaninbowConnectButton } from "@rainbow-me/rainbowkit";
 import { useSetAtom } from "jotai";
 import { ChevronDown } from "lucide-react";
 import { useAccount } from "wagmi";
+
+import { ChainIconById } from "@/app/components/ChainIconById";
 
 import { Wallet } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -19,11 +22,11 @@ import { getAvatarUrl, getImageUrl } from "@/web3/utils/url";
 
 import { isUsernameSetAtom } from "@/stores";
 
-import { useSwitchChain } from "./providers";
-import { Dialog, DialogContent, DialogHeader, DialogTrigger,DialogClose } from "./ui/dialog";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { chainIcons } from "@/configs";
- 
+
+import { useSwitchChain } from "./providers";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTrigger } from "./ui/dialog";
+
 export type Props = React.ComponentProps<typeof RaninbowConnectButton>;
 
 type AuthenticationStatus = "loading" | "unauthenticated" | "authenticated";
@@ -345,23 +348,24 @@ export const Web3AuthChainSwitchModal = ({
           )}
         </DialogTrigger>
 
-        <DialogContent className="rounded-2xl border  border-[#242424ca] bg-[#1a1b1f] max-w-[370px]">
-        <DialogClose className="good absolute z-10 right-[15px] top-[14px] w-[22px] h-[22px] p-[3px] text-[#979dac] rounded-full bg-[#38393c] ">
-        <Cross2Icon/>
-        </DialogClose>
-          <DialogHeader className="text-white  font-bold">Switch Networks</DialogHeader>
+        <DialogContent className="max-w-[370px] rounded-2xl  border border-[#242424ca] bg-[#1a1b1f]">
+          <DialogClose className="good absolute right-[15px] top-[14px] z-10 h-[22px] w-[22px] rounded-full bg-[#38393c] p-[3px] text-[#979dac] ">
+            <Cross2Icon />
+          </DialogClose>
+          <DialogHeader className="font-bold  text-white">Switch Networks</DialogHeader>
           {chains.map((chain) => (
             <button
               key={chain.id}
               onClick={() => setSelectedChain(chain.id)}
-              className={`flex w-full h-[50px] items-center justify-between rounded-full p-3 text-white hover:bg-[#2e3036]  ${chain.id==chainId?"bg-[#860c93] hover:bg-[#860c93]":""}`}
+              className={`flex h-[50px] w-full items-center justify-between rounded-full p-3 text-white hover:bg-[#2e3036]  ${chain.id == chainId ? "bg-[#860c93] hover:bg-[#860c93]" : ""}`}
             >
-              <div className="flex items-center gap-2 leading-[90%] text-left">
-                <img src={chainIcons[chain.id]} alt="BSC" className="h-6 w-6" />
-                <span className=" font-bold">{chain.name}</span> 
+              <div className="flex items-center gap-2 text-left leading-[90%]">
+                <ChainIconById chainId={chain.id} />
+
+                <span className=" font-bold">{chain.name}</span>
               </div>
               {chainId == chain.id && (
-                <span className="text-sm flex gap-1 font-bold">
+                <span className="flex gap-1 text-sm font-bold">
                   Connected <span className="text-green-500">●</span>
                 </span>
               )}
