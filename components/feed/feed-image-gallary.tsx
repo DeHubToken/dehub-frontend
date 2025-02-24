@@ -55,7 +55,7 @@ export function FeedImageGallary(props: { images: { url: string; alt: string }[]
   }
 
   return (
-    <div className="grid grid-cols-3 gap-1  max-h-[500px] overflow-hidden">
+    <div className="grid grid-cols-3 gap-1  overflow-hidden">
       {images.map((image, index) => (
         <LazyLoadImage key={index} {...getImageProps({ src: image.url, alt: image.alt })} />
       ))}

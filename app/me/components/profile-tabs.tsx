@@ -7,8 +7,8 @@ import ProfileTabViewServer from "./tab-view";
 
 const tabs = [
   { key: "video", label: "Videos" },
-  { key: "feed-all", label: "Feeds" },
-  { key: "user-activity", label: "activity" }
+  { key: "feed-all", label: "Feed" },
+  { key: "user-activity", label: "Activity" }
 ];
 
 export default function ProfileTabView({
@@ -29,9 +29,9 @@ export default function ProfileTabView({
             <Link
               key={key}
               href={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}?tab=${key}`}
-              className={` px-6 py-2 ${
+              className={` px-6 py-2 rounded-full hover:bg-theme-mine-shaft-dark  hover:pl-7 hover:pr-7 transition-all ${
                 activeTab === key
-                  ? "rounded-full bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft"
+                  ? "rounded-full bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft pl-7 pr-7"
                   : "border-transparent text-gray-500"
               }`}
             >
