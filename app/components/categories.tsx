@@ -77,7 +77,8 @@ async function CategoriesLoader(props: Props) {
           <CarouselItem className="basis-auto">
             <CategoryButton
               isActive={isActive("All")}
-              url={`${base??""}/${objectToGetParams({ category: "All", type, title, range,tab })}`}
+              scroll={tab==""}
+              url={`${base ?? ""}/${objectToGetParams({ category: "All", type, title, range, tab })}`}
             >
               All
             </CategoryButton>
@@ -85,7 +86,8 @@ async function CategoriesLoader(props: Props) {
           {categories.map((item, index) => (
             <CarouselItem key={index} className="basis-auto">
               <CategoryButton
-                url={`${base??""}/${objectToGetParams({ category: item, type, title, range ,tab})}`}
+                scroll={tab==""}
+                url={`${base ?? ""}/${objectToGetParams({ category: item, type, title, range, tab })}`}
                 isActive={isActive(item)}
               >
                 {item}
