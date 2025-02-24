@@ -3,8 +3,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TabsList } from "@radix-ui/react-tabs";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+  
 import { CirclePlus, Settings, Users } from "lucide-react";
 import io from "socket.io-client";
 import { toast } from "sonner";
@@ -34,8 +33,7 @@ import { MessageProvider } from "./components/provider";
 import { SocketEvent } from "./utils";
 
 /* ----------------------------------------------------------------------------------------------- */
-
-dayjs.extend(relativeTime);
+ 
 export default function MessagesScreen() {
   const { account } = useActiveWeb3React();
   const router = useRouter();

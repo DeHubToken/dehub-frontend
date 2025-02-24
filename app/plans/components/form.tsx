@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
@@ -14,6 +14,8 @@ import { Minus, Plus, Trash } from "lucide-react";
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { useWaitForTransaction } from "wagmi";
+
+import { ChainIconById } from "@/app/components/ChainIconById";
 
 import { BJ } from "@/components/icons/bj";
 import { CheckCircle } from "@/components/icons/check-circle";
@@ -35,7 +37,7 @@ import { createPlan, updatePlan } from "@/services/subscription-plans";
 
 import { supportedNetworks } from "@/web3/configs";
 
-import { durations, SB_ADDRESS, supportedTokens } from "@/configs";
+import { chainIcons, durations, SB_ADDRESS, supportedTokens } from "@/configs";
 
 import PublishOnChain from "./publish-on-chain";
 import { SubscriptionModalPreView } from "./subscription-preview";
@@ -51,7 +53,7 @@ type FormValues = {
 export default function Form({ plan, getTiers }: any) {
   const { account, chainId } = useActiveWeb3React();
   const router = useRouter();
-  const planId = plan != undefined ? plan.id : null; 
+  const planId = plan != undefined ? plan.id : null;
   const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
@@ -82,40 +84,39 @@ export default function Form({ plan, getTiers }: any) {
     register,
     control,
     watch,
-   reset,
-    formState: { errors,isDirty }
+    reset,
+    formState: { errors, isDirty }
   } = form;
 
   const { tier } = watch();
   const onSubmit = async (plan: any) => {
-
     // Add your API call logic here
     let { benefits, ...tier } = plan.tier;
-    benefits = benefits.map((b: any) => b.value); 
+    benefits = benefits.map((b: any) => b.value);
     if (benefits.length < 2) {
       toast.error("Please add at least two benefits.");
       return;
-    } 
+    }
     plan = { ...tier, benefits };
-    try { 
+    try {
       setIsPending(true);
-      const data: any = planId !== null ? await updatePlan(plan, planId) : await createPlan(plan);  
+      const data: any = planId !== null ? await updatePlan(plan, planId) : await createPlan(plan);
       if (data?.error) {
-        toast.error(data?.error)
-        return
-      } 
-      if (planId) { 
-        reset()
-        setIsPending(false);
-        toast.success("plan Updated");
-        router.push("/plans")
+        toast.error(data?.error);
         return;
       }
-      toast.success("plan created");  
+      if (planId) {
+        reset();
+        setIsPending(false);
+        toast.success("plan Updated");
+        router.push("/plans");
+        return;
+      }
+      toast.success("plan created");
       setIsPending(false);
-      reset()
-      await getTiers()
-      return;  
+      reset();
+      await getTiers();
+      return;
     } catch (error: any) {
       toast.error(error.message);
       setIsPending(false);
@@ -214,7 +215,7 @@ export default function Form({ plan, getTiers }: any) {
                 tier={tier}
                 control={control}
                 onPublish={() => {
-                  router.push("/plans")
+                  router.push("/plans");
                 }}
                 chainId={chainId}
                 isDirty={isDirty}
@@ -227,7 +228,15 @@ export default function Form({ plan, getTiers }: any) {
   );
 }
 
-export const SetDuration = ({ control, form, isPublished }: { control: any; form: any; isPublished: boolean }) => {
+export const SetDuration = ({
+  control,
+  form,
+  isPublished
+}: {
+  control: any;
+  form: any;
+  isPublished: boolean;
+}) => {
   const { setValue } = form;
   return (
     <Controller
@@ -257,7 +266,7 @@ export const SetDuration = ({ control, form, isPublished }: { control: any; form
               </Button>
               <Button
                 type="button"
-                className="h-full rounded-none px-5 py-6 sm:px-89"
+                className="sm:px-89 h-full rounded-none px-5 py-6"
                 onClick={() => {
                   const prevIndex = durations.findIndex((d) => d.value === field.value) - 1; // Find the current index
                   if (prevIndex >= 0) {
@@ -301,7 +310,7 @@ export function BenefitList({ control, tierIndex }: any) {
             {field.value}
             <span
               onClick={() => removeBenefit(n)}
-              className="absolute right-1 -top-2 cursor-pointer text-red-600"
+              className="absolute -top-2 right-1 cursor-pointer text-red-600"
             >
               <CrossCircled />
             </span>
@@ -328,14 +337,14 @@ export function BenefitList({ control, tierIndex }: any) {
           className="flex items-center gap-2 rounded px-4 py-2 transition-colors hover:bg-gray-200 dark:hover:bg-theme-mine-shaft-dark"
         >
           <Plus className="size-5" />
-          <span className="text-lg">Add another benefit</span>
+          <span className="text-lg">Add benefit</span>
         </button>
       </div>
     </div>
   );
 }
 
-export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId,isDirty }: any) => {
+export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId, isDirty }: any) => {
   // Get form context for `register` if not explicitly passed
   const { register } = useFormContext();
   const { remove } = useFieldArray({
@@ -353,14 +362,17 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId,i
       {/* Chain List Section */}
       <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_60%]">
         {tier?.chains?.map((field: any, index: number) => (
-          <div className="mb-4 pl-5 pr-5 flex-wrap flex w-full items-center  gap-5 mt-5" key={field.id}>
+          <div
+            className="mb-4 mt-5 flex w-full flex-wrap items-center gap-5  pl-5 pr-5"
+            key={field.id}
+          >
             {/* Chain ID or Label */}
             <div className="w-auto flex-shrink-0  sm:w-auto sm:text-left">
-              {field.chainId}) {supportedNetworks.find((c) => c.chainId == field.chainId)?.label}
+              <ChainIconById chainId={field.chainId} label={true}/>
             </div>
 
             {/* Currency Select */}
-            <div className="w-auto md:[w-auto] sm:w-40 md:w-48 focus:[box-shadow:none]">
+            <div className="md:[w-auto] w-auto focus:[box-shadow:none] sm:w-40 md:w-48">
               <CurrencySelect
                 control={control}
                 chainId={field.chainId}
@@ -376,14 +388,14 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId,i
                 <input
                   type="number"
                   min={0}
-                  style={{minWidth:100}}
+                  style={{ minWidth: 100 }}
                   placeholder="Enter price"
                   disabled={field.isPublished}
                   className="w-full rounded-md border bg-gray-100 px-4 py-2  text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   {...register(`tier.chains.${index}.price`, {
                     valueAsNumber: true,
                     required: "Amount is Required",
-                    validate: value => {
+                    validate: (value) => {
                       if (value <= 0) {
                         toast.error("Amount should be greater than 0");
                         return "Amount should be greater than 0";
@@ -413,7 +425,6 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId,i
               field={field}
               chainId={chainId}
               deployedPlan={deployedPlan}
-
             />
           </div>
         ))}
@@ -447,34 +458,34 @@ const AddChainDropdown: React.FC<any> = ({ tier, control }) => {
             className="flex items-center gap-2 rounded px-4 py-2 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
           >
             <Plus className="size-5" />
-            <span className="text-lg">Add another chain</span>
+            <span className="text-lg">Add chain</span>
           </button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent>
           {supportedNetworks
-           .filter((network) => [56, 8453,97].includes(network.chainId))
-          .map((network) => (
-            <DropdownMenuItem
-              key={network.chainId}
-              onClick={() => {
-                // Only append if the chainId is not already in the list
-                if (!isChainExist(network.chainId)) {
-                  appendChain({
-                    chainId: network.chainId,
-                    price: 0,
-                    token: "",
-                    isPublished: false,
-                    temp: true
-                  });
-                } else {
-                  alert(`Chain with ID ${network.chainId} already exists.`);
-                }
-              }}
-            >
-              {network.label}
-            </DropdownMenuItem>
-          ))}
+            .filter((network) => [56, 8453, 97].includes(network.chainId))
+            .map((network) => (
+              <DropdownMenuItem
+                key={network.chainId}
+                onClick={() => {
+                  // Only append if the chainId is not already in the list
+                  if (!isChainExist(network.chainId)) {
+                    appendChain({
+                      chainId: network.chainId,
+                      price: 0,
+                      token: "",
+                      isPublished: false,
+                      temp: true
+                    });
+                  } else {
+                    alert(`Chain with ID ${network.chainId} already exists.`);
+                  }
+                }}
+              >
+                {network.label}
+              </DropdownMenuItem>
+            ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -493,13 +504,16 @@ export const CurrencySelect = ({
   index: number;
   disabled: boolean;
 }) => {
-
-  const { setValue, trigger, formState: { errors } } = useFormContext<FormValues>();
+  const {
+    setValue,
+    trigger,
+    formState: { errors }
+  } = useFormContext<FormValues>();
 
   const handleValidation = async () => {
     const isValid = await trigger(`tier.chains.${index}.token`); // Validate the token field
     if (!isValid) {
-      toast.error('Token is required'); // Show toast message if validation fails
+      toast.error("Token is required"); // Show toast message if validation fails
     }
     return isValid;
   };
@@ -521,13 +535,13 @@ export const CurrencySelect = ({
             }} // Update the field value on change
             disabled={disabled}
           >
-            <SelectTrigger className="h-full min-w-32 rounded-none bg-transparent dark:bg-transparent text-base">
+            <SelectTrigger className="h-full min-w-32 rounded-none bg-transparent text-base dark:bg-transparent">
               <SelectValue placeholder="Select token" />
             </SelectTrigger>
             <SelectContent>
               {supportedTokens
-              .filter((chain) => [56, 8453,97].includes(chain.chainId))
-                .filter((t) => t.chainId == chainId &&t.isSubscriptionSupported)
+                .filter((chain) => [56, 8453, 97].includes(chain.chainId))
+                .filter((t) => t.chainId == chainId && t.isSubscriptionSupported)
                 .map((token, i: number) => (
                   <SelectItem key={i} value={token.address}>
                     <div className="flex items-center gap-4">
@@ -545,7 +559,7 @@ export const CurrencySelect = ({
             </SelectContent>
           </Select>
           {errors?.tier?.chains?.[index]?.token && (
-            <p className="text-red-500 text-sm">Token is required</p>
+            <p className="text-sm text-red-500">Token is required</p>
           )}
         </>
       )}

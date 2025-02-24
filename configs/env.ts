@@ -10,7 +10,7 @@ import { z } from "zod";
 export const env = createEnv({
   emptyStringAsUndefined: true,
   server: {
-    NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+    NODE_ENV: z.enum(["development", "staging", "production"]).default("development"),
     LIVEPEER_API_KEY: z.string(),
   },
   client: {
