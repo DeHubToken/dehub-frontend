@@ -5,6 +5,7 @@ export enum LivestreamEvents {
     EndStream = 'stream.end',
     JoinStream = 'stream.join',
     LeaveStream = 'stream.left',
+    TipStreamer = 'streamer.tip',
     SendMessage = 'stream.message',
     LikeStream = 'stream.like',
     ViewCountUpdate = 'stream.viewers.update',
@@ -24,4 +25,5 @@ export enum StreamActivityType {
     REACTION = 'REACTION',
     JOINED = 'JOINED',
     LEFT = 'LEFT',
+  TIP = 'TIP',
   }

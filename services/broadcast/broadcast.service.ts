@@ -14,16 +14,6 @@ export const createLiveStream = async (data: any, coverImage: File) => {
   }
 
   formData.append("thumbnail", coverImage);
-
-  // console.log(
-  //   formData.get("title"),
-  //   formData.get("description"),
-  //   formData.get("status"),
-  //   formData.get("thumbnail"),
-  //   formData.get("categories"), 
-  //   formData.get("settings")
-  // );
-
   return api<any>(`/live`, {
     method: "POST",
     body: formData,
@@ -43,6 +33,16 @@ export const broadcastStream = async (url: string, data: any) => {
 
 export const likeLiveStream = async (id: string, data: any) => {
   return api<any>(`/live/${id}/like`, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+};
+
+export const recordLiveGift = async (id: string, data: any) => {
+  return api<any>(`/live/${id}/gift`, {
     method: "POST",
     body: JSON.stringify(data),
     headers: {

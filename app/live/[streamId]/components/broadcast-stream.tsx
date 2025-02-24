@@ -66,13 +66,22 @@ export default function BroadcastStream(props: { streamId: string }) {
     if (!socket || !stream || !account) return;
 
     const handleStreamStart = (data: any) => {
-      console.log("Stream started", data);
+      // console.log("Stream started", data);
       setStream((prev: any) => ({ ...prev, status: StreamStatus.LIVE }));
       setIsPendingWebhook(false);
     };
 
+    const handleTip = (data: any) => {
+      const { gift } = data;
+
+      setStream((prev: any) => ({
+        ...prev,
+        totalTips: (prev.totalTips || 0) + Number(gift.meta.amount)
+      }));
+    };
+
     const handleStreamEnd = (data: any) => {
-      console.log("Stream started", data);
+      // console.log("Stream started", data);
       setStream((prev: any) => ({ ...prev, status: StreamStatus.ENDED }));
       setIsPendingWebhook(false);
     };
@@ -86,17 +95,19 @@ export default function BroadcastStream(props: { streamId: string }) {
     socket.on(LivestreamEvents.StartStream, handleStreamStart);
     socket.on(LivestreamEvents.EndStream, handleStreamEnd);
     socket.on(LivestreamEvents.ViewCountUpdate, handleViewUpdate);
+    socket.on(LivestreamEvents.TipStreamer, handleTip);
 
     return () => {
       socket.off(LivestreamEvents.StartStream, handleStreamStart);
       socket.off(LivestreamEvents.EndStream, handleStreamEnd);
       socket.off(LivestreamEvents.ViewCountUpdate, handleViewUpdate);
+      socket.off(LivestreamEvents.TipStreamer, handleTip);
     };
   }, [socket, streamId, stream, account]);
-  console.log('stream',stream)
+  // console.log('stream',stream)
 
   useEffect(() => {
-    console.log("Joining room", socket , stream?._id , account);
+    // console.log("Joining room", socket , stream?._id , account);
     if (!socket || !stream?._id || !account) return;
     socket.emit(LivestreamEvents.JoinRoom, { streamId: stream?._id });
     return () => {};

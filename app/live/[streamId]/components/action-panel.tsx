@@ -120,7 +120,7 @@ export default function BroadcastActionPanel(props: { stream: any }) {
             <ThumbsUp className="size-5" />
             {stream.likes || 0}
           </Button>
-          <GiftModal tokenId={0} to={stream.address} streamId={stream._id} />
+          <GiftModal tokenId={0} to={stream.address} stream={stream} />
           <div className="absolute right-0 top-0 size-auto sm:hidden">
             <Share />
           </div>

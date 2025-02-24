@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
@@ -8,39 +9,20 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { CreatableTagInput } from "@/components/form/tag-input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
-import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { useUser } from "@/hooks/use-user";
 
-import { getVideoCover } from "@/libs/canvas-preview";
-import { formatDateToInputValue } from "@/web3/utils/format";
-import { StreamStatus } from "@/configs";
 import { createLiveStream } from "@/services/broadcast/broadcast.service";
-import { useRouter } from "next/navigation";
+
+import { formatDateToInputValue } from "@/web3/utils/format";
 import { getAuthObject, getAuthParams } from "@/web3/utils/web3-actions";
+
+import { StreamStatus } from "@/configs";
 
 const streamStatusOptions = ["OFFLINE", "LIVE", "SCHEDULED"];
 
@@ -52,7 +34,8 @@ const liveStreamSchema = z.object({
   categories: z.array(z.string()),
   settings: z.object({
     enableChat: z.boolean().default(true),
-    schedule: z.boolean().default(false)
+    schedule: z.boolean().default(false),
+    minTip: z.string().default("500")
   }),
   scheduledFor: z.date().optional()
 });
@@ -78,7 +61,7 @@ export default function GoLiveForm({ categories }: Props) {
       description: "",
       thumbnail: "",
       categories: [],
-      settings: { enableChat: true, schedule: false }
+      settings: { enableChat: true, schedule: false, minTip: '500' }
     }
   });
 
@@ -101,7 +84,7 @@ export default function GoLiveForm({ categories }: Props) {
       if (!account || !user) {
         return toast.error("Please connect your wallet");
       }
-  
+
       if (data.settings?.schedule) {
         if (!data.scheduledFor) {
           return toast.error("Please select a date and time for scheduled stream");
@@ -110,12 +93,12 @@ export default function GoLiveForm({ categories }: Props) {
       } else {
         delete data.scheduledFor;
       }
-      
-      const authObject = await getAuthObject(library, account)
-      let {thumbnail, ...payload} =  data;
-      data = {...payload, ...authObject}
+
+      const authObject = await getAuthObject(library, account);
+      let { thumbnail, ...payload } = data;
+      data = { ...payload, ...authObject };
       const response = await createLiveStream(data, thumbnailFile);
-  
+
       if (response.success) {
         toast.success("Stream created successfully! Redirecting...");
         router.push(`/live/${response.data._id}`);
@@ -131,7 +114,7 @@ export default function GoLiveForm({ categories }: Props) {
   };
 
   return (
-    <main className="h-auto min-h-screen w-full space-y-10 py-28 px-4">
+    <main className="h-auto min-h-screen w-full space-y-10 px-4 py-28">
       <h1 className="text-4xl font-semibold">Broadcast</h1>
       <Form {...form}>
         {/* <form onSubmit={form.handleSubmit(createStream)} className="space-y-6"> */}
@@ -208,7 +191,7 @@ export default function GoLiveForm({ categories }: Props) {
                           className="size-full rounded-3xl object-cover"
                         />
                       ) : (
-                          <span className="text-gray-500">Click or drag to upload a thumbnail</span>
+                        <span className="text-gray-500">Click or drag to upload a thumbnail</span>
                       )}
                     </div>
                   </FormControl>
@@ -262,12 +245,14 @@ export default function GoLiveForm({ categories }: Props) {
                               <Input
                                 type="datetime-local"
                                 {...scheduleField}
-                                value={scheduleField.value ? formatDateToInputValue(new Date(scheduleField.value)) : ""}
+                                value={
+                                  scheduleField.value
+                                    ? formatDateToInputValue(new Date(scheduleField.value))
+                                    : ""
+                                }
                                 className="w-auto"
                                 onChange={(e) => {
-                                  const date = e.target.value
-                                    ? new Date(e.target.value)
-                                    : null;
+                                  const date = e.target.value ? new Date(e.target.value) : null;
                                   scheduleField.onChange(date);
                                 }}
                               />
@@ -282,6 +267,28 @@ export default function GoLiveForm({ categories }: Props) {
               </FormItem>
             )}
           />
+          <div className="flex items-center space-x-4">
+            <label htmlFor="schedule">Min. Tip</label>
+            <FormField
+              control={form.control}
+              name="settings.minTip"
+              render={({ field: minTip }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...minTip}
+                      type="number"
+                      placeholder="500 DHB"
+                      // value={minTip.value}
+                      // defaultValue={500}
+                      className="w-auto"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
 
         <Button

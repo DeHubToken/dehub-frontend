@@ -2,10 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 
 import { useWebSockets } from "@/contexts/websocket";
+
+import { useUser } from "@/hooks/use-user";
 
 import { truncate } from "@/libs/strings";
 import { cn } from "@/libs/utils";
@@ -15,7 +18,7 @@ import { getLiveStream } from "@/services/broadcast/broadcast.service";
 import { StreamStatus } from "@/configs";
 
 import { LivestreamEvents, StreamActivityType } from "../enums/livestream.enum";
-import { useUser } from "@/hooks/use-user";
+import TipAnimation from "./tip-animation";
 
 const MessageComponent = ({ activity }: { activity: any }) => {
   return (
@@ -38,6 +41,15 @@ const UserJoinComponent = ({ activity }: { activity: any }) => {
     <div className="text-center text-sm text-gray-400">
       {truncate(activity.meta.username || activity.address || activity.meta.address, 8)} joined the
       stream.
+    </div>
+  );
+};
+
+const StreamTipComponent = ({ activity }: { activity: any }) => {
+  return (
+    <div className="text-center text-sm text-gray-400">
+      {truncate(activity.meta.username || activity.address || activity.meta.address, 8)} tipped $
+      {activity.meta.amount} DHB.
     </div>
   );
 };
@@ -74,6 +86,7 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
   const [message, setMessage] = useState("");
   const [activities, setActivities] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
+  const [tipAnimations, setTipAnimations] = useState<Array<{ id: string; amount: number }>>([]);
   const { socket } = useWebSockets();
   const { account } = useUser();
 
@@ -112,7 +125,7 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
 
     // Handle user joining
     const handleUserJoin = (data: any) => {
-      console.log("New user joined", data);
+      // console.log("New user joined", data);
       // if (data.streamId !== stream._id) return;
       if (stream?.status !== StreamStatus.LIVE) return;
       setActivities((prev) => [
@@ -173,12 +186,67 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
       ]);
     };
 
+    const handleTip = (data: any) => {
+      const { gift } = data;
+      const amount = Number(gift.meta.amount);
+      const message = gift.meta.message;
+
+      console.log("Tip received:", data, amount);
+      setStream((prev: any) => ({
+        ...prev,
+        totalTips: (prev.totalTips || 0) + amount
+      }));
+      setActivities((prev) => [
+        ...prev,
+        {
+          status: StreamActivityType.TIP,
+          address: gift.meta.address,
+          meta: { ...gift.meta }
+        }
+      ]);
+
+      // Return early if it's the user's own tip
+      if (gift?.meta?.address.toLowerCase() === account?.toLowerCase()) {
+        return;
+      }
+
+      // Read out text [gift.meta.message]
+      if (typeof window !== "undefined" && window.speechSynthesis && message.trim() !== "") {
+        const utterance = new SpeechSynthesisUtterance(message);
+        window.speechSynthesis.speak(utterance);
+      }
+
+      const notification = message
+        ? `${truncate(gift.meta.username || gift.meta.displayName || gift.meta.address, 8)} tipped ${gift.meta.amount} DHB: ${message}`
+        : `${truncate(gift.meta.username || gift.meta.displayName || gift.meta.address, 8)} tipped ${gift.meta.amount} DHB`;
+
+      toast(notification, {
+        icon: gift.meta.tier ? "🎁" : "💰"
+      });
+
+      const tipId = `${Date.now()}-${Math.random()}`;
+      // Add new tip animation
+      setTipAnimations((prev) => [...prev, { id: tipId, amount }]);
+
+      // Determine duration based on amount
+      let duration = 3000;
+      if (amount >= 500000) duration = 5000;
+      if (amount >= 750000) duration = 10000;
+      if (amount >= 1000000) duration = 10000;
+
+      // Remove the tip animation after the duration
+      setTimeout(() => {
+        setTipAnimations((prev) => prev.filter((tip) => tip.id !== tipId));
+      }, duration);
+    };
+
     // Subscribe to events
     socket.on(LivestreamEvents.SendMessage, handleNewMessage);
     socket.on(LivestreamEvents.JoinStream, handleUserJoin);
     socket.on(LivestreamEvents.LeaveStream, handleUserLeave);
     socket.on(LivestreamEvents.StartStream, handleStreamStart);
     socket.on(LivestreamEvents.EndStream, handleStreamEnd);
+    socket.on(LivestreamEvents.TipStreamer, handleTip);
 
     // Cleanup listeners
     return () => {
@@ -187,6 +255,7 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
       socket.off(LivestreamEvents.LeaveStream, handleUserLeave);
       socket.off(LivestreamEvents.StartStream, handleStreamStart);
       socket.off(LivestreamEvents.EndStream, handleStreamEnd);
+      socket.off(LivestreamEvents.TipStreamer, handleTip);
     };
   }, [socket, stream]);
 
@@ -212,8 +281,12 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
   return (
     <div className="relative h-full min-h-full w-full rounded-2xl border border-theme-mine-shaft-dark bg-theme-mine-shaft-dark p-4 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
       <h2 className="mb-2 text-lg font-bold text-white">Chat</h2>
-
-      {stream?.status === StreamStatus.OFFLINE || stream?.status === StreamStatus.SCHEDULED ? (
+      {tipAnimations.map((tip) => (
+        <TipAnimation key={tip.id} amount={tip.amount} />
+      ))}
+      {!stream?.settings?.chat?.enabled ? (
+        <div className="text-center text-2xl font-bold text-white">Chat is disabled</div>
+      ) : stream?.status === StreamStatus.OFFLINE || stream?.status === StreamStatus.SCHEDULED ? (
         <div className="text-center text-2xl font-bold text-white">Stream is Offline</div>
       ) : (
         <div className="mb-4 max-h-[83%] flex-1 space-y-3 overflow-y-auto">
@@ -227,6 +300,9 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
 
               case StreamActivityType.LEFT:
                 return <UserLeaveComponent key={index} activity={activity} />;
+
+              case StreamActivityType.TIP:
+                return <StreamTipComponent key={index} activity={activity} />;
 
               case StreamActivityType.START:
                 return <StreamStartComponent key={index} />;

@@ -93,7 +93,7 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
     };
   }, [socket, stream]);
 
-  console.log("In streamer", account, library, ingestUrl)
+  // console.log("In streamer", account, library, ingestUrl)
 
   return (
     <>
