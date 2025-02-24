@@ -1,10 +1,9 @@
 "use client";
 
-import { CirclePlus } from "lucide-react";
-
 import SubscriptionGroupList from "@/app/components/join-subscription-group";
 
 import { CheckCircle } from "@/components/icons/check-circle";
+import { CirclePlus } from "@/components/icons/circle-plus";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,16 +27,16 @@ import BuySubOnChain from "./buy-sub-on-chain";
 
 /* ----------------------------------------------------------------------------------------------- */
 
-export function SubscriptionModal({ avatarImageUrl, displayName,aboutMe="", plans = [] }: any) {
+export function SubscriptionModal({ avatarImageUrl, displayName, aboutMe = "", plans = [] }: any) {
   const { account, chainId } = useActiveWeb3React();
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="gradientOne" size="sratch" className="gap-2 py-5">
-          <CirclePlus className="size-5" /> Subscribe
+        <Button className="gap-2 rounded-full">
+          <CirclePlus /> Subscribe
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[1200px] sm:rounded-3xl max-h-[80vh] overflow-auto">
+      <DialogContent className="max-h-[80vh] max-w-[1200px] overflow-auto sm:rounded-3xl">
         <DialogTitle className="sr-only">Subscribe</DialogTitle>
         <DialogDescription className="sr-only">Subscribe to my premium plans</DialogDescription>
         <DialogHeader className="flex flex-row gap-4">
@@ -50,8 +49,7 @@ export function SubscriptionModal({ avatarImageUrl, displayName,aboutMe="", plan
           <div className="flex flex-col">
             <span className="text-2xl">{displayName}</span>
             <span className="text-theme-monochrome-300 text-sm">
-            {aboutMe??"Hello! Thank you for supporting me!!"}
-
+              {aboutMe ?? "Hello! Thank you for supporting me!!"}
             </span>
           </div>
         </DialogHeader>
@@ -94,7 +92,7 @@ export function SubscriptionCard(props: React.HTMLAttributes<HTMLDivElement>) {
     <div
       {...props}
       className={cn(
-        "flex max-h-fit min-w-[calc((250/16)*1rem)] max-w-[calc((250/16)*1rem)] flex-col items-center gap-8 rounded-lg border bg-theme-mine-shaft-dark py-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft  mt-0 mr-auto ml-auto md:m-0"
+        "ml-auto mr-auto mt-0 flex max-h-fit min-w-[calc((250/16)*1rem)] max-w-[calc((250/16)*1rem)] flex-col items-center gap-8 rounded-lg border bg-theme-mine-shaft-dark  py-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft md:m-0"
       )}
     />
   );
@@ -145,7 +143,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
             return (
               <div
                 key={chain?.chainId}
-                className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
+                className="flex w-full flex-col items-center gap-2 rounded-lg border p-4 shadow-sm"
               >
                 <h2 className="text-lg font-bold">Chain {chain?.chainId}</h2>
                 <p className="text-center text-sm text-red-500">Not supported (switch chain)</p>
@@ -156,7 +154,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
           return (
             <div
               key={chain.chainId}
-              className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
+              className="flex w-full flex-col items-center gap-2 rounded-lg border p-4 shadow-sm"
             >
               <h2 className="text-lg font-bold">
                 {token.label} ({network?.label})
@@ -190,9 +188,9 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
 export function SubscriptionBenefits(props: { benefits: string[] }) {
   const { benefits } = props;
   return (
-    <ul className="flex flex-col gap-3 relative">
+    <ul className="relative flex flex-col gap-3">
       {benefits.map((benefit) => (
-        <li key={benefit} className="flex items-center gap-4 relative pl-8">
+        <li key={benefit} className="relative flex items-center gap-4 pl-8">
           <CheckCircle className=" absolute left-1 top-1" />
           <span className="text-xs">{benefit}</span>
         </li>

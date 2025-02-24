@@ -23,7 +23,6 @@ export async function Stream(props: FeedProps) {
   const cookie = cookies();
   const userCookie = cookie.get("user_information");
   const user = safeParseCookie<{ address: string }>(userCookie?.value);
-
   const res = await getNFTs({
     sortMode: type,
     unit: q ? 50 : 20,

@@ -96,11 +96,11 @@ async function CategoriesLoader(props: Props) {
 
 function CategoriesSkeleton() {
   return (
-    <div className="mr-5 flex w-full items-center gap-1">
-      {Array.from({ length: 10 }).map((_, i) => (
+    <div className="mr-5 flex w-full items-center gap-4 overflow-hidden">
+      {Array.from({ length: 20 }).map((_, i) => (
         <div
           key={i}
-          className="shimmer relative h-6 flex-1 rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
+          className="shimmer relative h-8 min-w-[80px] max-w-[80px] flex-1 rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
         />
       ))}
     </div>

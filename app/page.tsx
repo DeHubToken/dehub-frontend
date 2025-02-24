@@ -34,7 +34,7 @@ export default async function Page(props: Props) {
 
   return (
     <div className="flex h-auto min-h-screen w-full items-start justify-between">
-      <div className="h-auto min-h-screen w-full max-w-full flex-1 px-6 md:max-w-[calc(100%-var(--leaderboard-width))]">
+      <div className="h-auto min-h-screen w-full max-w-full flex-1 px-6 md:min-w-[calc(100%-var(--leaderboard-width))] md:max-w-[calc(100%-var(--leaderboard-width))]">
         <Categories
           title={type.toUpperCase()}
           category={category}

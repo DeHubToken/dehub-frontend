@@ -23,7 +23,7 @@ export async function RecentStreams() {
   }
 
   return (
-    <div className="sticky top-0 h-auto w-full px-4 pb-10 xl:h-screen xl:max-w-[25%] xl:flex-[0_0_25%] xl:overflow-y-scroll xl:py-20">
+    <div className="w-full flex-[0_0_calc((400/16)*1rem)] pt-6">
       <div className="flex h-auto w-full flex-col items-start justify-start gap-4">
         {response.data.result.length === 0 && (
           <div className="flex h-[calc(100vh-72px)] w-full items-center justify-center p-4">

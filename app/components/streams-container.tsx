@@ -19,7 +19,7 @@ import { getAvatarUrl } from "@/web3/utils/url";
 
 import { StreamItem } from "./stream-item";
 import { useStreamProvider } from "./stream-provider";
-import { StreamSkeleton } from "./stream-skeleton";
+import { StreamLoader, StreamSkeleton } from "./stream-skeleton";
 
 type Props = {
   isSearch: boolean;
@@ -63,9 +63,9 @@ export function StreamsContainer(props: Props) {
     page.current += 1;
   }
 
-  //   if (isPending) {
-  //     return <Skeleton />;
-  //   }
+  if (isPending) {
+    return <StreamLoader />;
+  }
 
   // @ts-expect-error
   if (isSearch && data?.videos?.length === 0) {
@@ -134,7 +134,7 @@ export function SearchItemsContainer(props: Omit<Props, "isSearch"> & { accounts
   }
 
   if (isPending) {
-    return <Skeleton />;
+    return <StreamLoader />;
   }
 
   if (data?.length === 0 && accounts?.length === 0) {
@@ -208,16 +208,5 @@ export function SearchItemsContainer(props: Omit<Props, "isSearch"> & { accounts
         )}
       />
     </>
-  );
-}
-
-function Skeleton(props: { total?: number }) {
-  const { total = 8 } = props;
-  return (
-    <div className={containerClass}>
-      {Array.from({ length: total }).map((_, index) => (
-        <StreamSkeleton key={index} />
-      ))}
-    </div>
   );
 }

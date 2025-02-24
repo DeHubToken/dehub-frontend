@@ -25,7 +25,7 @@ export async function Leaderboard() {
   }
 
   return (
-    <div className="sticky right-0 top-[calc(var(--navbar-height)+24px)] hidden h-screen w-full min-w-[var(--leaderboard-width)] items-start justify-start overflow-hidden pr-3 md:flex md:flex-col md:gap-3">
+    <div className="sticky right-0 top-[calc(var(--navbar-height)+24px)] hidden h-[calc(100vh-var(--navbar-height)-30px)] max-h-[calc(100vh-var(--navbar-height)-30px)] w-full min-w-[var(--leaderboard-width)] items-start justify-start overflow-hidden pr-3 md:flex md:flex-col md:gap-3">
       <div className="rounded-full bg-theme-neutrals-700 px-4 py-3 text-xs text-theme-neutrals-400">
         <span>Leaderboard</span>
       </div>
@@ -87,20 +87,38 @@ export async function Leaderboard() {
 
 export function LeaderboardSkeleton() {
   return (
-    <div className="sticky right-0 top-0 flex h-screen w-full items-start justify-start overflow-hidden px-4 pb-4 pt-28">
-      <div className="h-auto w-full">
-        <div className="flex size-auto items-center justify-between">
-          <h1 className="font-tanker text-4xl">Leaderboard</h1>
-          <Button size="sm" className="rounded-full">
+    <div className="sticky right-0 top-[calc(var(--navbar-height)+24px)] hidden h-[calc(100vh-var(--navbar-height)-30px)] max-h-[calc(100vh-var(--navbar-height)-30px)] w-full min-w-[var(--leaderboard-width)] items-start justify-start overflow-hidden pr-3 md:flex md:flex-col md:gap-3">
+      <div className="rounded-full bg-theme-neutrals-700 px-4 py-3 text-xs text-theme-neutrals-400">
+        <span>Leaderboard</span>
+      </div>
+      <div className="size-full rounded-3xl border border-neutral-800 p-3">
+        <div className="flex size-auto items-center justify-between px-3">
+          <h1 className="font-tanker text-xl">Leaderboard</h1>
+          <Button size="sm" className="rounded-full text-[12px]" disabled>
             View all
           </Button>
         </div>
 
-        <div className="relative h-screen w-full overflow-x-hidden overflow-y-scroll pb-40 pt-6">
-          <div className="flex h-auto w-full flex-col items-start justify-start gap-4">
+        <div className="relative flex size-full flex-col gap-4 overflow-x-hidden overflow-y-scroll pb-40 pt-4">
+          <div className="flex h-auto w-full items-center justify-between px-3 text-theme-neutrals-500">
+            <div className="flex size-auto items-center justify-start gap-4">
+              <p className="w-4 text-sm font-medium">#</p>
+              <p className="text-sm font-medium">User</p>
+            </div>
+            <p className="text-sm font-medium">Holdings</p>
+          </div>
+
+          <div className="flex h-auto w-full flex-col items-start justify-start gap-4 px-3">
             {Array.from({ length: 10 }).map((_, index) => (
-              <div className="h-[60px] w-full" key={index}>
-                <div className="shimmer h-[60px] w-full rounded bg-gray-200 dark:bg-theme-mine-shaft-dark" />
+              <div key={index} className="flex h-10 w-full items-center justify-between gap-4">
+                <div className="flex size-auto flex-1 items-center justify-start gap-4">
+                  <p className="shimmer h-5 w-4 rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark" />
+                  <div className="flex w-full cursor-pointer items-center gap-2">
+                    <div className="shimmer h-8 min-w-8 rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark" />
+                    <p className="shimmer h-5 w-full rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark" />
+                  </div>
+                </div>
+                <p className="shimmer h-5 w-16 rounded-full  border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark" />
               </div>
             ))}
           </div>
