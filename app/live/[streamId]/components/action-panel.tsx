@@ -137,6 +137,9 @@ export default function BroadcastActionPanel(props: { stream: any }) {
               <p className="text-sm">
                 <span className="font-semibold">Peak Views :</span> {stream.peakViewers || 0}
               </p>
+              <p className="text-sm">
+                <span className="font-semibold">Total tips:</span> {stream.totalTips || 0}
+              </p>
             </>
           )}
 
