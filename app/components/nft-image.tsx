@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { RxEyeClosed } from "react-icons/rx";
 import io from "socket.io-client";
 
 import { LazyImage } from "@/components/image";
 
-import { getImageUrl, getImageUrlApi } from "@/web3/utils/url";
+import { getImageUrl } from "@/web3/utils/url";
 
 import { socketUrl } from "@/configs";
 
 const socket = io(socketUrl);
 
-export function ImageWithLoader(props: {
+function _ImageWithLoader(props: {
   url: string;
   name?: string;
   isHidden?: boolean;
@@ -25,16 +25,17 @@ export function ImageWithLoader(props: {
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState("uploading started");
 
-  useEffect(() => {
-    socket.on(props.tokenId, (data: { progress: number; stage: string }) => {
-      setProgress(data.progress);
-      setStage(data.stage);
-    });
+  //   useEffect(() => {
+  //     socket.on(props.tokenId, (data: { progress: number; stage: string }) => {
+  //       setProgress(data.progress);
+  //       setStage(data.stage);
+  //     });
 
-    return () => {
-      socket.off(props.tokenId);
-    };
-  }, []);
+  //     return () => {
+  //       socket.off(props.tokenId);
+  //     };
+  //   }, []);
+
   return (
     <div className="relative h-full overflow-hidden">
       <LazyImage
@@ -105,3 +106,5 @@ export function ImageWithLoader(props: {
     </div>
   );
 }
+
+export const ImageWithLoader = memo(_ImageWithLoader, (prev, next) => prev.url === next.url);

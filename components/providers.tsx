@@ -2,6 +2,7 @@
 
 // import dynamic from "next/dynamic";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { domAnimation, LazyMotion } from "framer-motion";
 
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -45,7 +46,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        {children}
+        <LazyMotion features={domAnimation}>{children}</LazyMotion>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
       {/* <DevTools /> */}
