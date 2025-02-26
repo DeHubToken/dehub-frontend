@@ -36,7 +36,8 @@ const config = {
       }
     },
     fontFamily: {
-      exo: ["Exo", "sans-serif"]
+      exo_2: ["var(--font-exo_2)", "sans-serif"],
+      tanker: ["var(--font-tanker)", "sans-serif"]
     },
     extend: {
       colors: {

@@ -1,5 +1,6 @@
 "use client";
 
+import { ChainIconById } from "@/app/components/ChainIconById";
 import SubscriptionGroupList from "@/app/components/join-subscription-group";
 
 import { CheckCircle } from "@/components/icons/check-circle";
@@ -54,9 +55,9 @@ export function SubscriptionModal({ avatarImageUrl, displayName, aboutMe = "", p
           </div>
         </DialogHeader>
         <div className="mt-8 flex max-h-fit flex-wrap  gap-6 overflow-scroll">
-          {plans.map((plan: any) => {
+          {plans.map((plan: any, key: number) => {
             return (
-              <SubscriptionCard>
+              <SubscriptionCard key={key}>
                 <SubscriptionCardHeader>
                   <SubscriptionCardTitle>{plan.name}</SubscriptionCardTitle>
                   <SubscriptionCardDescription>{plan.description}</SubscriptionCardDescription>
@@ -145,8 +146,13 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
                 key={chain?.chainId}
                 className="flex w-full flex-col items-center gap-2 rounded-lg border p-4 shadow-sm"
               >
-                <h2 className="text-lg font-bold">Chain {chain?.chainId}</h2>
-                <p className="text-center text-sm text-red-500">Not supported (switch chain)</p>
+                <h2 className="text-lg font-bold">
+                  {" "}
+                  <ChainIconById chainId={chain.chainId} label={true} />
+                </h2>
+                <p className="text-center text-sm text-red-500">
+                  Not supported ( <ChainIconById chainId={chain.chainId} label={true} />)
+                </p>
               </div>
             );
           }
@@ -157,7 +163,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
               className="flex w-full flex-col items-center gap-2 rounded-lg border p-4 shadow-sm"
             >
               <h2 className="text-lg font-bold">
-                {token.label} ({network?.label})
+                <ChainIconById chainId={chain.chainId} label={true} />
               </h2>
               <div className="flex items-center gap-2">
                 <span> Price:</span>
@@ -189,8 +195,8 @@ export function SubscriptionBenefits(props: { benefits: string[] }) {
   const { benefits } = props;
   return (
     <ul className="relative flex flex-col gap-3">
-      {benefits.map((benefit) => (
-        <li key={benefit} className="relative flex items-center gap-4 pl-8">
+      {benefits.map((benefit, key: number) => (
+        <li key={key} className="relative flex items-center gap-4 pl-8">
           <CheckCircle className=" absolute left-1 top-1" />
           <span className="text-xs">{benefit}</span>
         </li>

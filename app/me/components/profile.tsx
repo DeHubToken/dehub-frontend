@@ -10,31 +10,36 @@ import { Avatar } from "./avatar";
 import { Banner } from "./banner";
 import { EditProfileButton } from "./edit-profile";
 import { ImageCropperModal } from "./image-cropper-modal";
+import ProfileTabView from "./profile-tabs";
 import { SocialLinks } from "./social-links";
 import { UserInfo } from "./user-info";
 
 /* ================================================================================================= */
 
-type Props = { user: User };
+type Props = { user: User; searchParams?: any };
 
 export async function Profile(props: Props) {
-  const { user } = props;
+  const { user, searchParams } = props;
   const res = await getNFTs({
     minter: user.address,
     unit: 40,
     address: user?.address
-  }); 
+  });
   return (
     <div className="h-auto w-full overflow-hidden">
       <div className="relative h-auto w-full">
         <Banner url={user.coverImageUrl} />
         <EditProfileButton />
-      </div> 
+      </div>
       <SocialLinks user={user} />
       <Avatar name={user?.username || user.displayName || ""} url={user.avatarImageUrl} />
       <UserInfo user={user} />
       <ImageCropperModal />
-      <UserUploads nfts={res.success ? res.data.result : []} isOwner={true} />
+      <ProfileTabView
+        isOwner={true}
+        user={user}
+        searchParams={searchParams} 
+      />
     </div>
   );
 }

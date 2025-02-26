@@ -146,7 +146,12 @@ export function StreamVideoProvider(props: { nft: NFT }) {
         {loading && <StreamVideoSkeleton />}
         <Video
           options={{
-            sources: [{ src: `${env.cdnBaseUrl}videos/${nft.tokenId}.mp4`, type: "video/mp4" }]
+            sources: [
+              {
+                src: `${env.NEXT_PUBLIC_CDN_BASE_URL}/videos/${nft.tokenId}.mp4`,
+                type: "video/mp4"
+              }
+            ]
           }}
           onPlay={recordView}
           onReady={(player) => {

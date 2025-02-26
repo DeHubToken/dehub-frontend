@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -237,7 +235,7 @@
 ::after,
 ::before,
 body {
-  font-family: "Exo", sans-serif;
+  @apply font-exo_2;
 }
 
 ::-webkit-scrollbar {
@@ -250,4 +248,10 @@ body {
 
 .side_menu {
   height: calc(100vh - 150px);
+}
+
+.prof_le {
+  position: relative !important;
+  width: 20px !important;
+  height: 20px !important;
 }

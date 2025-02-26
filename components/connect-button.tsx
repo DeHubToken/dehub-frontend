@@ -1,27 +1,37 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { Cross2Icon } from "@radix-ui/react-icons";
 import { ConnectButton as RaninbowConnectButton } from "@rainbow-me/rainbowkit";
 import { useSetAtom } from "jotai";
 import { ChevronDown } from "lucide-react";
+import { useAccount } from "wagmi";
+
+import { ChainIconById } from "@/app/components/ChainIconById";
 
 import { Wallet } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useUser } from "@/hooks/use-user";
+import { chains, useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { getAvatarUrl, getImageUrl } from "@/web3/utils/url";
 
 import { isUsernameSetAtom } from "@/stores";
-import Image from "next/image";
+
+import { chainIcons } from "@/configs";
+
+import { useSwitchChain } from "./providers";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTrigger } from "./ui/dialog";
 
 export type Props = React.ComponentProps<typeof RaninbowConnectButton>;
 
 type AuthenticationStatus = "loading" | "unauthenticated" | "authenticated";
 type RenderProps = {
-fixed?: boolean;
+  fixed?: boolean;
   account?: {
     address: string;
     balanceDecimals?: number;
@@ -94,7 +104,11 @@ export function WalletButton(props: RenderProps) {
       setIsUsernameSet(false);
     }
   }, [connected, setIsUsernameSet, user]);
+  const { connector } = useAccount();
 
+  useEffect(() => {
+    console.log("connector?.name", connector?.name);
+  }, [connector]);
   return (
     <div
       {...(!ready && {
@@ -138,6 +152,18 @@ export function WalletButton(props: RenderProps) {
             <button onClick={openChainModal} type="button">
               Wrong network
             </button>
+          );
+        }
+        if (connector?.name == "Web3Auth") {
+          return (
+            <Web3AuthChainSwitchModal
+              isSmallScreen={isSmallScreen}
+              fixed={fixed}
+              user={user}
+              account={account}
+              chain={chain}
+              openAccountModal={openAccountModal}
+            />
           );
         }
 
@@ -253,3 +279,139 @@ export default function ConnectButton(props: Props) {
     </RaninbowConnectButton.Custom>
   );
 }
+
+export const Web3AuthChainSwitchModal = ({
+  user,
+  account,
+  chain,
+  isSmallScreen,
+  fixed,
+  openAccountModal
+}: any) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { chainId } = useActiveWeb3React();
+  const { setSelectedChain } = useSwitchChain();
+  return (
+    <div className="flex items-center justify-end gap-0 md:gap-4">
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger>
+          {!isSmallScreen || fixed ? (
+            <>
+              <Button className="h-10 gap-2 rounded-full px-4" size="lg">
+                {chain.hasIcon && (
+                  <div
+                    style={{
+                      background: chain.iconBackground
+                    }}
+                    className="size-5 rounded-full"
+                  >
+                    {chain.iconUrl && (
+                      <Image
+                        alt={chain.name ?? "Chain icon"}
+                        src={chain.iconUrl}
+                        height={100}
+                        width={100}
+                        className="size-5"
+                      />
+                    )}
+                  </div>
+                )}
+                {chain.name && chain.name.length > 10
+                  ? `${chain.name.slice(0, 10)}...`
+                  : chain.name}
+                <ChevronDown className="size-4" />
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button size="icon_sm" className="rounded-full" variant="ghost">
+                {chain.hasIcon && (
+                  <div
+                    style={{
+                      background: chain.iconBackground
+                    }}
+                    className="size-5 rounded-full"
+                  >
+                    {chain.iconUrl && (
+                      <Image
+                        alt={chain.name ?? "Chain icon"}
+                        src={chain.iconUrl}
+                        height={200}
+                        width={200}
+                        className="size-5"
+                      />
+                    )}
+                  </div>
+                )}
+              </Button>
+            </>
+          )}
+        </DialogTrigger>
+
+        <DialogContent className="max-w-[370px] rounded-2xl  border border-[#242424ca] bg-[#1a1b1f]">
+          <DialogClose className="good absolute right-[15px] top-[14px] z-10 h-[22px] w-[22px] rounded-full bg-[#38393c] p-[3px] text-[#979dac] ">
+            <Cross2Icon />
+          </DialogClose>
+          <DialogHeader className="font-bold  text-white">Switch Networks</DialogHeader>
+          {chains.map((chain) => (
+            <button
+              key={chain.id}
+              onClick={() => setSelectedChain(chain.id)}
+              className={`flex h-[50px] w-full items-center justify-between rounded-full p-3 text-white hover:bg-[#2e3036]  ${chain.id == chainId ? "bg-[#860c93] hover:bg-[#860c93]" : ""}`}
+            >
+              <div className="flex items-center gap-2 text-left leading-[90%]">
+                <ChainIconById chainId={chain.id} />
+
+                <span className=" font-bold">{chain.name}</span>
+              </div>
+              {chainId == chain.id && (
+                <span className="flex gap-1 text-sm font-bold">
+                  Connected <span className="text-green-500">●</span>
+                </span>
+              )}
+            </button>
+          ))}
+        </DialogContent>
+      </Dialog>
+
+      {!isSmallScreen || fixed ? (
+        <Button
+          onClick={openAccountModal}
+          variant="gradientOne"
+          size="lg"
+          className="hidden h-10 w-max gap-2 overflow-hidden px-0 md:flex"
+        >
+          <div className="bg-theme-orange-500 grid size-full place-items-center px-4">
+            {account.displayBalance ? account.displayBalance : ""}
+          </div>
+          {user ? (
+            <Image
+              src={
+                user.result.avatarImageUrl
+                  ? getAvatarUrl(user.result.avatarImageUrl)
+                  : "/images/avatar.png"
+              }
+              height={300}
+              width={300}
+              alt="avatar"
+              className="size-6 rounded-full"
+            />
+          ) : (
+            <Image
+              src={account.ensAvatar ? account.ensAvatar : "/images/avatar.png"}
+              alt="avatar"
+              height={200}
+              width={200}
+              className="size-6 rounded-full"
+            />
+          )}
+          <span className="pr-6">{user ? user.result?.username : account.displayName}</span>
+        </Button>
+      ) : (
+        <Button onClick={openAccountModal} size="icon_sm" className="rounded-full" variant="ghost">
+          <Wallet className="scale-125" />
+        </Button>
+      )}
+    </div>
+  );
+};

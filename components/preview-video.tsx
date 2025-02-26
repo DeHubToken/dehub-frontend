@@ -15,7 +15,7 @@ type Props = {
 };
 
 export function PreviewVideo({ nft }: Props) {
-  const url = `${env.cdnBaseUrl}videos/${nft.tokenId}.mp4`;
+  const url = `${env.NEXT_PUBLIC_CDN_BASE_URL}/videos/${nft.tokenId}.mp4`;
   const [isBuffering, setIsBuffering] = useState(false);
 
   return (

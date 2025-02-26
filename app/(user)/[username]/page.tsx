@@ -13,6 +13,7 @@ import { Profile } from "./components/profile";
 
 type Props = {
   params: { username: string };
+  searchParams:any
 };
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -56,7 +57,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     openGraph: {
       title: `${userData?.username || userData.displayName} - Profile on Dehub`,
       description: `View ${userData?.username || userData.displayName}'s profile and collections on Dehub.`,
-      url: `https://dehub.io/profile/${userData?.username}`,
+      url: `https://dehub.io/${userData?.username}`,
       siteName: "Dehub",
       images: [
         {
@@ -75,7 +76,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 }
 
 export default async function Page(props: Props) {
+  console.log("props",props)
   const { username } = props.params;
+  const {searchParams}=props;
   const res = await getAccount(username);
 
   if (!res.success) {
@@ -102,5 +105,5 @@ export default async function Page(props: Props) {
     }
   }
 
-  return <Profile username={username} user={res.data.result} />;
+  return <Profile username={username} user={res.data.result} searchParams={searchParams} />;
 }

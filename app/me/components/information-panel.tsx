@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useWebSockets } from "@/contexts/websocket";
 
 import { formatToUsDate } from "@/libs/date-time";
+import { miniAddress } from "@/libs/strings";
 
 import { getBadgeUrl } from "@/web3/utils/calc";
 
@@ -26,25 +27,26 @@ export function InformationPanel(props: Props) {
       <div className="flex size-auto flex-col items-start justify-start gap-8">
         <div className="size-auto space-y-2">
           <div className="relative flex size-auto items-start justify-start gap-0 sm:items-start sm:gap-2">
-            <h1 className="w-3/5 text-2xl font-semibold sm:w-auto">
+            <h1 className="flex gap-2 text-2xl font-semibold sm:w-auto">
               {user.displayName || user?.username || "No name"}{" "}
-              {user.displayName && <span className="text-sm">({user?.username})</span>}
-            </h1>
-            <div className="relative h-4 w-4">
+              {user.displayName && <span className="text-sm">({user?.username})</span>}{" "}
               <Image
                 src={getBadgeUrl(user?.badge?.name as string, theme)}
                 alt="User Badge"
                 layout="fill"
-                className={`object-contain ${
+                className={`prof_le object-contain ${
                   isUserOnline(user.address)
                     ? "" // TODO: Add glow effect for when they are online
                     : ""
                 }`}
               />
-            </div>
+            </h1>
+            {/* <div className="relative h-4 w-4">
+             
+            </div> */}
           </div>
 
-          <p className="text-sm">{user.address}</p>
+          <p className="text-sm">{miniAddress(user?.address )}</p>
         </div>
 
         <div className="flex size-auto max-w-screen-xs flex-wrap items-start justify-start gap-4">

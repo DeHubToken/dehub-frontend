@@ -8,10 +8,12 @@ type SearchParams = {
   page?: number;
   sortMode?: string;
   minter?: string;
+  owner?: string;
   search?: string;
   range?: string | number;
   category?: string | null;
   address?: string;
+  postType?: string;
 };
 
 export type GetNFTsResult = {
@@ -70,7 +72,8 @@ export async function getNFTs(params?: SearchParams) {
         range: params.range,
         category: params.category,
         address: params.address,
-        page: params.page
+        page: params.page,
+        postType: params.postType
       })
     );
     const url = `/search_nfts${query}`;
@@ -92,14 +95,15 @@ export async function getNFTs(params?: SearchParams) {
       address: params?.address,
       page: params?.page,
       sortMode: params?.sortMode,
-      minter: params?.minter
+      minter: params?.minter,
+      owner: params?.owner
     })
   );
   const url = `/search_nfts${query}`;
   const res = await api<{ result: GetNFTsResult[] }>(url, {
     method: "GET",
     next: { revalidate: 2 * 60, tags: ["nfts"] }
-  }); 
+  });
   return res;
 }
 

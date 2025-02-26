@@ -4,11 +4,15 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { AvatarFallback, AvatarImage, Avatar as AvatarRoot } from "@/ui/avatar";
-import { WagmiConfig } from "wagmi";
+import { useAccount, WagmiConfig } from "wagmi";
 
-import { chains, wagmiConfig } from "@/hooks/web3-connect";
+import { useSwitchChain } from "@/components/providers";
+
+import { chains, useActiveWeb3React, wagmiConfig } from "@/hooks/web3-connect";
 
 import { createContext } from "@/libs/context";
+
+import { supportedNetworks } from "@/web3/configs";
 
 import theme from "@/themes/rainbow-theme";
 
@@ -52,9 +56,12 @@ function Avatar(props: AvatarComponentProps) {
 
 export function AvatarWalletProvider(props: Props) {
   const [data, setData] = useState<string | null>(null);
+  const { selectedChain } = useSwitchChain();
+
+  const config = wagmiConfig(selectedChain);
   return (
     <Provider data={data} setData={setData}>
-      <WagmiConfig config={wagmiConfig}>
+      <WagmiConfig config={config}>
         <RainbowKitProvider chains={chains} showRecentTransactions avatar={Avatar} theme={theme}>
           {props.children}
           <UserNameModal />

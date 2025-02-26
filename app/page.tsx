@@ -9,6 +9,7 @@ import { Leaderboard, LeaderboardSkeleton } from "./components/leaderborad";
 import { LikedFeed } from "./components/liked";
 import { Stream } from "./components/stream";
 import { StreamLoader } from "./components/stream-skeleton";
+import { LiveFeed } from "./live/components/live";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -55,6 +56,15 @@ export default async function Page(props: Props) {
                 q={q}
               />
             )}
+            {type === "live" && (
+              <LiveFeed
+                title={type.toUpperCase()}
+                category={category}
+                range={range}
+                type={type}
+                q={q}
+              />
+            )}
             {type === "liked" && (
               <LikedFeed
                 title={type.toUpperCase()}
@@ -64,7 +74,16 @@ export default async function Page(props: Props) {
                 q={q}
               />
             )}
-            {type !== "feed" && type !== "liked" && (
+            {type === "reports" && (
+             <FeedList
+             title={type.toUpperCase()}
+             category={category}
+             range={range}
+             type={type}
+             q={q}
+           />
+            )}
+            {type !== "feed" &&type!=="reports"&& type !== "liked" && type !== "live" && (
               <Stream
                 title={type.toUpperCase()}
                 category={category}

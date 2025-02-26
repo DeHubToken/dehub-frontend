@@ -160,7 +160,19 @@ const groups = [
           const qs = query.toString();
           return `/?${qs}`;
         }
-      }
+      },
+      {
+        id: "live",
+        name: "Live",
+        icon: <Broadcast />,
+        url: () => {
+          const query = new URLSearchParams();
+          query.set("type", "live");
+          query.delete("q");
+          const qs = query.toString();
+          return `/?${qs}`;
+        }
+      },
     ] as Link[]
   },
   {
@@ -176,7 +188,7 @@ const groups = [
         id: "broadcast",
         name: "Broadcast",
         icon: <Broadcast />,
-        url: () => "/"
+        url: () => "/live"
       },
       {
         id: "post",
@@ -230,6 +242,12 @@ const groups = [
         name: "Saved Feeds",
         icon: <MyUploads />,
         url: () => "?type=feed&saved"
+      },
+      {
+        id: "my-broadcasts",
+        name: "My Broadcasts",
+        icon: <Broadcast />,
+        url: () => "/"
       },
       {
         id: "my-playlists",

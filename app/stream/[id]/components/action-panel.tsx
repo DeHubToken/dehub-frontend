@@ -4,7 +4,7 @@ import type { NFT } from "@/services/nfts";
 
 import { useTheme } from "next-themes";
 
-import { SubscriptionModal } from "@/app/profile/[username]/components/subscription-modal";
+import { SubscriptionModal } from "@/app/(user)/[username]/components/subscription-modal";
 
 import { ThumbsDown, ThumbsUp } from "@/components/icons/thumbs-up";
 

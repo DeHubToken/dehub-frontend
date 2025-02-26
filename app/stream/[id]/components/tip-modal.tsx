@@ -149,7 +149,7 @@ export function TipModal(props: Props) {
         </DialogHeader>
         <div className="flex h-auto w-full flex-col items-start justify-start gap-4">
           <p className="text-base">
-            Enter amount of <span className="text-theme-orange-500 font-semibold">$BJ :</span>
+            Enter amount of <span className="text-theme-orange-500 font-semibold">$DHB :</span>
           </p>
           <Input
             type="number"
