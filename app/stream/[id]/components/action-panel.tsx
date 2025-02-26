@@ -49,9 +49,6 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
       </div>
 
       <div className="flex size-auto items-center justify-start gap-5">
-        <p className="text-sm">
-          <span className="font-semibold">Total Tips :</span> {nft.totalTips || 0}
-        </p>
         {nft.lockedBounty && (
           <p className="text-sm">
             <span className="font-semibold">Total Bounty :</span>{" "}

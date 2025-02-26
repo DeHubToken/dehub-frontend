@@ -61,7 +61,7 @@ export default function GoLiveForm({ categories }: Props) {
       description: "",
       thumbnail: "",
       categories: [],
-      settings: { enableChat: true, schedule: false, minTip: '500' }
+      settings: { enableChat: true, schedule: false, minTip: "500" }
     }
   });
 

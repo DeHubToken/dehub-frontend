@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import dayjs from "dayjs";
 import { ThumbsUp } from "lucide-react";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
@@ -100,66 +101,56 @@ export default function BroadcastActionPanel(props: { stream: any }) {
   }, [socket, stream]);
 
   return (
-    <div className="mt-3 h-auto w-full">
-      <p className="flex text-sm">
-        Broadcast by
-        <Link
-          href={`/${stream.account?.username || stream.address}`}
-          className="ml-2 flex items-center gap-2 text-classic-purple"
-        >
-          <span>{stream.account?.username || stream.account.displayName}</span>
-        </Link>
-      </p>
+    <div className="mb-4 mt-8 flex flex-col items-start justify-start gap-4">
+      <h1 className="w-full break-words text-2xl font-medium text-theme-neutrals-200">
+        {stream.title}
+      </h1>
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1">
+          <span className="text-theme-neutrals-400">Broadcast by:</span>
+          <Link
+            href={`/${stream.account?.username || stream.address}`}
+            className="font-bold text-theme-neutrals-200"
+          >
+            {stream.account?.username || stream.account.displayName}
+          </Link>
+        </div>
+
+        {stream.status === StreamStatus.SCHEDULED && (
+          <div className="flex items-center gap-1">
+            <span className="text-theme-neutrals-400">Schedual at:</span>
+            <span className="text-theme-neutrals-200">{formatToUsDate(stream.scheduledFor)}</span>
+          </div>
+        )}
+
+        <div className="flex items-center gap-1">
+          <span className="text-theme-neutrals-400">Peak Views:</span>
+          <span className="text-theme-neutrals-200">{stream.peakViewers || 0}</span>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <span className="text-theme-neutrals-400">Total Tips:</span>
+          <span className="text-theme-neutrals-200">{stream.totalTips || 0}</span>
+        </div>
+
+        {stream.status === StreamStatus.LIVE && (
+          <div className="flex items-center gap-1">
+            <span className="text-theme-neutrals-400">Viewers:</span>
+            <span className="text-theme-neutrals-200">{stream.totalViews || 0}</span>
+          </div>
+        )}
+      </div>
+
       <div className="mt-3 flex h-auto w-full flex-col items-start justify-start gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
         <div className="relative flex w-full flex-wrap items-center gap-4 pr-20 sm:size-auto sm:pr-0">
-          <Button
-            onClick={likeStream}
-            className={cn("gap-2 rounded-full")}
-            // disabled={status === "loading"}
-          >
+          <Button onClick={likeStream} className={cn("gap-2 rounded-full")}>
             <ThumbsUp className="size-5" />
             {stream.likes || 0}
           </Button>
           <GiftModal tokenId={0} to={stream.address} stream={stream} />
-          <div className="absolute right-0 top-0 size-auto sm:hidden">
-            <Share />
-          </div>
         </div>
 
         <div className="flex size-auto items-center justify-start gap-5">
-          {(stream.status === StreamStatus.LIVE || stream.status === StreamStatus.ENDED) && (
-            <>
-              {stream.status === StreamStatus.LIVE && (
-                <p className="text-sm">
-                  <span className="font-semibold">Viewers:</span> {stream.totalViews || 0}
-                </p>
-              )}
-              <p className="text-sm">
-                <span className="font-semibold">Peak Views :</span> {stream.peakViewers || 0}
-              </p>
-              <p className="text-sm">
-                <span className="font-semibold">Total tips:</span> {stream.totalTips || 0}
-              </p>
-            </>
-          )}
-
-          {/* {(stream.status === StreamStatus.LIVE || stream.status === StreamStatus.ENDED) && (
-            <>
-              <p className="text-sm">
-                <span className="font-semibold">Viewers:</span> {stream.totalViews || 0}
-              </p>
-              <p className="text-sm">
-                <span className="font-semibold">Peak Views :</span> {stream.peakViewers || 0}
-              </p>
-            </>
-          )} */}
-          {stream.status === StreamStatus.SCHEDULED && (
-            <p className="text-sm">
-              <span className="font-semibold">Scheduled for :</span>{" "}
-              {formatToUsDate(stream.scheduledFor)}
-            </p>
-          )}
-
           <div className="hidden size-auto sm:block">
             <Share />
           </div>

@@ -188,7 +188,9 @@ const groups = [
         id: "notifications",
         name: "Notifications",
         icon: <Notification className="size-6" />,
-        component: <NotificationModal />
+        component: (
+          <NotificationModal className="w-full cursor-pointer justify-center gap-2 hover:bg-theme-neutrals-900 dark:hover:bg-theme-neutrals-900" />
+        )
       },
       {
         id: "messages",
@@ -353,6 +355,7 @@ export function Sidebar(props: Props) {
                 key={link.id}
                 variant={isActive ? "default" : "ghost"}
                 onClick={() => handleClick(link)}
+                className="relative"
               >
                 {link.icon}
               </SidebarLinkButton>
@@ -368,7 +371,7 @@ export function Sidebar(props: Props) {
               <Separator className="bg-theme-monochrome-400/25" />
             </DialogHeader>
             {!leaderBoard.success && (
-              <div className="font-tanker text-center text-4xl tracking-wide">
+              <div className="text-center font-tanker text-4xl tracking-wide">
                 Error Fetching Leaderboard
               </div>
             )}

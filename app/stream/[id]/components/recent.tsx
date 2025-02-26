@@ -23,15 +23,13 @@ export async function RecentStreams() {
   }
 
   return (
-    <div className="w-full flex-[0_0_calc((400/16)*1rem)] pt-6">
-      <div className="flex h-auto w-full flex-col items-start justify-start gap-4">
-        {response.data.result.length === 0 && (
-          <div className="flex h-[calc(100vh-72px)] w-full items-center justify-center p-4">
-            No recent NFTs
-          </div>
-        )}
-        <RecentPanel streams={response.data.result} />
-      </div>
+    <div className="grid w-full flex-1 grid-cols-1 flex-col gap-4 px-6 pt-6 sm:grid-cols-2 xl:flex xl:max-w-[calc((400/16)*1rem)] xl:px-0">
+      {response.data.result.length === 0 && (
+        <div className="flex h-[calc(100vh-72px)] w-full items-center justify-center p-4">
+          No recent NFTs
+        </div>
+      )}
+      {response.data.result.length > 0 ? <RecentPanel streams={response.data.result} /> : null}
     </div>
   );
 }

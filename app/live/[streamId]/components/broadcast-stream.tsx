@@ -55,7 +55,7 @@ export default function BroadcastStream(props: { streamId: string }) {
         const isOwner: any = await checkIfBroadcastOwner(account?.toLowerCase(), response.data);
         setIsBroadcastOwner(isOwner);
       } else {
-        setStream(response.error);
+        setStream({ error: response.error });
       }
     };
 
@@ -120,93 +120,118 @@ export default function BroadcastStream(props: { streamId: string }) {
 
   if (!stream) {
     return (
-      <div className="absolute left-0 top-0 flex size-full h-screen flex-col items-center justify-center gap-4 text-center">
-        <h1 className="font-tanker text-3xl sm:text-6xl">Loading stream...</h1>
+      <div className="h-auto min-h-screen w-full flex-1 p-6">
+        <p>No stream found</p>
       </div>
     );
   }
 
   if (stream.error) {
     return (
-      <div className="absolute left-0 top-0 flex size-full h-screen flex-col items-center justify-center gap-4 text-center">
-        <h1 className="font-tanker text-3xl sm:text-6xl">{stream.error}</h1>
-        <Button asChild variant="gradientOne" className="px-6">
-          <Link href="/">Go Back</Link>
-        </Button>
+      <div className="grid h-auto min-h-screen w-full flex-1 place-items-center p-6">
+        <div className="flex flex-col gap-2">
+          <p className="font-tanker">{stream.error}</p>
+          <Button asChild variant="gradientOne" className="px-6">
+            <Link href="/">Go Back</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!account) {
+    return (
+      <div className="h-auto min-h-screen w-full flex-1 p-6">
+        {!account && <p>Connect wallet to view stream</p>}
       </div>
     );
   }
 
   return (
+    <div className="h-auto min-h-screen w-full flex-1 p-6">
+      {stream.status === StreamStatus.SCHEDULED && !isStartingNw && (
+        <div
+          className="relative w-full overflow-hidden rounded-2xl bg-black"
+          style={{ aspectRatio: "16/9" }}
+        >
+          <StatusBadge status={stream.status} />
+          <div className="absolute inset-0 bg-black bg-opacity-50" />
+          <img
+            src={`${env.NEXT_PUBLIC_CDN_BASE_URL}/${stream.thumbnail}`}
+            alt="Stream Thumbnail"
+            className="h-auto w-full object-cover"
+          />
+          <div className="absolute bottom-4 flex w-full justify-between px-4">
+            {isBroadcastOwner && (
+              <Button
+                onClick={handleGoLive}
+                variant="gradientOne"
+                className="px-6"
+                disabled={isPendingWebhook}
+              >
+                {isPendingWebhook ? "Starting..." : "Go Live Now"}
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {(stream.status === StreamStatus.LIVE ||
+        stream.status === StreamStatus.OFFLINE ||
+        isStartingNw) &&
+        stream.status !== StreamStatus.ENDED && (
+          <>
+            {isBroadcastOwner ? (
+              <StreamerView stream={stream} isBroadcastOwner={isBroadcastOwner} />
+            ) : (
+              <>
+                {hasJoined ? (
+                  <ViewerView stream={stream} />
+                ) : (
+                  <div
+                    className="relative w-full overflow-hidden rounded-2xl bg-black"
+                    style={{ aspectRatio: "16/9" }}
+                  >
+                    <StatusBadge status={stream.status} />
+                    <div className="absolute inset-0 bg-black bg-opacity-50" />
+                    <img
+                      src={`${env.NEXT_PUBLIC_CDN_BASE_URL}/${stream.thumbnail}`}
+                      alt="Stream Thumbnail"
+                      className="h-auto w-full object-cover"
+                    />
+                    <div className="absolute bottom-4 flex w-full justify-between px-4">
+                      {stream.status !== StreamStatus.OFFLINE && (
+                        <Button onClick={joinStream} variant="gradientOne" className="px-6">
+                          Join Stream
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </>
+        )}
+
+      {stream.status === StreamStatus.ENDED && <ReplayPlayer streamId={streamId} />}
+
+      <BroadcastActionPanel stream={stream} />
+      <BroadcastStreamInfo stream={stream} />
+      <PreviousStreams stream={stream} />
+    </div>
+  );
+}
+
+/*
+
     <div className="h-auto min-h-screen w-full px-4 xl:max-w-[75%] xl:flex-[0_0_75%]">
       {!account ? (
         <div>Connect wallet to view stream</div>
       ) : (
         <>
           <Suspense fallback={<div>Loading Stream...</div>}>
-            {stream.status === StreamStatus.SCHEDULED && !isStartingNw && (
-              <div
-                className="relative w-full overflow-hidden rounded-2xl bg-black"
-                style={{ aspectRatio: "16/9" }}
-              >
-                <StatusBadge status={stream.status} />
-                <div className="absolute inset-0 bg-black bg-opacity-50" />
-                <img
-                  src={`${env.NEXT_PUBLIC_CDN_BASE_URL}/${stream.thumbnail}`}
-                  alt="Stream Thumbnail"
-                  className="h-auto w-full object-cover"
-                />
-                <div className="absolute bottom-4 flex w-full justify-between px-4">
-                  {isBroadcastOwner && (
-                    <Button
-                      onClick={handleGoLive}
-                      variant="gradientOne"
-                      className="px-6"
-                      disabled={isPendingWebhook}
-                    >
-                      {isPendingWebhook ? "Starting..." : "Go Live Now"}
-                    </Button>
-                  )}
-                </div>
-              </div>
-            )}
 
-            {(stream.status === StreamStatus.LIVE ||
-              stream.status === StreamStatus.OFFLINE ||
-              isStartingNw) &&
-              stream.status !== StreamStatus.ENDED && (
-                <>
-                  {isBroadcastOwner ? (
-                    <StreamerView stream={stream} isBroadcastOwner={isBroadcastOwner} />
-                  ) : (
-                    <>
-                      {hasJoined ? (
-                        <ViewerView stream={stream} />
-                      ) : (
-                        <div
-                          className="relative w-full overflow-hidden rounded-2xl bg-black"
-                          style={{ aspectRatio: "16/9" }}
-                        >
-                          <StatusBadge status={stream.status} />
-                          <div className="absolute inset-0 bg-black bg-opacity-50" />
-                          <img
-                            src={`${env.NEXT_PUBLIC_CDN_BASE_URL}/${stream.thumbnail}`}
-                            alt="Stream Thumbnail"
-                            className="h-auto w-full object-cover"
-                          />
-                          <div className="absolute bottom-4 flex w-full justify-between px-4">
-                            {stream.status !== StreamStatus.OFFLINE && (
-                              <Button onClick={joinStream} variant="gradientOne" className="px-6">
-                                Join Stream
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
+
 
             {stream.status === StreamStatus.ENDED && <ReplayPlayer streamId={streamId} />}
           </Suspense>
@@ -217,5 +242,18 @@ export default function BroadcastStream(props: { streamId: string }) {
         </>
       )}
     </div>
-  );
-}
+
+*/
+
+/*
+ <Suspense fallback={<StreamVideoSkeleton />}>
+        <StreamVideo tokenId={tokenId} address={user?.address as string} />
+      </Suspense>
+      <StreamInfo nft={nft} />
+      <ActionPanel nft={nft} tokenId={tokenId} />
+      <div className="rounded-3xl bg-theme-neutrals-800 p-6">
+        <span className="text-xs text-theme-neutrals-400">Description</span>
+        <p className="mt-4 text-theme-neutrals-200">{nft.description}</p>
+      </div>
+      <CommentsPanel nft={nft} tokenId={tokenId} />
+*/

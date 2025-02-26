@@ -69,7 +69,7 @@ export function LikeButton(
     <Button
       {...rest}
       onClick={onVote}
-      className={cn("h-6 gap-2 rounded-full", rest.className)}
+      className={cn("gap-2 rounded-full", rest.className)}
       disabled={status === "loading"}
     >
       {children}

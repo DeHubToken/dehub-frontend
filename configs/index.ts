@@ -30,7 +30,7 @@ export const chainIcons: Record<number, any> = {
   [ChainId.BASE_MAINNET]: BaseIcon,
   [ChainId.BSC_MAINNET]: BnbIcon,
   [ChainId.BSC_TESTNET]: BnbTestnet,
-  [ChainId.GORLI]:GorliTestnet
+  [ChainId.GORLI]: GorliTestnet
 };
 
 export const streamInfoKeys = {
@@ -474,23 +474,23 @@ export const durations = [
 ];
 
 export const ActivityActionType = {
-  UPLOAD_FEED_SIMPLE: 'upload-feed-simple',
-  UPLOAD_FEED_IMAGES: 'upload-feed-images',
-  UPLOAD_VIDEO: 'upload_video',
-  CREATE_PLAN: 'create-plan',
-  PLAN_PUBLISHED: 'plan-published',
-  PURCHASE_PLAN: 'purchase-plan',
-  LIKE: 'like',
-  DIS_LIKE:'dis-like',
-  FOLLOW: 'follow',
-  REPLY_ON_POST: 'reply-on-post',
-  COMMENT_ON_POST: 'comment-on-post',
-  TIP_ON_POST: 'tip-on-post',
-  TIP_ON_CHAT: 'tip-on-chat',
+  UPLOAD_FEED_SIMPLE: "upload-feed-simple",
+  UPLOAD_FEED_IMAGES: "upload-feed-images",
+  UPLOAD_VIDEO: "upload_video",
+  CREATE_PLAN: "create-plan",
+  PLAN_PUBLISHED: "plan-published",
+  PURCHASE_PLAN: "purchase-plan",
+  LIKE: "like",
+  DIS_LIKE: "dis-like",
+  FOLLOW: "follow",
+  REPLY_ON_POST: "reply-on-post",
+  COMMENT_ON_POST: "comment-on-post",
+  TIP_ON_POST: "tip-on-post",
+  TIP_ON_CHAT: "tip-on-chat"
 };
 export enum StreamStatus {
-  OFFLINE = 'OFFLINE',
-  LIVE = 'LIVE',
-  ENDED = 'ENDED',
-  SCHEDULED = 'SCHEDULED',
+  OFFLINE = "OFFLINE",
+  LIVE = "LIVE",
+  ENDED = "ENDED",
+  SCHEDULED = "SCHEDULED"
 }
