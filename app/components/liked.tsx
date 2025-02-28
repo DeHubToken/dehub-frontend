@@ -18,11 +18,12 @@ type FeedProps = {
   category?: string;
   range?: string;
   type: string;
+  sort?: string;
   q?: string;
 };
 
 export async function LikedFeed(props: FeedProps) {
-  const { category, range, type, q } = props;
+  const { category, range, type, q,sort } = props;
   const { account, library } = useActiveWeb3React();
   const [res, setRes] = useState<any>(null);
 
@@ -31,6 +32,7 @@ export async function LikedFeed(props: FeedProps) {
       const res = await getLikedNFTs(
         {
           page: 1,
+          sort,
           address: account
         },
         library

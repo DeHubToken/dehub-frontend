@@ -51,7 +51,7 @@ export default function ProfileTabView({
               range={searchParams?.range}
               type={searchParams?.type}
               q={searchParams?.q}
-              sortBy={searchParams?.sortBy}
+              sort={searchParams?.sort}
             />
           )}
         </div>

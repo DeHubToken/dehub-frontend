@@ -26,7 +26,7 @@ type Props = {
   range?: string;
   type?: string;
   q?: string;
-  sortBy?: string;
+  sort?: string;
   base?:string;
   tab?:string;
 };
@@ -44,7 +44,7 @@ export async function Categories(props: Props) {
 
 async function CategoriesLoader(props: Props) {
   const categoriesRes = await getCategories();
-  const { category, type, title, range, sortBy, base ,tab} = props;
+  const { category, type, title, range, sort, base ,tab} = props;
  
   const isActive = (name: string) => category === name;
 
@@ -69,7 +69,7 @@ async function CategoriesLoader(props: Props) {
               categories={categories}
               type={type}
               range={range}
-              sortBy={sortBy}
+              sort={sort}
               base={base}
               tab={tab}
             />
