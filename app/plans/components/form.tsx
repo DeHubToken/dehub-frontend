@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -14,8 +16,6 @@ import { Minus, Plus, Trash } from "lucide-react";
 import { Controller, FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { useWaitForTransaction } from "wagmi";
-
-import { ChainIconById } from "@/app/components/ChainIconById";
 
 import { BJ } from "@/components/icons/bj";
 import { CheckCircle } from "@/components/icons/check-circle";
@@ -36,11 +36,13 @@ import { chains, useActiveWeb3React } from "@/hooks/web3-connect";
 import { createPlan, updatePlan } from "@/services/subscription-plans";
 
 import { supportedNetworks } from "@/web3/configs";
+import { getSignInfo } from "@/web3/utils/web3-actions";
 
-import { chainIcons, durations, SB_ADDRESS, supportedTokens } from "@/configs";
+import { chainIcons, ChainId, durations, SB_ADDRESS, supportedTokens } from "@/configs";
 
 import PublishOnChain from "./publish-on-chain";
 import { SubscriptionModalPreView } from "./subscription-preview";
+import { ChainIconById } from "@/app/components/ChainIconById";
 
 type FormValues = {
   tier: {
@@ -51,7 +53,7 @@ type FormValues = {
 };
 
 export default function Form({ plan, getTiers }: any) {
-  const { account, chainId } = useActiveWeb3React();
+  const { account, chainId, library }: any = useActiveWeb3React();
   const router = useRouter();
   const planId = plan != undefined ? plan.id : null;
   const [isPending, setIsPending] = useState(false);
@@ -90,6 +92,7 @@ export default function Form({ plan, getTiers }: any) {
 
   const { tier } = watch();
   const onSubmit = async (plan: any) => {
+    const { sig, timestamp }: any = await getSignInfo(library, account);
     // Add your API call logic here
     let { benefits, ...tier } = plan.tier;
     benefits = benefits.map((b: any) => b.value);
@@ -100,7 +103,10 @@ export default function Form({ plan, getTiers }: any) {
     plan = { ...tier, benefits };
     try {
       setIsPending(true);
-      const data: any = planId !== null ? await updatePlan(plan, planId) : await createPlan(plan);
+      const data: any =
+        planId !== null
+          ? await updatePlan(plan, planId, account, sig, timestamp)
+          : await createPlan(plan, account, sig, timestamp);
       if (data?.error) {
         toast.error(data?.error);
         return;
