@@ -1,15 +1,10 @@
-import Image from "next/image";
-import ImagePlacehoder from "@/assets/image-placeholder.png";
-import { useAtomValue } from "jotai";
+"use client" 
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { NFT } from "@/services/nfts";
 
-import { getStreamStatus } from "@/web3/utils/validators";
-
-import { userAtom } from "@/stores";
-
+ 
 import { streamInfoKeys } from "@/configs";
 
 interface Props {
@@ -26,7 +21,7 @@ export function FeedContent({ name, description, feed }: Props) {
     !feed?.streamInfo ||
     !(
       feed?.streamInfo?.[streamInfoKeys?.isLockContent] ||
-      feed?.streamInfo?.[streamInfoKeys?.isPayPerView]||feed?.plansDetails.length>0
+      feed?.streamInfo?.[streamInfoKeys?.isPayPerView]||feed?.plansDetails?.length>0
     )
       ? true
       : false;

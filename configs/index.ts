@@ -1,3 +1,8 @@
+import BaseIcon from "@/assets/base-icon.svg";
+import BnbIcon from "@/assets/bnb-icon.png";
+import BnbTestnet from "@/assets/bnb-icon.png"; // Ensure the correct file is used
+import GorliTestnet from "@/assets/gorli-icon.png"; // Ensure the correct file is used
+
 import { env } from "./env";
 
 export { env } from "./env";
@@ -21,6 +26,15 @@ export enum ChainId {
   BASE_MAINNET = 8453,
   SEPOLIA = 11155111
 }
+
+export const chainIcons: Record<number, any> = {
+  [ChainId.BASE_MAINNET]: BaseIcon,
+  [ChainId.BSC_MAINNET]: BnbIcon,
+  [ChainId.BSC_TESTNET]: BnbTestnet,
+  [ChainId.GORLI]:GorliTestnet,
+  [ChainId.SEPOLIA]:"https://sepolia.etherscan.io/images/logo-128.png"
+  
+};
 
 export const streamInfoKeys = {
   isLockContent: "isLockContent",
@@ -332,16 +346,9 @@ const productionTokens = [
     chainId: 56,
     address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", // Update to relevant address if needed
     iconUrl: "https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=024",
-    decimals: 18
+    decimals: 18 
   }
 ];
-export const chainIcons: any = {
-  [ChainId.BASE_MAINNET]:
-    "https://images.mirror-media.xyz/publication-images/cgqxxPdUFBDjgKna_dDir.png?height=1200&width=1200",
-  [ChainId.BSC_MAINNET]: "https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040",
-  [ChainId.BSC_TESTNET]: "https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040",
-  [ChainId.SEPOLIA]: "https://sepolia.etherscan.io/images/logo-128.png"
-};
 export const supportedTokens = isDevMode ? devTokens : productionTokens;
 
 export const supportedTokensForLockContent = supportedTokens.filter((e) => e.symbol === "DHB");
@@ -358,7 +365,7 @@ export const defaultWatchTimeForPPV = 2 * 60 * 60; // second unit
 export const devFee = 0.1;
 export const publicChatChannelId = "public_chn_prod_1";
 export const limitTip = 1_000_000_000;
-export const expireSignTime = isDevMode ? 60 * 60 * 2 : 60 * 60 * 24; // 2 hours
+export const expireSignTime = env.NEXT_PUBLIC_DEV === "ON" ? 60 * 60 * 2 : 60 * 60 * 24; // 2 hours
 
 export const ErrMsgEn = {
   lockContent: {},
@@ -468,3 +475,19 @@ export const durations = [
   { title: "1 year", value: 12, tier: 4 },
   { title: "lifetime", value: 999, tier: 5 }
 ];
+
+export const ActivityActionType = {
+  UPLOAD_FEED_SIMPLE: 'upload-feed-simple',
+  UPLOAD_FEED_IMAGES: 'upload-feed-images',
+  UPLOAD_VIDEO: 'upload_video',
+  CREATE_PLAN: 'create-plan',
+  PLAN_PUBLISHED: 'plan-published',
+  PURCHASE_PLAN: 'purchase-plan',
+  LIKE: 'like',
+  DIS_LIKE:'dis-like',
+  FOLLOW: 'follow',
+  REPLY_ON_POST: 'reply-on-post',
+  COMMENT_ON_POST: 'comment-on-post',
+  TIP_ON_POST: 'tip-on-post',
+  TIP_ON_CHAT: 'tip-on-chat',
+};

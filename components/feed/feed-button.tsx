@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@radix-ui/react-dropdown-menu";
-import { EllipsisVertical, Share2 } from "lucide-react";
+import { AlertTriangle, EllipsisVertical, Share2 } from "lucide-react";
 
 import {
   CopyUrl,
@@ -62,6 +62,12 @@ export function FeedBookmarkButton({ saveCount, ...props }: FeedBookmarkButtonPr
       icon={<Bookmark className="size-0" fill="#FF0000" />}
       saveCount={saveCount}
     />
+  );
+}
+type FeedReportCountButton = FeedButtonProps & { count?: number };
+export function FeedReportCountButton({ count, ...props }: FeedReportCountButton) {
+  return (
+    <FeedButton {...props} icon={<AlertTriangle className="size-0" fill="#FF0000" />} saveCount={count} />
   );
 }
 

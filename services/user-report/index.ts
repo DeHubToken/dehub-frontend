@@ -46,3 +46,45 @@ export async function unBlockUser(data: {
     throw new Error("Failed to unblock the user or conversation."); // Provide a meaningful error message
   }
 }
+
+export async function reasonReportFeed(
+  tokenId: number,
+  description: string,
+  address: string,
+  sig: string,
+  timestamp: string
+) {
+  const url = `/nft/reports`;
+
+  const requestBody = {
+    tokenId,
+    address,
+    description,
+    sig,
+    timestamp
+  };
+
+  return await api<any>(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(requestBody)
+  });
+}
+// Frontend API call to fetch reports by tokenId
+export async function getReportsByTokenId(tokenId: number, page = 1, limit = 20) {
+  const url = `/reports/${tokenId}?page=${page}&limit=${limit}`; // API endpoint to fetch reports
+  try {
+    // Make the API request to fetch the reports
+    const res = await api<any>(url, {
+      method: "GET" // HTTP method
+    });
+
+    // Returning the API response
+    return res;
+  } catch (error) {
+    console.error("Error fetching reports:", error);
+    throw new Error("Failed to fetch reports.");
+  }
+}
