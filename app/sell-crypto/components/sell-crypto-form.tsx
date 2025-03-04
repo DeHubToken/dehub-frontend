@@ -21,7 +21,7 @@ export default function SellCryptoForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState("");
 
-  // On mount, check for transaction status and redirect URL in query parameters
+  // Check for transaction status in query parameters on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const transactionStatus = params.get("transactionStatus");
@@ -42,6 +42,7 @@ export default function SellCryptoForm() {
     }
   }, []);
 
+  // Update conversion results based on sellAmount and cryptoToken
   useEffect(() => {
     if (sellAmount !== "") {
       const timeout = setTimeout(() => {
@@ -55,6 +56,7 @@ export default function SellCryptoForm() {
             const priceUsd = cgData[id]?.usd;
             const priceEur = cgData[id]?.eur;
             const priceGbp = cgData[id]?.gbp;
+
             if (priceUsd && priceEur && priceGbp) {
               const amount = parseFloat(sellAmount);
               setConversionResults({
@@ -78,16 +80,24 @@ export default function SellCryptoForm() {
     }
   }, [sellAmount, cryptoToken]);
 
+  // Handle the sell process including the API call and redirect URL
   const handleSell = async () => {
     if (!sellAmount || !account?.toLowerCase()) {
       toast.error("Please enter the sell amount and your wallet address.");
       return;
     }
+
+    // Start the loader
+    setIsLoading(true);
+
     const fiatAmount = conversionResults[fiatCurrency.toLowerCase() as Fiat] || 0;
+    const baseCurrencyAmount = parseFloat(sellAmount);
+
     const payload = {
-      currencyCode: cryptoToken,
+      defaultBaseCurrencyCode: cryptoToken,
+      baseCurrencyAmount,
       fiatAmount,
-      fiatCurrencyCode: fiatCurrency,
+      quoteCurrencyCode: fiatCurrency,
       walletAddress: account?.toLowerCase(),
     };
 
@@ -107,17 +117,20 @@ export default function SellCryptoForm() {
     } catch (error) {
       console.error("Error selling crypto:", error);
       toast.error("Failed to generate MoonPay URL.");
+      setIsLoading(false); // Stop the loader on error
     }
   };
 
+  // Redirects to the URL in a new tab and stops the loader
   const handleSellCrypto = (URL: string) => {
     if (URL) {
-      window.open(URL, '_blank', 'noopener,noreferrer'); 
+      window.open(URL, "_blank", "noopener,noreferrer");
+      setIsLoading(false);
     } else {
-      toast.error("Buy crypto URL not received.");
+      toast.error("Sell crypto URL not received.");
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div style={styles.page}>
@@ -174,10 +187,17 @@ export default function SellCryptoForm() {
         </div>
 
         {/* Sell Button */}
-        <button style={styles.sellButton} onClick={handleSell}>
-          Sell Now
+        <button style={styles.sellButton} onClick={handleSell} disabled={isLoading}>
+          {isLoading ? "Processing..." : "Sell Now"}
         </button>
       </div>
+
+      {/* Loader Overlay (only shown when isLoading is true) */}
+      {isLoading && (
+        <div style={styles.loaderOverlay}>
+          <div style={styles.loaderText}>Processing...</div>
+        </div>
+      )}
     </div>
   );
 }
@@ -191,6 +211,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: "100vw",
     boxSizing: "border-box",
     display: "block",
+    position: "relative",
   },
   container: {
     color: "#fff",
@@ -202,6 +223,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     maxWidth: "600px",
     width: "100%",
     fontSize: "1.5rem",
+    position: "relative",
+    zIndex: 1,
   },
   title: {
     fontSize: "3rem",
@@ -249,16 +272,21 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginTop: "2rem",
     fontWeight: 600,
   },
-  returnButton: {
-    width: "100%",
-    padding: "1rem",
-    backgroundColor: "#2962FF",
-    border: "none",
-    borderRadius: "4px",
+  loaderOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 9999,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loaderText: {
+    fontSize: "2rem",
     color: "#fff",
-    fontSize: "1.5rem",
-    cursor: "pointer",
-    marginTop: "1rem",
     fontWeight: 600,
   },
 };
