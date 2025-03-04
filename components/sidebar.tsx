@@ -21,7 +21,10 @@ import {
   PPV,
   Profile,
   Upload,
-  Wallet
+  Wallet,
+  BuyCrypto,
+  SwapCrypto,
+  SellCrypto
 } from "@/components/icons";
 import {
   Accordion,
@@ -248,7 +251,25 @@ const groups = [
         name: "Marked",
         icon: <Marked />,
         url: () => "/"
-      }
+      },
+      {
+        id: "buyCrypto",
+        name: "Buy Crypto",
+        icon: <BuyCrypto />,
+        url: () => "/buy-crypto",
+      },
+      {
+        id: "sellCrypto",
+        name: "Sell Crypto",
+        icon: <SellCrypto />,
+        url: () => "/sell-crypto",
+      },
+      {
+        id: "swap",
+        name: "Swap Crypto",
+        icon: <SwapCrypto />,
+        url: () => "/swap-crypto",
+      },
     ] as Link[]
   },
   {
@@ -278,7 +299,7 @@ const groups = [
         icon: <Contact />,
         url: () => "https://t.me/dehub",
         external: true
-      }
+      },
     ] as Link[]
   }
 ];

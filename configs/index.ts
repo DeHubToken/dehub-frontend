@@ -18,7 +18,8 @@ export enum ChainId {
   AVALANCHE_MAINNET = 43114,
   OKEX_MAINNET = 66,
   POLYGON_MAINNET = 137,
-  BASE_MAINNET = 8453
+  BASE_MAINNET = 8453,
+  SEPOLIA = 11155111
 }
 
 export const streamInfoKeys = {
@@ -338,7 +339,8 @@ export const chainIcons: any = {
   [ChainId.BASE_MAINNET]:
     "https://images.mirror-media.xyz/publication-images/cgqxxPdUFBDjgKna_dDir.png?height=1200&width=1200",
   [ChainId.BSC_MAINNET]: "https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040",
-  [ChainId.BSC_TESTNET]: "https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040"
+  [ChainId.BSC_TESTNET]: "https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040",
+  [ChainId.SEPOLIA]: "https://sepolia.etherscan.io/images/logo-128.png"
 };
 export const supportedTokens = isDevMode ? devTokens : productionTokens;
 
@@ -348,7 +350,7 @@ export const supportedTokensForAddBounty = supportedTokens;
 
 export const supportedChainIdsForMinting = [ChainId.BSC_MAINNET, ChainId.BASE_MAINNET];
 export const supportedChainIds = isDevMode
-  ? [ChainId.BSC_TESTNET, ChainId.GORLI]
+  ? [ChainId.BSC_TESTNET, ChainId.GORLI, ChainId.SEPOLIA]
   : [ChainId.MAINNET, ChainId.BSC_MAINNET, ChainId.POLYGON_MAINNET, ChainId.BASE_MAINNET];
 export const defaultChainId = isDevMode ? ChainId.GORLI : ChainId.BSC_MAINNET;
 export const defaultTokenSymbol = "DHB";

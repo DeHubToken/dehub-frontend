@@ -21,6 +21,9 @@ import Stream from "@/components/icons/stream";
 import Treading from "@/components/icons/treading";
 import Upload from "@/components/icons/upload";
 import Wallet from "@/components/icons/wallet";
+import BuyCrypto from "./buy-crypto";
+import SwapCrypto from "./swap-crypto";
+import SellCrypto from "./sell-crypto";
 
 export {
   Home,
@@ -45,5 +48,8 @@ export {
   ChevronDown,
   Star,
   Notification,
-  Plus
+  Plus,
+  BuyCrypto,
+  SwapCrypto,
+  SellCrypto
 };
