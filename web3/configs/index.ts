@@ -48,7 +48,8 @@ export const NETWORK_URLS: {
   [ChainId.BSC_MAINNET]: "https://binance.nodereal.io",
   [ChainId.BSC_TESTNET]: `https://data-seed-prebsc-1-s2.binance.org:8545`, //'https://bsc-testnet-rpc.publicnode.com',//`
   [ChainId.POLYGON_MAINNET]: "https://polygon-rpc.co",
-  [ChainId.BASE_MAINNET]: `https://base-sepolia.infura.io/v3/${infuraKey}`
+  [ChainId.BASE_MAINNET]: `https://base-sepolia.infura.io/v3/${infuraKey}`,
+  [ChainId.SEPOLIA]: `https://sepolia.infura.io/v3/${infuraKey}`
 };
 
 const testNetworks = [
@@ -75,6 +76,18 @@ const testNetworks = [
     value: "Goerli Testnet",
     label: "Goerli Testnet",
     customAbbreviation: "goerli"
+  },
+  {
+    id: ChainId.SEPOLIA,
+    chainId: ChainId.SEPOLIA,
+    ticker: "ETH",
+    name: "Sepolia Testnet",
+    shortName: "Sepolia",
+    rpcUrl: NETWORK_URLS[ChainId.SEPOLIA],
+    explorerUrl: "https://sepolia.etherscan.io/",
+    value: "Sepolia Testnet",
+    label: "Sepolia Testnet",
+    customAbbreviation: "sepolia"
   }
 ];
 
@@ -156,7 +169,17 @@ const TEST_NETWORKS = {
     rpcUrls: [NETWORK_URLS[ChainId.BSC_TESTNET]],
     blockExplorerUrls: ["https://testnet.bscscan.com/"],
   },
-  
+  [ChainId.SEPOLIA]: {
+    chainId: "0xaa36a7", // Hex for 11155111
+    chainName: "Sepolia Testnet",
+    nativeCurrency: {
+      name: "Sepolia Ether",
+      symbol: "ETH",
+      decimals: 18
+    },
+    rpcUrls: [NETWORK_URLS[ChainId.SEPOLIA]],
+    blockExplorerUrls: ["https://sepolia.etherscan.io/"],
+  }
 };
 
 const MAIN_NETWORKS = {
