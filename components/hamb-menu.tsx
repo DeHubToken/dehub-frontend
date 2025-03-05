@@ -29,7 +29,10 @@ import {
   PPV,
   Profile,
   Treading,
-  Upload
+  Upload,
+  BuyCrypto,
+  SwapCrypto,
+  SellCrypto
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 
@@ -198,6 +201,26 @@ const links = [
     icon: <Contact />,
     url: "https://t.me/dehub",
     isLink: true
+  },
+  {
+    id: "buyCrypto",
+    name: "Buy Crypto",
+    icon: <BuyCrypto />,
+    url: () => "/buy-crypto",
+    isLink: true
+  },
+  {
+    id: "sellCrypto",
+    name: "Sell Crypto",
+    icon: <SellCrypto />,
+    url: () => "/sell-crypto",
+    isLink: true
+  },
+  {
+    id: "swap",
+    name: "Swap Crypto",
+    icon: <SwapCrypto />,
+    url: () => "/swap-crypto",
   }
 ] as Link[];
 
