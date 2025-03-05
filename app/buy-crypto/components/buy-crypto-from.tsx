@@ -4,7 +4,13 @@ import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { env } from "@/configs";
 import { useActiveWeb3React } from "@/hooks/web3-connect";
-
+import GBPICON from "@/assets/gbp-icon.png";
+import USDICON from "@/assets/dollar-icon.png";
+import EUROICON from "@/assets/euro-icon.png";
+import ETHICON from "@/assets/ethereum-icon.png";
+import BASEICON from "@/assets/base-icon.svg";
+import Image from "next/image";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 const coinGeckoIds: { [key: string]: string } = {
   ETH: "ethereum",
   BASE: "base-protocol",
@@ -156,21 +162,34 @@ export default function BuyCryptoForm() {
               style={styles.input}
               disabled={isLoading}
             />
-            <select
-              value={payCurrency}
-              onChange={(e) => setPayCurrency(e.target.value)}
-              style={styles.select}
-              disabled={isLoading}
-            >
-              <option style={{background:'hsl(var(--theme-background))'}} value="GBP">GBP</option>
-              <option style={{background:'hsl(var(--theme-background))'}} value="USD">USD</option>
-              <option style={{background:'hsl(var(--theme-background))'}} value="EUR">EUR</option>
-            </select>
+            <div className="max-w-[70%]">
+
+              <Select value={payCurrency} onValueChange={(value) => setPayCurrency(value)} disabled={isLoading}>
+                <SelectTrigger className="h-10 min-w-32 rounded-md bg-transparent dark:bg-transparent">
+                  <SelectValue placeholder="Select Currency" />
+                </SelectTrigger>
+                <SelectContent>
+                  {[
+                    { label: "GBP", icon: GBPICON },
+                    { label: "USD", icon: USDICON },
+                    { label: "EUR", icon: EUROICON },
+                  ].map((currency) => (
+                    <SelectItem key={currency.label} value={currency.label}>
+                      <div className="flex items-center gap-4">
+                        <Image src={currency.icon} alt={`${currency.label} Icon`} width={25} height={25} />
+                        <span className="text-lg">{currency.label}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
           </div>
         </div>
 
         <div style={styles.formGroup}>
-          <div className="input_Row" style={styles.inputRow}>
+          <div className="input_Row " style={styles.inputRow}>
             <h3 className="sub_t" style={styles.subtitle2}>Buy</h3>
             <input
               type="text"
@@ -179,15 +198,26 @@ export default function BuyCryptoForm() {
               readOnly
               style={styles.input}
             />
-            <select
-              value={getCurrency}
-              onChange={(e) => setGetCurrency(e.target.value)}
-              style={styles.select}
-              disabled={isLoading}
-            >
-              <option style={{background:'hsl(var(--theme-background))'}} value="ETH">ETH</option>
-              <option style={{background:'hsl(var(--theme-background))'}} value="BASE">ETH (BASE)</option>
-            </select>
+              <div className="max-w-[70%]">
+            <Select value={getCurrency} onValueChange={setGetCurrency} disabled={isLoading}>
+              <SelectTrigger className="h-10 min-w-32 rounded-md bg-transparent dark:bg-transparent">
+                <SelectValue placeholder="Select Currency" />
+              </SelectTrigger>
+              <SelectContent>
+                {[
+                  { label: "ETH", icon: ETHICON },
+                  { label: "BASE", icon: BASEICON },
+                ].map((currency) => (
+                  <SelectItem key={currency.label} value={currency.label}>
+                    <div className="flex items-center gap-4">
+                      <Image src={currency.icon} alt={`${currency.label} Icon`} width={25} height={25} />
+                      <span className="text-lg">{currency.label}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            </div>
           </div>
         </div>
 
@@ -242,7 +272,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: "1px solid #333",
     boxShadow: "none",
     borderRadius: "10px",
-    height: "80px",
     padding: "0 20px",
     // No forced text color
   },

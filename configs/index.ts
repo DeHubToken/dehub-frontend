@@ -2,7 +2,8 @@ import BaseIcon from "@/assets/base-icon.svg";
 import BnbIcon from "@/assets/bnb-icon.png";
 import BnbTestnet from "@/assets/bnb-icon.png"; // Ensure the correct file is used
 import GorliTestnet from "@/assets/gorli-icon.png"; // Ensure the correct file is used
-
+ 
+ 
 import { env } from "./env";
 
 export { env } from "./env";

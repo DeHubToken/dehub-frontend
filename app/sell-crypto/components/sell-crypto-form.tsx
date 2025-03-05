@@ -4,6 +4,13 @@ import React, { useState, useEffect } from "react";
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 import { env } from "@/configs";
 import { toast } from "sonner";
+import GBPICON from "@/assets/gbp-icon.png";
+import USDICON from "@/assets/dollar-icon.png";
+import EUROICON from "@/assets/euro-icon.png";
+import ETHICON from "@/assets/ethereum-icon.png";
+import BASEICON from "@/assets/base-icon.svg";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Image from "next/image";
 
 type Fiat = "usd" | "eur" | "gbp";
 
@@ -141,14 +148,26 @@ export default function SellCryptoForm() {
               onChange={(e) => setSellAmount(e.target.value)}
               style={styles.input}
             />
-            <select
-              value={cryptoToken}
-              onChange={(e) => setCryptoToken(e.target.value)}
-              style={styles.select}
-            >
-              <option style={{background:'hsl(var(--theme-background))'}} value="ETH">ETH</option>
-              <option style={{background:'hsl(var(--theme-background))'}} value="Base">ETH (BASE)</option>
-            </select>
+            <div className="max-w-[70%]">
+              <Select value={cryptoToken} onValueChange={setCryptoToken}>
+                <SelectTrigger className="h-10 min-w-32 rounded-md bg-transparent dark:bg-transparent">
+                  <SelectValue placeholder="Select Token" />
+                </SelectTrigger>
+                <SelectContent>
+                  {[
+                    { label: "ETH", icon: ETHICON },
+                    { label: "Base", icon: BASEICON },
+                  ].map((token) => (
+                    <SelectItem key={token.label} value={token.label}>
+                      <div className="flex items-center gap-4">
+                        <Image src={token.icon} alt={`${token.label} Icon`} width={25} height={25} />
+                        <span className="text-lg">{token.label}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -166,15 +185,27 @@ export default function SellCryptoForm() {
               readOnly
               style={styles.input}
             />
-            <select
-              value={fiatCurrency}
-              onChange={(e) => setFiatCurrency(e.target.value)}
-              style={styles.select}
-            >
-              <option style={{background:'hsl(var(--theme-background))'}} value="USD">USD</option>
-              <option style={{background:'hsl(var(--theme-background))'}} value="EUR">EUR</option>
-              <option style={{background:'hsl(var(--theme-background))'}} value="GBP">GBP</option>
-            </select>
+            <div className="max-w-[70%]">
+              <Select value={fiatCurrency} onValueChange={setFiatCurrency}>
+                <SelectTrigger className="h-10 min-w-32 rounded-md bg-transparent dark:bg-transparent">
+                  <SelectValue placeholder="Select Currency" />
+                </SelectTrigger>
+                <SelectContent>
+                  {[
+                    { label: "USD", icon: USDICON },
+                    { label: "EUR", icon: EUROICON },
+                    { label: "GBP", icon: GBPICON },
+                  ].map((currency) => (
+                    <SelectItem key={currency.label} value={currency.label}>
+                      <div className="flex items-center gap-4">
+                        <Image src={currency.icon} alt={`${currency.label} Icon`} width={25} height={25} />
+                        <span className="text-lg">{currency.label}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
