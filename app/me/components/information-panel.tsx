@@ -15,6 +15,7 @@ import { miniAddress } from "@/libs/strings";
 import { getBadgeUrl } from "@/web3/utils/calc";
 
 import TokensList from "./token-list";
+import { maxStacked } from "@/libs/maxStacked";
 
 type Props = { user: User };
 
@@ -22,7 +23,7 @@ export function InformationPanel(props: Props) {
   const { user } = props;
   const { theme } = useTheme();
   const { isUserOnline } = useWebSockets();
-  const maxStaked = (user?.balanceData?.reduce((max, item) => Math.max(max, item.staked), 0)) ?? 0; 
+  const maxStaked = maxStacked(user?.balanceData??0) 
   return (
     <div className="mt-8 flex h-auto w-full flex-col items-start justify-between gap-6 md:flex-row md:gap-0">
       <div className="flex size-auto flex-col items-start justify-start gap-8">

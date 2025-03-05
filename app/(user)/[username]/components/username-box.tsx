@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import { useWebSockets } from "@/contexts/websocket";
 
 import { getBadgeUrl } from "@/web3/utils/calc";
+import { maxStacked } from "@/libs/maxStacked";
 
 type Props = {
   user: User;
@@ -17,7 +18,7 @@ export function UsernameBox(props: Props) {
   const { user } = props;
   const { theme } = useTheme();
   const { isUserOnline } = useWebSockets(); 
-  const maxStaked = (user?.balanceData?.reduce((max, item) => Math.max(max, item.staked), 0)) ?? 0; 
+  const maxStaked = maxStacked(user?.balanceData??0) 
   return (
     <div className="w-full space-y-2 overflow-hidden">
       <div className="flex size-auto items-start justify-start gap-1">
