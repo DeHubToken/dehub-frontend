@@ -16,21 +16,19 @@ import {
   tokens,
   POOL_FACTORY_CONTRACT_ADDRESS,
   QUOTER_CONTRACT_ADDRESS,
-  SWAP_ROUTER_CONTRACT_ADDRESS
+  SWAP_ROUTER_CONTRACT_ADDRESS,
 } from "../helper/swapHelpers";
 
-// Provide a provider & signer for on-chain calls
 const provider = new ethers.providers.Web3Provider((window as any).ethereum);
 const signer = provider.getSigner();
 
-// Dynamically import a ConnectButton for wallet connection
 const ConnectButton = dynamic(() => import("@/components/fix-connect-button"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center">
       <Skeleton className="bg-theme-monochrome-500 h-12 w-[162px] rounded-full" />
     </div>
-  )
+  ),
 });
 
 export default function SwapCryptoForm() {
@@ -42,25 +40,17 @@ export default function SwapCryptoForm() {
 
   const { account } = useActiveWeb3React();
 
-  // Determine which tokens we are swapping
   const tokenIn = fromCurrency === "ETH" ? tokens.WETH : tokens.DHB;
   const tokenOut = fromCurrency === "ETH" ? tokens.DHB : tokens.WETH;
 
-  /**
-   * Whenever user changes fromAmount or the selected tokens,
-   * fetch the on-chain quote from the Quoter and display that in `toAmount`.
-   */
   useEffect(() => {
-    // If there's no input or no connected account, clear the toAmount
     if (!account || !fromAmount) {
       setToAmount("");
       return;
     }
 
-    // We'll fetch the on-chain quote
     async function fetchOnChainQuote() {
       try {
-
         const factoryContract = new ethers.Contract(
           POOL_FACTORY_CONTRACT_ADDRESS,
           require("@/web3/abis/factory.json"),
@@ -84,7 +74,10 @@ export default function SwapCryptoForm() {
           tokenOut
         );
 
-        const outFormatted = ethers.utils.formatUnits(quotedAmountOut, tokenOut.decimals);
+        const outFormatted = ethers.utils.formatUnits(
+          quotedAmountOut,
+          tokenOut.decimals
+        );
         setToAmount(outFormatted);
       } catch (error) {
         console.error("Error fetching on-chain quote:", error);
@@ -95,7 +88,6 @@ export default function SwapCryptoForm() {
     fetchOnChainQuote();
   }, [account, fromAmount, fromCurrency, toCurrency]);
 
-  // Simple function to swap from/to tokens
   const handleSwapCurrencies = () => {
     setFromCurrency(toCurrency);
     setToCurrency(fromCurrency);
@@ -103,9 +95,6 @@ export default function SwapCryptoForm() {
     setToAmount(fromAmount);
   };
 
-  /**
-   * Called when user clicks "Swap" button
-   */
   const handleSwapTransaction = async () => {
     if (!fromAmount || !account) {
       toast.error("Please enter an amount and connect your wallet.");
@@ -116,7 +105,6 @@ export default function SwapCryptoForm() {
     try {
       console.log("Using network:", await provider.getNetwork());
 
-      // Prepare the same contracts used in the quote
       const factoryContract = new ethers.Contract(
         POOL_FACTORY_CONTRACT_ADDRESS,
         require("@/web3/abis/factory.json"),
@@ -128,24 +116,23 @@ export default function SwapCryptoForm() {
         provider
       );
 
-      // Convert input to the correct decimal
       const amountIn = ethers.utils.parseUnits(fromAmount, tokenIn.decimals);
 
-      // Check if user has enough balance of tokenIn
-      const balance = await getTokenBalance(tokenIn.address, tokenIn.decimals, signer);
+      const balance = await getTokenBalance(
+        tokenIn.address,
+        tokenIn.decimals,
+        signer
+      );
       if (balance.lt(amountIn)) {
         toast.error("Insufficient balance.");
         setLoading(false);
         return;
       }
 
-      // Approve the router to spend the input token
       await approveToken(tokenIn.address, amountIn, signer);
 
-      // Retrieve the pool fee
       const { fee } = await getPoolInfo(factoryContract, tokenIn, tokenOut);
 
-      // Also get the final on-chain quote
       const quotedAmountOut = await quoteAndLogSwap(
         quoterContract,
         fee,
@@ -155,7 +142,6 @@ export default function SwapCryptoForm() {
         tokenOut
       );
 
-      // Prepare the swap parameters
       const paramsObj = prepareSwapParamsObject(
         fee,
         amountIn,
@@ -165,14 +151,12 @@ export default function SwapCryptoForm() {
         tokenOut
       );
 
-      // Create the swap router instance
       const swapRouter = new ethers.Contract(
         SWAP_ROUTER_CONTRACT_ADDRESS,
         require("@/web3/abis/swaprouter.json"),
         signer
       );
 
-      // Execute the swap
       await executeSwap(swapRouter, paramsObj, signer);
 
       toast.success("Swap transaction successful!");
@@ -218,7 +202,11 @@ export default function SwapCryptoForm() {
           </div>
 
           <div style={styles.swapIconContainer}>
-            <button style={styles.swapIconBtn} onClick={handleSwapCurrencies} disabled={loading}>
+            <button
+              style={styles.swapIconBtn}
+              onClick={handleSwapCurrencies}
+              disabled={loading}
+            >
               ↕
             </button>
           </div>
@@ -265,19 +253,18 @@ export default function SwapCryptoForm() {
   );
 }
 
-// Just some basic styling
 const styles: { [key: string]: React.CSSProperties } = {
   page: {
     margin: 0,
     padding: 0,
-    backgroundColor: "#121212",
+    // Removed forced black background so it adapts to any theme
     minHeight: "100vh",
     width: "100vw",
     boxSizing: "border-box",
-    display: "block"
+    display: "block",
   },
   container: {
-    color: "#fff",
+    // Remove forced white text so it inherits from the page/theme
     fontFamily: "sans-serif",
     marginTop: "8rem",
     marginLeft: "15%",
@@ -285,78 +272,81 @@ const styles: { [key: string]: React.CSSProperties } = {
     boxSizing: "border-box",
     maxWidth: "600px",
     width: "100%",
-    fontSize: "1.5rem"
+    fontSize: "1.5rem",
   },
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "2rem"
+    marginBottom: "2rem",
   },
   title: {
     fontSize: "3rem",
-    margin: 0
+    margin: 0,
   },
   swapCard: {
-    backgroundColor: "#1E1E1E",
+    // Remove forced dark background
     borderRadius: "8px",
-    padding: "2rem"
+    padding: "2rem",
+    // Use a neutral border or subtle background so it's visible on any theme
+    border: "1px solid #ccc",
   },
   swapRow: {
     display: "flex",
     alignItems: "center",
     gap: "1rem",
-    marginBottom: "1.5rem"
+    marginBottom: "1.5rem",
   },
   amountColumn: {
     display: "flex",
     flexDirection: "column",
-    flex: 1
+    flex: 1,
   },
   amountInput: {
-    backgroundColor: "#2A2A2A",
-    border: "1px solid #333",
+    // Use transparent background & inherited color
+    backgroundColor: "transparent",
+    color: "inherit",
+    border: "1px solid #ccc",
     borderRadius: "4px",
-    color: "#fff",
     fontSize: "1.25rem",
     padding: "0.75rem",
-    marginBottom: "0.25rem"
+    marginBottom: "0.25rem",
   },
   select: {
     minWidth: "140px",
-    backgroundColor: "#2A2A2A",
-    border: "1px solid #333",
+    backgroundColor: "transparent",
+    color: "inherit",
+    border: "1px solid #ccc",
     borderRadius: "4px",
-    color: "#fff",
     fontSize: "1.25rem",
-    padding: "0.75rem"
+    padding: "0.75rem",
   },
   swapIconContainer: {
     display: "flex",
     justifyContent: "center",
-    marginBottom: "1.5rem"
+    marginBottom: "1.5rem",
   },
   swapIconBtn: {
-    backgroundColor: "#00C98E",
+    backgroundColor: "#00C98E", // keep your brand color
     border: "none",
     borderRadius: "50%",
     width: "48px",
     height: "48px",
     color: "#fff",
     fontSize: "1.5rem",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   buttonRow: {
     marginTop: "1rem",
     display: "flex",
     justifyContent: "center",
-    gap: "1rem"
+    gap: "1rem",
   },
   connectButtonContainer: {
-    minWidth: "200px"
+    minWidth: "200px",
   },
   swapButton: {
-    backgroundColor: "#00C98E",
+    backgroundColor: "#00C98E", // keep your brand color
     border: "none",
     borderRadius: "4px",
     padding: "1rem 2rem",
@@ -364,6 +354,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: "1.25rem",
     fontWeight: 600,
     cursor: "pointer",
-    minWidth: "470px"
-  }
+    minWidth: "470px",
+  },
 };
