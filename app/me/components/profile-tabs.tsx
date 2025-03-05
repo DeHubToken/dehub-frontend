@@ -28,6 +28,7 @@ export default function ProfileTabView({
           {tabs.map(({ key, label }) => (
             <Link
               key={key}
+              scroll={false} 
               href={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}?tab=${key}`}
               className={` px-6 py-2 rounded-full hover:bg-theme-mine-shaft-dark  hover:pl-7 hover:pr-7 transition-all ${
                 activeTab === key

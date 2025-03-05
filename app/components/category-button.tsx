@@ -11,11 +11,11 @@ type Props = {
   url: string;
   isActive: boolean;
   children: React.ReactNode;
+  scroll: boolean;
 };
 
 export function CategoryButton(props: Props) {
-  const { url, isActive, children } = props;
-
+  const { url, isActive, children, scroll } = props; 
   const [isActived, setIsActived] = useOptimistic(isActive);
   const { startTransition } = useStreamProvider("CategoryButton");
   const router = useRouter();
@@ -23,7 +23,7 @@ export function CategoryButton(props: Props) {
   function pushUrl() {
     startTransition(() => {
       setIsActived(true);
-      router.push(url);
+      router.push(url, { scroll });
     });
   }
 
