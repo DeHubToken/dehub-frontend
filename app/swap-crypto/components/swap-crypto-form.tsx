@@ -18,6 +18,8 @@ import {
   QUOTER_CONTRACT_ADDRESS,
   SWAP_ROUTER_CONTRACT_ADDRESS,
 } from "../helper/swapHelpers";
+import { Button } from "@/components/ui/button";
+import { ArrowDownUp } from "lucide-react";
 
 const provider = new ethers.providers.Web3Provider((window as any).ethereum);
 const signer = provider.getSigner();
@@ -202,13 +204,14 @@ export default function SwapCryptoForm() {
           </div>
 
           <div style={styles.swapIconContainer}>
-            <button
-              style={styles.swapIconBtn}
+            <Button
+              variant="gradientOne" size="sratch"
+              // style={styles.swapIconBtn}
               onClick={handleSwapCurrencies}
               disabled={loading}
             >
-              ↕
-            </button>
+              <ArrowDownUp />
+            </Button>
           </div>
 
           <div style={styles.swapRow}>
@@ -238,13 +241,13 @@ export default function SwapCryptoForm() {
                 <ConnectButton label="Connect Wallet" />
               </div>
             ) : (
-              <button
-                style={styles.swapButton}
+              <Button
+                variant="gradientOne" size="sratch" className="w-full text-2xl text-500"
                 onClick={handleSwapTransaction}
                 disabled={loading}
               >
                 {loading ? "Swapping..." : "Swap"}
-              </button>
+              </Button>
             )}
           </div>
         </div>
