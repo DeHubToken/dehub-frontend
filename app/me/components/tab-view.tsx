@@ -19,17 +19,19 @@ async function TabVideoUploads({ isOwner, user, searchParams }: Props) {
   if (!user?.address) {
     return <div>No Uploads</div>;
   }
-
-  const res = await getNFTs({
-    minter: user.address,
-    unit: 40,
-    address: user.address,
-    postType: "video",
-    sortMode: searchParams?.type,
-    category: searchParams?.category === "All" ? null : searchParams?.category,
-    range: searchParams?.range,
-    search: searchParams?.q
-  });
+const parms={
+  minter: user.address,
+  unit: 40,
+  address: user.address,
+  postType: "video",
+  sortMode: searchParams?.type,
+  sort:searchParams?.sort,
+  category: searchParams?.category === "All" ? null : searchParams?.category,
+  range: searchParams?.range,
+  search: searchParams?.q
+}
+console.log("getNFTs_parms",parms);
+  const res = await getNFTs(parms);
 
   const data = res.success ? res.data.result : [];
   console.log("data[0]", data[0]);
@@ -59,6 +61,7 @@ async function TabFeedsImagesUploads({ isOwner, user, searchParams }: Props) {
         minter={user?.address?.toLowerCase()}
         category={searchParams?.category}
         range={searchParams?.range}
+        sort={searchParams?.sort}
         type={searchParams?.type}
         q={searchParams?.q}
       />

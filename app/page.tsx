@@ -19,12 +19,13 @@ type Props = {
     range?: string;
     type: string;
     q?: string;
-    sortBy?: string;
+    sort?: string;
   };
 };
 
 export default async function Page(props: Props) {
-  const { category, range, type, q, sortBy } = props.searchParams;
+  const { category, range, type, q, sort } = props.searchParams;
+console.log("searchParams",props.searchParams);
 
   if (!type) {
     return redirect(`/?type=trends`);
@@ -41,7 +42,7 @@ export default async function Page(props: Props) {
           range={range}
           type={type}
           q={q}
-          sortBy={sortBy}
+          sort={sort}
         />
 
         <div className="mt-8 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
@@ -51,6 +52,7 @@ export default async function Page(props: Props) {
                 title={type.toUpperCase()}
                 category={category}
                 range={range}
+                sort={sort}
                 type={type}
                 q={q}
               />
@@ -60,6 +62,7 @@ export default async function Page(props: Props) {
                 title={type.toUpperCase()}
                 category={category}
                 range={range}
+                sort={sort}
                 type={type}
                 q={q}
               />
@@ -69,6 +72,7 @@ export default async function Page(props: Props) {
              title={type.toUpperCase()}
              category={category}
              range={range}
+             sort={sort}
              type={type}
              q={q}
            />
@@ -77,6 +81,7 @@ export default async function Page(props: Props) {
               <Stream
                 title={type.toUpperCase()}
                 category={category}
+                sort={sort}
                 range={range}
                 type={type}
                 q={q}

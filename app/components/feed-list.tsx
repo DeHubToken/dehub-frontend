@@ -59,6 +59,7 @@ type FeedProps = {
   range?: string;
   type?: string;
   q?: string;
+  sort?: string;
   minter?: string;
   postType?: string;
 };
@@ -68,7 +69,7 @@ export function FeedList(props: FeedProps) {
     open: false
   });
 
-  const { category, range, type, q, minter, postType } = props;
+  const { category, range, type,sort, q, minter, postType } = props;
   const [feeds, setFeeds] = useState<any>([]);
   const [feed, setFeed] = useState<any>(null);
   const searchParams = useSearchParams();
@@ -123,6 +124,7 @@ export function FeedList(props: FeedProps) {
         unit: q ? 50 : 20,
         category: category === "All" ? null : category,
         range,
+        sort,
         search: q,
         address: account,
         minter: minter ?? "",
