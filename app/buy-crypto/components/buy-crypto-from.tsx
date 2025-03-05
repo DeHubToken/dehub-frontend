@@ -251,9 +251,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: "none",
     fontSize: "1.5rem",
     boxShadow: "none",
-    // borderRight: "1px solid #ccc",
+    borderRight: "1px solid rgb(51, 51, 51)",
     width: "100%",
-    outline: "none",
     height: "77px"
     // No forced text color
   },
