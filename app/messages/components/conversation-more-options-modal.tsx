@@ -22,6 +22,7 @@ import { getAvatarUrl } from "@/web3/utils/url";
 
 import { useMessage } from "./provider";
 import { AddUserInChatModal } from "./add-user-in-group-modal";
+import { miniAddress } from "@/libs/strings";
 
 type Props = {};
 
@@ -102,7 +103,7 @@ export const User = ({ participant }: any) => {
             <span className="text-base font-bold">
               {user?.displayName ||
                 user?.username ||
-                `${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}
+                 miniAddress(user?.address) }
             </span>
           </div>
         </div>

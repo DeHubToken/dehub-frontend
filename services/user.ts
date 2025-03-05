@@ -167,6 +167,12 @@ export async function unFollow(params: {
   }
 }
 
+export async function getUserActivity(usernameOrAddress:string) {
+  const url = `/activity/${usernameOrAddress}`;
+  const response = await api<{ result: User }>(url);
+  return response
+}
+
 type LibraryType = any;
 
 export type TLeaderboard = {

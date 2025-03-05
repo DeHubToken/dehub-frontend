@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
+import { miniAddress } from "@/libs/strings";
+
 import { searchUserOrGroup } from "@/services/dm";
 
 import { getAvatarUrl } from "@/web3/utils/url";
@@ -21,7 +23,7 @@ import { useMessage } from "./provider";
 // Interface for the API response
 interface SearchUserResponse {
   success: boolean;
-  data?: { users: User[],message?: string };
+  data?: { users: User[]; message?: string };
   message?: string;
 }
 
