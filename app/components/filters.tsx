@@ -61,7 +61,7 @@ export function FeedRangeFilterMobile(props: Props) {
       }
       const query = stringify(q);
       
-      return router.push(`${base??""}/?${query}`);
+      return router.push(`${base??""}/?${query}`,{scroll:tab==""});
     });
   };
 
@@ -78,7 +78,7 @@ export function FeedRangeFilterMobile(props: Props) {
       delete q.sort;
       delete q.category;
       const query = stringify(q);
-      return router.push(`${base??"/"}?${query}`);
+      return router.push(`${base??"/"}?${query}`,{scroll:tab==""});
     });
   };
 
