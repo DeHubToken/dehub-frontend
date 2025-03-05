@@ -134,13 +134,15 @@ export default function SellCryptoForm() {
 
   return (
     <div style={styles.page}>
-      <div style={styles.container}>
+      <div className="contain_er" style={styles.container}>
         <h1 style={styles.title}>Sell Crypto</h1>
+        {/* <h6 style={styles.subtitle}>Purchase Dehub with GBP</h6> */}
 
         {/* "You Sell" Section */}
         <div style={styles.formGroup}>
-          <label style={styles.label}>You Sell</label>
-          <div style={styles.inputRow}>
+          {/* <label style={styles.label}>You Sell</label> */}
+          <div className="input_Row" style={styles.inputRow}>
+          <h3 className="sub_t" style={styles.subtitle2}>Sell</h3>
             <input
               type="number"
               placeholder="0.00"
@@ -161,8 +163,9 @@ export default function SellCryptoForm() {
 
         {/* "You Receive" Section */}
         <div style={styles.formGroup}>
-          <label style={styles.label}>You Receive</label>
-          <div style={styles.inputRow}>
+          {/* <label style={styles.label}>You Receive</label> */}
+          <div className="input_Row" style={styles.inputRow}>
+          <h3 className="sub_t" style={styles.subtitle2}>Receive</h3>
             <input
               type="text"
               placeholder="0.00"
@@ -208,27 +211,35 @@ const styles: { [key: string]: React.CSSProperties } = {
     padding: 0,
     backgroundColor: "#121212",
     minHeight: "100vh",
-    width: "100vw",
+    width: "100%",
     boxSizing: "border-box",
     display: "block",
-    position: "relative",
   },
   container: {
     color: "#fff",
     fontFamily: "sans-serif",
     marginTop: "8rem",
-    marginLeft: "15%",
+    marginLeft: "auto",
+    marginRight: "auto",
     padding: "2rem",
     boxSizing: "border-box",
     maxWidth: "600px",
     width: "100%",
     fontSize: "1.5rem",
-    position: "relative",
-    zIndex: 1,
   },
   title: {
     fontSize: "3rem",
-    marginBottom: "2rem",
+    marginBottom: "20px",
+  },
+  subtitle: {
+    color:"#ffffff",
+    marginBottom: "25px",
+    opacity: ".5",
+  },
+  subtitle2: {
+    color:"#ffffff",
+    opacity: ".5",
+    width: "130px",
   },
   formGroup: {
     marginBottom: "1.5rem",
@@ -241,36 +252,53 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   inputRow: {
     display: "flex",
-    gap: "1rem",
-  },
-  input: {
-    flex: 1,
+    gap: "10px",
+    alignItems: "center",
     backgroundColor: "#1E1E1E",
     border: "1px solid #333",
     color: "#fff",
-    borderRadius: "4px",
-    padding: "1rem",
+    borderRadius: "10px",
+    height: "80px",
+    padding: "0 20px",
+  },
+  input: {
+    // flex: 1,
+    backgroundColor: "#1E1E1E",
+    border: "0px solid #333",
+    // color: "#fff",
+    // borderRadius: "4px",
+    // padding: "1rem",
     fontSize: "1.5rem",
+    boxShadow: "none !important",
+    height: "77px",
+  borderRight: "1px solid rgb(51, 51, 51)",
+  width:"100%",
+  color: "#ffffff6e",
   },
   select: {
     backgroundColor: "#1E1E1E",
-    border: "1px solid #333",
+    border: "0px solid #333",
     color: "#fff",
     borderRadius: "4px",
-    padding: "1rem",
-    fontSize: "1.5rem",
+    width: "90px",
+    fontSize: "18px",
   },
   sellButton: {
     width: "100%",
-    padding: "1rem",
-    backgroundColor: "#D32F2F",
+    padding: "10px",
+    backgroundColor: "#2962FF",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "30px",
     color: "#fff",
-    fontSize: "1.5rem",
+    fontSize: "16px",
     cursor: "pointer",
     marginTop: "2rem",
     fontWeight: 600,
+    backgroundImage: "linear-gradient(to right, #8cc0fc , #4288f7)",
+    maxWidth: "150px", 
+    margin: "50px auto 0 auto",
+    display: "flex",
+  justifyContent: "center",
   },
   loaderOverlay: {
     position: "fixed",

@@ -171,13 +171,15 @@ export default function BuyCryptoForm() {
 
   return (
     <div style={styles.page}>
-      <div style={styles.container}>
+      <div className="contain_er" style={styles.container}>
         <h1 style={styles.title}>Buy Crypto</h1>
+        {/* <h6 style={styles.subtitle}>Purchase Dehub with GBP</h6> */}
 
         {/* "You Pay" Section */}
         <div style={styles.formGroup}>
-          <label style={styles.label}>You Pay</label>
-          <div style={styles.inputRow}>
+          {/* <label style={styles.label}>You Pay</label> */}
+          <div className="input_Row" style={styles.inputRow}>
+            <h3 className="sub_t" style={styles.subtitle2}>Spend</h3>
             <input
               type="number"
               placeholder="0.00"
@@ -201,8 +203,9 @@ export default function BuyCryptoForm() {
 
         {/* "You Get" Section */}
         <div style={styles.formGroup}>
-          <label style={styles.label}>You Get</label>
-          <div style={styles.inputRow}>
+          {/* <label style={styles.label}>You Get</label> */}
+          <div className="input_Row" style={styles.inputRow}>
+          <h3 className="sub_t" style={styles.subtitle2}>Buy</h3>
             <input
               type="text"
               placeholder="0.00"
@@ -224,7 +227,7 @@ export default function BuyCryptoForm() {
 
         {/* Buy Button */}
         <button style={styles.buyButton} onClick={handleBuy} disabled={isLoading}>
-          {isLoading ? "Processing..." : "Buy Now"}
+          {isLoading ? "Processing..." : "Buy Crypto"}
         </button>
       </div>
     </div>
@@ -237,7 +240,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     padding: 0,
     backgroundColor: "#121212",
     minHeight: "100vh",
-    width: "100vw",
+    width: "100%",
     boxSizing: "border-box",
     display: "block",
   },
@@ -245,7 +248,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "#fff",
     fontFamily: "sans-serif",
     marginTop: "8rem",
-    marginLeft: "15%",
+    marginLeft: "auto",
+    marginRight: "auto",
     padding: "2rem",
     boxSizing: "border-box",
     maxWidth: "600px",
@@ -254,7 +258,17 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   title: {
     fontSize: "3rem",
-    marginBottom: "2rem",
+    marginBottom: "20px",
+  },
+  subtitle: {
+    color:"#ffffff",
+    marginBottom: "25px",
+    opacity: ".5",
+  },
+  subtitle2: {
+    color:"#ffffff",
+    opacity: ".5",
+    width: "100px",
   },
   formGroup: {
     marginBottom: "1.5rem",
@@ -269,34 +283,53 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     gap: "1rem",
     alignItems: "center",
+    backgroundColor: "#1E1E1E",
+    border: "1px solid #333",
+    color: "#fff",
+    borderRadius: "10px",
+    height: "80px",
+    padding: "0 20px",
   },
   input: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: "#1E1E1E",
-    border: "1px solid #333",
-    color: "#fff",
-    borderRadius: "4px",
-    padding: "1rem",
+    border: "0px solid #333",
+    // color: "#fff",
+    // borderRadius: "4px",
+    // padding: "1rem",
     fontSize: "1.5rem",
+    boxShadow: "none !important",
+    height: "77px",
+  borderRight: "1px solid rgb(51, 51, 51)",
+  width:"100%",
   },
+
+
   select: {
     backgroundColor: "#1E1E1E",
-    border: "1px solid #333",
+    border: "0px solid #333",
     color: "#fff",
     borderRadius: "4px",
-    padding: "1rem",
-    fontSize: "1.5rem",
+    width: "90px",
+    fontSize: "18px",
   },
   buyButton: {
     width: "100%",
-    padding: "1rem",
+    padding: "10px",
     backgroundColor: "#2962FF",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "30px",
     color: "#fff",
-    fontSize: "1.5rem",
+    fontSize: "16px",
     cursor: "pointer",
     marginTop: "2rem",
     fontWeight: 600,
+    backgroundImage: "linear-gradient(to right, #8cc0fc , #4288f7)",
+    maxWidth: "150px", 
+    margin: "50px auto 0 auto",
+    display: "flex",
+  justifyContent: "center",
   },
+
+ 
 };
