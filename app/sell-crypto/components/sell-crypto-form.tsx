@@ -21,7 +21,6 @@ export default function SellCryptoForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState("");
 
-  // Check for transaction status in query parameters on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const transactionStatus = params.get("transactionStatus");
@@ -42,7 +41,6 @@ export default function SellCryptoForm() {
     }
   }, []);
 
-  // Update conversion results based on sellAmount and cryptoToken
   useEffect(() => {
     if (sellAmount !== "") {
       const timeout = setTimeout(() => {
@@ -80,14 +78,11 @@ export default function SellCryptoForm() {
     }
   }, [sellAmount, cryptoToken]);
 
-  // Handle the sell process including the API call and redirect URL
   const handleSell = async () => {
     if (!sellAmount || !account?.toLowerCase()) {
       toast.error("Please enter the sell amount and your wallet address.");
       return;
     }
-
-    // Start the loader
     setIsLoading(true);
 
     const fiatAmount = conversionResults[fiatCurrency.toLowerCase() as Fiat] || 0;
@@ -117,11 +112,10 @@ export default function SellCryptoForm() {
     } catch (error) {
       console.error("Error selling crypto:", error);
       toast.error("Failed to generate MoonPay URL.");
-      setIsLoading(false); // Stop the loader on error
+      setIsLoading(false);
     }
   };
 
-  // Redirects to the URL in a new tab and stops the loader
   const handleSellCrypto = (URL: string) => {
     if (URL) {
       window.open(URL, "_blank", "noopener,noreferrer");
@@ -136,13 +130,10 @@ export default function SellCryptoForm() {
     <div style={styles.page}>
       <div className="contain_er" style={styles.container}>
         <h1 style={styles.title}>Sell Crypto</h1>
-        {/* <h6 style={styles.subtitle}>Purchase Dehub with GBP</h6> */}
 
-        {/* "You Sell" Section */}
         <div style={styles.formGroup}>
-          {/* <label style={styles.label}>You Sell</label> */}
           <div className="input_Row" style={styles.inputRow}>
-          <h3 className="sub_t" style={styles.subtitle2}>Sell</h3>
+            <h3 className="sub_t" style={styles.subtitle2}>Sell</h3>
             <input
               type="number"
               placeholder="0.00"
@@ -155,17 +146,15 @@ export default function SellCryptoForm() {
               onChange={(e) => setCryptoToken(e.target.value)}
               style={styles.select}
             >
-              <option value="ETH">ETH</option>
-              <option value="Base">Base</option>
+              <option style={{background:'hsl(var(--theme-background))'}} value="ETH">ETH</option>
+              <option style={{background:'hsl(var(--theme-background))'}} value="Base">ETH (BASE)</option>
             </select>
           </div>
         </div>
 
-        {/* "You Receive" Section */}
         <div style={styles.formGroup}>
-          {/* <label style={styles.label}>You Receive</label> */}
           <div className="input_Row" style={styles.inputRow}>
-          <h3 className="sub_t" style={styles.subtitle2}>Receive</h3>
+            <h3 className="sub_t" style={styles.subtitle2}>Receive</h3>
             <input
               type="text"
               placeholder="0.00"
@@ -182,20 +171,18 @@ export default function SellCryptoForm() {
               onChange={(e) => setFiatCurrency(e.target.value)}
               style={styles.select}
             >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
+              <option style={{background:'hsl(var(--theme-background))'}} value="USD">USD</option>
+              <option style={{background:'hsl(var(--theme-background))'}} value="EUR">EUR</option>
+              <option style={{background:'hsl(var(--theme-background))'}} value="GBP">GBP</option>
             </select>
           </div>
         </div>
 
-        {/* Sell Button */}
         <button style={styles.sellButton} onClick={handleSell} disabled={isLoading}>
           {isLoading ? "Processing..." : "Sell Now"}
         </button>
       </div>
 
-      {/* Loader Overlay (only shown when isLoading is true) */}
       {isLoading && (
         <div style={styles.loaderOverlay}>
           <div style={styles.loaderText}>Processing...</div>
@@ -209,14 +196,13 @@ const styles: { [key: string]: React.CSSProperties } = {
   page: {
     margin: 0,
     padding: 0,
-    backgroundColor: "#121212",
     minHeight: "100vh",
     width: "100%",
     boxSizing: "border-box",
     display: "block",
   },
+  // Remove color: "#fff" so text can inherit from theme
   container: {
-    color: "#fff",
     fontFamily: "sans-serif",
     marginTop: "8rem",
     marginLeft: "auto",
@@ -231,74 +217,58 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: "3rem",
     marginBottom: "20px",
   },
-  subtitle: {
-    color:"#ffffff",
-    marginBottom: "25px",
-    opacity: ".5",
-  },
+  // Remove forced white colors and let them inherit
   subtitle2: {
-    color:"#ffffff",
     opacity: ".5",
     width: "130px",
   },
   formGroup: {
     marginBottom: "1.5rem",
   },
-  label: {
-    display: "block",
-    marginBottom: "0.75rem",
-    fontSize: "1.25rem",
-    opacity: 0.9,
-  },
   inputRow: {
     display: "flex",
     gap: "10px",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "transparent",
     border: "1px solid #333",
-    color: "#fff",
     borderRadius: "10px",
     height: "80px",
     padding: "0 20px",
   },
   input: {
-    // flex: 1,
-    backgroundColor: "#1E1E1E",
-    border: "0px solid #333",
-    // color: "#fff",
-    // borderRadius: "4px",
-    // padding: "1rem",
+    backgroundColor: "transparent",
+    border: "none",
     fontSize: "1.5rem",
-    boxShadow: "none !important",
+    boxShadow: "none",
     height: "77px",
-  borderRight: "1px solid rgb(51, 51, 51)",
-  width:"100%",
-  color: "#ffffff6e",
+    borderRight: "1px solid rgb(51, 51, 51)",
+    width: "100%",
+    // Let color inherit from theme or parent
   },
   select: {
-    backgroundColor: "#1E1E1E",
-    border: "0px solid #333",
-    color: "#fff",
+    backgroundColor: "transparent",
+    border: "none",
     borderRadius: "4px",
     width: "90px",
     fontSize: "18px",
+    // Let color inherit from theme or parent
   },
   sellButton: {
     width: "100%",
     padding: "10px",
-    backgroundColor: "#2962FF",
     border: "none",
     borderRadius: "30px",
-    color: "#fff",
     fontSize: "16px",
     cursor: "pointer",
     marginTop: "2rem",
     fontWeight: 600,
     backgroundImage: "linear-gradient(to right, #8cc0fc , #4288f7)",
-    maxWidth: "150px", 
+    maxWidth: "150px",
     margin: "50px auto 0 auto",
     display: "flex",
-  justifyContent: "center",
+    justifyContent: "center",
+    // Let color inherit from theme or parent
+    color: "#fff", // You can keep the button text white if your gradient background is dark
   },
   loaderOverlay: {
     position: "fixed",
@@ -314,7 +284,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   loaderText: {
     fontSize: "2rem",
-    color: "#fff",
     fontWeight: 600,
+    color: "#fff",
   },
 };
