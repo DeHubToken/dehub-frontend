@@ -24,6 +24,7 @@ import { StreamStatus } from "@/configs";
 
 import { LivestreamEvents, StreamActivityType } from "../enums/livestream.enum";
 import TipAnimation from "./tip-animation";
+import UserProfileCard from "@/app/components/user-profile-card";
 
 export function LiveChat(props: { streamId: string }) {
   const { streamId } = props;
@@ -309,6 +310,16 @@ function UserMessage(props: { activity: any }) {
   const { activity } = props;
   return (
     <div className="flex items-start">
+      {/* <UserProfileCard 
+        username={activity.meta?.username}
+        avatarUrl={activity.meta?.avatarImageUrl}
+        address={activity.address}
+        createdAt={activity.meta?.createdAt}
+        staked = {activity.meta?.staked || 0}
+        displayName = {activity.meta?.displayName}
+        aboutMe = {activity.meta?.aboutMe}
+        followers = {activity.meta?.followers || 0}
+      /> */}
       <Avatar>
         <AvatarFallback>
           {createAvatarName(activity.meta.username || activity.address?.[0])}
