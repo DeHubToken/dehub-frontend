@@ -227,7 +227,7 @@ export function LiveChat(props: { streamId: string }) {
   if (!account) return null;
 
   return (
-    <div className="relative flex max-h-[calc((100vh-var(--navbar-height)-48px-60px))] min-h-[calc((100vh-var(--navbar-height)-48px-60px))] flex-col justify-between rounded-3xl border border-theme-neutrals-800 px-5 py-3">
+    <div className="relative flex max-h-[calc((100vh-var(--navbar-height)-48px-60px))] min-h-[calc((100vh-var(--navbar-height)-48px-60px))] flex-col rounded-3xl border border-theme-neutrals-800 px-5 py-3">
       <div className="flex items-center justify-between">
         <span className="font-semibold text-theme-neutrals-100">Live chat</span>
         <Button className="h-7 rounded-full">View all</Button>

@@ -130,7 +130,7 @@ export default function BroadcastActionPanel(props: { stream: any }) {
 
         <div className="flex items-center gap-1">
           <span className="text-theme-neutrals-400">Total Tips:</span>
-          <span className="text-theme-neutrals-200">{stream.totalTips || 0}</span>
+          <span className="text-theme-neutrals-200">{stream.totalTips || 0} DHB</span>
         </div>
 
         {stream.status === StreamStatus.LIVE && (

@@ -20,6 +20,12 @@ const nextConfig = bundleAnalyzer({
   },
   poweredByHeader: false,
   reactStrictMode: true,
+  experimental: {
+    turbo: {
+      loaders: {}, // You can add custom loaders
+      resolveAlias: {} // You can add custom resolveAlias
+    }
+  },
   webpack: (config, context) => {
     config.externals.push({
       bufferutil: "bufferutil",

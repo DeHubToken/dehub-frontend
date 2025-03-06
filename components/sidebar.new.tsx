@@ -149,6 +149,18 @@ const groups = [
           const qs = query.toString();
           return `/?${qs}`;
         }
+      },
+      {
+        id: "live",
+        name: "Live",
+        icon: <Broadcast className="size-6" />,
+        url: () => {
+          const query = new URLSearchParams();
+          query.set("type", "live");
+          query.delete("q");
+          const qs = query.toString();
+          return `/?${qs}`;
+        }
       }
     ] as Link[]
   },
@@ -165,7 +177,7 @@ const groups = [
         id: "broadcast",
         name: "Broadcast",
         icon: <Broadcast className="size-6" />,
-        url: () => "/"
+        url: () => "/live"
       },
       {
         id: "post",
