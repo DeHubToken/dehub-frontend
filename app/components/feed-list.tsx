@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { HeartFilledIcon } from "@radix-ui/react-icons";
 import { useAtomValue } from "jotai";
 import { BookmarkIcon, BugIcon } from "lucide-react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "sonner";
 
 import {
@@ -52,8 +53,10 @@ import { ClaimAsCommentor, ClaimAsViewer } from "../stream/[id]/components/claim
 import { useClaimBounty } from "../stream/[id]/hooks/use-claim-bounty";
 import { FeedReportDialog } from "./feed-report-modal";
 import { ReportListModal } from "./report-list-modal";
+import { FeedSkeleton, StreamSkeleton } from "./stream-skeleton";
 
 type FeedProps = {
+  isSearch?: boolean;
   title?: string;
   category?: string;
   range?: string;
@@ -62,16 +65,29 @@ type FeedProps = {
   sort?: string;
   minter?: string;
   postType?: string;
+  isInfiniteScroll?: boolean;
 };
-
+const feedMap = new Map<string, any>();
 export function FeedList(props: FeedProps) {
   const [selectedFeed, setSelectedFeed] = useState<{ open: boolean; tokenId?: number }>({
     open: false
   });
-
-  const { category, range, type,sort, q, minter, postType } = props;
+  const {
+    category,
+    range,
+    type,
+    sort,
+    q,
+    minter,
+    postType,
+    isInfiniteScroll = true,
+    isSearch
+  } = props;
   const [feeds, setFeeds] = useState<any>([]);
   const [feed, setFeed] = useState<any>(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(isInfiniteScroll);
+  const [isPending, setIsPending] = useState(false);
   const searchParams = useSearchParams();
   const [signData, setSignData] = useState<{ sig: string; timestamp: string }>({
     timestamp: "",
@@ -87,7 +103,7 @@ export function FeedList(props: FeedProps) {
       sessionStorage.setItem("storedAccount", account);
       window.location.reload();
       return;
-    }
+    } 
     if (storedAccount !== account || !signData?.sig || !signData?.timestamp) {
       syncSigData(setSignData, account, library);
     }
@@ -119,6 +135,7 @@ export function FeedList(props: FeedProps) {
   const hasSaved = searchParams.has("saved");
   useEffect(() => {
     (async () => {
+      setIsPending(true);
       const res: any = await getFeedNFTs({
         sortMode: type,
         unit: q ? 50 : 20,
@@ -130,6 +147,7 @@ export function FeedList(props: FeedProps) {
         minter: minter ?? "",
         postType: postType ?? "feed-all"
       });
+      setIsPending(false);
       if (res.success) {
         if (hasSaved) {
           setFeeds((prevFeeds: any) => prevFeeds.filter((item: any) => item?.isSaved === true));
@@ -138,7 +156,7 @@ export function FeedList(props: FeedProps) {
         }
       }
     })();
-  }, [account, library, hasSaved]);
+  }, []);
   const fetchFeed = async () => {
     if (!selectedFeed.tokenId) {
       return;
@@ -146,14 +164,54 @@ export function FeedList(props: FeedProps) {
     const response: any = await getNFT(selectedFeed?.tokenId, account as string);
     if (response.data.result) setFeed(response.data.result);
   };
-
   useEffect(() => {
     fetchFeed();
   }, [selectedFeed]);
+
+  async function fetchMore() {
+    setHasMore(true);
+    const res = await getFeedNFTs({
+      sortMode: type,
+      unit: q ? 50 : 20,
+      category: category === "All" ? null : category,
+      range,
+      search: q,
+      page: page + 1,
+      address: account,
+      sort,
+      minter: minter ?? "",
+      postType: postType ?? "feed-all"
+    });
+    if (!res.success) {
+      setHasMore(false);
+      return;
+    }
+
+    if (res.data.result.length === 0) {
+      setHasMore(false);
+      return;
+    }
+
+    const filteredData = res.data.result.filter((nft) => !feedMap.has(`${nft.tokenId}`));
+    // @ts-ignore
+    setFeeds([...feeds, ...filteredData]);
+    setPage(page + 1);
+    console.log("feeds-appendend");
+  }
+
+  if (isPending) {
+    return <Skeleton />;
+  }
   return (
     <div className="flex w-full flex-col items-center gap-3">
-      {feeds && feeds.length > 0 ? (
-        feeds.map((feed: any, key: number) => {
+      <InfiniteScroll
+        next={isInfiniteScroll ? fetchMore : () => {}}
+        hasMore={hasMore}
+        loader={<Skeleton total={4} />}
+        dataLength={feeds.length || 0}
+        className={"flex w-full flex-col items-center gap-3"}
+      >
+        {feeds.map((feed: any, key: number) => {
           return (
             <FeedCard key={key}>
               <FeedHeader>
@@ -221,11 +279,20 @@ export function FeedList(props: FeedProps) {
               </FeedFooter>
             </FeedCard>
           );
-        })
-      ) : (
-        <div className="mt-5">No Feed Saved Yet.</div>
-      )}
+        })}
 
+        {isSearch && feeds?.length === 0 && (
+          <div className="flex h-[650px] w-full flex-col items-center justify-center">
+            <p>No Match found</p>
+          </div>
+        )}
+
+        {!isSearch && feeds?.length === 0 && (
+          <div className="flex h-[650px] w-full flex-col items-center justify-center">
+            <p>No Uploads found</p>
+          </div>
+        )}
+      </InfiniteScroll>
       <FeedReplyDialog
         open={selectedFeed.open}
         onOpenChange={(open) => setSelectedFeed({ open: false })}
@@ -430,3 +497,14 @@ export const DropDownItemSubscriptionModal = ({ post }: { post: NFT }) => {
     </DropdownMenuItem>
   );
 };
+
+export function Skeleton(props: { total?: number }) {
+  const { total = 8 } = props;
+  return (
+    <div className={"relative flex h-auto w-full flex-col  gap-5"}>
+      {Array.from({ length: total }).map((_, index) => (
+        <FeedSkeleton key={index} />
+      ))}
+    </div>
+  );
+}
