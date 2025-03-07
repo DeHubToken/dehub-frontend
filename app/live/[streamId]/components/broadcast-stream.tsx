@@ -104,10 +104,8 @@ export default function BroadcastStream(props: { streamId: string }) {
       socket.off(LivestreamEvents.TipStreamer, handleTip);
     };
   }, [socket, streamId, stream, account]);
-  // console.log('stream',stream)
 
   useEffect(() => {
-    // console.log("Joining room", socket , stream?._id , account);
     if (!socket || !stream?._id || !account) return;
     socket.emit(LivestreamEvents.JoinRoom, { streamId: stream?._id });
     return () => {};
@@ -148,7 +146,7 @@ export default function BroadcastStream(props: { streamId: string }) {
   }
 
   return (
-    <div className="h-auto min-h-screen w-full flex-1 p-6">
+    <div className="h-auto w-full flex-1 p-6">
       {stream.status === StreamStatus.SCHEDULED && !isStartingNw && (
         <div
           className="relative w-full overflow-hidden rounded-2xl bg-black"
@@ -221,39 +219,3 @@ export default function BroadcastStream(props: { streamId: string }) {
     </div>
   );
 }
-
-/*
-
-    <div className="h-auto min-h-screen w-full px-4 xl:max-w-[75%] xl:flex-[0_0_75%]">
-      {!account ? (
-        <div>Connect wallet to view stream</div>
-      ) : (
-        <>
-          <Suspense fallback={<div>Loading Stream...</div>}>
-
-
-
-            {stream.status === StreamStatus.ENDED && <ReplayPlayer streamId={streamId} />}
-          </Suspense>
-
-          <BroadcastActionPanel stream={stream} />
-          <BroadcastStreamInfo stream={stream} />
-          <PreviousStreams stream={stream} />
-        </>
-      )}
-    </div>
-
-*/
-
-/*
- <Suspense fallback={<StreamVideoSkeleton />}>
-        <StreamVideo tokenId={tokenId} address={user?.address as string} />
-      </Suspense>
-      <StreamInfo nft={nft} />
-      <ActionPanel nft={nft} tokenId={tokenId} />
-      <div className="rounded-3xl bg-theme-neutrals-800 p-6">
-        <span className="text-xs text-theme-neutrals-400">Description</span>
-        <p className="mt-4 text-theme-neutrals-200">{nft.description}</p>
-      </div>
-      <CommentsPanel nft={nft} tokenId={tokenId} />
-*/

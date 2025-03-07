@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Hand } from "lucide-react";
 import { toast } from "sonner";
 
+import UserProfileCard from "@/app/components/user-profile-card";
+
 import { Gift } from "@/components/icons/gift";
 import { ThumbsUp } from "@/components/icons/thumbs-up";
 import { WavingHand } from "@/components/icons/waving-hand";
@@ -23,8 +25,7 @@ import { getLiveStream } from "@/services/broadcast/broadcast.service";
 import { StreamStatus } from "@/configs";
 
 import { LivestreamEvents, StreamActivityType } from "../enums/livestream.enum";
-import TipAnimation from "./tip-animation";
-import UserProfileCard from "@/app/components/user-profile-card";
+import TipAnimation, { GiftAnimation } from "./tip-animation";
 
 export function LiveChat(props: { streamId: string }) {
   const { streamId } = props;
@@ -231,11 +232,11 @@ export function LiveChat(props: { streamId: string }) {
     <div className="relative flex max-h-[calc((100vh-var(--navbar-height)-48px-60px))] min-h-[calc((100vh-var(--navbar-height)-48px-60px))] flex-col rounded-3xl border border-theme-neutrals-800 px-5 py-3">
       <div className="flex items-center justify-between">
         <span className="font-semibold text-theme-neutrals-100">Live chat</span>
-        <Button className="h-7 rounded-full">View all</Button>
+        <Button className="hidden h-7 rounded-full md:flex">View all</Button>
       </div>
 
       {tipAnimations.map((tip) => (
-        <TipAnimation key={tip.id} amount={tip.amount} />
+        <GiftAnimation key={tip.id} />
       ))}
 
       {!stream?.settings?.chat?.enabled ? (
@@ -277,7 +278,7 @@ export function LiveChat(props: { streamId: string }) {
       )}
 
       {stream?.status !== StreamStatus.OFFLINE && stream?.status !== StreamStatus.SCHEDULED ? (
-        <div className="mt-4 flex items-center gap-2">
+        <div className="absolute bottom-[66px] left-0 right-0 mt-4 flex items-center gap-2 xl:relative xl:bottom-0">
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -310,7 +311,7 @@ function UserMessage(props: { activity: any }) {
   const { activity } = props;
   return (
     <div className="flex items-start">
-      {/* <UserProfileCard 
+      {/* <UserProfileCard
         username={activity.meta?.username}
         avatarUrl={activity.meta?.avatarImageUrl}
         address={activity.address}
@@ -341,7 +342,7 @@ function UserMessage(props: { activity: any }) {
 
 export function LiveStreamTabs() {
   return (
-    <div className="flex items-center">
+    <div className="hidden items-center xl:flex">
       <Button variant="noBg" className="rounded-full p-3">
         Live prediction
       </Button>

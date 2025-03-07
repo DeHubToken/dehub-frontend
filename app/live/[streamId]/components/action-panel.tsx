@@ -7,6 +7,7 @@ import { ThumbsUp } from "lucide-react";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 
+import UserProfileCard from "@/app/components/user-profile-card";
 import { Share } from "@/app/stream/[id]/components/share";
 import { LikeButton } from "@/app/stream/[id]/components/stream-actions";
 import TipModal from "@/app/stream/[id]/components/tip-modal";
@@ -105,7 +106,8 @@ export default function BroadcastActionPanel(props: { stream: any }) {
       <h1 className="w-full break-words text-2xl font-medium text-theme-neutrals-200">
         {stream.title}
       </h1>
-      <div className="flex items-center gap-4">
+
+      <div className="flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-1">
           <span className="text-theme-neutrals-400">Broadcast by:</span>
           <Link

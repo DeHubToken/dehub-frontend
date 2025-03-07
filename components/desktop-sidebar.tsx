@@ -126,7 +126,7 @@ export function MobileOnlyBottomBar() {
               <Separator className="bg-theme-monochrome-400/25" />
             </DialogHeader>
             {!leaderBoard.success && (
-              <div className="font-tanker text-center text-4xl tracking-wide">
+              <div className="text-center font-tanker text-4xl tracking-wide">
                 Error Fetching Leaderboard
               </div>
             )}

@@ -1,6 +1,235 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bell, Crown, Gift, Heart, Music, PartyPopper, Flower, Sparkles, Sword } from "lucide-react";
+import {
+  Bell,
+  Crown,
+  Flower,
+  Gift,
+  Heart,
+  Music,
+  PartyPopper,
+  Sparkles,
+  Sword
+} from "lucide-react";
+
+export const GiftAnimation = () => {
+  const [isAnimating, setIsAnimating] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Random emoji selections for particles
+  const giftEmojis = ["🎁", "🎀", "💝", "💖", "✨", "💫", "🌟", "⭐", "🎉", "🎊"];
+
+  // Generate random particles
+  const generateParticles = (count) => {
+    const particles = [];
+    for (let i = 0; i < count; i++) {
+      const randomEmoji = giftEmojis[Math.floor(Math.random() * giftEmojis.length)];
+      const delay = Math.random() * 0.5;
+      const animationType = Math.floor(Math.random() * 4);
+
+      particles.push({
+        id: i,
+        emoji: randomEmoji,
+        delay,
+        animationType,
+        scale: 0.5 + Math.random() * 1.5
+      });
+    }
+    return particles;
+  };
+
+  const particles = generateParticles(20);
+
+  return (
+    <>
+      {isAnimating && (
+        <div className="fixed inset-0 flex items-center justify-center overflow-hidden">
+          {/* Main gift emoji that appears first */}
+          <div className="relative">
+            <div
+              className="transform text-8xl transition-all"
+              style={{
+                animation: "giftAppear 0.5s",
+                opacity: 0,
+                transform: "scale(0)"
+              }}
+            >
+              🎁
+            </div>
+
+            {/* Gift opening effect - replaced by celebration emoji */}
+            <div
+              className="absolute inset-0 flex items-center justify-center text-8xl"
+              style={{
+                animation: "giftOpen 0.5s",
+                animationDelay: "0.7s",
+                opacity: 0,
+                transform: "scale(0)"
+              }}
+            >
+              🎊
+            </div>
+
+            {/* Flying particles/emojis */}
+            {particles.map((particle) => (
+              <div
+                key={particle.id}
+                className="absolute left-1/2 top-1/2 text-2xl"
+                style={{
+                  animation: `particleFly${particle.animationType} 2s forwards`,
+                  animationDelay: `${0.8 + particle.delay}s`,
+                  opacity: 0,
+                  transform: "translate(-50%, -50%)",
+                  fontSize: `${1 + particle.scale}rem`
+                }}
+              >
+                {particle.emoji}
+              </div>
+            ))}
+
+            {/* Heart emojis that appear at the end */}
+            <div
+              className="absolute"
+              style={{
+                animation: "heartAppear 1s",
+                animationDelay: "1.2s",
+                opacity: 0,
+                top: "-70px",
+                left: "50%",
+                transform: "translateX(-50%) scale(0)"
+              }}
+            >
+              <span className="text-5xl">❤️</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes giftAppear {
+          0% {
+            opacity: 0;
+            transform: scale(0) rotate(-20deg);
+          }
+          60% {
+            opacity: 1;
+            transform: scale(1.2) rotate(10deg);
+          }
+          80% {
+            transform: scale(0.9) rotate(-5deg);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+          }
+        }
+
+        @keyframes giftOpen {
+          0% {
+            opacity: 0;
+            transform: scale(0);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.3);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes heartAppear {
+          0% {
+            opacity: 0;
+            transform: translateX(-50%) scale(0);
+          }
+          40% {
+            opacity: 1;
+            transform: translateX(-50%) scale(1.2);
+          }
+          60% {
+            transform: translateX(-50%) scale(0.9);
+          }
+          80% {
+            transform: translateX(-50%) scale(1.1);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+          }
+        }
+
+        @keyframes particleFly0 {
+          0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+          }
+          10% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translate(calc(-50% + 100px), calc(-50% - 100px)) scale(0.5) rotate(360deg);
+          }
+        }
+
+        @keyframes particleFly1 {
+          0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+          }
+          10% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translate(calc(-50% - 120px), calc(-50% - 80px)) scale(0.5) rotate(360deg);
+          }
+        }
+
+        @keyframes particleFly2 {
+          0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+          }
+          10% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translate(calc(-50% + 80px), calc(-50% + 110px)) scale(0.5) rotate(360deg);
+          }
+        }
+
+        @keyframes particleFly3 {
+          0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+          }
+          10% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translate(calc(-50% - 90px), calc(-50% + 90px)) scale(0.5) rotate(360deg);
+          }
+        }
+      `}</style>
+    </>
+  );
+};
 
 const EMOJIS: any = {
   ROSE: <Flower className="h-8 w-8 text-rose-500" />,
@@ -298,7 +527,7 @@ const TipAnimation = ({ amount }: { amount: number }) => {
                   key={`spartan-${i}`}
                   className="mx-2 flex h-16 w-16 items-center justify-center rounded-full bg-gray-800"
                 >
-                    sword
+                  sword
                   <Sword className="h-8 w-8 text-white" />
                 </motion.div>
               ))}
