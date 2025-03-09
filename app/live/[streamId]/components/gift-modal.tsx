@@ -73,18 +73,11 @@ export const giftTiers = [
   { min: 17, name: "Basic Gift", icon: PartyPopper, color: "text-blue-500" }
 ];
 
-const delayOptions = [
-  { value: 0, label: "No Delay" },
-  { value: 30, label: "30 Seconds" },
-  { value: 60, label: "1 Minute" },
-  { value: 300, label: "5 Minutes" }
-];
-
 export function GiftModal(props: Props) {
   const { tokenId, to, triggerProps, stream } = props;
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState(0);
-  const [delay, setDelay] = useState(0);
+  // const [delay, setDelay] = useState(0);
   const [message, setMessage] = useState("");
   const [minTip] = useState(stream?.settings?.minTip || 1);
 
@@ -173,7 +166,7 @@ export function GiftModal(props: Props) {
       amount: Number(amount),
       selectedTier,
       celebration: selectedTier ? true : false,
-      delay,
+      // delay,
       message
     });
     if (!account) {
@@ -237,7 +230,7 @@ export function GiftModal(props: Props) {
         const response = await recordLiveGift(stream._id, {
           address: account.toLowerCase(),
           amount,
-          delay,
+          // delay,
           message,
           recipient: to,
           selectedTier: selectedTier?.name,
@@ -351,7 +344,7 @@ export function GiftModal(props: Props) {
           />
 
           <div className="w-full space-y-4">
-            <div className="flex items-center gap-4">
+            {/* <div className="flex items-center gap-4">
               <Clock className="size-5 text-gray-400" />
               <Select value={delay.toString()} onValueChange={(value) => setDelay(Number(value))}>
                 <SelectTrigger className="w-[180px]">
@@ -365,7 +358,7 @@ export function GiftModal(props: Props) {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
 
             <Textarea
               placeholder="Add a message (optional)"
