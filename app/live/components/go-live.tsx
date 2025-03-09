@@ -184,12 +184,12 @@ export default function GoLiveForm({ categories }: Props) {
   });
 
   const createStream = async (data: LiveStreamFormValues) => {
+    const toastId = toast.loading("Starting stream creation process...");
     try {
       setIsLoading(true);
       if (!account || !user) {
         return toast.error("Please connect your wallet");
       }
-      const toastId = toast.loading("Starting stream creation process...");
 
       // Step 1: Get tokenId and auth details from backend
       const formData = new FormData();
@@ -199,6 +199,7 @@ export default function GoLiveForm({ categories }: Props) {
       formData.append("streamInfo", JSON.stringify(filteredStreamInfo(data.streamInfo as any)));
       formData.append("category", data.categories?.length > 0 ? JSON.stringify(data.categories.map((e) => e)) : "");
       formData.append("address", account.toLowerCase());
+      formData.append("chainId", chainId.toString());
       const sigData = await getSignInfo(library, account);
       formData.append("sig", sigData.sig);
       formData.append("timestamp", sigData.timestamp);
@@ -287,16 +288,17 @@ export default function GoLiveForm({ categories }: Props) {
       const authObject = await getAuthObject(library, account);
       let { thumbnail, ...payload } = data;
       data = { ...payload, ...authObject };
-      const response = await createLiveStream({ ...data, tokenId: result.createdTokenId }, thumbnailFile);
+      const response = await createLiveStream({ ...data, tokenId: result.createdTokenId, streamInfo: JSON.stringify(filteredStreamInfo(data.streamInfo as any)) }, thumbnailFile);
 
       if (response.success) {
-        toast.success("Stream created successfully! Redirecting...");
+        toast.success("Stream created successfully! Redirecting...", { id: toastId });
         router.push(`/live/${response.data._id}`);
       } else {
         toast.error("Failed to create stream");
       }
     } catch (error) {
       console.error(error);
+      toast.dismiss(toastId);
       toast.error("Something went wrong.");
     } finally {
       setIsLoading(false);
@@ -605,7 +607,7 @@ export default function GoLiveForm({ categories }: Props) {
                 name="payPerView"
                 control={form.control}
                 render={({ field }) => (
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  <Switch checked={field.value} onCheckedChange={field.onChange} disabled={true} />
                 )}
               />
               <TooltipProvider>
@@ -674,7 +676,7 @@ export default function GoLiveForm({ categories }: Props) {
                 name="bounty"
                 control={form.control}
                 render={({ field }) => (
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  <Switch checked={field.value} onCheckedChange={field.onChange} disabled={true} />
                 )}
               />
               <TooltipProvider>

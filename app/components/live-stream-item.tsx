@@ -59,6 +59,56 @@ export function LiveStreamItem({ stream, isOwner, ...rest }: Props) {
           />
           <StatusBadge status={stream.status} className="text-xs" />
         </Link>
+        {stream?.streamInfo?.isAddBounty && (
+          <div className="absolute -left-16 top-12 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-classic-magenta px-10 py-0.5 text-center text-xs text-white shadow-default">
+            <span>
+              Watch2Earn: {formatNumber(stream.streamInfo.addBountyAmount)}{" "}
+              {stream.streamInfo.addBountyTokenSymbol}
+            </span>
+            <Image
+              src="/icons/tokens/DHB.png"
+              alt="DHB"
+              width={20}
+              height={20}
+              className="size-4 rounded-full bg-black"
+            />
+          </div>
+        )}
+
+        {stream?.streamInfo?.isPayPerView && (
+          <div className="absolute -right-20 top-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-classic-blue px-12 py-0.5 text-center text-xs text-white">
+            <span>
+              PPV: {stream.streamInfo.payPerViewAmount || 0} {stream.streamInfo.payPerViewTokenSymbol}
+            </span>
+            <Image
+              src="/icons/tokens/DHB.png"
+              alt="DHB"
+              width={20}
+              height={20}
+              className="size-4 rounded-full bg-black"
+            />
+          </div>
+        )}
+        {/* {stream?.plansDetails?.length > 0 && (
+          <div className="absolute -left-20 bottom-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-classic-purple px-12 py-0.5 text-center text-xs text-white">
+            <span>Subscribe To Watch</span>
+          </div>
+        )} */}
+        {stream?.streamInfo?.isLockContent && (
+          <div className="absolute -right-20 bottom-8 z-10 flex w-60 -rotate-45 items-center justify-center gap-1 bg-classic-violet px-12 py-0.5 text-center text-xs text-white">
+            <span>
+              Lock: {stream.streamInfo.lockContentAmount || 0}{" "}
+              {stream.streamInfo.lockContentTokenSymbol}
+            </span>
+            <Image
+              src="/icons/tokens/DHB.png"
+              alt="DHB"
+              width={20}
+              height={20}
+              className="size-4 rounded-full bg-black"
+            />
+          </div>
+        )}
       </div>
 
       <div className="p-4">
@@ -73,10 +123,10 @@ export function LiveStreamItem({ stream, isOwner, ...rest }: Props) {
           <div className="flex-1">
             <p className="truncate text-sm font-bold">{truncate(stream.title, 40)}</p>
             <div className="flex items-start">
-                  <Link href={`/${stream.account.username || stream.address}`} className="text-[11px]">
-                    {truncate(stream.account.displayName || stream.account.username || stream.address, 26)}
-                  </Link>
-                </div>
+              <Link href={`/${stream.account.username || stream.address}`} className="text-[11px]">
+                {truncate(stream.account.displayName || stream.account.username || stream.address, 26)}
+              </Link>
+            </div>
             <span className="text-[11px] text-gray-500">
               {formatDistance(new Date(stream.createdAt), new Date(), { addSuffix: true })}
             </span>
