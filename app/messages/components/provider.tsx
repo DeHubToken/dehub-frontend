@@ -43,6 +43,8 @@ type State = {
   handleUnBlock: () => void;
   handleToggleUserReport: (input: boolean) => void;
   handleToggleConversationMoreOptions: (input: boolean) => void;
+  handleToggleUserDMStatusModal: (input?: boolean) => void;
+  handleToggleDeleteChat:()=>void;
   blockChatHandler: (input: string) => Promise<any>;
   reValidateMessage: (messageId: string, dmId: string) => void;
   handleExitGroup: (userAddress: string) => void;
@@ -55,14 +57,22 @@ type State = {
   toggleTipModal: boolean;
   toggleUserReport: boolean;
   toggleConversationMoreOptions: boolean;
+  toggleUserDMStatusModal: boolean;
+  toggleDeleteChat:boolean;
+  chatWith?: string;
   permissions: {};
   me: any;
 };
 
 const [Provider, useMessage] = createContext<State>("MessagesScreen");
 
-export function MessageProvider(props: { children: React.ReactNode; socketConnections: any }) {
+export function MessageProvider(props: {
+  children: React.ReactNode;
+  socketConnections: any;
+  searchParams: { u?: string };
+}) {
   const { account }: any = useActiveWeb3React();
+  const { searchParams } = props;
   const socket = props?.socketConnections?.current?.dm;
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
   const [status, setStatus] = useState<State["status"]>("idle");
@@ -79,6 +89,8 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const [toggleTipModal, setToggleTipModal] = useState(false);
   const [toggleUserReport, setToggleUserReport] = useState(false);
   const [toggleConversationMoreOptions, setToggleConversationMoreOptions] = useState(false);
+  const [toggleUserDMStatusModal, setToggleUserDMStatusModal] = useState(false);
+  const [toggleDeleteChat, setToggleDeleteChat] = useState(false);
   const [chatStatus, setChatStatus] = useState({
     reportedId: null,
     allow: true,
@@ -140,7 +152,10 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     console.log("handleAddNewChat", { msg, data });
     setMessages((prevState: any[]) => {
       const exist = prevState.find((d) => d._id == data._id);
-      if (exist) return prevState;
+      setSelectedMessageId(data._id);
+      if (exist) {
+        return prevState;
+      }
       return [data, ...prevState];
     });
     toast.success(msg);
@@ -211,7 +226,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     if (!account) {
       toast.error("please connect to wallet.");
       return;
-    } 
+    }
     const { data, error }: any = await blockDM({
       conversationId: message._id,
       reason,
@@ -222,7 +237,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       toast.error(error);
       return;
     }
-    const reportedId = data.reportedId; 
+    const reportedId = data.reportedId;
     if (!userAddress) {
       setChatStatus({
         allow: false,
@@ -267,7 +282,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   };
   const startNewChat = (user: { address: string; username: string; _id?: string }) => {
     socket.emit(SocketEvent.createAndStart, user);
-    toast.success(`please wait starting chat with ${user.username || user.address}`);
+    toast.success(`Please wait starting chat with ${user.username || user.address}`);
   };
   const sendMessage = (content = "", gif = null, type = "msg") => {
     socket.emit(SocketEvent.sendMessage, { content, gif, type, dmId: message?._id });
@@ -416,6 +431,12 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     setToggleTipModal((b) => !b);
   };
 
+  const handleToggleUserDMStatusModal = () => { 
+    setToggleUserDMStatusModal((b) => !b);
+  };
+  const handleToggleDeleteChat=()=>{
+    setToggleDeleteChat((b) => !b);
+  }
   return (
     <Provider
       chatStatus={chatStatus}
@@ -440,16 +461,21 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       handleToggleUserReport={handleToggleUserReport}
       handleToggleTipModal={handleToggleTipModal}
       handleToggleConversationMoreOptions={handleToggleConversationMoreOptions}
+      handleToggleUserDMStatusModal={handleToggleUserDMStatusModal}
+      handleToggleDeleteChat={handleToggleDeleteChat}
       toggleTipModal={toggleTipModal}
       toggleEmoji={toggleEmoji}
       toggleGif={toggleGif}
       toggleMedia={toggleMedia}
       toggleUserReport={toggleUserReport}
       toggleConversationMoreOptions={toggleConversationMoreOptions}
+      toggleDeleteChat={toggleDeleteChat}
+      toggleUserDMStatusModal={toggleUserDMStatusModal}
       handleUnBlock={handleUnBlock}
       blockChatHandler={blockChatHandler}
       reValidateMessage={reValidateMessage}
       handleExitGroup={handleExitGroup}
+      chatWith={searchParams?.u ?? ""}
       permissions={{}}
       refresh={fetchMyContacts}
     >

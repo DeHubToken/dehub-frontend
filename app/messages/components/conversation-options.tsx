@@ -26,7 +26,7 @@ const ConversationOptions = ({ type, participant }: Props) => {
   const {
     setSelectedMessageId,
     me,
-    handleToggleUserReport,
+    handleToggleUserReport,handleToggleDeleteChat,
     handleExitGroup,
     handleToggleConversationMoreOptions
   }: any & { handleToggleUserReport: () => void } = useMessage("ConversationOptions");
@@ -63,6 +63,15 @@ const ConversationOptions = ({ type, participant }: Props) => {
           >
             <CircleAlert className="size-5" />
             <span> Block </span>
+          </DropdownMenuItem>
+        )}
+        {type == "dm" && (
+          <DropdownMenuItem
+            className="flex gap-1    p-2  "
+            onClick={handleToggleDeleteChat}
+          >
+            <CircleAlert className="size-5" />
+            <span> Delete Chat </span>
           </DropdownMenuItem>
         )}
         {type == "group" && me?.role != "admin" && (
