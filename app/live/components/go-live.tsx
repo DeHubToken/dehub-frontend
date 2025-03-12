@@ -461,12 +461,13 @@ export default function GoLiveForm({ categories }: Props) {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <div className="flex items-center space-x-4">
-                    <label htmlFor="enableChat">Enable Chat</label>
+                  <div className="flex w-full justify-between items-center space-x-4">
+                    <label htmlFor="enableChat" className="block w-32">Enable Chat</label>
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
                       id="enableChat"
+                      
                     />
                   </div>
                 </FormControl>
@@ -479,14 +480,15 @@ export default function GoLiveForm({ categories }: Props) {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <div className="flex items-center space-x-4">
-                    <label htmlFor="schedule">Schedule</label>
+                  <div className="flex items-center w-full justify-between space-x-4">
+                    <label htmlFor="schedule" className="block w-32">Schedule</label>
                     <Switch
                       checked={field.value}
                       onCheckedChange={(checked) => {
                         field.onChange(checked);
                         if (!checked) form.setValue("scheduledFor", undefined);
                       }}
+                      
                     />
                     {field.value && (
                       <FormField
@@ -521,7 +523,7 @@ export default function GoLiveForm({ categories }: Props) {
             )}
           />
           <div className="flex items-center space-x-4">
-            <label htmlFor="schedule">Min. Tip</label>
+            <label htmlFor="schedule" className="block w-32">Min. Tip</label>
             <FormField
               control={form.control}
               name="settings.minTip"
@@ -577,7 +579,7 @@ export default function GoLiveForm({ categories }: Props) {
           {/* Lock Content Section */}
           <div className="flex items-center justify-start gap-4">
             <div className="flex items-center gap-4">
-              <label htmlFor="lockContent">Lock Content</label>
+              <label htmlFor="lockContent"className="block w-32">Lock Content</label>
               {/* <span className="text-lg">Lock Content</span> */}
               <FormField
                 name="lockContent"
@@ -660,7 +662,7 @@ export default function GoLiveForm({ categories }: Props) {
           <div className="flex items-center justify-start gap-4">
             <div className="flex items-center gap-4">
               {/* <span className="text-lg">Pay Per View</span> */}
-              <label htmlFor="payPerView">Pay Per View</label>
+              <label htmlFor="payPerView"className="block w-32">Pay Per View</label>
 
               <FormField
                 name="payPerView"
@@ -742,7 +744,7 @@ export default function GoLiveForm({ categories }: Props) {
           {/* Bounty Section */}
           <div className="flex items-center justify-start gap-4">
             <div className="flex items-center gap-4">
-              <label htmlFor="bounty">Bounty</label>
+              <label htmlFor="bounty"className="block w-32">Bounty</label>
               {/* <span className="text-lg">Bounty</span> */}
               <FormField
                 name="bounty"
