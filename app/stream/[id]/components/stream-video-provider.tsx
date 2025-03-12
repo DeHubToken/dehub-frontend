@@ -142,7 +142,7 @@ export function StreamVideoProvider(props: { nft: NFT }) {
 
   if (isFreeStream || isAnySubscribed(nft.plansDetails) || isOwner(nft, account || "")) {
     return (
-      <div className="relative h-auto w-full overflow-hidden rounded-2xl">
+      <div className="relative h-auto w-full overflow-hidden rounded-3xl">
         {loading && <StreamVideoSkeleton />}
         <Video
           options={{

@@ -12,6 +12,7 @@ const iconUrl = "/icons/google.svg";
 
 const getChainConfig = (chains: any[], chainId: number) => {
   const index = chains.findIndex((c) => c.id == chainId);
+  console.log(chains,chains[index], index, chainId)
   return {
     chainNamespace: CHAIN_NAMESPACES.EIP155,
     chainId: "0x" + chains[index]?.id.toString(16),

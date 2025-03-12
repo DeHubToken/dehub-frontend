@@ -28,7 +28,7 @@ export function Error({ error, resetErrorBoundary, title }: ErrorBoundryProps & 
                 access it.
               </p>
 
-              {env.NODE_ENV === "development" && (
+              {env.NEXT_PUBLIC_NODE_ENV === "development" && (
                 <div className="my-4 rounded border border-gray-200 p-3 dark:border-theme-mine-shaft">
                   <pre className="text-xs text-red-600">{error.message}</pre>
                 </div>

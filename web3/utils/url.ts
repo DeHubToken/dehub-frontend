@@ -4,6 +4,10 @@ import objectToGetParams from "@/libs/utils";
 
 import { env } from "@/configs";
 
+const baseUrl = env.NEXT_PUBLIC_CDN_BASE_URL as string;
+// Remove the last slash
+const baseUrlWithoutSlash = baseUrl.replace(/\/$/, "");
+
 export function getImageUrl(url: string, width?: number, height?: number) {
   if (!url) return "";
 
@@ -17,7 +21,7 @@ export function getImageUrl(url: string, width?: number, height?: number) {
   }
 
   try {
-    return env.NEXT_PUBLIC_CDN_BASE_URL + "/images/" + fileName + q; // Use the extracted filename
+    return baseUrlWithoutSlash + "/images/" + fileName + q; // Use the extracted filename
   } catch (err) {
     return url + q; // Fallback to the original URL
   }

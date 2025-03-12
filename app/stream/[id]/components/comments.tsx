@@ -3,6 +3,7 @@
 import type { Comment, NFT } from "@/services/nfts";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,22 +12,24 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { Send } from "@/components/icons/send";
+import { VideoChat } from "@/components/icons/video-chat";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { truncate } from "@/libs/strings";
-import { createAvatarName } from "@/libs/utils";
+import { cn, createAvatarName } from "@/libs/utils";
 
 import { getAvatarUrl } from "@/web3/utils/url";
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { postComment } from "../actions";
 import { TipModal } from "./tip-modal";
-import Image from "next/image";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -84,28 +87,40 @@ function ReplyToComment(props: { comment: Comment }) {
 
   return (
     <>
-      <div className="flex size-auto items-center justify-start gap-2">
-        <Button size="sm" onClick={() => setToggleReply(true)}>
+      <div className="mt-2 flex size-auto items-center justify-start gap-2">
+        <TipModal triggerProps={{ size: "sm" }} tokenId={0} to={comment.address} />
+        <Button
+          className="h-9 rounded-full px-3"
+          size="sm"
+          onClick={() => setToggleReply((prev) => !prev)}
+        >
           Reply
         </Button>
-        <TipModal triggerProps={{ size: "sm" }} tokenId={0} to={comment.address} />
       </div>
 
       <div className="w-full" ref={parent}>
         {toggleReply && (
           <form
             action={action}
-            className="mt-2 flex h-auto w-full flex-col items-start justify-start gap-4"
+            className="mt-2 flex h-auto w-full flex-col items-start justify-start gap-4 rounded-3xl border border-theme-neutrals-800 p-4"
           >
-            <Textarea placeholder="Type your message here." {...commentForm.register("comment")} />
-            {commentForm.formState.errors.comment && (
-              <p className="text-red-500">{commentForm.formState.errors.comment.message}</p>
-            )}
-            <div className="flex size-auto items-center justify-start gap-2">
-              <SubmitButton>Reply</SubmitButton>
-              <Button size="sm" type="button" onClick={() => setToggleReply(false)}>
-                Cancel
-              </Button>
+            <div className="w-full">
+              <span className="text-sm font-semibold text-theme-neutrals-500">Replay</span>
+              <div className="mt-4 flex w-full items-center gap-2">
+                <Input
+                  className={cn(
+                    "h-11 rounded-full px-3",
+                    commentForm.formState.errors.comment &&
+                      "border-red-600 focus-within:border-red-600 focus-within:shadow-none focus:border-red-600 focus:shadow-none"
+                  )}
+                  placeholder="Type..."
+                  {...commentForm.register("comment")}
+                />
+                <Button type="button" className="h-9 rounded-full">
+                  <VideoChat />
+                </Button>
+                <SubmitButton>Reply</SubmitButton>
+              </div>
             </div>
           </form>
         )}
@@ -155,17 +170,27 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
   });
 
   return (
-    <div className="mt-10 flex h-auto w-full flex-col items-start justify-start gap-4">
-      {/* TODO: Make seperate component <CommentForm/> */}
-      <form className="flex w-full flex-col items-end gap-3" action={action}>
-        <div className="w-full">
-          <Textarea placeholder="Type your message here." {...commentForm.register("comment")} />
-          {commentForm.formState.errors.comment && (
-            <p className="text-red-500">{commentForm.formState.errors.comment.message}</p>
-          )}
-        </div>
-        <div className="flex items-center">
-          <SubmitButton className="min-w-[80px]">Comment</SubmitButton>
+    <div className="flex h-auto w-full flex-col items-start justify-start gap-4">
+      <form
+        className="my-8 w-full rounded-3xl border border-theme-neutrals-800 p-4"
+        action={action}
+      >
+        <span className="text-xs font-semibold text-theme-neutrals-500">Add your comment</span>
+        <div className="mt-4 flex items-center gap-2">
+          <Input
+            className={cn(
+              "h-11 rounded-full",
+              commentForm.formState.errors.comment &&
+                "border-red-600 focus-within:border-red-600 focus-within:shadow-none focus:border-red-600 focus:shadow-none"
+            )}
+            placeholder="Type.."
+          />
+          <Button type="button" className="h-10 rounded-full">
+            <VideoChat />
+          </Button>
+          <Button type="submit" className="h-10 rounded-full">
+            <Send />
+          </Button>
         </div>
       </form>
 
@@ -175,85 +200,88 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
         </div>
       )}
 
-      {/* TODO: Make seperate component. <CommentsList /> */}
-      <div
-        ref={parent}
-        className="flex h-auto w-full flex-col items-start justify-start gap-6 border-t border-theme-mine-shaft-dark pt-6 dark:border-theme-mine-shaft sm:gap-4 sm:pt-0"
-      >
-        {nft.comments.map((comment) => (
-          <div key={comment.id} className="flex w-full flex-col items-end justify-start gap-4">
-            <div className="flex h-auto w-full items-start justify-start gap-4 sm:p-5">
-              <Link
-                href={`/${comment.writor?.username || comment.address}`}
-                className="size-12 overflow-hidden rounded-full"
-              >
-                <Avatar>
-                  <AvatarFallback className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark">
-                    {createAvatarName(comment.writor?.username).toUpperCase()}
-                  </AvatarFallback>
-                  <AvatarImage
-                    src={getAvatarUrl(comment.writor?.avatarUrl)}
-                    alt={comment.writor?.username}
-                    className="size-full object-cover"
+      <div ref={parent} className="h-auto w-full rounded-3xl border border-theme-neutrals-800 p-4">
+        <div className="px-4">
+          <span className="text-sm font-semibold text-theme-neutrals-500">Comments</span>
+        </div>
+        <div className="mt-4 flex flex-col gap-6">
+          {nft.comments.map((comment) => (
+            <div key={comment.id} className="flex w-full flex-col items-end justify-start gap-4">
+              <div className="flex h-auto w-full items-start justify-start gap-4 sm:p-5">
+                <Link
+                  href={`/${comment.writor?.username || comment.address}`}
+                  className="overflow-hidden rounded-full"
+                >
+                  <Avatar className="size-8">
+                    <AvatarFallback className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark">
+                      {createAvatarName(comment.writor?.username).toUpperCase()}
+                    </AvatarFallback>
+                    <AvatarImage
+                      src={getAvatarUrl(comment.writor?.avatarUrl)}
+                      alt={comment.writor?.username}
+                      className="size-full object-cover"
+                    />
+                  </Avatar>
+                </Link>
+                <div className="flex h-auto w-full flex-col items-start justify-start gap-2">
+                  <p className="flex items-center gap-2 text-sm font-semibold text-theme-neutrals-200">
+                    {comment.writor?.username || truncate(comment.address, 10)}
+                    <span className="font-normal text-theme-neutrals-500">
+                      {new Date(comment.updatedAt).toDateString()}
+                    </span>
+                  </p>
+                  <p
+                    className="whitespace-pre-line text-base text-theme-neutrals-400"
+                    dangerouslySetInnerHTML={{
+                      __html: comment.content
+                    }}
                   />
-                </Avatar>
-              </Link>
-              <div className="flex h-auto w-full flex-col items-start justify-start gap-2">
-                <p className="flex items-center gap-2 text-sm font-medium">
-                  {comment.writor?.username || truncate(comment.address, 10)}
-                  <span>{new Date(comment.updatedAt).toDateString()}</span>
-                </p>
-                <p
-                  className="whitespace-pre-line text-base font-medium"
-                  dangerouslySetInnerHTML={{
-                    __html: comment.content
-                  }}
-                />
-                <ReplyToComment comment={comment} />
+                  <ReplyToComment comment={comment} />
+                </div>
               </div>
-            </div>
 
-            {comment.replyIds
-              .map((id) => nft.comments.find((c) => Number(c.id) === Number(id)))
-              .map((reply) => {
-                if (!reply) return null;
-                return (
-                  <div
-                    key={reply.id}
-                    className="flex h-auto w-full items-start justify-start gap-4 rounded-xl bg-theme-mine-shaft-dark p-3 dark:bg-theme-mine-shaft-dark sm:w-[calc(100%-5rem)]"
-                  >
-                    <Link
-                      href={`/${reply.writor?.username || reply.address}`}
-                      className="size-12 overflow-hidden rounded-full"
+              {comment.replyIds
+                .map((id) => nft.comments.find((c) => Number(c.id) === Number(id)))
+                .map((reply) => {
+                  if (!reply) return null;
+                  return (
+                    <div
+                      key={reply.id}
+                      className="flex h-auto w-full items-start justify-start gap-4 rounded-xl bg-theme-mine-shaft-dark p-3 dark:bg-theme-mine-shaft-dark sm:w-[calc(100%-5rem)]"
                     >
-                      <Avatar>
-                        <AvatarFallback className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark">
-                          {createAvatarName(comment.writor?.username).toUpperCase()}
-                        </AvatarFallback>
-                        <AvatarImage
-                          src={getAvatarUrl(reply.writor?.avatarUrl)}
-                          alt={reply.writor?.username}
-                          className="size-full object-cover"
+                      <Link
+                        href={`/${reply.writor?.username || reply.address}`}
+                        className="size-12 overflow-hidden rounded-full"
+                      >
+                        <Avatar>
+                          <AvatarFallback className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark">
+                            {createAvatarName(comment.writor?.username).toUpperCase()}
+                          </AvatarFallback>
+                          <AvatarImage
+                            src={getAvatarUrl(reply.writor?.avatarUrl)}
+                            alt={reply.writor?.username}
+                            className="size-full object-cover"
+                          />
+                        </Avatar>
+                      </Link>
+                      <div className="flex h-auto w-full flex-col items-start justify-start gap-2">
+                        <p className="flex items-center gap-2 text-sm font-medium">
+                          {reply.writor?.username || truncate(reply.address, 10)}
+                          <span>{new Date(reply.updatedAt).toDateString()}</span>
+                        </p>
+                        <p
+                          className="whitespace-pre-line text-base font-medium"
+                          dangerouslySetInnerHTML={{
+                            __html: reply.content
+                          }}
                         />
-                      </Avatar>
-                    </Link>
-                    <div className="flex h-auto w-full flex-col items-start justify-start gap-2">
-                      <p className="flex items-center gap-2 text-sm font-medium">
-                        {reply.writor?.username || truncate(reply.address, 10)}
-                        <span>{new Date(reply.updatedAt).toDateString()}</span>
-                      </p>
-                      <p
-                        className="whitespace-pre-line text-base font-medium"
-                        dangerouslySetInnerHTML={{
-                          __html: reply.content
-                        }}
-                      />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-          </div>
-        ))}
+                  );
+                })}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -262,9 +290,16 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
 function SubmitButton(props: React.ComponentProps<typeof Button>) {
   const status = useFormStatus();
   return (
-    <Button variant="gradientOne" size="md" type="submit" {...props} disabled={status.pending}>
+    <Button
+      className="h-9 px-4"
+      variant="gradientOne"
+      size="md"
+      type="submit"
+      {...props}
+      disabled={status.pending}
+    >
       {status.pending && <Spinner />}
-      {!status.pending && "Comment"}
+      {!status.pending && <Send />}
     </Button>
   );
 }

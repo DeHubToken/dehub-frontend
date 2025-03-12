@@ -30,7 +30,7 @@ export function FacebookShareButton(props: { url: string }) {
   return (
     <Button size="md" onClick={onClick} className="w-full justify-start gap-1 py-2">
       <Facebook className="size-4" />
-      <span className="text-sm">Facebook</span>
+      <span className="text-sm text-theme-neutrals-400">Facebook</span>
     </Button>
   );
 }
@@ -46,7 +46,7 @@ export function TwitterShareButton(props: { url: string }) {
   return (
     <Button size="md" onClick={onClick} className="w-full justify-start gap-1 py-2">
       <Twitter className="size-4" />
-      <span className="text-sm">Twitter</span>
+      <span className="text-sm text-theme-neutrals-400">Twitter</span>
     </Button>
   );
 }
@@ -72,7 +72,7 @@ export function CopyUrl(props: { url: string }) {
       onClick={() => copyToClipboard(url)}
     >
       <Link2 className="size-4" />
-      <span className="text-sm">Copy URL</span>
+      <span className="text-sm text-theme-neutrals-400">Copy URL</span>
     </Button>
   );
 }
@@ -90,7 +90,7 @@ export function Share() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-32">
-        <DropdownMenuLabel>Share</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-theme-neutrals-200">Share</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="flex flex-col items-start justify-start gap-1">
           <DropdownMenuItem asChild>

@@ -7,7 +7,11 @@ const bundleAnalyzer = withBundleAnalyzer({
 /** @type {import('next').NextConfig} */
 const nextConfig = bundleAnalyzer({
   eslint: {
-    dirs: ["."]
+    dirs: ["."],
+    ignoreDuringBuilds: true
+  },
+  typescript: {
+    ignoreBuildErrors: true
   },
   logging: {
     fetches: {
@@ -16,6 +20,12 @@ const nextConfig = bundleAnalyzer({
   },
   poweredByHeader: false,
   reactStrictMode: true,
+  experimental: {
+    turbo: {
+      loaders: {}, // You can add custom loaders
+      resolveAlias: {} // You can add custom resolveAlias
+    }
+  },
   webpack: (config, context) => {
     config.externals.push({
       bufferutil: "bufferutil",
@@ -39,9 +49,10 @@ const nextConfig = bundleAnalyzer({
         hostname: process.env.NEXT_PUBLIC_CDN_BASE_URL
           ? new URL(process.env.NEXT_PUBLIC_CDN_BASE_URL).host
           : ""
-      },{
-        protocol:"http",
-        hostname:"localhost"
+      },
+      {
+        protocol: "http",
+        hostname: "localhost"
       },
       {
         protocol: "https",

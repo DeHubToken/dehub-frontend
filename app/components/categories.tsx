@@ -60,10 +60,10 @@ async function CategoriesLoader(props: Props) {
         opts={{
           dragFree: true
         }}
-        className="flex items-center justify-start gap-2"
+        className="relative flex items-center justify-start gap-2"
       >
-        <CarouselPrevious className="scale-75" />
-        <CarouselContent>
+        <CarouselPrevious className="absolute left-0 top-1/2 z-[2] -translate-y-1/2" />
+        <CarouselContent className="relative z-0 pl-16">
           <CarouselItem className="basis-auto pl-4">
             <FeedRangeFilterMobile
               categories={categories}
@@ -93,7 +93,7 @@ async function CategoriesLoader(props: Props) {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselNext className="scale-75" />
+        <CarouselNext className="absolute right-0 top-1/2 z-[2] -translate-y-1/2" />
       </Carousel>
     </div>
   );
@@ -101,11 +101,11 @@ async function CategoriesLoader(props: Props) {
 
 function CategoriesSkeleton() {
   return (
-    <div className="mr-5 flex w-full items-center gap-1">
-      {Array.from({ length: 10 }).map((_, i) => (
+    <div className="mr-5 flex w-full items-center gap-4 overflow-hidden">
+      {Array.from({ length: 20 }).map((_, i) => (
         <div
           key={i}
-          className="shimmer relative h-6 flex-1 rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
+          className="shimmer relative h-8 min-w-[80px] max-w-[80px] flex-1 rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
         />
       ))}
     </div>
