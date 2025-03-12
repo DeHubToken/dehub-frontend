@@ -56,7 +56,7 @@ const liveStreamSchema = z.object({
   settings: z.object({
     enableChat: z.boolean().default(true),
     schedule: z.boolean().default(false),
-    minTip: z.string().default("1"),
+    minTip: z.string().default("1000"),
     tipDelay: z.number().default(0)
   }),
   scheduledFor: z.date().optional(),
@@ -116,7 +116,7 @@ export default function GoLiveForm({ categories }: Props) {
       description: "",
       thumbnail: "",
       categories: [],
-      settings: { enableChat: true, schedule: false, minTip: "1", tipDelay: 0 },
+      settings: { enableChat: true, schedule: false, minTip: "1000", tipDelay: 0 },
       streamInfo: {}
     }
   });
@@ -251,58 +251,58 @@ export default function GoLiveForm({ categories }: Props) {
       toast.loading("Minting NFT...", { id: toastId });
       let txReceipt;
 
-      // if (data.streamInfo?.[streamInfoKeys.isAddBounty]) {
-      //   const tokenSymbol = data.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "DHB";
-      //   const bountyToken = supportedTokens.find(
-      //     (e) => e.symbol === tokenSymbol && e.chainId === chainId
-      //   );
-      //   const tx = await mintWithBounty(
-      //     streamController,
-      //     result.createdTokenId,
-      //     result.timestamp,
-      //     result.v,
-      //     result.r,
-      //     result.s,
-      //     bountyToken,
-      //     data.bountyAmount,
-      //     data.bountyFirstViewers,
-      //     data.bountyFirstComments
-      //   );
+      if (data.streamInfo?.[streamInfoKeys.isAddBounty]) {
+        const tokenSymbol = data.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "DHB";
+        const bountyToken = supportedTokens.find(
+          (e) => e.symbol === tokenSymbol && e.chainId === chainId
+        );
+        const tx = await mintWithBounty(
+          streamController,
+          result.createdTokenId,
+          result.timestamp,
+          result.v,
+          result.r,
+          result.s,
+          bountyToken,
+          data.bountyAmount,
+          data.bountyFirstViewers,
+          data.bountyFirstComments
+        );
 
-      //   txReceipt = await tx.wait();
-      // } else {
-      //   const estimatedGasPrice = await library.getGasPrice();
-      //   const adjustedGasPrice = estimatedGasPrice.mul(110).div(100);
+        txReceipt = await tx.wait();
+      } else {
+        const estimatedGasPrice = await library.getGasPrice();
+        const adjustedGasPrice = estimatedGasPrice.mul(110).div(100);
 
-      //   const tx = await streamCollectionContract?.mint(
-      //     result.createdTokenId,
-      //     result.timestamp,
-      //     result.v,
-      //     result.r,
-      //     result.s,
-      //     [],
-      //     1000,
-      //     `${result.createdTokenId}.json`,
-      //     {
-      //       gasLimit: calculateGasMargin(
-      //         await streamCollectionContract?.estimateGas.mint(
-      //           result.createdTokenId,
-      //           result.timestamp,
-      //           result.v,
-      //           result.r,
-      //           result.s,
-      //           [],
-      //           1000,
-      //           `${result.createdTokenId}.json`
-      //         ),
-      //         GAS_MARGIN
-      //       ),
-      //       gasPrice: adjustedGasPrice
-      //     }
-      //   );
+        const tx = await streamCollectionContract?.mint(
+          result.createdTokenId,
+          result.timestamp,
+          result.v,
+          result.r,
+          result.s,
+          [],
+          1000,
+          `${result.createdTokenId}.json`,
+          {
+            gasLimit: calculateGasMargin(
+              await streamCollectionContract?.estimateGas.mint(
+                result.createdTokenId,
+                result.timestamp,
+                result.v,
+                result.r,
+                result.s,
+                [],
+                1000,
+                `${result.createdTokenId}.json`
+              ),
+              GAS_MARGIN
+            ),
+            gasPrice: adjustedGasPrice
+          }
+        );
 
-      //   txReceipt = await tx.wait();
-      // }
+        txReceipt = await tx.wait();
+      }
 
       // 3. Create live stream with minted token ID
       toast.loading("Creating live stream...", { id: toastId });
@@ -321,8 +321,8 @@ export default function GoLiveForm({ categories }: Props) {
       const response = await createLiveStream(
         {
           ...data,
-          // tokenId: Number(result.createdTokenId),
-          tokenId: 1034,
+          tokenId: Number(result.createdTokenId),
+          // tokenId: 1034,
           streamInfo: JSON.stringify(filteredStreamInfo(data.streamInfo as any))
         },
         thumbnailFile
@@ -531,7 +531,8 @@ export default function GoLiveForm({ categories }: Props) {
                     <Input
                       {...minTip}
                       type="number"
-                      placeholder="1 DHB"
+                      placeholder="1000 DHB"
+                      min={1000}
                       // value={minTip.value}
                       // defaultValue={500}
                       className="w-auto"
