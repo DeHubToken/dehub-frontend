@@ -252,24 +252,24 @@ const groups = [
         icon: <Marked />,
         url: () => "/"
       },
-      {
-        id: "buyCrypto",
-        name: "Buy Crypto",
-        icon: <BuyCrypto />,
-        url: () => "/buy-crypto",
-      },
-      {
-        id: "sellCrypto",
-        name: "Sell Crypto",
-        icon: <SellCrypto />,
-        url: () => "/sell-crypto",
-      },
-      {
-        id: "swap",
-        name: "Swap Crypto",
-        icon: <SwapCrypto />,
-        url: () => "/swap-crypto",
-      },
+      // {
+      //   id: "buyCrypto",
+      //   name: "Buy Crypto",
+      //   icon: <BuyCrypto />,
+      //   url: () => "/buy-crypto",
+      // },
+      // {
+      //   id: "sellCrypto",
+      //   name: "Sell Crypto",
+      //   icon: <SellCrypto />,
+      //   url: () => "/sell-crypto",
+      // },
+      // {
+      //   id: "swap",
+      //   name: "Swap Crypto",
+      //   icon: <SwapCrypto />,
+      //   url: () => "/swap-crypto",
+      // },
     ] as Link[]
   },
   {

@@ -46,7 +46,7 @@ export const { chains, publicClient, webSocketPublicClient } = isDevMode
         //  mainnet,
         // polygon,
         base,
-        sepolia
+        // sepolia
       ],
       providers
     );
