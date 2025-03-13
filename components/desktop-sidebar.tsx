@@ -31,13 +31,13 @@ const links: {
     id: 1,
     name: "Home",
     url: "/",
-    icon: <Home />
+    icon: <Home className="size-4" />
   },
   {
     id: 2,
     name: "Track",
     url: "/",
-    icon: <LeaderBoard />
+    icon: <LeaderBoard className="size-4" />
   },
   {
     id: 3,
@@ -55,7 +55,7 @@ const links: {
     id: 5,
     name: "Profile",
     url: "/me",
-    icon: <Profile />
+    icon: <Profile className="size-4" />
   }
 ];
 
@@ -120,13 +120,13 @@ export function MobileOnlyBottomBar() {
 
       <Suspense fallback={<div>Loading...</div>}>
         <Dialog open={openLeaderBoard} onOpenChange={setOpenLeaderBoard}>
-          <DialogContent className="h-[calc(100vh-200px)] sm:max-w-[425px] 2xl:max-w-[800px]">
+          <DialogContent className="h-[calc(100vh-200px)] max-w-full sm:max-w-[90%] 2xl:max-w-[800px]">
             <DialogHeader className="gap-2">
               <DialogTitle className="font-tanker text-4xl tracking-wide">Leaderboard</DialogTitle>
               <Separator className="bg-theme-monochrome-400/25" />
             </DialogHeader>
             {!leaderBoard.success && (
-              <div className="font-tanker text-center text-4xl tracking-wide">
+              <div className="text-center font-tanker text-4xl tracking-wide">
                 Error Fetching Leaderboard
               </div>
             )}
