@@ -358,7 +358,7 @@ export const supportedTokensForAddBounty = supportedTokens;
 
 export const supportedChainIdsForMinting = [ChainId.BSC_MAINNET, ChainId.BASE_MAINNET];
 export const supportedChainIds = isDevMode
-  ? [ChainId.BSC_TESTNET, ChainId.GORLI, ChainId.SEPOLIA]
+  ? [ChainId.BSC_TESTNET, ChainId.GORLI]
   : [ChainId.MAINNET, ChainId.BSC_MAINNET, ChainId.POLYGON_MAINNET, ChainId.BASE_MAINNET];
 export const defaultChainId = isDevMode ? ChainId.GORLI : ChainId.BSC_MAINNET;
 export const defaultTokenSymbol = "DHB";
