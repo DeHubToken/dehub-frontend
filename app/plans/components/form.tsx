@@ -44,6 +44,7 @@ import { chainIcons, ChainId, durations, SB_ADDRESS, supportedTokens } from "@/c
 
 import PublishOnChain from "./publish-on-chain";
 import { SubscriptionModalPreView } from "./subscription-preview";
+import { Input } from "@/components/ui/input";
 
 type FormValues = {
   tier: {
@@ -394,7 +395,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId, 
             <div className="w-auto sm:w-40 md:w-48">
               <div className="flex items-center justify-center gap-5 align-middle">
                 <label> Amount: </label>
-                <input
+                <Input
                   type="number"
                   min={0}
                   style={{ minWidth: 100 }}
