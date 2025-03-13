@@ -207,13 +207,13 @@ const groups = [
       {
         id: "messages",
         name: "Messages",
-        icon: <MessageCircle />,
+        icon: <MessageCircle size={16} />,
         url: () => "/messages"
       },
       {
         id: "plans",
         name: "Plans",
-        icon: <Book />,
+        icon: <Book size={16} />,
         url: () => "/plans"
       },
       {

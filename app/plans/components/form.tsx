@@ -17,6 +17,8 @@ import { Controller, FormProvider, useFieldArray, useForm, useFormContext } from
 import { toast } from "sonner";
 import { useWaitForTransaction } from "wagmi";
 
+import { ChainIconById } from "@/app/components/ChainIconById";
+
 import { BJ } from "@/components/icons/bj";
 import { CheckCircle } from "@/components/icons/check-circle";
 import CrossCircled from "@/components/icons/cross-circled";
@@ -42,7 +44,6 @@ import { chainIcons, ChainId, durations, SB_ADDRESS, supportedTokens } from "@/c
 
 import PublishOnChain from "./publish-on-chain";
 import { SubscriptionModalPreView } from "./subscription-preview";
-import { ChainIconById } from "@/app/components/ChainIconById";
 
 type FormValues = {
   tier: {
@@ -109,19 +110,21 @@ export default function Form({ plan, getTiers }: any) {
           : await createPlan(plan, account, sig, timestamp);
       if (data?.error) {
         toast.error(data?.error);
+        setIsPending(false);
         return;
       }
       if (planId) {
-        reset();
-        setIsPending(false);
         toast.success("plan Updated");
-        router.push("/plans");
-        return;
+      } else {
+        toast.success("plan created");
       }
-      toast.success("plan created");
+      router.push("/plans");
+
       setIsPending(false);
+      if (getTiers) {
+        await getTiers();
+      }
       reset();
-      await getTiers();
       return;
     } catch (error: any) {
       toast.error(error.message);
@@ -374,7 +377,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId, 
           >
             {/* Chain ID or Label */}
             <div className="w-auto flex-shrink-0  sm:w-auto sm:text-left">
-              <ChainIconById chainId={field.chainId} label={true}/>
+              <ChainIconById chainId={field.chainId} label={true} />
             </div>
 
             {/* Currency Select */}
