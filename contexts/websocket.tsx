@@ -1,11 +1,10 @@
-"use client";
-
-import { createContext, useContext, useEffect, useState } from "react";
-import io from "socket.io-client";
+"use client"
+import { createContext, useContext, useEffect, useMemo, useState, useRef } from "react";
+import io, { Socket } from "socket.io-client";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
-
 import { env } from "@/configs";
+import { getAuthObject } from "@/web3/utils/web3-actions";
 
 const SocketsContext = createContext<any>({});
 
@@ -13,47 +12,76 @@ export const useWebSockets = () => useContext(SocketsContext);
 
 export const SERVER_URL = env.NEXT_PUBLIC_SOCKET_URL;
 
-// @ts-ignore
-export const WebsocketProvider = ({ children }) => {
-  const [onlineUsers, setOnlineUsers] = useState([]);
-  const { account } = useActiveWeb3React();
+export const WebsocketProvider = ({ children }: { children: React.ReactNode }) => {
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const socketRef = useRef<Socket | null>(null);
+  const { account, library } = useActiveWeb3React();
 
   useEffect(() => {
-    console.log("SERVER_URL", SERVER_URL);
+    let isMounted = true;
 
-    const socketOptions = {
-      query: {
-        address: account
+    const setUpSockets = async () => {
+      // If we already have a socket connection, don't create a new one
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+
+      const socketOptions={
+        query: {
+          address: account
+        }, 
+      }
+
+      // TODO: update for stream chat
+      const authObject = account ? await getAuthObject(library, account as string) : {};
+      const socketIO = io(SERVER_URL, {
+        auth: authObject,
+        ...socketOptions
+      });
+
+      socketIO.on("update-online-users", (users: string[]) => {
+        if (isMounted) {
+          setOnlineUsers(users);
+        }
+      });
+
+      if (account) {
+        // socketIO.emit("join", account);
+        // socketIO.io.on("reconnect", () => {
+        //   socketIO.emit("join", account);
+        // });
+      }
+
+      if (isMounted) {
+        socketRef.current = socketIO;
+        setSocket(socketIO);
+      } else {
+        socketIO.disconnect();
       }
     };
 
-    const socket = io(SERVER_URL, socketOptions);
+    setUpSockets();
 
-    socket.on("update-online-users", (users) => {
-      setOnlineUsers(users);
-    });
+    return () => {
+      isMounted = false;
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
+  }, [account, library]);
 
-    if (account) {
-      socket.emit("join", account);
-      socket.io.on("reconnect", (attemptNumber) => {
-        socket.emit("join", account);
-      });
-
-      socket.io.on("reconnect_attempt", (attemptNumber) => {
-        socket.emit("join", account);
-      });
-
-      return () => {
-        socket.disconnect();
-      };
-    }
-  }, [account]);
-
-  const contextValue = {
+  const contextValue = useMemo(() => ({
     onlineUsers,
-    // @ts-ignore
-    isUserOnline: (address: string) => onlineUsers.includes(address?.toLowerCase())
-  };
+    isUserOnline: (address: string) => 
+      address ? onlineUsers.includes(address.toLowerCase()) : false,
+    socket: socket,
+  }), [onlineUsers, socket]);
 
-  return <SocketsContext.Provider value={contextValue}>{children}</SocketsContext.Provider>;
+  return (
+    <SocketsContext.Provider value={contextValue}>
+      {children}
+    </SocketsContext.Provider>
+  );
 };

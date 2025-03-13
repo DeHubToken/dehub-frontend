@@ -1,11 +1,10 @@
 "use client";
 
-import { CirclePlus } from "lucide-react";
-
 import { ChainIconById } from "@/app/components/ChainIconById";
 import SubscriptionGroupList from "@/app/components/join-subscription-group";
 
 import { CheckCircle } from "@/components/icons/check-circle";
+import { CirclePlus } from "@/components/icons/circle-plus";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,16 +28,16 @@ import BuySubOnChain from "./buy-sub-on-chain";
 
 /* ----------------------------------------------------------------------------------------------- */
 
-export function SubscriptionModal({ avatarImageUrl, displayName,aboutMe="", plans = [] }: any) {
+export function SubscriptionModal({ avatarImageUrl, displayName, aboutMe = "", plans = [] }: any) {
   const { account, chainId } = useActiveWeb3React();
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="gradientOne" size="sratch" className="gap-2 py-5">
-          <CirclePlus className="size-5" /> Subscribe
+        <Button className="gap-2 rounded-full">
+          <CirclePlus /> Subscribe
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[1200px] sm:rounded-3xl max-h-[80vh] overflow-auto">
+      <DialogContent className="max-h-[80vh] max-w-[1200px] overflow-auto sm:rounded-3xl">
         <DialogTitle className="sr-only">Subscribe</DialogTitle>
         <DialogDescription className="sr-only">Subscribe to my premium plans</DialogDescription>
         <DialogHeader className="flex flex-row gap-4">
@@ -51,8 +50,7 @@ export function SubscriptionModal({ avatarImageUrl, displayName,aboutMe="", plan
           <div className="flex flex-col">
             <span className="text-2xl">{displayName}</span>
             <span className="text-theme-monochrome-300 text-sm">
-            {aboutMe??"Hello! Thank you for supporting me!!"}
-
+              {aboutMe ?? "Hello! Thank you for supporting me!!"}
             </span>
           </div>
         </DialogHeader>
@@ -146,7 +144,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
             return (
               <div
                 key={chain?.chainId}
-                className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
+                className="flex w-full flex-col items-center gap-2 rounded-lg border p-4 shadow-sm"
               >
                 <h2 className="text-lg font-bold">
                   {" "}
@@ -162,7 +160,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
           return (
             <div
               key={chain.chainId}
-              className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
+              className="flex w-full flex-col items-center gap-2 rounded-lg border p-4 shadow-sm"
             >
               <h2 className="text-lg font-bold">
                 <ChainIconById chainId={chain.chainId} label={true} />

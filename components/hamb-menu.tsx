@@ -23,9 +23,9 @@ import {
   Exclusive,
   Explore,
   Game,
-  LeaderBoard,
+  LeaderBoard as LeaderBoardIcon,
   New,
-  Notification,
+  Notification as NotificationIcon,
   PPV,
   Profile,
   Treading,
@@ -41,6 +41,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { getLeaderborard } from "@/services/nfts/leaderborad";
 
 import { NotificationMobileModal } from "./modals/notification-modal";
+import { Broadcast } from "./_icons";
 
 type LinkBase = {
   id: string;
@@ -65,7 +66,7 @@ const links = [
   {
     id: "notifications",
     name: "Notifications",
-    icon: <Notification />
+    // icon: <NotificationIcon />
   },
   {
     id: "messages",
@@ -167,18 +168,38 @@ const links = [
     isLink: true
   },
   {
+    id: "live",
+    name: "Livestreams",
+    icon: <Broadcast />,
+    url: () => {
+      const query = new URLSearchParams();
+      query.set("type", "live");
+      query.delete("q");
+      const qs = query.toString();
+      return `/?${qs}`;
+    },
+    isLink: true
+  },
+  {
     id: "leaderboard",
     name: "Leaderboard",
-    icon: <Notification />,
+    icon: <LeaderBoardIcon />,
     url: null,
     isLink: false,
-    component: <Leaderboard />
+    component: <Leaderboard />,
   },
   {
     id: 7,
     name: "Upload",
     icon: <Upload />,
     url: "/upload",
+    isLink: true
+  },
+  {
+    id: 11,
+    name: "Go Live",
+    icon: <Broadcast />,
+    url: "/live",
     isLink: true
   },
   {
@@ -351,7 +372,7 @@ function Leaderboard() {
           variant="ghost"
           className="w-full justify-start gap-4 rounded-none border-b border-theme-mine-shaft-dark p-8 dark:border-theme-mine-shaft"
         >
-          <LeaderBoard />
+          <LeaderBoardIcon className="size-4" />
           <span className="text-sm">Leaderboard</span>
         </Button>
       }

@@ -133,3 +133,5 @@ dist
 .DS_Store
 
 app/ui-preview
+
+*storybook.log

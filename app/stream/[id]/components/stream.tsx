@@ -3,6 +3,7 @@ import type { NFT } from "@/services/nfts";
 import { Suspense } from "react";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import dayjs from "dayjs";
 
 import { Button } from "@/components/ui/button";
 
@@ -23,44 +24,37 @@ function StreamInfo(props: { nft: NFT }) {
   const { nft } = props;
 
   return (
-    <div className="mt-5 h-auto w-full rounded-2xl border border-theme-mine-shaft-dark bg-theme-mine-shaft-dark p-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
-      <div className="flex h-auto w-full flex-col items-start justify-start gap-4 overflow-hidden">
-        <div className="flex h-auto w-full flex-col items-start justify-between gap-2 sm:flex-row">
-          <div className="flex items-center gap-1">
-            <p className="text-sm">
-              <span className="font-semibold">Views  :</span> {nft.views || 0}
-            </p>
-          </div>
-          <p className="text-sm">
-            <span className="font-semibold">Uploaded :</span>{" "}
-            {new Date(nft.createdAt).toDateString()}{" "}
-            {getTransactionLink(nft.chainId || defaultChainId, nft.mintTxHash) && (
-              <a
-                href={getTransactionLink(nft.chainId || defaultChainId, nft.mintTxHash)!}
-                className="whitespace-pre text-white"
-                target="_blank"
-                rel="noreferrer"
-              >
-                (Full details)
-              </a>
-            )}
-          </p>
+    <div className="mb-4 mt-8 flex flex-col items-start justify-start gap-4">
+      <h1 className="w-full break-words text-2xl font-medium text-theme-neutrals-200">
+        {nft.name}
+      </h1>
+
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1">
+          <span className="text-theme-neutrals-400">Uploaded by:</span>
+          <Link
+            href={`/profile/${nft.mintername || nft.minter}`}
+            className="font-bold text-theme-neutrals-200"
+          >
+            {nft.minterDisplayName || nft.mintername}
+          </Link>
         </div>
-        <h1 className="w-full break-words text-2xl font-medium">{nft.name}</h1>
-        {/* <p className="text-sm">
-          <span className="font-semibold">Duration :</span> {secondToMinute(nft?.videoDuration)}{" "}
-          minutes
-        </p> */}
-        <p className="text-sm">
-          <span className="font-semibold">Description :</span> {nft.description}
-        </p>
-        <div className="flex w-full flex-wrap">
-          <span className="mr-1 font-semibold">Categories :</span>
-          {nft?.category?.map((i) => (
-            <Link key={i} href={`/?category=${i}&type=trends`} className="mr-1">
-              <span className="cursor-pointer">#{i}</span>
-            </Link>
-          ))}
+
+        <div className="flex items-center gap-1">
+          <span className="text-theme-neutrals-400">Date:</span>
+          <span className="text-theme-neutrals-200">
+            {dayjs(nft.createdAt).format("MMM DD, YYYY")}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <span className="text-theme-neutrals-400">Views:</span>
+          <span className="text-theme-neutrals-200">{nft.views || 0}</span>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <span className="text-theme-neutrals-400">Total Tips:</span>
+          <span className="text-theme-neutrals-200">{nft.totalTips || 0}</span>
         </div>
       </div>
     </div>
@@ -87,12 +81,16 @@ export async function Stream(props: { tokenId: number }) {
 
   const nft = response.data.result;
   return (
-    <div className="h-auto min-h-screen w-full px-4 py-20 xl:max-w-[75%] xl:flex-[0_0_75%]">
+    <div className="h-auto min-h-screen w-full flex-1 p-6">
       <Suspense fallback={<StreamVideoSkeleton />}>
         <StreamVideo tokenId={tokenId} address={user?.address as string} />
       </Suspense>
-      <ActionPanel nft={nft} tokenId={tokenId} />
       <StreamInfo nft={nft} />
+      <ActionPanel nft={nft} tokenId={tokenId} />
+      <div className="rounded-3xl bg-theme-neutrals-800 p-6">
+        <span className="text-xs text-theme-neutrals-400">Description</span>
+        <p className="mt-4 text-theme-neutrals-200">{nft.description}</p>
+      </div>
       <CommentsPanel nft={nft} tokenId={tokenId} />
     </div>
   );
@@ -106,7 +104,7 @@ async function StreamVideo(props: { tokenId: number; address: string }) {
     return null;
   }
 
-  const nft = response.data.result; 
+  const nft = response.data.result;
   // Checking for transcoding status
   const isTranscodingVideo = nft?.transcodingStatus === "on";
   if (isTranscodingVideo) {
@@ -116,10 +114,13 @@ async function StreamVideo(props: { tokenId: number; address: string }) {
   // Is free stream
   let isFreeStream = false;
 
-  if (!nft?.streamInfo)
-    isFreeStream = true;
+  if (!nft?.streamInfo) isFreeStream = true;
 
-  if (nft.streamInfo && !nft?.streamInfo[streamInfoKeys?.isLockContent] && !nft?.streamInfo[streamInfoKeys?.isPayPerView]) {
+  if (
+    nft.streamInfo &&
+    !nft?.streamInfo[streamInfoKeys?.isLockContent] &&
+    !nft?.streamInfo[streamInfoKeys?.isPayPerView]
+  ) {
     isFreeStream = true;
   }
 

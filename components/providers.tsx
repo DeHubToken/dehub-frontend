@@ -3,6 +3,7 @@
 // import dynamic from "next/dynamic";
 import { createContext, useContext, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { domAnimation, LazyMotion } from "framer-motion";
 import { useAccount } from "wagmi";
 
 import { wagmiConfig } from "@/hooks/web3-connect";
@@ -51,7 +52,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        {children}
+        <LazyMotion features={domAnimation}>{children}</LazyMotion>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
       {/* <DevTools /> */}
@@ -67,9 +68,9 @@ export const SwitchChainProvider = ({ children }: any) => {
   const [selectedChain, setSelectedChain] = useState<number | null>(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       // Check localStorage only if it's the client-side
-      const storedChain = localStorage.getItem('selectedChain');
+      const storedChain = localStorage.getItem("selectedChain");
       if (storedChain) {
         setSelectedChain(Number(storedChain));
       } else {
@@ -80,9 +81,9 @@ export const SwitchChainProvider = ({ children }: any) => {
   }, []);
 
   useEffect(() => {
-    if (selectedChain !== null && typeof window !== 'undefined') {
+    if (selectedChain !== null && typeof window !== "undefined") {
       // Update localStorage when selectedChain changes
-      localStorage.setItem('selectedChain', String(selectedChain));
+      localStorage.setItem("selectedChain", String(selectedChain));
     }
   }, [selectedChain]);
 
@@ -95,7 +96,7 @@ export const SwitchChainProvider = ({ children }: any) => {
   const contextValue = {
     switchChain,
     setSelectedChain,
-    selectedChain,
+    selectedChain
   };
 
   return (

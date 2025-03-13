@@ -163,6 +163,18 @@ const groups = [
           const qs = query.toString();
           return `/?${qs}`;
         }
+      },
+      {
+        id: "live",
+        name: "Live",
+        icon: <Broadcast />,
+        url: () => {
+          const query = new URLSearchParams();
+          query.set("type", "live");
+          query.delete("q");
+          const qs = query.toString();
+          return `/?${qs}`;
+        }
       }
     ] as Link[]
   },
@@ -179,7 +191,7 @@ const groups = [
         id: "broadcast",
         name: "Broadcast",
         icon: <Broadcast />,
-        url: () => "/"
+        url: () => "/live"
       },
       {
         id: "post",
@@ -233,6 +245,12 @@ const groups = [
         name: "Saved Feeds",
         icon: <MyUploads />,
         url: () => "?type=feed&saved"
+      },
+      {
+        id: "my-broadcasts",
+        name: "My Broadcasts",
+        icon: <Broadcast />,
+        url: () => "/"
       },
       {
         id: "my-playlists",
@@ -412,7 +430,7 @@ export function Sidebar(props: Props) {
               <Separator className="bg-theme-monochrome-400/25" />
             </DialogHeader>
             {!leaderBoard.success && (
-              <div className="font-tanker text-center text-4xl tracking-wide">
+              <div className="text-center font-tanker text-4xl tracking-wide">
                 Error Fetching Leaderboard
               </div>
             )}

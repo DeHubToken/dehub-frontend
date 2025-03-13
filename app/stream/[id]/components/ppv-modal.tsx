@@ -42,10 +42,11 @@ import { unlockPPV } from "../actions";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Props = {
   nft: NFT;
+  isLiveStream?: boolean;
 };
 
 export function PPVModal(props: Props) {
-  const { nft } = props;
+  const { nft, isLiveStream  } = props;
   const [ppvModal, setPPVModal] = useState(false);
   const { account, chainId, library } = useActiveWeb3React();
   const user = useAtomValue(userAtom);
@@ -111,7 +112,8 @@ export function PPVModal(props: Props) {
         ppvAmount,
         ppvToken,
         nft?.tokenId,
-        nft?.minter
+        // @ts-ignore
+        isLiveStream ? nft?.address : nft?.minter 
       );
       const totalItems = 40;
       const arr = Array.from({ length: totalItems }, (_, i) => i + 1);

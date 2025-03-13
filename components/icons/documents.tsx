@@ -3,25 +3,11 @@ import type { SVGProps } from "react";
 import * as React from "react";
 
 const Documents = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={17}
-    height={17}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="lucide lucide-book-open-text"
-    {...props}
-  >
-    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-    <path d="M6 8h2" />
-    <path d="M6 12h2" />
-    <path d="M16 8h2" />
-    <path d="M16 12h2" />
+  <svg viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M4.913 11h6.175q.387 0 .662-.275a.9.9 0 0 0 .275-.662.9.9 0 0 0-.275-.663.9.9 0 0 0-.662-.275H4.913a.9.9 0 0 0-.663.275.9.9 0 0 0-.275.662q0 .389.275.663a.9.9 0 0 0 .663.275m0 2.813h6.175q.387 0 .662-.276a.9.9 0 0 0 .275-.662.9.9 0 0 0-.275-.662.9.9 0 0 0-.662-.275H4.913a.9.9 0 0 0-.663.274.9.9 0 0 0-.275.663q0 .388.275.662a.9.9 0 0 0 .663.275m0 2.812h3.175q.387 0 .662-.275a.9.9 0 0 0 .275-.663.9.9 0 0 0-.275-.662.9.9 0 0 0-.662-.275H4.913a.9.9 0 0 0-.663.275.9.9 0 0 0-.275.662q0 .389.275.663a.9.9 0 0 0 .663.275M2.1 19.875q-.775 0-1.325-.55A1.8 1.8 0 0 1 .225 18V2.25q0-.775.55-1.325T2.1.375h7.125q.375 0 .719.137.344.138.606.4L15.225 5.6q.262.262.406.6t.144.712V18q0 .775-.55 1.325t-1.325.55zM9.075 6.138q0 .387.275.662a.9.9 0 0 0 .663.275H13.9L9.075 2.25z"
+      fill="currentColor"
+    />
   </svg>
 );
 export default Documents;

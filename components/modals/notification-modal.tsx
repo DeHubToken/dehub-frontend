@@ -25,7 +25,7 @@ import { getNotifications, requestMarkAsRead } from "@/services/user";
 
 import { formatNotificationDate } from "@/web3/utils/format";
 
-import { Notification } from "../icons";
+import { Notification } from "../_icons";
 import { NotificationCount } from "../notification-count";
 import { Button } from "../ui/button";
 
@@ -85,8 +85,7 @@ const NotificationModal = (props: { className?: string }) => {
             className
           )}
         >
-          <Notification />
-          <span className={cn("relative hidden lg:block")}>Notifications</span>
+          <Notification className="size-6" />
           {notifications?.length > 0 && (
             <span className="bg-theme-orange-500 absolute -right-2 top-1/2 flex size-5 -translate-y-1/2 items-center justify-center rounded-full p-1 text-xs font-bold text-white xl:right-0 xl:size-6">
               {notifications?.length}
@@ -100,12 +99,12 @@ const NotificationModal = (props: { className?: string }) => {
           <Separator className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark" />
         </DialogHeader>
         {error && (
-          <div className="font-tanker text-center text-4xl tracking-wide">
+          <div className="text-center font-tanker text-4xl tracking-wide">
             Error Fetching Notifications
           </div>
         )}
         {notifications && (
-          <div className="shadow-lg flex flex-col items-start justify-start gap-6 rounded-lg p-4">
+          <div className="flex flex-col items-start justify-start gap-6 rounded-lg p-4 shadow-lg">
             {!notifications || notifications?.length === 0 ? (
               <div className="w-full text-center text-gray-500">No notifications found</div>
             ) : (
@@ -193,7 +192,7 @@ export const NotificationMobileModal = (props: { className?: string }) => {
             className
           )}
         >
-          <Notification />
+          <Notification className="size-4" />
           Notifications
           {notifications.length > 0 && (
             <span className="bg-theme-orange-500 absolute right-4 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-full p-1 text-xs font-bold text-white">
@@ -208,12 +207,12 @@ export const NotificationMobileModal = (props: { className?: string }) => {
           <Separator className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark" />
         </DialogHeader>
         {error && (
-          <div className="font-tanker text-center text-4xl tracking-wide">
+          <div className="text-center font-tanker text-4xl tracking-wide">
             Error Fetching Notifications
           </div>
         )}
         {notifications && (
-          <div className="shadow-lg flex flex-col items-start justify-start gap-6 rounded-lg p-4">
+          <div className="flex flex-col items-start justify-start gap-6 rounded-lg p-4 shadow-lg">
             {!notifications || notifications.length === 0 ? (
               <div className="w-full text-center text-gray-500">No notifications found</div>
             ) : (
