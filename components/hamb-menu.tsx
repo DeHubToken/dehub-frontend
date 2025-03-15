@@ -223,7 +223,7 @@ const links = [
 ] as Link[];
 
 export function HambMenu() {
-  const isSmallScreen = useMediaQuery("(max-width: 960px)");
+  const isSmallScreen = useMediaQuery("(max-width: 1160px)");
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
 

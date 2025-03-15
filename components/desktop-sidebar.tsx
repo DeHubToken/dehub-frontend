@@ -63,7 +63,7 @@ export function MobileOnlyBottomBar() {
   const { account, library } = useActiveWeb3React();
   const [leaderBoard, setLeaderBoard] = useState<any>([]);
   const [openLeaderBoard, setOpenLeaderBoard] = useState(false);
-  const isSmallScreen = useMediaQuery("(max-width: 960px)");
+  const isSmallScreen = useMediaQuery("(max-width: 1160px)");
 
   function handleClick(link: {
     id: number;
@@ -148,7 +148,7 @@ export function MobileOnlyBottomBar() {
 }
 
 export function DesktopSidebar() {
-  const isSmallScreen = useMediaQuery("(max-width: 960px)");
+  const isSmallScreen = useMediaQuery("(max-width: 1160px)");
   if (isSmallScreen) return null;
   return <Sidebar />;
 }

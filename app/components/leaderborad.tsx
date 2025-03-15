@@ -25,7 +25,7 @@ export async function Leaderboard() {
   }
 
   return (
-    <div className="sticky right-0 top-[calc(var(--navbar-height)+24px)] hidden h-[calc(100vh-var(--navbar-height)-30px)] max-h-[calc(100vh-var(--navbar-height)-30px)] w-full min-w-[var(--leaderboard-width)] items-start justify-start overflow-hidden pr-3 md:flex md:flex-col md:gap-3">
+    <div className="sticky right-0 top-[calc(var(--navbar-height)+24px)] hidden h-[calc(100vh-var(--navbar-height)-30px)] max-h-[calc(100vh-var(--navbar-height)-30px)] w-full min-w-[var(--leaderboard-width)] items-start justify-start overflow-hidden pr-3 lg:flex lg:flex-col lg:gap-3">
       <div className="rounded-full bg-theme-neutrals-700 px-4 py-3 text-xs text-theme-neutrals-400">
         <span>Leaderboard</span>
       </div>

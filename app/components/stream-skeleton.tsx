@@ -1,7 +1,7 @@
 export function StreamSkeleton() {
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
-      <div className="shimmer relative min-h-[calc((275/16)*1rem)] w-full rounded-2xl bg-gray-300 dark:bg-theme-mine-shaft-dark/50">
+    <div className="flex max-h-[calc((370/16)*1rem)] min-h-[calc((370/16)*1rem)] w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
+      <div className="shimmer relative min-h-[calc((250/16)*1rem)] w-full rounded-2xl bg-gray-300 dark:bg-theme-mine-shaft-dark/50">
         <div className="absolute bottom-2 right-2 h-4 w-10 rounded-full bg-gray-500 dark:bg-zinc-900/70" />
       </div>
 
