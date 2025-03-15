@@ -27,17 +27,17 @@ export async function LiveFeed(props: FeedProps) {
   const { category, range, type, q } = props;
   const { account, library } = useActiveWeb3React();
 
-  if (!account) {
-    return (
-      <div className="flex min-h-[calc(100vh-48px-72px-32px-80px)] w-full items-center justify-center">
-        <Error error="Account not connected" title="Oops! Can not load feeds" />
-      </div>
-    );
-  }
+  // if (!account) {
+  //   return (
+  //     <div className="flex min-h-[calc(100vh-48px-72px-32px-80px)] w-full items-center justify-center">
+  //       <Error error="Account not connected" title="Oops! Can not load feeds" />
+  //     </div>
+  //   );
+  // }
 
   // change to get live feed
   const res = await getNFTs({
-    sortMode: 'live',
+    sortMode: "live",
     unit: q ? 50 : 20,
     category: category === "All" ? null : category,
     range,

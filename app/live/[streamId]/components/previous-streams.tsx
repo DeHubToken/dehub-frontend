@@ -4,12 +4,16 @@ import React, { useEffect, useState } from "react";
 
 import { StreamsContainer } from "@/app/components/streams-container";
 
+import { useMediaQuery } from "@/hooks/use-media-query";
+
 import { getNFTs } from "@/services/nfts/trending";
 
 const PreviousStreams = ({ stream }: { stream: any }) => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const isVisible = useMediaQuery("(min-width: 1280px)");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +50,8 @@ const PreviousStreams = ({ stream }: { stream: any }) => {
   if (!data || data.length === 0) {
     return <></>;
   }
+
+  if (!isVisible) return null;
 
   return (
     <div className="mt-28 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">

@@ -3,18 +3,30 @@
 import { Suspense, useEffect, useState } from "react";
 // import { cookies } from "next/headers";
 import Link from "next/link";
+import { useAtomValue } from "jotai";
 import { toast } from "sonner";
 
+import { PPVModal } from "@/app/stream/[id]/components/ppv-modal";
+
+import { ConnectButton } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 
 // import { safeParseCookie } from "@/libs/cookies";
 import { useWebSockets } from "@/contexts/websocket";
 
 import { useUser } from "@/hooks/use-user";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
+
+import { api } from "@/libs/api";
 
 import { checkIfBroadcastOwner, getLiveStream } from "@/services/broadcast/broadcast.service";
 
-import { env, StreamStatus } from "@/configs";
+import { getStreamStatus } from "@/web3/utils/validators";
+import { getSignInfo } from "@/web3/utils/web3-actions";
+
+import { userAtom } from "@/stores";
+
+import { env, streamInfoKeys, StreamStatus } from "@/configs";
 
 import { LivestreamEvents } from "../enums/livestream.enum";
 import BroadcastActionPanel from "./action-panel";
@@ -24,6 +36,26 @@ import StatusBadge from "./status-badge";
 import BroadcastStreamInfo from "./stream-info";
 import StreamerView from "./streamer-view";
 import ViewerView from "./viewer-view";
+
+const ErrorComponent = ({ children, stream }: any) => {
+  return (
+    <div className="h-auto w-full flex-1 p-6">
+      <>
+        <div
+          className="relative w-full overflow-hidden rounded-2xl border border-dashed border-gray-900 bg-black bg-opacity-50"
+          style={{ aspectRatio: "16/9" }}
+        >
+          {/* <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-xl font-medium text-white"> */}
+          <div className="h-full w-full">{children}</div>
+        </div>
+        <BroadcastActionPanel stream={stream} />
+        <BroadcastStreamInfo stream={stream} />
+        <PreviousStreams stream={stream} />
+      </>
+    </div>
+  );
+};
 
 export default function BroadcastStream(props: { streamId: string }) {
   const { streamId } = props;
@@ -35,6 +67,12 @@ export default function BroadcastStream(props: { streamId: string }) {
   const { socket } = useWebSockets();
   const { account } = useUser();
 
+  const [isFreeStream, setIsFreeStream] = useState(false);
+  const [extraDetails, setExtraDetails] = useState<any>();
+
+  const user = useAtomValue(userAtom);
+  const { library, chainId } = useActiveWeb3React();
+
   const joinStream = async () => {
     if (!account) return toast.error("Connect your wallet!");
     if (!socket || hasJoined || !stream?._id) return;
@@ -45,6 +83,7 @@ export default function BroadcastStream(props: { streamId: string }) {
     }
     socket.emit(LivestreamEvents.JoinStream, { streamId: stream._id });
     setHasJoined(true);
+    await recordView();
   };
 
   useEffect(() => {
@@ -53,6 +92,8 @@ export default function BroadcastStream(props: { streamId: string }) {
       if (response.success) {
         setStream(response.data);
         const isOwner: any = await checkIfBroadcastOwner(account?.toLowerCase(), response.data);
+        const payload = response.data;
+        setStream(payload);
         setIsBroadcastOwner(isOwner);
       } else {
         setStream({ error: response.error });
@@ -61,6 +102,24 @@ export default function BroadcastStream(props: { streamId: string }) {
 
     fetchStream();
   }, [streamId, account]);
+
+  useEffect(() => {
+    const fetchStreamStatus = async () => {
+      if (!stream) return;
+      const isFree =
+        !stream?.streamInfo ||
+        (!stream?.streamInfo?.[streamInfoKeys?.isLockContent] &&
+          !stream?.streamInfo?.[streamInfoKeys?.isPayPerView]) ||
+        isBroadcastOwner
+          ? true
+          : false;
+      const status = getStreamStatus(stream, user, chainId);
+      console.log("Status", status, stream);
+      setIsFreeStream(isFree);
+      setExtraDetails(status);
+    };
+    fetchStreamStatus();
+  }, [stream, account, user]);
 
   useEffect(() => {
     if (!socket || !stream || !account) return;
@@ -104,14 +163,21 @@ export default function BroadcastStream(props: { streamId: string }) {
       socket.off(LivestreamEvents.TipStreamer, handleTip);
     };
   }, [socket, streamId, stream, account]);
-  // console.log('stream',stream)
 
   useEffect(() => {
-    // console.log("Joining room", socket , stream?._id , account);
     if (!socket || !stream?._id || !account) return;
     socket.emit(LivestreamEvents.JoinRoom, { streamId: stream?._id });
     return () => {};
   }, [socket, stream, account]);
+
+  async function recordView() {
+    if (!account || !stream?.tokenId) return;
+
+    const result = await getSignInfo(library, account);
+    api(
+      `/record-view/${stream.tokenId}?sig=${result.sig.trim()}&timestamp=${result.timestamp}&address=${account}`
+    );
+  }
 
   const handleGoLive = () => {
     setIsPendingWebhook(true);
@@ -141,14 +207,40 @@ export default function BroadcastStream(props: { streamId: string }) {
 
   if (!account) {
     return (
-      <div className="h-auto min-h-screen w-full flex-1 p-6">
-        {!account && <p>Connect wallet to view stream</p>}
-      </div>
+      <ErrorComponent stream={stream}>
+        <div className="flex h-full flex-col items-center justify-center gap-2">
+          <p>Connect wallet to view stream</p>
+          <ConnectButton label="Connect Wallet" />
+        </div>
+      </ErrorComponent>
+    );
+  }
+
+  console.log("isFreeStream", isFreeStream, extraDetails, user);
+  if (!isFreeStream) {
+    return (
+      <ErrorComponent stream={stream}>
+        <div className="flex h-full flex-col items-center justify-center gap-2">
+          {extraDetails?.streamStatus?.isLockedWithLockContent && (
+            <p>
+              {`Please hold at least ${stream?.streamInfo?.[streamInfoKeys?.lockContentAmount]} ${stream?.streamInfo?.[streamInfoKeys?.lockContentTokenSymbol] || "DHB"} to unlock.`}
+            </p>
+          )}
+          {extraDetails?.streamStatus?.isLockedWithPPV && (
+            <>
+              <p>
+                {`Unlock PPV stream with ${stream?.streamInfo?.[streamInfoKeys?.payPerViewAmount]} ${stream?.streamInfo?.[streamInfoKeys?.payPerViewTokenSymbol]}`}
+              </p>
+              <PPVModal nft={stream} />
+            </>
+          )}
+        </div>
+      </ErrorComponent>
     );
   }
 
   return (
-    <div className="h-auto min-h-screen w-full flex-1 p-6">
+    <div className="h-auto w-full flex-1 p-6">
       {stream.status === StreamStatus.SCHEDULED && !isStartingNw && (
         <div
           className="relative w-full overflow-hidden rounded-2xl bg-black"
@@ -221,39 +313,3 @@ export default function BroadcastStream(props: { streamId: string }) {
     </div>
   );
 }
-
-/*
-
-    <div className="h-auto min-h-screen w-full px-4 xl:max-w-[75%] xl:flex-[0_0_75%]">
-      {!account ? (
-        <div>Connect wallet to view stream</div>
-      ) : (
-        <>
-          <Suspense fallback={<div>Loading Stream...</div>}>
-
-
-
-            {stream.status === StreamStatus.ENDED && <ReplayPlayer streamId={streamId} />}
-          </Suspense>
-
-          <BroadcastActionPanel stream={stream} />
-          <BroadcastStreamInfo stream={stream} />
-          <PreviousStreams stream={stream} />
-        </>
-      )}
-    </div>
-
-*/
-
-/*
- <Suspense fallback={<StreamVideoSkeleton />}>
-        <StreamVideo tokenId={tokenId} address={user?.address as string} />
-      </Suspense>
-      <StreamInfo nft={nft} />
-      <ActionPanel nft={nft} tokenId={tokenId} />
-      <div className="rounded-3xl bg-theme-neutrals-800 p-6">
-        <span className="text-xs text-theme-neutrals-400">Description</span>
-        <p className="mt-4 text-theme-neutrals-200">{nft.description}</p>
-      </div>
-      <CommentsPanel nft={nft} tokenId={tokenId} />
-*/

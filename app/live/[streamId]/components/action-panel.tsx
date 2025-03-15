@@ -7,6 +7,8 @@ import { ThumbsUp } from "lucide-react";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 
+import UserProfileCard from "@/app/components/user-profile-card";
+import { ClaimAsCommentor, ClaimAsViewer } from "@/app/stream/[id]/components/claims";
 import { Share } from "@/app/stream/[id]/components/share";
 import { LikeButton } from "@/app/stream/[id]/components/stream-actions";
 import TipModal from "@/app/stream/[id]/components/tip-modal";
@@ -38,7 +40,8 @@ export default function BroadcastActionPanel(props: { stream: any }) {
   const { account, chainId, library, user } = useUser();
 
   const likeStream = async () => {
-    if (!socket || !account || !stream) throw new Error("WebSocket is not connected.");
+    if (!account) return toast.error("Connect your wallet!");
+    if (!socket || !stream) throw new Error("WebSocket is not connected.");
     try {
       const signData = await getSignInfo(library, account);
       const response = await likeLiveStream(stream._id, {
@@ -105,7 +108,8 @@ export default function BroadcastActionPanel(props: { stream: any }) {
       <h1 className="w-full break-words text-2xl font-medium text-theme-neutrals-200">
         {stream.title}
       </h1>
-      <div className="flex items-center gap-4">
+
+      <div className="flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-1">
           <span className="text-theme-neutrals-400">Broadcast by:</span>
           <Link
@@ -130,7 +134,7 @@ export default function BroadcastActionPanel(props: { stream: any }) {
 
         <div className="flex items-center gap-1">
           <span className="text-theme-neutrals-400">Total Tips:</span>
-          <span className="text-theme-neutrals-200">{stream.totalTips || 0}</span>
+          <span className="text-theme-neutrals-200">{stream.totalTips || 0} DHB</span>
         </div>
 
         {stream.status === StreamStatus.LIVE && (
@@ -148,6 +152,8 @@ export default function BroadcastActionPanel(props: { stream: any }) {
             {stream.likes || 0}
           </Button>
           <GiftModal tokenId={0} to={stream.address} stream={stream} />
+          <ClaimAsViewer nft={stream} tokenId={stream.tokenId || 0} />
+          <ClaimAsCommentor nft={stream} tokenId={stream.tokenId || 0} />
         </div>
 
         <div className="flex size-auto items-center justify-start gap-5">

@@ -165,7 +165,7 @@ const groups = [
         id: "broadcast",
         name: "Broadcast",
         icon: <Broadcast className="size-6" />,
-        url: () => "/"
+        url: () => "/live"
       },
       {
         id: "post",

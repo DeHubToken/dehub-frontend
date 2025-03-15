@@ -11,7 +11,7 @@ import { ThemeSwitcher } from "./theme-switcher";
 
 /* ----------------------------------------------------------------------------------------------- */
 
-const ConnectButton = dynamic(() => import("./connect-button"), {
+export const ConnectButton = dynamic(() => import("./connect-button"), {
   ssr: false,
   loading: () => (
     <div className="flex size-auto items-center justify-center">

@@ -44,6 +44,7 @@ export function StreamsContainer(props: Props) {
   const [data, setData] = useState(initialData);
   const [fetchingMore, setFetchingMore] = useState(false);
   const [canFetchMore, setCanFetchMore] = useState(true);
+  const [isLive, setIsLive] = useState(type === "live");
   const { isPending } = useStreamProvider("FeedsList");
 
   const { infiniteScrollRef } = useInfiniteScroll({
@@ -100,9 +101,13 @@ export function StreamsContainer(props: Props) {
 
   return (
     <div className="relative grid h-auto w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
-      {data.map((item, index) => (
-        <StreamItem nft={item} index={index} key={item.tokenId + "--" + index} />
-      ))}
+      {data?.map((item, index) =>
+        isLive ? (
+          <LiveStreamItem stream={item} key={item?._id} data-is-last={index === data.length - 1} />
+        ) : (
+          <StreamItem nft={item} index={index % 20} key={item.tokenId + "--" + index} />
+        )
+      )}
 
       {!fetchingMore && <InfiniteScrollScreenOffset ref={infiniteScrollRef} />}
     </div>

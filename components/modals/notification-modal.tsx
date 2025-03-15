@@ -192,7 +192,7 @@ export const NotificationMobileModal = (props: { className?: string }) => {
             className
           )}
         >
-          <Notification />
+          <Notification className="size-4" />
           Notifications
           {notifications.length > 0 && (
             <span className="bg-theme-orange-500 absolute right-4 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-full p-1 text-xs font-bold text-white">
