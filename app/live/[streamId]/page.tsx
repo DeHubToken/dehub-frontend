@@ -16,7 +16,7 @@ export default async function Page(props: Props) {
   const userCookie = cookie.get("user_information");
 
   return (
-    <div className="container mx-auto h-auto min-h-screen w-full flex-col items-start justify-start xl:flex xl:flex-row xl:justify-between">
+    <div className="container mx-auto hidden h-auto min-h-screen w-full flex-col items-start justify-start xl:flex xl:flex-row xl:justify-between">
       <ErrorBoundary FallbackComponent={Error}>
         <BroadcastStream streamId={streamId} />
       </ErrorBoundary>

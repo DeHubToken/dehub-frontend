@@ -37,8 +37,8 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 
 import { getLeaderborard } from "@/services/nfts/leaderborad";
 
-import { NotificationMobileModal } from "./modals/notification-modal";
 import { Broadcast } from "./_icons";
+import { NotificationMobileModal } from "./modals/notification-modal";
 
 type LinkBase = {
   id: string;
@@ -56,13 +56,13 @@ const links = [
   {
     id: "profile",
     name: "Profile",
-    icon: <Profile />,
+    icon: <Profile className="size-4" />,
     url: "/me",
     isLink: true
   },
   {
     id: "notifications",
-    name: "Notifications",
+    name: "Notifications"
     // icon: <NotificationIcon />
   },
   {
@@ -89,7 +89,7 @@ const links = [
   {
     id: "ppv",
     name: "PPV",
-    icon: <PPV />,
+    icon: <PPV className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "ppv");
@@ -102,7 +102,7 @@ const links = [
   {
     id: "watch2earn",
     name: "Watch2Earn",
-    icon: <Bounty />,
+    icon: <Bounty className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "bounty");
@@ -115,7 +115,7 @@ const links = [
   {
     id: "exclusive",
     name: "Exclusive",
-    icon: <Exclusive />,
+    icon: <Exclusive className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "locked");
@@ -128,7 +128,7 @@ const links = [
   {
     id: "new",
     name: "New",
-    icon: <New />,
+    icon: <New className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "new");
@@ -141,7 +141,7 @@ const links = [
   {
     id: "trending",
     name: "Most Viewed",
-    icon: <Treading />,
+    icon: <Treading className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "trends");
@@ -154,7 +154,7 @@ const links = [
   {
     id: "likedvideos",
     name: "Liked Videos",
-    icon: <Game />,
+    icon: <Game className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "liked");
@@ -167,7 +167,7 @@ const links = [
   {
     id: "live",
     name: "Livestreams",
-    icon: <Broadcast />,
+    icon: <Broadcast className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "live");
@@ -180,50 +180,50 @@ const links = [
   {
     id: "leaderboard",
     name: "Leaderboard",
-    icon: <LeaderBoardIcon />,
+    icon: <LeaderBoardIcon className="size-4" />,
     url: null,
     isLink: false,
-    component: <Leaderboard />,
+    component: <Leaderboard />
   },
   {
     id: 7,
     name: "Upload",
-    icon: <Upload />,
+    icon: <Upload className="size-4" />,
     url: "/upload",
     isLink: true
   },
   {
     id: 11,
     name: "Go Live",
-    icon: <Broadcast />,
+    icon: <Broadcast className="size-4" />,
     url: "/live",
     isLink: true
   },
   {
     id: "explore",
     name: "Explore",
-    icon: <Explore />,
+    icon: <Explore className="size-4" />,
     url: "/",
     isLink: true
   },
   {
     id: "documents",
     name: "Documents",
-    icon: <Documents />,
+    icon: <Documents className="size-4" />,
     url: "https://dehub.gitbook.io",
     isLink: true
   },
   {
     id: "contact",
     name: "Contact",
-    icon: <Contact />,
+    icon: <Contact className="size-4" />,
     url: "https://t.me/dehub",
     isLink: true
   }
 ] as Link[];
 
 export function HambMenu() {
-  const isSmallScreen = useMediaQuery("(max-width: 960px)");
+  const isSmallScreen = useMediaQuery("(max-width: 1160px)");
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -260,9 +260,9 @@ export function HambMenu() {
               : "translate-x-full")
           }
         >
-          <div className="side_menu h-screen w-full overflow-y-scroll py-10 mr-2">
+          <div className="side_menu mr-2 h-screen w-full overflow-y-auto py-10">
             <div className="flex size-full flex-col items-start justify-start">
-              {links.map((link,key) => {
+              {links.map((link, key) => {
                 if (link.id === "notifications") {
                   return (
                     <NotificationMobileModal

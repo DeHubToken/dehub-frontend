@@ -5,6 +5,7 @@ import { memo, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { EyeOpenIcon, HeartFilledIcon } from "@radix-ui/react-icons";
+import { AnimatePresence, m as motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { CiMenuKebab } from "react-icons/ci";
 
@@ -27,6 +28,7 @@ import { getAvatarUrl } from "@/web3/utils/url";
 
 import { LikeButton } from "../stream/[id]/components/stream-actions";
 import { ImageWithLoader } from "./nft-image";
+import { StreamSkeleton } from "./stream-skeleton";
 
 type Props = {
   nft: any;
@@ -39,9 +41,13 @@ function _StreamItem(props: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isHidden, setIsHidden] = useState<boolean>(nft?.isHidden);
   const [isHovered, setIsHovered] = useState(false);
+
   const { isUserOnline } = useWebSockets();
   const { account } = useActiveWeb3React();
   const { theme } = useTheme();
+
+  const shouldShowLoading = index < 30;
+  const [isLoading, setIsLoading] = useState(shouldShowLoading);
 
   const updateVisibility = async (id: string) => {
     try {
@@ -56,13 +62,42 @@ function _StreamItem(props: Props) {
     setIsOpen(!isOpen);
   };
 
+  useEffect(() => {
+    let id: NodeJS.Timeout;
+    if (shouldShowLoading) {
+      id = setTimeout(() => {
+        setIsLoading(false);
+      }, index * 100);
+    }
+
+    return () => {
+      if (id) {
+        clearTimeout(id);
+      }
+    };
+  }, []);
+
   return (
-    <div className="relative max-h-[calc((370/16)*1rem)] min-h-[calc((370/16)*1rem)]">
+    <div className="relative">
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            key="skeleton"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-0 z-10"
+          >
+            <StreamSkeleton />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div
         {...rest}
-        className="relative flex h-auto w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
+        className="relative flex h-auto max-h-[calc((370/16)*1rem)] min-h-[calc((370/16)*1rem)] w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
       >
-        <div className="relative flex w-full overflow-hidden rounded-2xl pt-[56.25%] text-sm font-semibold">
+        <div className="relative flex max-h-[calc((250/16)*1rem)] min-h-[calc((250/16)*1rem)] w-full overflow-hidden rounded-2xl text-sm font-semibold">
           <Link
             href={`/stream/${nft.tokenId}`}
             className="next__link absolute left-0 top-0 size-full overflow-hidden rounded-2xl"

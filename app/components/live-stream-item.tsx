@@ -23,8 +23,8 @@ import { formatNumber } from "@/web3/utils/format";
 import { getAvatarUrl } from "@/web3/utils/url";
 
 import { env } from "@/configs";
-import StatusBadge from "../live/[streamId]/components/status-badge";
 
+import StatusBadge from "../live/[streamId]/components/status-badge";
 
 type Props = {
   stream: any;
@@ -78,7 +78,8 @@ export function LiveStreamItem({ stream, isOwner, ...rest }: Props) {
         {stream?.streamInfo?.isPayPerView && (
           <div className="absolute -right-20 top-8 z-10 flex w-60 rotate-45 items-center justify-center gap-1 bg-classic-blue px-12 py-0.5 text-center text-xs text-white">
             <span>
-              PPV: {stream.streamInfo.payPerViewAmount || 0} {stream.streamInfo.payPerViewTokenSymbol}
+              PPV: {stream.streamInfo.payPerViewAmount || 0}{" "}
+              {stream.streamInfo.payPerViewTokenSymbol}
             </span>
             <Image
               src="/icons/tokens/DHB.png"
@@ -115,7 +116,11 @@ export function LiveStreamItem({ stream, isOwner, ...rest }: Props) {
         <div className="flex items-center gap-2">
           <Link href={`/${stream.account.username || stream.address}`}>
             <Avatar>
-              <AvatarFallback>{createAvatarName(stream.account.displayName || stream.account.username || stream.address)}</AvatarFallback>
+              <AvatarFallback>
+                {createAvatarName(
+                  stream.account.displayName || stream.account.username || stream.address
+                )}
+              </AvatarFallback>
               <AvatarImage src={getAvatarUrl(stream.account.avatarImageUrl)} />
             </Avatar>
           </Link>
@@ -124,7 +129,10 @@ export function LiveStreamItem({ stream, isOwner, ...rest }: Props) {
             <p className="truncate text-sm font-bold">{truncate(stream.title, 40)}</p>
             <div className="flex items-start">
               <Link href={`/${stream.account.username || stream.address}`} className="text-[11px]">
-                {truncate(stream.account.displayName || stream.account.username || stream.address, 26)}
+                {truncate(
+                  stream.account.displayName || stream.account.username || stream.address,
+                  26
+                )}
               </Link>
             </div>
             <span className="text-[11px] text-gray-500">

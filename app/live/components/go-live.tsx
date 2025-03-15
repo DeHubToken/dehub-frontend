@@ -555,7 +555,7 @@ export default function GoLiveForm({ categories }: Props) {
               )}
             />
           </div>
-          {/* 
+          {/*
           Change to a stream delay
           <div className="flex items-center space-x-4">
             <label htmlFor="schedule">Tip Delay</label>

@@ -37,7 +37,7 @@ export async function LiveFeed(props: FeedProps) {
 
   // change to get live feed
   const res = await getNFTs({
-    sortMode: 'live',
+    sortMode: "live",
     unit: q ? 50 : 20,
     category: category === "All" ? null : category,
     range,

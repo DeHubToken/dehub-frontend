@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useAtomValue } from "jotai";
 import { toast } from "sonner";
 
+import { PPVModal } from "@/app/stream/[id]/components/ppv-modal";
+
 import { ConnectButton } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 
@@ -34,7 +36,6 @@ import StatusBadge from "./status-badge";
 import BroadcastStreamInfo from "./stream-info";
 import StreamerView from "./streamer-view";
 import ViewerView from "./viewer-view";
-import { PPVModal } from "@/app/stream/[id]/components/ppv-modal";
 
 const ErrorComponent = ({ children, stream }: any) => {
   return (
@@ -63,12 +64,12 @@ export default function BroadcastStream(props: { streamId: string }) {
   const [hasJoined, setHasJoined] = useState<any>(false);
   const [isBroadcastOwner, setIsBroadcastOwner] = useState(false);
   const [isPendingWebhook, setIsPendingWebhook] = useState(false);
+  const { socket } = useWebSockets();
+  const { account } = useUser();
 
   const [isFreeStream, setIsFreeStream] = useState(false);
   const [extraDetails, setExtraDetails] = useState<any>();
 
-  const { socket } = useWebSockets();
-  const { account } = useUser();
   const user = useAtomValue(userAtom);
   const { library, chainId } = useActiveWeb3React();
 
@@ -89,9 +90,10 @@ export default function BroadcastStream(props: { streamId: string }) {
     const fetchStream = async () => {
       const response = await getLiveStream(streamId);
       if (response.success) {
+        setStream(response.data);
+        const isOwner: any = await checkIfBroadcastOwner(account?.toLowerCase(), response.data);
         const payload = response.data;
-        setStream(payload)
-        const isOwner: any = await checkIfBroadcastOwner(account?.toLowerCase(), payload);
+        setStream(payload);
         setIsBroadcastOwner(isOwner);
       } else {
         setStream({ error: response.error });
@@ -221,14 +223,14 @@ export default function BroadcastStream(props: { streamId: string }) {
         <div className="flex h-full flex-col items-center justify-center gap-2">
           {extraDetails?.streamStatus?.isLockedWithLockContent && (
             <p>
-              {`Please hold at least ${stream?.streamInfo?.[streamInfoKeys?.lockContentAmount]} ${stream?.streamInfo?.[streamInfoKeys?.lockContentTokenSymbol] || 'DHB'} to unlock.`}
+              {`Please hold at least ${stream?.streamInfo?.[streamInfoKeys?.lockContentAmount]} ${stream?.streamInfo?.[streamInfoKeys?.lockContentTokenSymbol] || "DHB"} to unlock.`}
             </p>
           )}
           {extraDetails?.streamStatus?.isLockedWithPPV && (
             <>
-            <p>
-              {`Unlock PPV stream with ${stream?.streamInfo?.[streamInfoKeys?.payPerViewAmount]} ${stream?.streamInfo?.[streamInfoKeys?.payPerViewTokenSymbol]}`}
-            </p>
+              <p>
+                {`Unlock PPV stream with ${stream?.streamInfo?.[streamInfoKeys?.payPerViewAmount]} ${stream?.streamInfo?.[streamInfoKeys?.payPerViewTokenSymbol]}`}
+              </p>
               <PPVModal nft={stream} />
             </>
           )}

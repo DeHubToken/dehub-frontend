@@ -20,7 +20,7 @@ export default async function Page(props: Props) {
   }
 
   return (
-    <div className="container mx-auto flex h-auto min-h-screen flex-col items-start justify-start xl:flex-row xl:justify-between">
+    <div className="mx-auto flex h-auto min-h-screen flex-col items-start justify-start sm:container xl:flex-row xl:justify-between">
       <ErrorBoundary FallbackComponent={Error}>
         <Suspense fallback={<div>Loading...</div>}>
           <Stream tokenId={_id} />

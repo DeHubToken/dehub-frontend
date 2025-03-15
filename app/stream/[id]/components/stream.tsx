@@ -29,7 +29,7 @@ function StreamInfo(props: { nft: NFT }) {
         {nft.name}
       </h1>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-1">
           <span className="text-theme-neutrals-400">Uploaded by:</span>
           <Link

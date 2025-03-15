@@ -103,17 +103,10 @@ export function StreamsContainer(props: Props) {
     <div className="relative grid h-auto w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
       {data?.map((item, index) =>
         isLive ? (
-          <LiveStreamItem
-            stream={item}
-            key={item?._id}
-            data-is-last={index === data.length - 1}
-          />
+          <LiveStreamItem stream={item} key={item?._id} data-is-last={index === data.length - 1} />
         ) : (
-          <StreamItem
-            nft={item}
-            index={index % 20}
-            key={item.tokenId + "--" + index}
-          />)
+          <StreamItem nft={item} index={index % 20} key={item.tokenId + "--" + index} />
+        )
       )}
 
       {!fetchingMore && <InfiniteScrollScreenOffset ref={infiniteScrollRef} />}
