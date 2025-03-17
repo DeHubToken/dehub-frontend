@@ -210,7 +210,7 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
               <div className="flex h-auto w-full items-start justify-start gap-4 sm:p-5">
                 <Link
                   href={`/${comment.writor?.username || comment.address}`}
-                  className="overflow-hidden rounded-full"
+                  className="size-8 overflow-hidden rounded-full sm:size-auto"
                 >
                   <Avatar className="size-8">
                     <AvatarFallback className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark">
@@ -223,7 +223,7 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
                     />
                   </Avatar>
                 </Link>
-                <div className="flex h-auto w-full flex-col items-start justify-start gap-2">
+                <div className="flex h-auto w-[calc(100%-48px)] flex-col items-start justify-start gap-2 sm:w-full">
                   <p className="flex items-center gap-2 text-sm font-semibold text-theme-neutrals-200">
                     {comment.writor?.username || truncate(comment.address, 10)}
                     <span className="font-normal text-theme-neutrals-500">

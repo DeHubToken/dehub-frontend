@@ -30,6 +30,12 @@ import { LikeButton } from "../stream/[id]/components/stream-actions";
 import { ImageWithLoader } from "./nft-image";
 import { StreamSkeleton } from "./stream-skeleton";
 
+function secondsToMinutes(seconds) {
+  let minutes = Math.floor(seconds / 60);
+  let sec = Math.floor(seconds % 60);
+  return `${String(minutes).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+}
+
 type Props = {
   nft: any;
   isOwner?: Boolean;
@@ -95,7 +101,7 @@ function _StreamItem(props: Props) {
       </AnimatePresence>
       <div
         {...rest}
-        className="relative flex h-auto max-h-[calc((370/16)*1rem)] min-h-[calc((370/16)*1rem)] w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
+        className="relative flex h-auto w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
       >
         <div className="relative flex max-h-[calc((250/16)*1rem)] min-h-[calc((250/16)*1rem)] w-full overflow-hidden rounded-2xl text-sm font-semibold">
           <Link
@@ -173,13 +179,19 @@ function _StreamItem(props: Props) {
               />
             </div>
           )}
+
+          <div className="absolute bottom-3 right-3">
+            <p className="rounded-full bg-[#010305]/15 p-1 px-4 text-sm backdrop-blur-md">
+              {nft?.videoDuration ? secondsToMinutes(nft?.videoDuration) : "00:00"}
+            </p>
+          </div>
         </div>
 
         <div className="flex h-auto w-full flex-col items-start justify-start gap-1 p-4">
-          <div className="h-auto w-full px-2">
-            <div className="flex size-auto items-center justify-start gap-2">
+          <div className="h-auto w-full">
+            <div className="flex w-full items-center justify-start gap-2">
               <Link href={`/profile/${nft.mintername || nft.minter}`}>
-                <Avatar className="size-8">
+                <Avatar className="size-10">
                   <AvatarFallback>{createAvatarName(nft.minterDisplayName)}</AvatarFallback>
                   <AvatarImage src={getAvatarUrl(nft.minterAvatarUrl)} />
                 </Avatar>
@@ -187,13 +199,13 @@ function _StreamItem(props: Props) {
 
               <div className="flex w-full items-center justify-between">
                 <div className="flex size-auto flex-col items-start justify-start">
-                  <p className="text-xs font-bold text-theme-neutrals-200">
+                  <p className="text-sm font-bold text-theme-neutrals-200">
                     {truncate(nft.name, 26)}
                   </p>
-                  <div className="mt-1 flex items-start gap-1">
+                  <div className="mt-1 flex items-start gap-1.5">
                     <Link
                       href={`/profile/${nft.mintername || nft.minter}`}
-                      className="text-[10px] text-neutral-400"
+                      className="text-xs text-neutral-400"
                     >
                       {truncate(nft.minterDisplayName || nft.mintername || nft.minter, 26)}
                     </Link>
