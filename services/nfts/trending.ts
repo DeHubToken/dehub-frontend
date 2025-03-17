@@ -9,6 +9,7 @@ type SearchParams = {
   sortMode?: string;
   sort?:string;
   minter?: string;
+  owner?: string;
   search?: string;
   range?: string | number;
   category?: string | null;
@@ -99,7 +100,8 @@ export async function getNFTs(params?: SearchParams) {
       address: params?.address,
       page: params?.page,
       sortMode: params?.sortMode,
-      minter: params?.minter
+      minter: params?.minter,
+      owner: params?.owner
     })
   );
   const url = `/search_nfts${query}`;

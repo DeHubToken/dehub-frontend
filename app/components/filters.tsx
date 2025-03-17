@@ -87,7 +87,10 @@ export function FeedRangeFilterMobile(props: Props) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild className="flex">
-        <Badge variant="default" className="cursor-pointer gap-1 px-4 text-[11px]">
+        <Badge
+          variant="default"
+          className="h-8 cursor-pointer gap-1 bg-neutral-800 px-4 py-2 text-[11px] text-theme-neutrals-400 dark:bg-neutral-800 dark:text-theme-neutrals-400"
+        >
           <ListFilter className="size-3" /> Sort
         </Badge>
       </SheetTrigger>

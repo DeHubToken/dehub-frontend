@@ -29,25 +29,25 @@ export function SearchBox(props: { category?: string; type?: string; range?: str
   const { startTransition, isPending } = useStreamProvider("SearchBox");
 
   const action: () => void = () => {
-    startTransition(() => {
-      search({ category, type, range, q: text });
-    });
+    if (text.length > 0) {
+      startTransition(() => {
+        search({ category, type, range, q: text });
+      });
+    }
   };
 
   return (
-    <form className="relative hidden w-full md:block" action={action}>
+    <form className="relative hidden w-full md:flex md:items-center" action={action}>
       <input
         type="text"
         name="search"
-        className="block h-12 w-full rounded-full border-none bg-theme-mine-shaft-dark px-6 py-2 text-sm outline-none dark:bg-theme-mine-shaft placeholder:dark:text-gray-400"
+        className="block h-10 w-full rounded-full border-none bg-theme-neutrals-800 px-6 py-2 text-sm outline-none"
         placeholder="Search"
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
       <Button
-        variant="gradientOne"
-        size="icon_sm"
-        className="absolute right-3 top-1/2 -translate-y-1/2"
+        className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full bg-theme-neutrals-700"
         type="submit"
         disabled={isPending}
       >

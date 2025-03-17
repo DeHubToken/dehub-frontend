@@ -9,6 +9,7 @@ import { Leaderboard, LeaderboardSkeleton } from "./components/leaderborad";
 import { LikedFeed } from "./components/liked";
 import { Stream } from "./components/stream";
 import { StreamLoader } from "./components/stream-skeleton";
+import { LiveFeed } from "./live/components/live";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -34,8 +35,8 @@ console.log("searchParams",props.searchParams);
   const key = category + "-" + range + "-" + type + "-" + q;
 
   return (
-    <main className="flex h-auto min-h-screen w-full items-start justify-between">
-      <div className="h-auto min-h-screen w-full px-6 py-20 md:max-w-[75%] md:flex-[0_0_75%]">
+    <div className="flex h-auto min-h-screen w-full items-start justify-between">
+      <div className="h-auto min-h-screen w-full max-w-full flex-1 px-6 lg:min-w-[calc(100%-var(--leaderboard-width))] lg:max-w-[calc(100%-var(--leaderboard-width))]">
         <Categories
           title={type.toUpperCase()}
           category={category}
@@ -53,6 +54,15 @@ console.log("searchParams",props.searchParams);
                 category={category}
                 range={range}
                 sort={sort}
+                type={type}
+                q={q}
+              />
+            )}
+            {type === "live" && (
+              <LiveFeed
+                title={type.toUpperCase()}
+                category={category}
+                range={range}
                 type={type}
                 q={q}
               />
@@ -77,7 +87,7 @@ console.log("searchParams",props.searchParams);
              q={q}
            />
             )}
-            {type !== "feed" &&type!=="reports"&& type !== "liked" && (
+            {type !== "feed" && type !== "reports" && type !== "liked" && type !== "live" && (
               <Stream
                 title={type.toUpperCase()}
                 category={category}
@@ -94,6 +104,6 @@ console.log("searchParams",props.searchParams);
       <Suspense fallback={<LeaderboardSkeleton />}>
         <Leaderboard />
       </Suspense>
-    </main>
+    </div>
   );
 }

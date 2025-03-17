@@ -264,7 +264,7 @@ export function UploadForm(props: Props) {
         }
         if (data.streamInfo?.[streamInfoKeys?.isAddBounty]) {
           try {
-            const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
+            const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "DHB";
             const bountyToken = supportedTokens.find(
               (e) => e.symbol === tokenSymbol && e.chainId === chainId
             );
