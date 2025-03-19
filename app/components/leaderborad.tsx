@@ -26,8 +26,8 @@ export async function Leaderboard() {
 
   return (
     <div className="sticky right-0 top-[calc(var(--navbar-height)+24px)] hidden h-[calc(100vh-var(--navbar-height)-30px)] max-h-[calc(100vh-var(--navbar-height)-30px)] w-full min-w-[var(--leaderboard-width)] items-start justify-start overflow-hidden pr-3 lg:flex lg:flex-col lg:gap-3">
-      <div className="rounded-full bg-theme-neutrals-700 px-4 py-3 text-xs text-theme-neutrals-400">
-        <span>Leaderboard</span>
+      <div className="rounded-full bg-theme-neutrals-700 px-5 py-2 text-xs text-theme-neutrals-400">
+        <span className="text-base">Leaderboard</span>
       </div>
       <div className="size-full rounded-3xl border border-neutral-800 p-3">
         <div className="flex size-auto items-center justify-between px-3">
