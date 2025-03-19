@@ -1,9 +1,13 @@
 "use client";
+
 import { Upload } from "lucide-react";
 import { useDropzone } from "react-dropzone";
+
 import { Button } from "@/components/ui/button";
+
 import { getVideoCover } from "@/libs/canvas-preview";
 import { cn } from "@/libs/utils";
+
 const VideoUploadTab = ({
   videoFile,
   setVideoPreview,
@@ -57,7 +61,7 @@ const VideoUploadTab = ({
       <div
         {...getRootProps()}
         className={cn(
-          "relative h-60 w-full rounded-3xl border border-dashed border-gray-200 bg-theme-mine-shaft-dark hover:cursor-pointer dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark lg:size-full",
+          "relative h-60 w-full rounded-3xl border border-dashed border-gray-200 border-theme-mine-shaft bg-theme-mine-shaft-dark hover:cursor-pointer lg:size-full",
           isDragAccept ? "border border-green-500" : "",
           isDragReject ? "border border-red-500" : ""
         )}
@@ -65,7 +69,7 @@ const VideoUploadTab = ({
         {!videoPreview && (
           <>
             <div className="absolute left-0 top-0 flex size-full flex-col items-center justify-center gap-2">
-              <Upload className="size-12 text-gray-300 dark:text-theme-titan-white/60" />
+              <Upload className="size-12 text-gray-300 text-theme-titan-white/60" />
               <div className="flex size-auto flex-col items-center justify-center">
                 <p className="text-md">Drop or Select Video</p>
                 <p className="text-sm">(Max Video File Size: 1GB)</p>
@@ -77,7 +81,7 @@ const VideoUploadTab = ({
               {...getInputProps()}
             />
           </>
-        )} 
+        )}
         {videoPreview && (
           <video
             className="size-full rounded-3xl object-cover"

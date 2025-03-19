@@ -1,10 +1,9 @@
-"use client" 
+"use client";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { NFT } from "@/services/nfts";
 
- 
 import { streamInfoKeys } from "@/configs";
 
 interface Props {
@@ -12,16 +11,18 @@ interface Props {
   name: string;
   feed: NFT;
 }
-export function FeedContent({ name, description, feed }: Props) { 
+export function FeedContent({ name, description, feed }: Props) {
   const { account, chainId } = useActiveWeb3React();
-  const isOwner =!!(account) &&
-  (feed?.minter?.toLowerCase() === account?.toLowerCase() ||
-    feed?.owner?.toLowerCase() === account?.toLowerCase())
+  const isOwner =
+    !!account &&
+    (feed?.minter?.toLowerCase() === account?.toLowerCase() ||
+      feed?.owner?.toLowerCase() === account?.toLowerCase());
   const isFreeStream =
     !feed?.streamInfo ||
     !(
       feed?.streamInfo?.[streamInfoKeys?.isLockContent] ||
-      feed?.streamInfo?.[streamInfoKeys?.isPayPerView]||feed?.plansDetails?.length>0
+      feed?.streamInfo?.[streamInfoKeys?.isPayPerView] ||
+      feed?.plansDetails?.length > 0
     )
       ? true
       : false;
@@ -32,7 +33,7 @@ export function FeedContent({ name, description, feed }: Props) {
       <p>{name}</p>
 
       <p
-        className={`text-theme-monochrome-300 max-h-40 overflow-scroll text-base ${blur ? "blur-sm" : null}`}
+        className={`max-h-40 overflow-scroll text-base text-theme-neutrals-400 ${blur ? "blur-sm" : null}`}
       >
         {description}
       </p>

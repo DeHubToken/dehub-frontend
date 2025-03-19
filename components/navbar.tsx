@@ -7,7 +7,8 @@ import { HambMenu } from "@/components/hamb-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { Logo } from "./logo";
-import { ThemeSwitcher } from "./theme-switcher";
+
+// import { ThemeSwitcher } from "./theme-switcher";
 
 /* ----------------------------------------------------------------------------------------------- */
 

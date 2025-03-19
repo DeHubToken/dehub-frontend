@@ -1,10 +1,6 @@
 export function Logo() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1777.842 419.149"
-      className="text-gray-800 dark:text-white"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1777.842 419.149" className="text-white">
       <g fill="currentColor">
         <path
           data-name="Path 1"

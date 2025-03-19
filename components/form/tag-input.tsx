@@ -16,11 +16,10 @@ export interface TOption {
 }
 
 const classNames: ClassNamesConfig<TOption, true> = {
-  control: () =>
-    "group bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark border-2 border-gray-200 dark:border-theme-mine-shaft rounded-full p-3 h-auto react-select-control",
+  control: () => "group bg-theme-mine-shaft-dark rounded-full p-3 h-auto react-select-control",
   valueContainer: () => "value-container gap-2",
   singleValue: () => "single-value",
-  placeholder: () => "placeholder dark:text-theme-titan-white text-theme-mine-shaft",
+  placeholder: () => "placeholder text-theme-titan-white/40 text-sm",
   option: (props) =>
     cn(
       "option inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium transition-colors hover:bg-theme-cloud-burst h-10 px-4 py-2 cursor-pointer",
@@ -36,7 +35,7 @@ const classNames: ClassNamesConfig<TOption, true> = {
   menuPortal: () => "menu-portal",
   menuList: () => "menu-list",
   menu: () =>
-    "menu w-full rounded-md border dark:border-theme-mine-shaft bg-theme-mine-shaft-dark border-gray-200 dark:bg-theme-mine-shaft-dark animate-in",
+    "menu w-full rounded-md border border-theme-mine-shaft bg-theme-mine-shaft-dark border-gray-200 bg-theme-mine-shaft-dark animate-in",
   loadingMessage: () => "loading-message",
   loadingIndicator: () => "loading-indicator",
   input: () => "input",

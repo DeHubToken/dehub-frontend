@@ -104,7 +104,7 @@ function CategoriesSkeleton() {
       {Array.from({ length: 20 }).map((_, i) => (
         <div
           key={i}
-          className="shimmer relative h-8 min-w-[80px] max-w-[80px] flex-1 rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
+          className="shimmer relative h-8 min-w-[80px] max-w-[80px] flex-1 rounded-full border border-gray-400 border-theme-mine-shaft bg-gray-400 bg-theme-mine-shaft-dark"
         />
       ))}
     </div>

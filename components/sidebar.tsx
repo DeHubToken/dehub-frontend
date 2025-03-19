@@ -324,7 +324,7 @@ export function Sidebar(props: Props) {
     <div
       {...props}
       className={cn(
-        "bg-theme-monochrome-700 sticky left-0 top-0 h-screen w-full overflow-hidden overflow-y-scroll py-20",
+        "sticky left-0 top-0 h-screen w-full overflow-hidden overflow-y-scroll py-20",
         props.className
       )}
     >

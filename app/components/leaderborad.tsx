@@ -112,13 +112,13 @@ export function LeaderboardSkeleton() {
             {Array.from({ length: 10 }).map((_, index) => (
               <div key={index} className="flex h-10 w-full items-center justify-between gap-4">
                 <div className="flex size-auto flex-1 items-center justify-start gap-4">
-                  <p className="shimmer h-5 w-4 rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark" />
+                  <p className="shimmer h-5 w-4 rounded-full border border-gray-400 border-theme-mine-shaft bg-gray-400 bg-theme-mine-shaft-dark" />
                   <div className="flex w-full cursor-pointer items-center gap-2">
-                    <div className="shimmer h-8 min-w-8 rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark" />
-                    <p className="shimmer h-5 w-full rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark" />
+                    <div className="shimmer h-8 min-w-8 rounded-full border border-gray-400 border-theme-mine-shaft bg-gray-400 bg-theme-mine-shaft-dark" />
+                    <p className="shimmer h-5 w-full rounded-full border border-gray-400 border-theme-mine-shaft bg-gray-400 bg-theme-mine-shaft-dark" />
                   </div>
                 </div>
-                <p className="shimmer h-5 w-16 rounded-full  border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark" />
+                <p className="shimmer h-5 w-16 rounded-full  border border-gray-400 border-theme-mine-shaft bg-gray-400 bg-theme-mine-shaft-dark" />
               </div>
             ))}
           </div>

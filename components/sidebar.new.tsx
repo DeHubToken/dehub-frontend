@@ -62,7 +62,7 @@ function SidebarLinkButton(props: React.ComponentProps<typeof Button>) {
       asChild
       {...props}
       className={cn(
-        "w-full cursor-pointer justify-center gap-2 px-8 py-6 text-base hover:bg-transparent dark:hover:bg-transparent lg:justify-start",
+        "w-full cursor-pointer justify-center gap-2 px-8 py-6 text-base hover:bg-transparent lg:justify-start",
         props.className
       )}
     />

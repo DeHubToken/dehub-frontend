@@ -164,7 +164,7 @@ export function FeedList(props: FeedProps) {
                 />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <button className="rounded-md p-2 hover:bg-gray-700">
                       <FeedSettingsButton />
                     </button>
                   </DropdownMenuTrigger>
@@ -187,9 +187,9 @@ export function FeedList(props: FeedProps) {
                   }))}
                 />
               </Link>
-              <FeedFooter>
+              <FeedFooter className="text-neutral-500">
                 <LikeButton
-                  className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+                  className="gap-1 rounded-full text-sm"
                   vote
                   tokenId={feed?.tokenId}
                   votes={feed.totalVotes?.for || 0}
@@ -200,7 +200,7 @@ export function FeedList(props: FeedProps) {
                 <FeedCommentButton
                   onClick={() => setSelectedFeed({ open: true, tokenId: feed.tokenId })}
                 >
-                  {feed.comment}
+                  {feed.comment || 0}
                 </FeedCommentButton>
 
                 <FeedBookmarkButton

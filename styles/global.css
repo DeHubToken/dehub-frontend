@@ -35,10 +35,16 @@
     --radius: 0.5rem;
 
     /* TODO: We will remove below tokens after migration */
-    --theme-background: 0 0% 100%; /* #ffffff */
-    --theme-mine-shaft-dark: 0 0% 97%; /*#f7f7f7 */
-    --theme-cloud-burst: 205 100% 93%; /* #d9efff */
-    --theme-mine-shaft: 0 0% 7%; /* #111111 */
+    /* --theme-background: 0 0% 100%; #ffffff */
+    /* --theme-mine-shaft-dark: 0 0% 97%; #f7f7f7 */
+    /* --theme-cloud-burst: 205 100% 93%; #d9efff */
+    /* --theme-mine-shaft: 0 0% 7%; #111111 */
+
+    --theme-background: 0 0% 7%; /* #111111 */
+    --theme-mine-shaft-dark: 0 0% 16%; /* #292929 */
+    --theme-cloud-burst: 215 35% 20%; /* #223146 */
+    --theme-mine-shaft: 0 0% 23%; /* #3a3a3a */
+    --theme-titan-white: 0 0% 95%; /* #f1f1f1 */
 
     /* Our design system related variables */
 

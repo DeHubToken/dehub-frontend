@@ -220,7 +220,7 @@ export function UploadForm(props: Props) {
       }
       try {
         const sigData = await getSignInfo(library, account);
-        console.log("sigData",sigData)
+        console.log("sigData", sigData);
         const formData = new FormData();
         formData.append("name", data.title);
         formData.append("description", data.description);
@@ -790,7 +790,7 @@ export function UploadForm(props: Props) {
                         size="icon_sm"
                         className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
                       >
-                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                        <Info className="size-5 text-white/50" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent className="w-80">
@@ -813,7 +813,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-mine-shaft bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
@@ -842,7 +842,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 border-theme-mine-shaft bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Network" />
                       </SelectTrigger>
                       <SelectContent>
@@ -887,7 +887,7 @@ export function UploadForm(props: Props) {
                         size="icon_sm"
                         className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
                       >
-                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                        <Info className="size-5 text-white/50" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent className="w-80">
@@ -911,7 +911,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-mine-shaft bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
@@ -939,7 +939,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 border-theme-mine-shaft bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Network" />
                       </SelectTrigger>
                       <SelectContent>
@@ -980,7 +980,7 @@ export function UploadForm(props: Props) {
                         size="icon_sm"
                         className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
                       >
-                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                        <Info className="size-5 text-white/50" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent className="w-80">
@@ -1000,7 +1000,7 @@ export function UploadForm(props: Props) {
                   control={form.control}
                   render={({ field }) => (
                     <Select disabled={!isBounty} value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-mine-shaft bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
@@ -1066,7 +1066,7 @@ export function UploadForm(props: Props) {
                         size="icon_sm"
                         className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
                       >
-                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                        <Info className="size-5 text-white/50" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent className="w-80">
@@ -1097,26 +1097,22 @@ export function UploadForm(props: Props) {
                       }
                       placeholder="Select Plans"
                       classNamePrefix="react-select rounded-full"
-                      theme={(base) =>
-                        theme === "light"||theme== "system"
-                          ? base
-                          : {
-                              ...base,
-                              colors: {
-                                ...base.colors,
-                                primary: "#4f8aef", // Highlight color (matches blue button from the image)
-                                primary25: "#354152", // Hover state
-                                neutral0: "#111", // Background color of the select
-                                neutral5: "#222", // Border color
-                                neutral10: "#333", // Placeholder color
-                                neutral20: "#444" // Option hover color
-                              },
-                              spacing: {
-                                ...base.spacing,
-                                controlHeight: 35 // Adjust the control height
-                              }
-                            }
-                      }
+                      theme={(base) => ({
+                        ...base,
+                        colors: {
+                          ...base.colors,
+                          primary: "#4f8aef", // Highlight color (matches blue button from the image)
+                          primary25: "#354152", // Hover state
+                          neutral0: "#111", // Background color of the select
+                          neutral5: "#222", // Border color
+                          neutral10: "#333", // Placeholder color
+                          neutral20: "#444" // Option hover color
+                        },
+                        spacing: {
+                          ...base.spacing,
+                          controlHeight: 35 // Adjust the control height
+                        }
+                      })}
                     />
                   )}
                 />
