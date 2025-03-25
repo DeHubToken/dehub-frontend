@@ -8,7 +8,7 @@ export function FeedCard(props: React.ComponentProps<"div">) {
     <div
       {...rest}
       className={cn(
-        "w-full sm:min-w-[calc((520/16)*16px)] sm:max-w-[calc((700/16)*16px)] ",
+        "w-full",
         "flex flex-col gap-5 rounded-3xl border border-theme-neutrals-800 bg-theme-neutrals-900 p-5",
         rest.className
       )}

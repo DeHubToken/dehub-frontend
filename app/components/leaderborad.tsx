@@ -35,8 +35,12 @@ export async function Leaderboard() {
           <TabsTrigger className="rounded-full px-5 py-2" value="leaderboard">
             Leaderboard
           </TabsTrigger>
+          <TabsTrigger className="rounded-full px-5 py-2" value="recommended">
+            Recommended
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="explore">Explore</TabsContent>
+        <TabsContent value="recommended">Recommended</TabsContent>
         <TabsContent value="leaderboard">
           <div className="size-full max-h-[calc(100vh-var(--navbar-height)-52px-30px)] overflow-hidden rounded-3xl border border-neutral-800 p-3">
             <div className="flex size-auto items-center justify-between px-3">

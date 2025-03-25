@@ -32,6 +32,7 @@ type Props = {
 };
 
 export async function Categories(props: Props) {
+  if (props.type === "feed") return null;
   return (
     <div className="flex h-auto w-full items-center justify-between">
       <Suspense fallback={<CategoriesSkeleton />}>

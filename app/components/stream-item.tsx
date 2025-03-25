@@ -211,7 +211,7 @@ function _StreamItem(props: Props) {
                     </Link>
                     <div className="relative h-3 w-3">
                       <Image
-                        src={getBadgeUrl(nft.minterStaked, theme)}
+                        src={getBadgeUrl(nft.minterStaked, "dark")}
                         alt="User Badge"
                         layout="fill"
                         className={`object-contain ${!isUserOnline(nft.minter) ? "" : ""}`} // TODO: Add glow effect for when they are online
