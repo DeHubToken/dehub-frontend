@@ -101,7 +101,7 @@ function _StreamItem(props: Props) {
       </AnimatePresence>
       <div
         {...rest}
-        className="relative flex h-auto w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
+        className="relative flex h-auto max-h-[calc((350/16)*1rem)] w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
       >
         <div className="relative flex max-h-[calc((250/16)*1rem)] min-h-[calc((250/16)*1rem)] w-full overflow-hidden rounded-2xl text-sm font-semibold">
           <Link

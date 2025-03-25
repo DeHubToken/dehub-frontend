@@ -4,9 +4,10 @@ import { redirect } from "next/navigation";
 import { Error } from "@/components/error";
 import { ErrorBoundary } from "@/components/error-boundry";
 
+import { Feed } from "./components/feed";
 import { RecentPanel } from "./components/recent";
 import { Stream } from "./components/stream";
-import  {Feed} from "./components/feed"
+
 type Props = {
   params: { id: string };
 };
