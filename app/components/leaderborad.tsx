@@ -4,6 +4,8 @@ import type { LeaderboradResponse } from "@/services/nfts/leaderborad";
 
 import Link from "next/link";
 
+import { TabContentWrapper } from "@/components/tab-wrapper";
+import { TrendingCard, TrendingContainer, TrendingCreatorCard } from "@/components/trending-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -39,10 +41,52 @@ export async function Leaderboard() {
             Recommended
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="explore">Explore</TabsContent>
+        <TabsContent value="explore" className="flex flex-col gap-3">
+          <TabContentWrapper>
+            <div className="flex items-center justify-between pl-2">
+              <h1 className="font-tanker text-xl">Trending topic</h1>
+              <Button size="sm" className="rounded-full text-[12px]">
+                View all
+              </Button>
+            </div>
+            <TrendingContainer className="mt-3">
+              <TrendingCard
+                title="Crypto crash"
+                description="Trending in United Kingdom"
+                posts="18K"
+              />
+              <TrendingCard
+                title="Crypto crash"
+                description="Trending in United Kingdom"
+                posts="18K"
+              />
+            </TrendingContainer>
+          </TabContentWrapper>
+
+          <TabContentWrapper>
+            <div className="flex items-center justify-between pl-2">
+              <h1 className="font-tanker text-xl">Treading creators</h1>
+              <Button size="sm" className="rounded-full text-[12px]">
+                View all
+              </Button>
+            </div>
+            <TrendingContainer className="mt-3">
+              <TrendingCreatorCard
+                name="Darren Ullrich"
+                description="Marketing tips & tutorials"
+                avatarUrl="https://images.unsplash.com/photo-1502685104226-e9df14d4d9f0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+              />
+              <TrendingCreatorCard
+                name="Fannie Feeney"
+                description="Beauty and self care"
+                avatarUrl="https://images.unsplash.com/photo-1502685104226-e9df14d4d9f0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+              />
+            </TrendingContainer>
+          </TabContentWrapper>
+        </TabsContent>
         <TabsContent value="recommended">Recommended</TabsContent>
         <TabsContent value="leaderboard">
-          <div className="size-full max-h-[calc(100vh-var(--navbar-height)-52px-30px)] overflow-hidden rounded-3xl border border-neutral-800 p-3">
+          <TabContentWrapper className="max-h-[calc(100vh-var(--navbar-height)-52px-30px)]">
             <div className="flex size-auto items-center justify-between px-3">
               <h1 className="font-tanker text-xl">Leaderboard</h1>
               <LeaderBoardModal
@@ -96,7 +140,7 @@ export async function Leaderboard() {
                 ))}
               </div>
             </div>
-          </div>
+          </TabContentWrapper>
         </TabsContent>
       </Tabs>
     </div>

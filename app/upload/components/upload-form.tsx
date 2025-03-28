@@ -662,7 +662,7 @@ export function UploadForm(props: Props) {
   }, [bountyAmount, chainId, firstXComment, firstXViewer, isBounty, supportedTokensForChain]);
 
   return (
-    <main className="h-auto min-h-screen w-full">
+    <div className="h-auto min-h-screen w-full">
       <Form {...form}>
         <div className="flex h-auto w-full flex-col items-start justify-start gap-6 px-4 py-28 sm:gap-10">
           <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -1193,6 +1193,6 @@ export function UploadForm(props: Props) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </main>
+    </div>
   );
 }

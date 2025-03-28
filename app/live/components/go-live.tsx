@@ -367,7 +367,7 @@ export default function GoLiveForm({ categories }: Props) {
   };
 
   return (
-    <main className="h-auto min-h-screen w-full space-y-10 px-4 py-28 pt-6">
+    <div className="h-auto min-h-screen w-full space-y-10 px-4 py-28 pt-6">
       <h1 className="text-4xl font-semibold">Broadcast</h1>
       <Form {...form}>
         {/* <form onSubmit={form.handleSubmit(createStream)} className="space-y-6"> */}
@@ -838,6 +838,6 @@ export default function GoLiveForm({ categories }: Props) {
           {isloading ? "Creating" : "Create Broadcast"}
         </Button>
       </Form>
-    </main>
+    </div>
   );
 }
