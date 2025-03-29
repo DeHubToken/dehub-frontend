@@ -18,12 +18,12 @@ export function FeedImageGallary(props: { images: { url: string; alt: string }[]
   if (!count) return null;
 
   if (count === 1) {
-    return <LazyLoadImage   {...getImageProps({ src: images[0].url, alt: images[0].alt })} />;
+    return <LazyLoadImage {...getImageProps({ src: images[0].url, alt: images[0].alt })} />;
   }
 
   if (count === 2) {
     return (
-      <div className="flex flex-row   gap-1 max-h-[500px]  overflow-hidden"  >
+      <div className="flex max-h-[500px]  flex-row gap-1 overflow-hidden">
         {images.map((image, index) => (
           <LazyLoadImage key={index} {...getImageProps({ src: image.url, alt: image.alt })} />
         ))}
@@ -33,8 +33,8 @@ export function FeedImageGallary(props: { images: { url: string; alt: string }[]
 
   if (count === 3) {
     return (
-      <div className="flex flex-row gap-1  max-h-[500px] overflow-hidden">
-        <LazyLoadImage   {...getImageProps({ src: images[0].url, alt: images[0].alt })} />
+      <div className="flex max-h-[500px] flex-row  gap-1 overflow-hidden">
+        <LazyLoadImage {...getImageProps({ src: images[0].url, alt: images[0].alt })} />
         <div className="flex w-1/2 flex-col gap-1">
           {images.slice(1).map((image, index) => (
             <LazyLoadImage key={index} {...getImageProps({ src: image.url, alt: image.alt })} />
@@ -46,7 +46,7 @@ export function FeedImageGallary(props: { images: { url: string; alt: string }[]
 
   if (count === 4) {
     return (
-      <div className="grid grid-cols-2 gap-1  max-h-[1000px] overflow-hidden">
+      <div className="grid max-h-[1000px] grid-cols-2  gap-1 overflow-hidden">
         {images.map((image, index) => (
           <LazyLoadImage key={index} {...getImageProps({ src: image.url, alt: image.alt })} />
         ))}
@@ -55,7 +55,7 @@ export function FeedImageGallary(props: { images: { url: string; alt: string }[]
   }
 
   return (
-    <div className="grid grid-cols-3 gap-1  max-h-[500px] overflow-hidden">
+    <div className="grid max-h-[500px] grid-cols-3  gap-1 overflow-hidden">
       {images.map((image, index) => (
         <LazyLoadImage key={index} {...getImageProps({ src: image.url, alt: image.alt })} />
       ))}

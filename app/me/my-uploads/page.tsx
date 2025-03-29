@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const videosTableHeader: string[] = ["Date", "Views", "Likes", "Status", "Aciton"];
 
+// TODO: Replace with real data
 const data = [
   {
     id: 1,
@@ -62,26 +63,24 @@ export default function Page() {
         </h1>
       </div>
 
-      <div className="flex items-center justify-between">
-        <Tabs defaultValue="videos" className="w-full">
-          <div className="flex items-center justify-between">
-            <TabsList className="justify-start">
-              <TabsTrigger value="videos">Videos</TabsTrigger>
-              <TabsTrigger value="snippets">Snippets</TabsTrigger>
-            </TabsList>
-            <Button className="gap-2 rounded-full">
-              Filter
-              <ListFilter className="size-3 text-zinc-400" />
-            </Button>
-          </div>
-          <TabsContent value="videos" className="mt-6">
-            <VideosPanel videos={data} />
-          </TabsContent>
-          <TabsContent value="snippets">
-            <SnippetsPanel videos={data} />
-          </TabsContent>
-        </Tabs>
-      </div>
+      <Tabs defaultValue="videos" className="w-full">
+        <div className="flex items-center justify-between">
+          <TabsList className="justify-start">
+            <TabsTrigger value="videos">Videos</TabsTrigger>
+            <TabsTrigger value="snippets">Snippets</TabsTrigger>
+          </TabsList>
+          <Button className="gap-2 rounded-full">
+            Filter
+            <ListFilter className="size-3 text-zinc-400" />
+          </Button>
+        </div>
+        <TabsContent value="videos" className="mt-6">
+          <VideosPanel videos={data} />
+        </TabsContent>
+        <TabsContent value="snippets" className="mt-6">
+          <SnippetsPanel videos={data} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

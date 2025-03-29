@@ -163,9 +163,9 @@ export function FeedList(props: FeedProps) {
           <div className="mb-6 flex w-full items-center justify-between">
             <TabsList className="w-fit">
               {tabs.map((tab) => (
-                <Trigger key={tab.value} value={tab.value}>
+                <TabsTrigger key={tab.value} value={tab.value}>
                   {tab.name}
-                </Trigger>
+                </TabsTrigger>
               ))}
             </TabsList>
             <Button className="rounded-full">Most Viewed</Button>
@@ -341,6 +341,7 @@ export const FeedItem = ({ feed }: any) => {
   useEffect(() => {
     syncSigData(setSignData, account, library);
   }, [account]);
+
   return (
     <FeedCard>
       <FeedHeader>
@@ -458,12 +459,3 @@ export const DropDownItemSubscriptionModal = ({ post }: { post: NFT }) => {
     </DropdownMenuItem>
   );
 };
-
-function Trigger(props: React.ComponentProps<typeof TabsTrigger>) {
-  return (
-    <TabsTrigger
-      className="rounded-full px-4 py-3 data-[state=active]:bg-theme-neutrals-800"
-      {...props}
-    />
-  );
-}
