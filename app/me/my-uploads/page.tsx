@@ -102,9 +102,9 @@ type VideosPanelProps = {
 function VideosPanel(props: VideosPanelProps) {
   const { videos } = props;
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-start gap-6 self-stretch rounded-[10px] px-4">
-        <div className="flex flex-[50%] items-center justify-start gap-2.5">
+    <div className="w-full overflow-x-scroll">
+      <div className="flex w-full min-w-[1000px] items-center justify-start gap-6 rounded-[10px] px-4">
+        <div className="flex min-w-40 items-center justify-start gap-2.5 sm:flex-[30%]">
           <h1 className="text-xs font-semibold leading-none text-theme-neutrals-400">Videos</h1>
         </div>
         {videosTableHeader.map((header) => (
@@ -116,56 +116,58 @@ function VideosPanel(props: VideosPanelProps) {
         ))}
       </div>
 
-      <div className="mt-4 flex flex-col gap-3">
+      <div className="mt-4 flex w-full min-w-[1000px] flex-col gap-3">
         {videos.map((video) => (
           <div
             key={video.id}
-            className="flex items-center justify-start gap-6 self-stretch rounded-3xl p-4 outline outline-1 outline-offset-[-1px] outline-theme-neutrals-800"
+            className="w-full rounded-3xl p-4 outline outline-1 outline-offset-[-1px] outline-theme-neutrals-800"
           >
-            <div className="flex flex-[50%] items-start justify-start gap-6 self-stretch overflow-hidden py-2">
-              <div className="relative h-24 w-40 overflow-hidden rounded-lg bg-theme-neutrals-700">
-                <LazyImage
-                  className="size-full object-cover"
-                  src={video.thumbnail}
-                  alt={video.title}
-                />
-              </div>
-              <div className="flex items-center justify-start gap-3">
-                <div className="flex flex-col items-start justify-start gap-1">
-                  <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
-                    {video.title}
-                  </span>
-                  <span className="justify-start text-xs font-normal leading-none text-theme-neutrals-400">
-                    {video.description}
-                  </span>
+            <div className="flex w-full items-center justify-start gap-6">
+              <div className="flex flex-col items-start justify-start gap-6 self-stretch overflow-hidden py-2 sm:flex-[30%] sm:flex-row">
+                <div className="relative h-24 w-40 overflow-hidden rounded-lg bg-theme-neutrals-700">
+                  <LazyImage
+                    className="size-full object-cover"
+                    src={video.thumbnail}
+                    alt={video.title}
+                  />
+                </div>
+                <div className="flex items-center justify-start gap-3">
+                  <div className="flex flex-col items-start justify-start gap-1">
+                    <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
+                      {video.title}
+                    </span>
+                    <span className="justify-start text-xs font-normal leading-none text-theme-neutrals-400">
+                      {video.description}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
-              <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
-                {video.date}
-              </span>
-            </div>
-            <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
-              <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
-                {video.views}
-              </span>
-            </div>
-            <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
-              <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
-                {video.likes}
-              </span>
-            </div>
-            <div className="flex flex-1 flex-col items-start justify-start gap-4 self-stretch overflow-hidden py-2">
-              <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
-                {video.status}
-              </span>
-              <div className="justify-start text-xs font-semibold leading-none text-theme-neutrals-400">
-                {video.isPrivate ? "Private" : "Public"}
+              <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
+                <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
+                  {video.date}
+                </span>
               </div>
-            </div>
-            <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
-              <Button className="rounded-full text-theme-neutrals-400">Edit Draft</Button>
+              <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
+                <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
+                  {video.views}
+                </span>
+              </div>
+              <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
+                <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
+                  {video.likes}
+                </span>
+              </div>
+              <div className="flex flex-1 flex-col items-start justify-start gap-4 self-stretch overflow-hidden py-2">
+                <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
+                  {video.status}
+                </span>
+                <div className="justify-start text-xs font-semibold leading-none text-theme-neutrals-400">
+                  {video.isPrivate ? "Private" : "Public"}
+                </div>
+              </div>
+              <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
+                <Button className="rounded-full text-theme-neutrals-400">Edit Draft</Button>
+              </div>
             </div>
           </div>
         ))}
@@ -177,9 +179,9 @@ function VideosPanel(props: VideosPanelProps) {
 function SnippetsPanel(props: VideosPanelProps) {
   const { videos } = props;
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-start gap-6 self-stretch rounded-[10px] px-4">
-        <div className="flex flex-[50%] items-center justify-start gap-2.5">
+    <div className="w-full overflow-x-scroll">
+      <div className="flex w-full min-w-[1000px] items-center justify-start gap-6 rounded-[10px] px-4">
+        <div className="flex min-w-40 items-center justify-start gap-2.5 sm:flex-[30%]">
           <h1 className="text-xs font-semibold leading-none text-theme-neutrals-400">Snippets</h1>
         </div>
         {videosTableHeader.map((header) => (
@@ -191,56 +193,58 @@ function SnippetsPanel(props: VideosPanelProps) {
         ))}
       </div>
 
-      <div className="mt-4 flex flex-col gap-3">
+      <div className="mt-4 flex w-full min-w-[1000px] flex-col gap-3">
         {videos.map((video) => (
           <div
             key={video.id}
-            className="flex items-center justify-start gap-6 self-stretch rounded-3xl p-4 outline outline-1 outline-offset-[-1px] outline-theme-neutrals-800"
+            className="w-full rounded-3xl p-4 outline outline-1 outline-offset-[-1px] outline-theme-neutrals-800"
           >
-            <div className="flex flex-[50%] items-start justify-start gap-6 self-stretch overflow-hidden py-2">
-              <div className="relative h-[160px] w-24 overflow-hidden rounded-lg bg-theme-neutrals-700">
-                <LazyImage
-                  className="size-full object-cover"
-                  src={video.thumbnail}
-                  alt={video.title}
-                />
-              </div>
-              <div className="flex items-center justify-start gap-3">
-                <div className="flex flex-col items-start justify-start gap-1">
-                  <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
-                    {video.title}
-                  </span>
-                  <span className="justify-start text-xs font-normal leading-none text-theme-neutrals-400">
-                    {video.description}
-                  </span>
+            <div className="flex w-full items-center justify-start gap-6">
+              <div className="flex flex-col items-start justify-start gap-6 self-stretch overflow-hidden py-2 sm:flex-[30%] sm:flex-row">
+                <div className="relative h-[160px] w-24 overflow-hidden rounded-lg bg-theme-neutrals-700">
+                  <LazyImage
+                    className="size-full object-cover"
+                    src={video.thumbnail}
+                    alt={video.title}
+                  />
+                </div>
+                <div className="flex items-center justify-start gap-3">
+                  <div className="flex flex-col items-start justify-start gap-1">
+                    <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
+                      {video.title}
+                    </span>
+                    <span className="justify-start text-xs font-normal leading-none text-theme-neutrals-400">
+                      {video.description}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
-              <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
-                {video.date}
-              </span>
-            </div>
-            <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
-              <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
-                {video.views}
-              </span>
-            </div>
-            <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
-              <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
-                {video.likes}
-              </span>
-            </div>
-            <div className="flex flex-1 flex-col items-start justify-start gap-4 self-stretch overflow-hidden py-2">
-              <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
-                {video.status}
-              </span>
-              <div className="justify-start text-xs font-semibold leading-none text-theme-neutrals-400">
-                {video.isPrivate ? "Private" : "Public"}
+              <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
+                <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
+                  {video.date}
+                </span>
               </div>
-            </div>
-            <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
-              <Button className="rounded-full text-theme-neutrals-400">Edit Draft</Button>
+              <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
+                <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
+                  {video.views}
+                </span>
+              </div>
+              <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
+                <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
+                  {video.likes}
+                </span>
+              </div>
+              <div className="flex flex-1 flex-col items-start justify-start gap-4 self-stretch overflow-hidden py-2">
+                <span className="justify-start text-base font-semibold leading-tight text-theme-neutrals-200">
+                  {video.status}
+                </span>
+                <div className="justify-start text-xs font-semibold leading-none text-theme-neutrals-400">
+                  {video.isPrivate ? "Private" : "Public"}
+                </div>
+              </div>
+              <div className="flex flex-1 flex-col items-start justify-start self-stretch overflow-hidden py-2">
+                <Button className="rounded-full text-theme-neutrals-400">Edit Draft</Button>
+              </div>
             </div>
           </div>
         ))}

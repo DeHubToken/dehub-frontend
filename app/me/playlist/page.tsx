@@ -25,9 +25,6 @@ const fakeData = [
 ];
 
 export default function Page() {
-  const cardWidth = 256;
-  const gap = 24;
-  const rows = useRows(fakeData, cardWidth + gap);
   return (
     <div className="w-full px-6">
       <div className="flex flex-1 flex-col items-start justify-start gap-2.5 self-stretch p-2.5">
@@ -38,24 +35,17 @@ export default function Page() {
           <Button className="rounded-full">Recently added</Button>
         </div>
 
-        {rows.map((row, index) => {
-          return (
-            <div
-              className={cn("flex items-center gap-6 self-stretch", index !== 0 && "mt-6")}
-              key={index}
-            >
-              {row.map((playlist) => (
-                <PlayListCard
-                  key={playlist.id}
-                  thumbnail={playlist.thumbnail.src}
-                  title={playlist.title}
-                  videosCount={playlist.videosCount}
-                  isPrivate={playlist.isPrivate}
-                />
-              ))}
-            </div>
-          );
-        })}
+        <div className="grid w-full grid-cols-1 items-stretch gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
+          {fakeData.map((playlist) => (
+            <PlayListCard
+              key={playlist.id}
+              thumbnail={playlist.thumbnail.src}
+              title={playlist.title}
+              videosCount={playlist.videosCount}
+              isPrivate={playlist.isPrivate}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -72,11 +62,11 @@ type PlayListCardProps = {
 function PlayListCard(props: PlayListCardProps) {
   const { thumbnail, title, videosCount, isPrivate } = props;
   return (
-    <div className="relative inline-flex w-64 flex-col items-center justify-start gap-3 rounded-[10px] pb-3 shadow-[0px_0px_32px_0px_rgba(6,7,8,0.32)]">
-      <div className="absolute left-[28px] top-[-10px] h-28 w-48 rounded-[10px] bg-theme-neutrals-800" />
-      <div className="absolute left-[14px] top-[-5px] h-32 w-56 rounded-[10px] bg-theme-neutrals-700" />
-      <div className="flex flex-col items-center justify-center">
-        <div className="relative h-36 w-64 overflow-hidden rounded-[10px]">
+    <div className="relative inline-flex w-full flex-col items-center justify-start gap-3 rounded-[10px] pb-3 shadow-[0px_0px_32px_0px_rgba(6,7,8,0.32)]">
+      <div className="absolute left-1/2 top-[-14px] h-28 w-[calc(100%-40px)] -translate-x-1/2 rounded-[10px] bg-theme-neutrals-800" />
+      <div className="absolute left-1/2 top-[-7px] h-32 w-[calc(100%-20px)] -translate-x-1/2 rounded-[10px] bg-theme-neutrals-700" />
+      <div className="flex w-full flex-col items-center justify-center">
+        <div className="relative h-44 w-full overflow-hidden rounded-[10px] lg:h-36">
           <button className="absolute right-2 top-[8px] z-[1] inline-flex size-6 items-center justify-center gap-2.5 overflow-hidden rounded-full bg-neutral-400 bg-opacity-20 bg-blend-difference backdrop-blur-lg">
             <Pin className="text-color-neutrals-200 size-3" />
           </button>
@@ -90,7 +80,7 @@ function PlayListCard(props: PlayListCardProps) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-end justify-start self-stretch">
+      <div className="flex w-full flex-col items-end justify-start self-stretch">
         <div className="inline-flex items-center justify-between self-stretch px-2">
           <div className="flex items-center justify-start gap-3">
             <div className="inline-flex flex-col items-start justify-start gap-1">

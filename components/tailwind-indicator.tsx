@@ -13,7 +13,7 @@ export function TailwindIndicator() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  if (!isDevMode) return null;
+  //   if (!isDevMode) return null;
 
   return (
     <div className="font-mono fixed bottom-0 right-28 z-50 flex size-16 items-center justify-center rounded-full bg-gray-800 p-3 text-lg text-white">
