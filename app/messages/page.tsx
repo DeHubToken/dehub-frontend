@@ -1,14 +1,15 @@
-import React from 'react'
-import MessagesScreen from './main' 
+import React from "react";
 
-type Props = {}
+import MessagesScreen from "./main";
+
+type Props = {};
 
 const page = (props: Props) => {
   return (
     <div>
-      <MessagesScreen/> 
+      <MessagesScreen />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;
