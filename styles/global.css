@@ -121,6 +121,7 @@
 
     --navbar-height: calc((80 / 16) * 1rem);
     --leaderboard-width: calc((400 / 16) * 1rem);
+    --tabpanel-width: calc((400 / 16) * 1rem);
     --sidebar-width: calc((88 / 16) * 1rem);
   }
 
@@ -260,4 +261,10 @@ body {
   position: relative !important;
   width: 20px !important;
   height: 20px !important;
+}
+
+@layer components {
+  .content-container-with-tab-panel {
+    @apply h-auto min-h-screen w-full max-w-full flex-1 px-6 lg:min-w-[calc(100%-var(--tabpanel-width))] lg:max-w-[calc(100%-var(--tabpanel-width))];
+  }
 }
