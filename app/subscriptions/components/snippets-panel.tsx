@@ -33,15 +33,15 @@ export function SnippetsPanel() {
         {data.map((item) => (
           <div
             key={item.id}
-            className="flex max-h-[calc((600/16)*1rem)] min-h-[calc((600/16)*1rem)] w-full max-w-[400px] items-end justify-start gap-4"
+            className="relative flex max-h-[calc((600/16)*1rem)] min-h-[calc((600/16)*1rem)] w-full max-w-[400px] items-end justify-start gap-4"
           >
             <div className="relative flex h-full w-80 flex-col items-start justify-start gap-2.5 overflow-hidden rounded-3xl p-4">
-              <div className="absolute bottom-4 left-1/2 z-[1] flex w-full -translate-x-1/2 items-end justify-end gap-2.5 self-stretch">
-                <div className="flex flex-1 flex-col items-start justify-end gap-2.5 overflow-hidden p-4">
+              <div className="absolute bottom-4 left-0 z-[1] flex w-full items-start justify-start gap-2.5 self-stretch">
+                <div className="flex w-[calc(100%-40px)] flex-col items-start justify-start gap-2.5 overflow-hidden p-4 sm:w-full">
                   <span className="justify-start self-stretch text-base font-semibold leading-tight text-theme-neutrals-200">
                     {item.name}
                   </span>
-                  <span className="text-base font-normal leading-tight text-theme-neutrals-300">
+                  <span className="text-sm font-normal leading-tight text-theme-neutrals-300 sm:text-base">
                     {item.description}
                   </span>
                 </div>
@@ -53,7 +53,7 @@ export function SnippetsPanel() {
                 className="absolute inset-0 size-full rounded-3xl object-cover"
               />
             </div>
-            <div className="flex flex-col items-center justify-center gap-6 py-6">
+            <div className="absolute bottom-4 right-4 z-[2] flex flex-col items-center justify-center gap-6 py-6 sm:relative sm:bottom-[unset] sm:right-[unset]">
               <Avatar className="size-12">
                 <AvatarFallback>UR</AvatarFallback>
                 <AvatarImage src={item.avatarUrl} alt="avatar" className="object-cover" />
