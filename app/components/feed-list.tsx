@@ -161,7 +161,7 @@ export function FeedList(props: FeedProps) {
       <div className="mx-auto min-w-[calc((600/16)*1rem)] max-w-[calc((600/16)*1rem)]">
         <Tabs defaultValue="for-you" className="w-full">
           <div className="mb-6 flex w-full items-center justify-between">
-            <TabsList className="w-fit justify-start rounded-full border border-theme-neutrals-800">
+            <TabsList className="w-fit">
               {tabs.map((tab) => (
                 <Trigger key={tab.value} value={tab.value}>
                   {tab.name}

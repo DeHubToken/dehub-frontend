@@ -70,8 +70,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function MeLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-auto min-h-screen w-full items-start justify-between px-4 py-20 md:px-8">
-      {children}
-    </div>
+    <div className="flex h-auto min-h-screen w-full items-start justify-between">{children}</div>
   );
 }

@@ -30,7 +30,7 @@ export async function Leaderboard() {
   return (
     <div className="sticky right-0 top-[calc(var(--navbar-height)+24px)] hidden w-full min-w-[var(--leaderboard-width)] items-start justify-start pr-3 lg:flex lg:flex-col lg:gap-3">
       <Tabs defaultValue="leaderboard" className="w-full">
-        <TabsList className="justify-start p-0">
+        <TabsList className="w-full">
           <TabsTrigger className="rounded-full px-5 py-2" value="explore">
             Explore
           </TabsTrigger>

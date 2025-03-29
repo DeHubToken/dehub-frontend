@@ -26,7 +26,7 @@ export async function Profile(props: Props) {
     address: user?.address
   });
   return (
-    <div className="h-auto w-full overflow-hidden">
+    <div className="h-auto w-full overflow-hidden px-4 py-20 md:px-8">
       <div className="relative h-auto w-full">
         <Banner url={user.coverImageUrl} />
         <EditProfileButton />
@@ -35,11 +35,7 @@ export async function Profile(props: Props) {
       <Avatar name={user?.username || user.displayName || ""} url={user.avatarImageUrl} />
       <UserInfo user={user} />
       <ImageCropperModal />
-      <ProfileTabView
-        isOwner={true}
-        user={user}
-        searchParams={searchParams} 
-      />
+      <ProfileTabView isOwner={true} user={user} searchParams={searchParams} />
     </div>
   );
 }
