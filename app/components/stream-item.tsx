@@ -103,7 +103,7 @@ function _StreamItem(props: Props) {
         {...rest}
         className="relative flex h-auto max-h-[calc((350/16)*1rem)] w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
       >
-        <div className="relative flex max-h-[calc((250/16)*1rem)] min-h-[calc((250/16)*1rem)] w-full overflow-hidden rounded-2xl text-sm font-semibold">
+        <div className="relative flex h-0 w-full overflow-hidden rounded-2xl pt-[56.25%] text-sm font-semibold">
           <Link
             href={`/stream/${nft.tokenId}`}
             className="next__link absolute left-0 top-0 size-full overflow-hidden rounded-2xl"
@@ -191,7 +191,7 @@ function _StreamItem(props: Props) {
           <div className="h-auto w-full">
             <div className="flex w-full items-center justify-start gap-2">
               <Link href={`/profile/${nft.mintername || nft.minter}`}>
-                <Avatar className="size-10">
+                <Avatar className="size-8 2xl:size-10">
                   <AvatarFallback>{createAvatarName(nft.minterDisplayName)}</AvatarFallback>
                   <AvatarImage src={getAvatarUrl(nft.minterAvatarUrl)} />
                 </Avatar>
@@ -199,8 +199,8 @@ function _StreamItem(props: Props) {
 
               <div className="flex w-full items-center justify-between">
                 <div className="flex size-auto flex-col items-start justify-start">
-                  <p className="text-sm font-bold text-theme-neutrals-200">
-                    {truncate(nft.name, 26)}
+                  <p className="w-full overflow-hidden text-nowrap text-[12px] font-bold text-theme-neutrals-200 2xl:text-sm">
+                    {truncate(nft.name, 20)}
                   </p>
                   <div className="mt-1 flex items-start gap-1.5">
                     <Link
@@ -243,7 +243,7 @@ function _StreamItem(props: Props) {
               </div>
             </div>
           </div>
-          <div className="flex w-full items-center justify-between">
+          <div className="mt-2 flex w-full items-center justify-between">
             <div />
             <div className="flex h-auto items-center justify-end gap-2">
               <LikeButton
