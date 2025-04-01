@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
-import { Leaderboard, LeaderboardSkeleton } from "../components/leaderborad";
+import { LeaderboardSkeleton } from "../components/leaderborad";
+import { TabPanel } from "../components/tab-panel";
 import { StakingForm } from "./components/staking-form";
 
 export default async function Page() {
@@ -13,7 +14,7 @@ export default async function Page() {
       </div>
 
       <Suspense fallback={<LeaderboardSkeleton />}>
-        <Leaderboard />
+        <TabPanel defaultValue="leaderboard" />
       </Suspense>
     </div>
   );

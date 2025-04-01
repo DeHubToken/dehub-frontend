@@ -29,7 +29,7 @@ export function FeedContent({ name, description, feed }: Props) {
 
   const blur = !isOwner && !isFreeStream! && !isAnySubscribed(feed?.plansDetails);
   return (
-    <div className="flex flex-col gap-3">
+    <div className="mb-2 flex flex-col gap-3">
       <p>{name}</p>
 
       <p

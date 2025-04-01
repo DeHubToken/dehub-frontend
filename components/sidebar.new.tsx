@@ -117,7 +117,7 @@ const groups = [
         id: "subs",
         name: "Subs",
         icon: <Subs className="size-6" />,
-        url: () => "/"
+        url: () => "/plans"
       },
       {
         id: "followed",
@@ -230,7 +230,7 @@ const groups = [
         id: "my-uploads",
         name: "My Uploads",
         icon: <MyUploads className="size-6" />,
-        url: () => "/"
+        url: () => "/me/my-uploads"
       },
       {
         id: "my-saved",
@@ -242,19 +242,19 @@ const groups = [
         id: "my-playlists",
         name: "My Playlists",
         icon: <Playlist className="size-6" />,
-        url: () => "/"
+        url: () => "/me/playlist"
       },
       {
         id: "liked",
         name: "Liked",
         icon: <Liked className="size-6" />,
-        url: () => "/"
+        url: () => "/me/collections"
       },
       {
         id: "marked",
         name: "Marked",
         icon: <Marked className="size-6" />,
-        url: () => "/"
+        url: () => "/me/collections"
       }
     ] as Link[]
   },

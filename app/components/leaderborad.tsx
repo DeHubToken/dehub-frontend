@@ -147,11 +147,24 @@ export async function Leaderboard() {
   );
 }
 
+const tabs = [
+  { name: "Explore", value: "explore" },
+  { name: "Leaderboard", value: "leaderboard" },
+  { name: "Recommended", value: "recommended" }
+];
+
 export function LeaderboardSkeleton() {
   return (
     <div className="sticky right-0 top-[calc(var(--navbar-height)+24px)] hidden h-[calc(100vh-var(--navbar-height)-30px)] max-h-[calc(100vh-var(--navbar-height)-30px)] w-full max-w-[var(--leaderboard-width)] items-start justify-start overflow-hidden pr-3 md:flex md:flex-col md:gap-3">
-      <div className="rounded-full bg-theme-neutrals-700 px-4 py-3 text-xs text-theme-neutrals-400">
-        <span>Leaderboard</span>
+      <div className="inline-flex w-full items-center justify-between rounded-full border border-theme-neutrals-800 p-1 text-muted-foreground">
+        {tabs.map((tab) => (
+          <div
+            key={tab.name}
+            className="bg-color-neutrals-700 inline-flex h-10 items-center justify-center gap-2.5 self-stretch whitespace-nowrap rounded-full rounded-full px-5 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-theme-neutrals-700 data-[state=active]:text-theme-neutrals-400 data-[state=active]:shadow-[0px_0px_20px_0px_rgba(56,58,61,1.00)] data-[state=active]:ring-offset-background"
+          >
+            {tab.name}
+          </div>
+        ))}
       </div>
       <div className="size-full rounded-3xl border border-neutral-800 p-3">
         <div className="flex size-auto items-center justify-between px-3">

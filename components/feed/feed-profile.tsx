@@ -30,7 +30,7 @@ export function FeedProfile(props: Props) {
   return (
     <div className="flex gap-2">
       <Link href={`/${name || minter}`}>
-        <Avatar className="size-8">
+        <Avatar className="size-10">
           <AvatarFallback>{createAvatarName(name)}</AvatarFallback>
           <AvatarImage src={getAvatarUrl(avatar)} />
         </Avatar>
