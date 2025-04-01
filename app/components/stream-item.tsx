@@ -5,6 +5,7 @@ import { memo, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { EyeOpenIcon, HeartFilledIcon } from "@radix-ui/react-icons";
+import dayjs from "dayjs";
 import { AnimatePresence, m as motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { CiMenuKebab } from "react-icons/ci";
@@ -101,7 +102,7 @@ function _StreamItem(props: Props) {
       </AnimatePresence>
       <div
         {...rest}
-        className="relative flex h-auto max-h-[calc((350/16)*1rem)] w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
+        className="relative flex h-auto min-h-[calc((350/16)*1rem)] w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
       >
         <div className="relative flex h-0 w-full overflow-hidden rounded-2xl pt-[56.25%] text-sm font-semibold">
           <Link
@@ -244,7 +245,8 @@ function _StreamItem(props: Props) {
             </div>
           </div>
           <div className="mt-2 flex w-full items-center justify-between">
-            <div />
+            <p className="text-xs text-theme-neutrals-500">{dayjs(nft?.createdAt).fromNow()}</p>
+            {/* <div /> */}
             <div className="flex h-auto items-center justify-end gap-2">
               <LikeButton
                 className="gap-1 rounded-full bg-theme-neutrals-700 px-3 py-[2px] text-theme-neutrals-400 dark:bg-theme-neutrals-700 dark:text-theme-neutrals-400"
