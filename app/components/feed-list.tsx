@@ -332,6 +332,7 @@ const syncSigData = async (setSignData: any, account: `0x${string}`, library: st
     setSignData({ sig: "", timestamp: "" });
   }
 };
+
 export const FeedItem = ({ feed }: any) => {
   const { account, library, chainId }: any = useActiveWeb3React();
   const [signData, setSignData] = useState<{ sig: string; timestamp: string }>({
