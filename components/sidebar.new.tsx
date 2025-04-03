@@ -14,6 +14,7 @@ import {
   Exclusive,
   Home,
   LeaderBoard,
+  Live,
   PPV,
   Profile,
   Upload,
@@ -130,6 +131,18 @@ const groups = [
   {
     label: "Watch",
     links: [
+      {
+        id: "live",
+        name: "Live",
+        icon: <Live className="size-6" />,
+        url: () => {
+          const query = new URLSearchParams();
+          query.set("type", "live");
+          query.delete("q");
+          const qs = query.toString();
+          return `/?${qs}`;
+        }
+      },
       {
         id: "ppv",
         name: "PPV",
