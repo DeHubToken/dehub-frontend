@@ -64,7 +64,7 @@ export function RecentPanel(props: Props) {
 
               <div className="flex items-center gap-2">
                 <LikeButton
-                  className="h-6 gap-1 rounded-full bg-theme-neutrals-700 px-1 py-[2px]"
+                  className="h-6 gap-1 rounded-full bg-theme-neutrals-700 px-2 py-[2px]"
                   vote
                   tokenId={item.tokenId}
                   votes={item.totalVotes?.for || 0}
@@ -73,7 +73,7 @@ export function RecentPanel(props: Props) {
                 </LikeButton>
                 <Button
                   size="sm"
-                  className="h-6 gap-1 rounded-full bg-theme-neutrals-700 px-1 py-[2px]"
+                  className="h-6 gap-1 rounded-full bg-theme-neutrals-700 px-2 py-[2px]"
                 >
                   <EyeOpenIcon className="size-3" />
                   {item.views || 0}

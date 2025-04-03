@@ -77,6 +77,14 @@ const nextConfig = bundleAnalyzer({
       {
         protocol: "https",
         hostname: "media.tenor.com"
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.co"
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com"
       }
     ]
   }

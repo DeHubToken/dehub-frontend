@@ -14,6 +14,7 @@ import {
   Exclusive,
   Home,
   LeaderBoard,
+  Live,
   PPV,
   Profile,
   Upload,
@@ -22,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
@@ -56,16 +58,31 @@ type Link = {
   component?: React.ReactNode;
 };
 
-function SidebarLinkButton(props: React.ComponentProps<typeof Button>) {
+function SidebarLinkButton({
+  name,
+  ...props
+}: { name?: string } & React.ComponentProps<typeof Button>) {
   return (
-    <Button
-      asChild
-      {...props}
-      className={cn(
-        "w-full cursor-pointer justify-center gap-2 px-8 py-6 text-base hover:bg-transparent dark:hover:bg-transparent lg:justify-start",
-        props.className
-      )}
-    />
+    <TooltipProvider>
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger className="w-full">
+          <Button
+            asChild
+            {...props}
+            className={cn(
+              "w-full cursor-pointer justify-center gap-2 px-8 py-6 text-base hover:bg-transparent lg:justify-start",
+              props.className
+            )}
+          />
+        </TooltipTrigger>
+        <TooltipContent
+          className="font-tanker text-sm capitalize"
+          side={name === "home" ? "right" : "top"}
+        >
+          {name}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 
@@ -101,7 +118,7 @@ const groups = [
         id: "subs",
         name: "Subs",
         icon: <Subs className="size-6" />,
-        url: () => "/"
+        url: () => "/plans"
       },
       {
         id: "followed",
@@ -114,6 +131,18 @@ const groups = [
   {
     label: "Watch",
     links: [
+      {
+        id: "live",
+        name: "Live",
+        icon: <Live className="size-6" />,
+        url: () => {
+          const query = new URLSearchParams();
+          query.set("type", "live");
+          query.delete("q");
+          const qs = query.toString();
+          return `/?${qs}`;
+        }
+      },
       {
         id: "ppv",
         name: "PPV",
@@ -214,7 +243,7 @@ const groups = [
         id: "my-uploads",
         name: "My Uploads",
         icon: <MyUploads className="size-6" />,
-        url: () => "/"
+        url: () => "/me/my-uploads"
       },
       {
         id: "my-saved",
@@ -226,19 +255,19 @@ const groups = [
         id: "my-playlists",
         name: "My Playlists",
         icon: <Playlist className="size-6" />,
-        url: () => "/"
+        url: () => "/me/playlist"
       },
       {
         id: "liked",
         name: "Liked",
         icon: <Liked className="size-6" />,
-        url: () => "/"
+        url: () => "/me/collections"
       },
       {
         id: "marked",
         name: "Marked",
         icon: <Marked className="size-6" />,
-        url: () => "/"
+        url: () => "/me/collections"
       }
     ] as Link[]
   },
@@ -267,7 +296,7 @@ const groups = [
         id: "contact",
         name: "Contact",
         icon: <Contact className="size-6" />,
-        url: () => "https://t.me/dehub",
+        url: () => "https://t.me/dehubportal",
         external: true
       }
     ] as Link[]
@@ -297,27 +326,48 @@ export function Sidebar(props: Props) {
     <div
       {...props}
       className={cn(
-        "sticky left-0 top-[calc(var(--navbar-height)+24px)] h-screen w-full overflow-hidden overflow-y-scroll",
+        "sticky left-0 top-[calc(var(--navbar-height)+24px)] h-screen w-auto overflow-hidden overflow-y-scroll",
         "min-w-[calc((88/16)*1rem)] max-w-[calc((88/16)*1rem)]",
         "flex flex-col",
         props.className
       )}
     >
-      {groups.map((group, index) => (
-        <div key={group.label} className={cn(index !== 0 ? "py-5" : "")}>
-          {group.links.map((link) => {
-            const isActive = type?.toLowerCase() === link.id.toLowerCase();
+      <div className="flex w-full flex-col pb-40">
+        {groups.map((group, index) => (
+          <div key={group.label} className={cn(index !== 0 ? "py-5" : "")}>
+            {group.links.map((link) => {
+              const isActive = type?.toLowerCase() === link.id.toLowerCase();
 
-            if (link.component) return link.component;
+              if (link.component) return link.component;
 
-            if (link.url) {
-              if (link.id === "profile" || link.id === "messages") {
-                if (!account) return null;
+              if (link.url) {
+                if (link.id === "profile" || link.id === "messages") {
+                  if (!account) return null;
+                  return (
+                    <SidebarLinkButton
+                      key={link.id}
+                      variant={isActive ? "default" : "ghost"}
+                      onClick={() => handleClick(link)}
+                      name={link.id}
+                    >
+                      <Link
+                        key={link.id}
+                        href={link.url(searchParams.toString())}
+                        target={link.external ? "_blank" : "_self"}
+                        className="relative"
+                      >
+                        {link.icon}
+                      </Link>
+                    </SidebarLinkButton>
+                  );
+                }
+
                 return (
                   <SidebarLinkButton
                     key={link.id}
                     variant={isActive ? "default" : "ghost"}
                     onClick={() => handleClick(link)}
+                    name={link.id}
                   >
                     <Link
                       key={link.id}
@@ -333,61 +383,47 @@ export function Sidebar(props: Props) {
 
               return (
                 <SidebarLinkButton
+                  asChild={false}
                   key={link.id}
                   variant={isActive ? "default" : "ghost"}
                   onClick={() => handleClick(link)}
+                  className="relative"
+                  name={link.id}
                 >
-                  <Link
-                    key={link.id}
-                    href={link.url(searchParams.toString())}
-                    target={link.external ? "_blank" : "_self"}
-                    className="relative"
-                  >
-                    {link.icon}
-                  </Link>
+                  {link.icon}
                 </SidebarLinkButton>
               );
-            }
-
-            return (
-              <SidebarLinkButton
-                asChild={false}
-                key={link.id}
-                variant={isActive ? "default" : "ghost"}
-                onClick={() => handleClick(link)}
-                className="relative"
-              >
-                {link.icon}
-              </SidebarLinkButton>
-            );
-          })}
-        </div>
-      ))}
-      <Suspense fallback={<div>Loading...</div>}>
-        <Dialog open={openLeaderBoard} onOpenChange={setOpenLeaderBoard}>
-          <DialogContent className="h-[calc(100vh-200px)] sm:max-w-[425px] 2xl:max-w-[800px]">
-            <DialogHeader className="gap-2">
-              <DialogTitle className="font-tanker text-4xl tracking-wide">Leaderboard</DialogTitle>
-              <Separator className="bg-theme-monochrome-400/25" />
-            </DialogHeader>
-            {!leaderBoard.success && (
-              <div className="text-center font-tanker text-4xl tracking-wide">
-                Error Fetching Leaderboard
-              </div>
-            )}
-            {leaderBoard.success && leaderBoard.data && (
-              <div className="size-full overflow-y-scroll">
-                <div className="h-auto min-h-screen w-full">
-                  <DataTable
-                    columns={leaderboardColumns}
-                    data={leaderBoard.data.result.byWalletBalance}
-                  />
+            })}
+          </div>
+        ))}
+        <Suspense fallback={<div>Loading...</div>}>
+          <Dialog open={openLeaderBoard} onOpenChange={setOpenLeaderBoard}>
+            <DialogContent className="h-[calc(100vh-200px)] sm:max-w-[425px] 2xl:max-w-[800px]">
+              <DialogHeader className="gap-2">
+                <DialogTitle className="font-tanker text-4xl tracking-wide">
+                  Leaderboard
+                </DialogTitle>
+                <Separator className="bg-theme-monochrome-400/25" />
+              </DialogHeader>
+              {!leaderBoard.success && (
+                <div className="text-center font-tanker text-4xl tracking-wide">
+                  Error Fetching Leaderboard
                 </div>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
-      </Suspense>
+              )}
+              {leaderBoard.success && leaderBoard.data && (
+                <div className="size-full overflow-y-scroll">
+                  <div className="h-auto min-h-screen w-full">
+                    <DataTable
+                      columns={leaderboardColumns}
+                      data={leaderBoard.data.result.byWalletBalance}
+                    />
+                  </div>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
+        </Suspense>
+      </div>
     </div>
   );
 }

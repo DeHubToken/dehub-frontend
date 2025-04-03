@@ -3,7 +3,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TabsList } from "@radix-ui/react-tabs";
-  
 import { CirclePlus, Settings, Users } from "lucide-react";
 import io from "socket.io-client";
 import { toast } from "sonner";
@@ -33,7 +32,7 @@ import { MessageProvider } from "./components/provider";
 import { SocketEvent } from "./utils";
 
 /* ----------------------------------------------------------------------------------------------- */
- 
+
 export default function MessagesScreen() {
   const { account } = useActiveWeb3React();
   const router = useRouter();
@@ -140,10 +139,12 @@ const ContactListHeader = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="end">
           <DropdownMenuItem onClick={handleDmChatModal}>
-            <CirclePlus className="size-5" />&nbsp;&nbsp;Dm
+            <CirclePlus className="size-5" />
+            &nbsp;&nbsp;Dm
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleGroupChatModal}>
-            <Users className="size-5" />&nbsp;&nbsp;Group
+            <Users className="size-5" />
+            &nbsp;&nbsp;Group
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

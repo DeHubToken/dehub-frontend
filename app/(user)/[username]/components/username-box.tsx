@@ -21,14 +21,15 @@ export function UsernameBox(props: Props) {
     <div className="w-full space-y-2 overflow-hidden">
       <div className="flex size-auto items-start justify-start gap-1">
         <h1 className="text-2xl font-semibold">
-          {user.displayName ?? user?.username ??"No name"}
+          {user.displayName ?? user?.username ?? "No name"}
         </h1>
-        <div className="relative h-4 w-4">
+        <div className="relative size-5 rounded-full bg-white p-0.5">
           <Image
             src={getBadgeUrl(user?.badge?.name as string, theme)}
-            alt="User Badge" 
-            layout="fill"
-            className={`object-contain ${
+            alt="User Badge"
+            width={20}
+            height={20}
+            className={`w-full object-contain ${
               isUserOnline(user.address)
                 ? "" // TODO: Add glow effect for when they are online
                 : ""

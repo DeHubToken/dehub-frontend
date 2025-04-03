@@ -6,7 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from "@radix-ui/react-dropdown-menu";
+} from "@/ui/dropdown-menu";
 import { AlertTriangle, EllipsisVertical, Share2 } from "lucide-react";
 
 import {
@@ -67,7 +67,11 @@ export function FeedBookmarkButton({ saveCount, ...props }: FeedBookmarkButtonPr
 type FeedReportCountButton = FeedButtonProps & { count?: number };
 export function FeedReportCountButton({ count, ...props }: FeedReportCountButton) {
   return (
-    <FeedButton {...props} icon={<AlertTriangle className="size-0" fill="#FF0000" />} saveCount={count} />
+    <FeedButton
+      {...props}
+      icon={<AlertTriangle className="size-0" fill="#FF0000" />}
+      saveCount={count}
+    />
   );
 }
 
@@ -77,12 +81,12 @@ export function FeedShareButton(props: FeedButtonProps & { tokenId: number }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" className="rounded-full">
+        <Button size="icon" className="bg-transparent">
           <Share2 className="size-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-32">
-        <DropdownMenuLabel>Share</DropdownMenuLabel>
+      <DropdownMenuContent className="w-32 rounded-md">
+        <DropdownMenuLabel className="text-neutral-400">Share</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="flex flex-col items-start justify-start gap-1">
           <DropdownMenuItem asChild>

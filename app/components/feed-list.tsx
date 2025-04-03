@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
 import { HeartFilledIcon } from "@radix-ui/react-icons";
 import { useAtomValue } from "jotai";
-import { BookmarkIcon, BugIcon } from "lucide-react";
+import { BookmarkIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -17,20 +16,20 @@ import {
   FeedFooter,
   FeedHeader,
   FeedImageGallary,
-  FeedLikeButton,
-  FeedLikedButton,
   FeedProfile,
   FeedReplyDialog,
   FeedReportCountButton,
   FeedSettingsButton,
   FeedShareButton
 } from "@/components/feed";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
@@ -38,7 +37,7 @@ import { getFeedNFTs } from "@/services/feeds";
 import { getNFT, NFT } from "@/services/nfts";
 import { savePost } from "@/services/nfts/savePost";
 
-import { commentImageUrl, getImageUrl, getImageUrlApiSimple } from "@/web3/utils/url";
+import { getImageUrlApiSimple } from "@/web3/utils/url";
 import { getStreamStatus } from "@/web3/utils/validators";
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
@@ -62,6 +61,14 @@ type FeedProps = {
   minter?: string;
   postType?: string;
 };
+
+const tabs = [
+  { name: "For you", value: "for-you" },
+  { name: "Subscribed", value: "subscribed" },
+  { name: "Followed", value: "followed" },
+  { name: "Liked", value: "liked" },
+  { name: "Saved", value: "saved" }
+];
 
 export function FeedList(props: FeedProps) {
   const [selectedFeed, setSelectedFeed] = useState<{ open: boolean; tokenId?: number }>({
@@ -149,141 +156,164 @@ export function FeedList(props: FeedProps) {
     fetchFeed();
   }, [selectedFeed]);
   return (
-    <div className="flex w-full flex-col items-center gap-3">
-      {feeds && feeds.length > 0 ? (
-        feeds.map((feed: any, key: number) => {
-          return (
-            <FeedCard key={key}>
-              <FeedHeader>
-                <FeedProfile
-                  name={feed.mintername}
-                  avatar={feed?.minterAvatarUrl}
-                  time={(feed?.createdAt).toString()}
-                  minter={feed?.minter}
-                  minterStaked={feed?.minterStaked}
-                />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
-                      <FeedSettingsButton />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent side="bottom" align="end">
-                    <WithPPVDropdownItem post={feed} />
-                    <ClaimAsViewerDropdownItem post={feed} />
-                    <ClaimAsCommentorDropdownItem post={feed} />
-                    <DropDownItemTip post={feed} />
-                    <DropDownItemSubscriptionModal post={feed} />
-                    <DropDownItemReport post={feed} />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </FeedHeader>
-              <Link href={`/feeds/${feed?.tokenId}`}>
-                <FeedContent name={feed.name} description={feed.description} feed={feed} />
-                <FeedImageGallary
-                  images={feed.imageUrls.map((i: any) => ({
-                    url: `${getImageUrlApiSimple(i)}?address=${account ?? ""}&sig=${signData?.sig ?? ""}&timestamp=${signData?.timestamp ?? ""}`,
-                    alt: feed.name
-                  }))}
-                />
-              </Link>
-              <FeedFooter>
-                <LikeButton
-                  className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
-                  vote
-                  tokenId={feed?.tokenId}
-                  votes={feed.totalVotes?.for || 0}
-                  size="sm"
-                >
-                  <HeartFilledIcon className="size-3 fill-red-400" />
-                </LikeButton>
-                <FeedCommentButton
-                  onClick={() => setSelectedFeed({ open: true, tokenId: feed.tokenId })}
-                >
-                  {feed.comment}
-                </FeedCommentButton>
+    <div className="flex w-full justify-between">
+      <div className="flex-[0_0_250px]" />
+      <div className="mx-auto min-w-[calc((600/16)*1rem)] max-w-[calc((600/16)*1rem)]">
+        <Tabs defaultValue="for-you" className="w-full">
+          <div className="mb-6 flex w-full items-center justify-between">
+            <TabsList className="w-fit">
+              {tabs.map((tab) => (
+                <TabsTrigger key={tab.value} value={tab.value}>
+                  {tab.name}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            <Button className="rounded-full">Most Viewed</Button>
+          </div>
 
-                <FeedBookmarkButton
-                  onClick={(e) => {
-                    handleSavePost(feed.tokenId);
-                  }}
-                >
-                  <BookmarkIcon className={`size-4 ${feed.isSaved ? "fill-white" : "#8a8b8d"}`} />
-                </FeedBookmarkButton>
-                {feed?.reportCount > 0 && (
-                  <FeedReportCountButton count={feed?.reportCount ?? 0}>
-                    <ReportListModal tokenId={feed?.tokenId ?? null} />
-                  </FeedReportCountButton>
-                )}
-                <FeedShareButton tokenId={feed?.tokenId} />
-              </FeedFooter>
-            </FeedCard>
-          );
-        })
-      ) : (
-        <div className="mt-5">No Feed Saved Yet.</div>
-      )}
+          <TabsContent value="for-you">
+            <div className="flex w-full flex-col items-center gap-3">
+              {feeds && feeds.length > 0 ? (
+                feeds.map((feed: any, key: number) => {
+                  return (
+                    <FeedCard key={key}>
+                      <FeedHeader>
+                        <FeedProfile
+                          name={feed.mintername}
+                          avatar={feed?.minterAvatarUrl}
+                          time={(feed?.createdAt).toString()}
+                          minter={feed?.minter}
+                          minterStaked={feed?.minterStaked}
+                        />
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="rounded-md p-2 hover:bg-gray-700">
+                              <FeedSettingsButton />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent side="bottom" align="end">
+                            <WithPPVDropdownItem post={feed} />
+                            <ClaimAsViewerDropdownItem post={feed} />
+                            <ClaimAsCommentorDropdownItem post={feed} />
+                            <DropDownItemTip post={feed} />
+                            <DropDownItemSubscriptionModal post={feed} />
+                            <DropDownItemReport post={feed} />
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </FeedHeader>
+                      <Link href={`/feeds/${feed?.tokenId}`}>
+                        <FeedContent name={feed.name} description={feed.description} feed={feed} />
+                        <FeedImageGallary
+                          images={feed.imageUrls.map((i: any) => ({
+                            url: `${getImageUrlApiSimple(i)}?address=${account ?? ""}&sig=${signData?.sig ?? ""}&timestamp=${signData?.timestamp ?? ""}`,
+                            alt: feed.name
+                          }))}
+                        />
+                      </Link>
+                      <FeedFooter className="text-neutral-500">
+                        <LikeButton
+                          className="gap-1 rounded-full text-sm"
+                          vote
+                          tokenId={feed?.tokenId}
+                          votes={feed.totalVotes?.for || 0}
+                          size="sm"
+                        >
+                          <HeartFilledIcon className="size-3 fill-red-400" />
+                        </LikeButton>
+                        <FeedCommentButton
+                          onClick={() => setSelectedFeed({ open: true, tokenId: feed.tokenId })}
+                        >
+                          {feed.comment || 0}
+                        </FeedCommentButton>
 
-      <FeedReplyDialog
-        open={selectedFeed.open}
-        onOpenChange={(open) => setSelectedFeed({ open: false })}
-        tokenId={feed?.tokenId}
-        fetchFeed={fetchFeed}
-        comments={
-          feed?.comments.map((c: any) => ({
-            id: c.id,
-            time: new Date(c.createdAt).toString(),
-            name: c?.writor?.username,
-            content: c.content,
-            imageUrl: c.imageUrl,
-            avatar: c.avatar
-          })) || []
-        }
-      >
-        <FeedCard className=" max-h-[80vh]">
-          <FeedHeader>
-            <FeedProfile
-              name={feed?.mintername || ""}
-              avatar={feed?.minterAvatarUrl || ""}
-              time={feed?.createdAt?.toString()}
-              minter={feed?.minter}
-              minterStaked={feed?.minterStaked}
-            />
-            <FeedSettingsButton />
-          </FeedHeader>
+                        <FeedBookmarkButton
+                          onClick={(e) => {
+                            handleSavePost(feed.tokenId);
+                          }}
+                        >
+                          <BookmarkIcon
+                            className={`size-4 ${feed.isSaved ? "fill-white" : "#8a8b8d"}`}
+                          />
+                        </FeedBookmarkButton>
+                        {feed?.reportCount > 0 && (
+                          <FeedReportCountButton count={feed?.reportCount ?? 0}>
+                            <ReportListModal tokenId={feed?.tokenId ?? null} />
+                          </FeedReportCountButton>
+                        )}
+                        <FeedShareButton tokenId={feed?.tokenId} />
+                      </FeedFooter>
+                    </FeedCard>
+                  );
+                })
+              ) : (
+                <div className="mt-5">No Feed Saved Yet.</div>
+              )}
 
-          <FeedContent name={feed?.name} description={feed?.description} feed={feed} />
-          <FeedImageGallary
-            images={
-              feed?.imageUrls.map((i: string) => ({
-                url: `${getImageUrlApiSimple(i)}?address=${account ?? ""}&sig=${signData?.sig ?? ""}&timestamp=${signData?.timestamp ?? ""}`,
-                alt: feed?.url
-              })) || []
-            }
-          />
-          <FeedFooter>
-            <LikeButton
-              className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
-              vote
-              tokenId={feed?.tokenId}
-              votes={feed?.totalVotes?.for || 0}
-              size="sm"
-            >
-              <HeartFilledIcon className="size-3 fill-red-400" />
-            </LikeButton>
-            <FeedCommentButton>{feed?.comment || 0}</FeedCommentButton>
-            <FeedBookmarkButton>
-              <BookmarkIcon
-                onClick={(e) => {
-                  handleSavePost(feed.tokenId);
-                }}
-                className={`size-4 ${feed?.isSaved ? "fill-white" : "#8a8b8d"}`}
-              />
-            </FeedBookmarkButton>
-            <FeedShareButton tokenId={feed?.tokenId} />
-          </FeedFooter>
-        </FeedCard>
-      </FeedReplyDialog>
+              <FeedReplyDialog
+                open={selectedFeed.open}
+                onOpenChange={(open) => setSelectedFeed({ open: false })}
+                tokenId={feed?.tokenId}
+                fetchFeed={fetchFeed}
+                comments={
+                  feed?.comments.map((c: any) => ({
+                    id: c.id,
+                    time: new Date(c.createdAt).toString(),
+                    name: c?.writor?.username,
+                    content: c.content,
+                    imageUrl: c.imageUrl,
+                    avatar: c.avatar
+                  })) || []
+                }
+              >
+                <FeedCard className=" max-h-[80vh]">
+                  <FeedHeader>
+                    <FeedProfile
+                      name={feed?.mintername || ""}
+                      avatar={feed?.minterAvatarUrl || ""}
+                      time={feed?.createdAt?.toString()}
+                      minter={feed?.minter}
+                      minterStaked={feed?.minterStaked}
+                    />
+                    <FeedSettingsButton />
+                  </FeedHeader>
+
+                  <FeedContent name={feed?.name} description={feed?.description} feed={feed} />
+                  <FeedImageGallary
+                    images={
+                      feed?.imageUrls.map((i: string) => ({
+                        url: `${getImageUrlApiSimple(i)}?address=${account ?? ""}&sig=${signData?.sig ?? ""}&timestamp=${signData?.timestamp ?? ""}`,
+                        alt: feed?.url
+                      })) || []
+                    }
+                  />
+                  <FeedFooter>
+                    <LikeButton
+                      className="gap-1 rounded-full bg-black/5 text-[11px] dark:bg-theme-mine-shaft"
+                      vote
+                      tokenId={feed?.tokenId}
+                      votes={feed?.totalVotes?.for || 0}
+                      size="sm"
+                    >
+                      <HeartFilledIcon className="size-3 fill-red-400" />
+                    </LikeButton>
+                    <FeedCommentButton>{feed?.comment || 0}</FeedCommentButton>
+                    <FeedBookmarkButton>
+                      <BookmarkIcon
+                        onClick={(e) => {
+                          handleSavePost(feed.tokenId);
+                        }}
+                        className={`size-4 ${feed?.isSaved ? "fill-white" : "#8a8b8d"}`}
+                      />
+                    </FeedBookmarkButton>
+                    <FeedShareButton tokenId={feed?.tokenId} />
+                  </FeedFooter>
+                </FeedCard>
+              </FeedReplyDialog>
+            </div>
+          </TabsContent>
+          <TabsContent value="subscribed">Change your password here.</TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }
@@ -302,6 +332,7 @@ const syncSigData = async (setSignData: any, account: `0x${string}`, library: st
     setSignData({ sig: "", timestamp: "" });
   }
 };
+
 export const FeedItem = ({ feed }: any) => {
   const { account, library, chainId }: any = useActiveWeb3React();
   const [signData, setSignData] = useState<{ sig: string; timestamp: string }>({
@@ -311,6 +342,7 @@ export const FeedItem = ({ feed }: any) => {
   useEffect(() => {
     syncSigData(setSignData, account, library);
   }, [account]);
+
   return (
     <FeedCard>
       <FeedHeader>

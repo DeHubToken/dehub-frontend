@@ -1,17 +1,18 @@
 "use client";
 
 // import { cookies } from "next/headers";
-import { useEffect, useState } from "react";
-
+// import { useEffect, useState } from "react";
 import { StreamsContainer } from "@/app/components/streams-container";
 
 import { Error } from "@/components/error.server";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
-import { safeParseCookie } from "@/libs/cookies";
+// import { safeParseCookie } from "@/libs/cookies";
 
-import { getLikedNFTs, getNFTs } from "@/services/nfts/trending";
+import { getNFTs } from "@/services/nfts/trending";
+
+// import { getLikedNFTs, getNFTs } from "@/services/nfts/trending";
 
 // import { StreamsContainer } from "./streams-container";
 

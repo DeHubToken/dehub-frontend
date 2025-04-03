@@ -27,12 +27,12 @@ type Props = {
   type?: string;
   q?: string;
   sortBy?: string;
-  base?:string;
-  tab?:string;
+  base?: string;
+  tab?: string;
 };
 
 export async function Categories(props: Props) {
- 
+  if (props.type === "feed") return null;
   return (
     <div className="flex h-auto w-full items-center justify-between">
       <Suspense fallback={<CategoriesSkeleton />}>
@@ -44,8 +44,8 @@ export async function Categories(props: Props) {
 
 async function CategoriesLoader(props: Props) {
   const categoriesRes = await getCategories();
-  const { category, type, title, range, sortBy, base ,tab} = props;
- 
+  const { category, type, title, range, sortBy, base, tab } = props;
+
   const isActive = (name: string) => category === name;
 
   if (!categoriesRes.success) {
@@ -64,7 +64,7 @@ async function CategoriesLoader(props: Props) {
       >
         <CarouselPrevious className="absolute left-0 top-1/2 z-[2] -translate-y-1/2" />
         <CarouselContent className="relative z-0 pl-16">
-          <CarouselItem className="basis-auto pl-4">
+          <CarouselItem className="basis-auto">
             <FeedRangeFilterMobile
               categories={categories}
               type={type}
@@ -77,7 +77,7 @@ async function CategoriesLoader(props: Props) {
           <CarouselItem className="basis-auto">
             <CategoryButton
               isActive={isActive("All")}
-              url={`${base??""}/${objectToGetParams({ category: "All", type, title, range,tab })}`}
+              url={`${base ?? ""}/${objectToGetParams({ category: "All", type, title, range, tab })}`}
             >
               All
             </CategoryButton>
@@ -85,7 +85,7 @@ async function CategoriesLoader(props: Props) {
           {categories.map((item, index) => (
             <CarouselItem key={index} className="basis-auto">
               <CategoryButton
-                url={`${base??""}/${objectToGetParams({ category: item, type, title, range ,tab})}`}
+                url={`${base ?? ""}/${objectToGetParams({ category: item, type, title, range, tab })}`}
                 isActive={isActive(item)}
               >
                 {item}
@@ -105,7 +105,7 @@ function CategoriesSkeleton() {
       {Array.from({ length: 20 }).map((_, i) => (
         <div
           key={i}
-          className="shimmer relative h-8 min-w-[80px] max-w-[80px] flex-1 rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
+          className="shimmer relative h-8 min-w-[80px] max-w-[80px] flex-1 rounded-full border border-gray-400 border-theme-mine-shaft bg-gray-400 bg-theme-mine-shaft-dark"
         />
       ))}
     </div>

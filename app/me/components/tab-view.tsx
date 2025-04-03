@@ -134,7 +134,6 @@ const tabComponents: Record<string, React.FC<Props>> = {
 };
 
 export default async function ProfileTabViewServer(props: any) {
- 
   // Extract query parameters from request headers
   const activeTab = props.activeTab ?? "video"; // Default to "video"
   const TabComponent = tabComponents[activeTab] || (() => <div>Invalid Tab</div>);

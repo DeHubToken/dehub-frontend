@@ -334,7 +334,7 @@ export function BenefitList({ control, tierIndex }: any) {
             addBenefit({ value: benefit }); // Appending new benefit correctly
             setBenefit(""); // Reset input
           }}
-          className="flex items-center gap-2 rounded px-4 py-2 transition-colors hover:bg-gray-200 dark:hover:bg-theme-mine-shaft-dark"
+          className="flex items-center gap-2 rounded px-4 py-2 transition-colors hover:bg-theme-mine-shaft-dark"
         >
           <Plus className="size-5" />
           <span className="text-lg">Add benefit</span>
@@ -368,7 +368,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId, 
           >
             {/* Chain ID or Label */}
             <div className="w-auto flex-shrink-0  sm:w-auto sm:text-left">
-              <ChainIconById chainId={field.chainId} label={true}/>
+              <ChainIconById chainId={field.chainId} label={true} />
             </div>
 
             {/* Currency Select */}
@@ -455,7 +455,7 @@ const AddChainDropdown: React.FC<any> = ({ tier, control }) => {
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="flex items-center gap-2 rounded px-4 py-2 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
+            className="flex items-center gap-2 rounded px-4 py-2 transition-colors hover:bg-theme-mine-shaft-dark"
           >
             <Plus className="size-5" />
             <span className="text-lg">Add chain</span>

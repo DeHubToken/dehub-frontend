@@ -178,7 +178,7 @@ export function SearchItemsContainer(props: Omit<Props, "isSearch"> & { accounts
         <Link
           href={`/${data.username || data.address}`}
           key={index}
-          className="relative flex h-auto w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
+          className="relative flex h-auto w-full flex-col overflow-hidden rounded-2xl border border-gray-200 border-theme-mine-shaft bg-theme-mine-shaft-dark"
         >
           <div className="overflow-hidden rounded-xl shadow-lg">
             <div className="relative h-32 bg-gradient-to-r from-blue-500 to-purple-600">

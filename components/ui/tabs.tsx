@@ -14,7 +14,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
+      "inline-flex w-fit items-center rounded-full border border-theme-neutrals-800 p-1 text-muted-foreground",
       className
     )}
     {...props}
@@ -22,6 +22,11 @@ const TabsList = React.forwardRef<
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
 
+<div className="bg-color-neutrals-700 inline-flex items-center justify-center gap-2.5 self-stretch rounded-[999px] px-4 py-3 shadow-[0px_0px_20px_0px_rgba(56,58,61,1.00)]">
+  <div className="text-color-neutrals-400 justify-start text-center font-['Exo_2'] text-xs font-semibold leading-[10.40px]">
+    Videos
+  </div>
+</div>;
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
@@ -29,7 +34,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "data-[state=active]:shadow inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground",
+      "bg-color-neutrals-700 inline-flex h-10 items-center justify-center gap-2.5 self-stretch whitespace-nowrap rounded-full px-4 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-theme-neutrals-700 data-[state=active]:text-theme-neutrals-400 data-[state=active]:shadow-[0px_0px_20px_0px_rgba(56,58,61,1.00)] data-[state=active]:ring-offset-background",
       className
     )}
     {...props}

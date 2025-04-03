@@ -1,27 +1,26 @@
-"use client"
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import dayjs from "@/libs/dayjs";
 import { useTheme } from "next-themes";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { useWebSockets } from "@/contexts/websocket";
 
+import dayjs from "@/libs/dayjs";
 import { createAvatarName } from "@/libs/utils";
 
 import { getBadgeUrl } from "@/web3/utils/calc";
 import { getAvatarUrl } from "@/web3/utils/url";
- 
 
 type Props = {
   avatar: string;
   name: string;
   time: string;
   minter: string;
-  minterStaked: number; 
+  minterStaked: number;
 };
-
 
 export function FeedProfile(props: Props) {
   const { avatar, name, time, minter, minterStaked } = props;
@@ -31,7 +30,7 @@ export function FeedProfile(props: Props) {
   return (
     <div className="flex gap-2">
       <Link href={`/${name || minter}`}>
-        <Avatar className="size-8">
+        <Avatar className="size-10">
           <AvatarFallback>{createAvatarName(name)}</AvatarFallback>
           <AvatarImage src={getAvatarUrl(avatar)} />
         </Avatar>
@@ -49,7 +48,7 @@ export function FeedProfile(props: Props) {
             />
           </div>
         </div>
-        <span className="text-theme-monochrome-300 text-[10px]">{dayjs(time).fromNow()}</span>
+        <span className="text-[10px] text-neutral-500">{dayjs(time).fromNow()}</span>
       </div>
     </div>
   );

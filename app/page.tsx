@@ -5,10 +5,11 @@ import { redirect } from "next/navigation";
 
 import { Categories } from "./components/categories";
 import { FeedList } from "./components/feed-list";
-import { Leaderboard, LeaderboardSkeleton } from "./components/leaderborad";
+import { LeaderboardSkeleton } from "./components/leaderborad";
 import { LikedFeed } from "./components/liked";
 import { Stream } from "./components/stream";
 import { StreamLoader } from "./components/stream-skeleton";
+import { TabPanel } from "./components/tab-panel";
 import { LiveFeed } from "./live/components/live";
 
 /* ----------------------------------------------------------------------------------------------- */
@@ -35,7 +36,8 @@ export default async function Page(props: Props) {
 
   return (
     <div className="flex h-auto min-h-screen w-full items-start justify-between">
-      <div className="h-auto min-h-screen w-full max-w-full flex-1 px-6 lg:min-w-[calc(100%-var(--leaderboard-width))] lg:max-w-[calc(100%-var(--leaderboard-width))]">
+      <div className="content-container-with-tab-panel">
+        {/* TODO: Based on query, need to show and hide */}
         <Categories
           title={type.toUpperCase()}
           category={category}
@@ -96,8 +98,9 @@ export default async function Page(props: Props) {
         </div>
       </div>
 
+      {/* TODO: Replace skeleton with generic tab panel skeleton */}
       <Suspense fallback={<LeaderboardSkeleton />}>
-        <Leaderboard />
+        <TabPanel defaultValue="leaderboard" />
       </Suspense>
     </div>
   );

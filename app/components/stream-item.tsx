@@ -5,6 +5,7 @@ import { memo, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { EyeOpenIcon, HeartFilledIcon } from "@radix-ui/react-icons";
+import dayjs from "dayjs";
 import { AnimatePresence, m as motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { CiMenuKebab } from "react-icons/ci";
@@ -29,6 +30,12 @@ import { getAvatarUrl } from "@/web3/utils/url";
 import { LikeButton } from "../stream/[id]/components/stream-actions";
 import { ImageWithLoader } from "./nft-image";
 import { StreamSkeleton } from "./stream-skeleton";
+
+function secondsToMinutes(seconds) {
+  let minutes = Math.floor(seconds / 60);
+  let sec = Math.floor(seconds % 60);
+  return `${String(minutes).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+}
 
 type Props = {
   nft: any;
@@ -95,9 +102,9 @@ function _StreamItem(props: Props) {
       </AnimatePresence>
       <div
         {...rest}
-        className="relative flex h-auto max-h-[calc((370/16)*1rem)] min-h-[calc((370/16)*1rem)] w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
+        className="relative flex h-auto w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800 md:min-h-[calc((350/16)*1rem)]"
       >
-        <div className="relative flex max-h-[calc((250/16)*1rem)] min-h-[calc((250/16)*1rem)] w-full overflow-hidden rounded-2xl text-sm font-semibold">
+        <div className="relative flex h-0 w-full overflow-hidden rounded-2xl pt-[56.25%] text-sm font-semibold">
           <Link
             href={`/stream/${nft.tokenId}`}
             className="next__link absolute left-0 top-0 size-full overflow-hidden rounded-2xl"
@@ -173,13 +180,19 @@ function _StreamItem(props: Props) {
               />
             </div>
           )}
+
+          <div className="absolute bottom-3 right-3">
+            <p className="rounded-full bg-[#010305]/15 p-1 px-4 text-sm backdrop-blur-md">
+              {nft?.videoDuration ? secondsToMinutes(nft?.videoDuration) : "00:00"}
+            </p>
+          </div>
         </div>
 
         <div className="flex h-auto w-full flex-col items-start justify-start gap-1 p-4">
-          <div className="h-auto w-full px-2">
-            <div className="flex size-auto items-center justify-start gap-2">
+          <div className="h-auto w-full">
+            <div className="flex w-full items-center justify-start gap-2">
               <Link href={`/profile/${nft.mintername || nft.minter}`}>
-                <Avatar className="size-8">
+                <Avatar className="size-8 2xl:size-10">
                   <AvatarFallback>{createAvatarName(nft.minterDisplayName)}</AvatarFallback>
                   <AvatarImage src={getAvatarUrl(nft.minterAvatarUrl)} />
                 </Avatar>
@@ -187,19 +200,19 @@ function _StreamItem(props: Props) {
 
               <div className="flex w-full items-center justify-between">
                 <div className="flex size-auto flex-col items-start justify-start">
-                  <p className="text-xs font-bold text-theme-neutrals-200">
-                    {truncate(nft.name, 26)}
+                  <p className="w-full overflow-hidden text-nowrap text-[12px] font-bold text-theme-neutrals-200 2xl:text-sm">
+                    {truncate(nft.name, 20)}
                   </p>
-                  <div className="mt-1 flex items-start gap-1">
+                  <div className="mt-1 flex items-start gap-1.5">
                     <Link
                       href={`/profile/${nft.mintername || nft.minter}`}
-                      className="text-[10px] text-neutral-400"
+                      className="text-xs text-neutral-400"
                     >
                       {truncate(nft.minterDisplayName || nft.mintername || nft.minter, 26)}
                     </Link>
                     <div className="relative h-3 w-3">
                       <Image
-                        src={getBadgeUrl(nft.minterStaked, theme)}
+                        src={getBadgeUrl(nft.minterStaked, "dark")}
                         alt="User Badge"
                         layout="fill"
                         className={`object-contain ${!isUserOnline(nft.minter) ? "" : ""}`} // TODO: Add glow effect for when they are online
@@ -231,8 +244,9 @@ function _StreamItem(props: Props) {
               </div>
             </div>
           </div>
-          <div className="flex w-full items-center justify-between">
-            <div />
+          <div className="mt-2 flex w-full items-center justify-between">
+            <p className="text-xs text-theme-neutrals-500">{dayjs(nft?.createdAt).fromNow()}</p>
+            {/* <div /> */}
             <div className="flex h-auto items-center justify-end gap-2">
               <LikeButton
                 className="gap-1 rounded-full bg-theme-neutrals-700 px-3 py-[2px] text-theme-neutrals-400 dark:bg-theme-neutrals-700 dark:text-theme-neutrals-400"

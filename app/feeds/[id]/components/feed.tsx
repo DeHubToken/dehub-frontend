@@ -12,13 +12,11 @@ import { getNFT } from "@/services/nfts";
 
 import { getTransactionLink } from "@/web3/utils/format";
 
-import { defaultChainId, streamInfoKeys } from "@/configs";
+import { defaultChainId } from "@/configs";
 
 import { ActionPanel } from "./action-panel";
 import { CommentsPanel } from "./comments";
-import ImageCarousel from "./image-carousel"; 
-import BlurTextView from "./blur-text-view";
-
+import ImageCarousel from "./image-carousel";
 
 function FeedInfo(props: { nft: NFT }) {
   const { nft } = props;
@@ -91,10 +89,10 @@ export async function Feed(props: { tokenId: number }) {
   return (
     <div className="h-auto min-h-screen w-full px-4 py-20 xl:max-w-[75%] xl:flex-[0_0_75%]">
       {nft.postType === "feed-images" && (
-        <Suspense fallback={<span>loading...</span>}> 
-          <ImageCarousel images={nft.imageUrls||[]}/>
-      </Suspense>
-      )} 
+        <Suspense fallback={<span>loading...</span>}>
+          <ImageCarousel images={nft.imageUrls || []} />
+        </Suspense>
+      )}
       {nft.postType === "feed-images" && <ActionPanel nft={nft} tokenId={tokenId} />}
       <FeedInfo nft={nft} />
       {nft.postType === "feed-simple" && <ActionPanel nft={nft} tokenId={tokenId} />}

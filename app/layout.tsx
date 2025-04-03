@@ -71,6 +71,7 @@ export default function RootLayout({ children }: Props) {
               <AvatarWalletProvider>
                 <WebsocketProvider>
                   <StreamProvider>
+                    <TailwindIndicator />
                     <Layout>{children}</Layout>
                   </StreamProvider>
                 </WebsocketProvider>

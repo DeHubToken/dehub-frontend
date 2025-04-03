@@ -1,12 +1,9 @@
-import React from 'react'
-// import  {use} from 'next/navigation'
-type Props = {}
-import { redirect } from 'next/navigation'
-const page = (props: Props) => {
-    redirect("/")
-  return (
-    <div>Not found</div>
-  )
-}
+import { redirect } from "next/navigation";
 
-export default page
+type Props = {};
+
+const page = (props: Props) => {
+  return redirect("/");
+};
+
+export default page;

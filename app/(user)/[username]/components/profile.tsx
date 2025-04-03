@@ -20,7 +20,7 @@ type Props = {
 };
 
 export async function Profile(props: Props) {
-  const { username, user, searchParams } = props; 
+  const { username, user, searchParams } = props;
   const res = await getNFTs({
     minter: user.address,
     unit: 40,
@@ -29,7 +29,7 @@ export async function Profile(props: Props) {
   });
 
   return (
-    <main className="flex h-auto min-h-screen w-full items-start justify-between overflow-hidden px-4 py-20 sm:px-8 sm:py-28">
+    <div className="flex h-auto min-h-screen w-full items-start justify-between overflow-hidden px-4 py-20 sm:px-8 sm:py-28">
       <div className="h-auto w-full">
         <Banner user={user} />
         <SocialLinks user={user} />
@@ -42,9 +42,9 @@ export async function Profile(props: Props) {
             <UserFollowingInfo user={user} />
             <UserDescription user={user} />
           </div>
-        </div> 
-        <ProfileTabView  searchParams={searchParams} user={user} isOwner={false}  />
+        </div>
+        <ProfileTabView searchParams={searchParams} user={user} isOwner={false} />
       </div>
-    </main>
+    </div>
   );
 }

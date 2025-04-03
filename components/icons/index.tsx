@@ -22,6 +22,8 @@ import Treading from "@/components/icons/treading";
 import Upload from "@/components/icons/upload";
 import Wallet from "@/components/icons/wallet";
 
+import Live from "./live";
+
 export {
   Home,
   Stream,
@@ -45,5 +47,6 @@ export {
   ChevronDown,
   Star,
   Notification,
-  Plus
+  Plus,
+  Live
 };
