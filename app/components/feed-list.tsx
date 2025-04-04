@@ -110,7 +110,7 @@ export function FeedList(props: FeedProps) {
       sessionStorage.setItem("storedAccount", account);
       window.location.reload();
       return;
-    } 
+    }
     if (storedAccount !== account || !signData?.sig || !signData?.timestamp) {
       syncSigData(setSignData, account, library);
     }
@@ -227,8 +227,14 @@ export function FeedList(props: FeedProps) {
 
           <TabsContent value="for-you">
             <div className="flex w-full flex-col items-center gap-3">
-              {feeds && feeds.length > 0 ? (
-                feeds.map((feed: any, key: number) => {
+              <InfiniteScroll
+                next={isInfiniteScroll ? fetchMore : () => {}}
+                hasMore={hasMore}
+                loader={<Skeleton total={4} />}
+                dataLength={feeds.length || 0}
+                className={"flex w-full flex-col items-center gap-3"}
+              >
+                {feeds.map((feed: any, key: number) => {
                   return (
                     <FeedCard key={key}>
                       <FeedHeader>
@@ -298,10 +304,20 @@ export function FeedList(props: FeedProps) {
                       </FeedFooter>
                     </FeedCard>
                   );
-                })
-              ) : (
-                <div className="mt-5">No Feed Saved Yet.</div>
-              )}
+                })}
+
+                {isSearch && feeds?.length === 0 && (
+                  <div className="flex h-[650px] w-full flex-col items-center justify-center">
+                    <p>No Match found</p>
+                  </div>
+                )}
+
+                {!isSearch && feeds?.length === 0 && (
+                  <div className="flex h-[650px] w-full flex-col items-center justify-center">
+                    <p>No Uploads found</p>
+                  </div>
+                )}
+              </InfiniteScroll>
 
               <FeedReplyDialog
                 open={selectedFeed.open}

@@ -53,5 +53,6 @@ export {
   Plus,
   BuyCrypto,
   SwapCrypto,
+  Live,
   SellCrypto
 };
