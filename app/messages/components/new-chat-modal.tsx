@@ -53,12 +53,12 @@ interface User {
   youtubeLink?: string | null;
 }
 
-export const NewChatModal = ({ open, setOpen }: { open: boolean; setOpen: (d:boolean) => void }) => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
+export const NewChatModal = ({ open, setOpen ,}: { open: boolean; setOpen: (d:boolean) => void }) => {
+  const { startNewChat ,chatWith} = useMessage("NewChatModal");
+  const [searchTerm, setSearchTerm] = useState<string>(chatWith??"");
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const { startNewChat } = useMessage("NewChatModal");
   // State for dialog open/close
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;

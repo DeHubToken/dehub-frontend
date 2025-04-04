@@ -8,6 +8,7 @@ type SearchParams = {
     unit?: number;
     page?: number;
     sortMode?: string;
+    sort?: string;
     minter?: string;
     search?: string;
     range?: string | number;
@@ -67,6 +68,7 @@ export async function getFeedNFTs(params?: SearchParams) {
           q: params.search,
           search: params.search,
           unit: 50,
+          sort:params?.sort,
           range: params.range,
           category: params.category,
           address: params.address,

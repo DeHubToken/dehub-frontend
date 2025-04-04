@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -36,11 +38,13 @@ import { chains, useActiveWeb3React } from "@/hooks/web3-connect";
 import { createPlan, updatePlan } from "@/services/subscription-plans";
 
 import { supportedNetworks } from "@/web3/configs";
+import { getSignInfo } from "@/web3/utils/web3-actions";
 
-import { chainIcons, durations, SB_ADDRESS, supportedTokens } from "@/configs";
+import { chainIcons, ChainId, durations, SB_ADDRESS, supportedTokens } from "@/configs";
 
 import PublishOnChain from "./publish-on-chain";
 import { SubscriptionModalPreView } from "./subscription-preview";
+import { Input } from "@/components/ui/input";
 
 type FormValues = {
   tier: {
@@ -51,7 +55,7 @@ type FormValues = {
 };
 
 export default function Form({ plan, getTiers }: any) {
-  const { account, chainId } = useActiveWeb3React();
+  const { account, chainId, library }: any = useActiveWeb3React();
   const router = useRouter();
   const planId = plan != undefined ? plan.id : null;
   const [isPending, setIsPending] = useState(false);
@@ -90,6 +94,7 @@ export default function Form({ plan, getTiers }: any) {
 
   const { tier } = watch();
   const onSubmit = async (plan: any) => {
+    const { sig, timestamp }: any = await getSignInfo(library, account);
     // Add your API call logic here
     let { benefits, ...tier } = plan.tier;
     benefits = benefits.map((b: any) => b.value);
@@ -100,22 +105,27 @@ export default function Form({ plan, getTiers }: any) {
     plan = { ...tier, benefits };
     try {
       setIsPending(true);
-      const data: any = planId !== null ? await updatePlan(plan, planId) : await createPlan(plan);
+      const data: any =
+        planId !== null
+          ? await updatePlan(plan, planId, account, sig, timestamp)
+          : await createPlan(plan, account, sig, timestamp);
       if (data?.error) {
         toast.error(data?.error);
+        setIsPending(false);
         return;
       }
       if (planId) {
-        reset();
-        setIsPending(false);
         toast.success("plan Updated");
-        router.push("/plans");
-        return;
+      } else {
+        toast.success("plan created");
       }
-      toast.success("plan created");
+      router.push("/plans");
+
       setIsPending(false);
+      if (getTiers) {
+        await getTiers();
+      }
       reset();
-      await getTiers();
       return;
     } catch (error: any) {
       toast.error(error.message);
@@ -385,7 +395,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId, 
             <div className="w-auto sm:w-40 md:w-48">
               <div className="flex items-center justify-center gap-5 align-middle">
                 <label> Amount: </label>
-                <input
+                <Input
                   type="number"
                   min={0}
                   style={{ minWidth: 100 }}

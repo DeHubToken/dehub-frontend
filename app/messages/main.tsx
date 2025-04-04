@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TabsList } from "@radix-ui/react-tabs";
-import { CirclePlus, Settings, Users } from "lucide-react";
+import { CirclePlus, CloudMoonIcon, Settings, Users } from "lucide-react";
 import io from "socket.io-client";
 import { toast } from "sonner";
 
@@ -28,12 +28,13 @@ import { ConversationView } from "./components/conversation-view";
 import { MobileContactList } from "./components/mobile-contact-list";
 import { NewChatModal } from "./components/new-chat-modal";
 import { NewGroupChatModal } from "./components/new-group-chat";
-import { MessageProvider } from "./components/provider";
+import { MessageProvider, useMessage } from "./components/provider";
 import { SocketEvent } from "./utils";
+import { UserDMStatusModal } from "./components/user-status-modal";
 
 /* ----------------------------------------------------------------------------------------------- */
 
-export default function MessagesScreen() {
+export default function MessagesScreen({ searchParams }: { searchParams?: { u?: string } }) {
   const { account } = useActiveWeb3React();
   const router = useRouter();
 
@@ -87,7 +88,7 @@ export default function MessagesScreen() {
   }, [socketConnections.current, account]); // Only re-run this effect when the account changes
 
   return (
-    <MessageProvider socketConnections={socketConnections}>
+    <MessageProvider socketConnections={socketConnections} searchParams={searchParams ?? {}}>
       <ScreenHeight>
         <Messages />
       </ScreenHeight>
@@ -113,8 +114,11 @@ function Messages() {
 
       <div className="flex flex-1 px-6 pt-2">
         <NoConversation />
+        <UserDMStatusModal/>
+
         <ConversationView />
       </div>
+      
     </Fragment>
   );
 }
@@ -128,6 +132,19 @@ const ContactListHeader = () => {
   const handleGroupChatModal = () => {
     setIsOpenGroupModal(!isOpenGroupModal);
   };
+
+  const { chatWith, selectedMessageId, handleToggleUserDMStatusModal } =
+    useMessage("NewGroupChatModal");
+
+  useEffect(() => {
+    if (!chatWith) {
+      return;
+    }
+    if (selectedMessageId) {
+      return;
+    }
+    setIsDmModal(true);
+  }, [chatWith]);
   return (
     <div className="flex items-center justify-between">
       <h1 className="text-2xl">Messages</h1>
@@ -145,6 +162,10 @@ const ContactListHeader = () => {
           <DropdownMenuItem onClick={handleGroupChatModal}>
             <Users className="size-5" />
             &nbsp;&nbsp;Group
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={()=>handleToggleUserDMStatusModal()}>
+            <CloudMoonIcon className="size-5" />
+            &nbsp;&nbsp;DND
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

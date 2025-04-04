@@ -2,7 +2,8 @@ import BaseIcon from "@/assets/base-icon.svg";
 import BnbIcon from "@/assets/bnb-icon.png";
 import BnbTestnet from "@/assets/bnb-icon.png"; // Ensure the correct file is used
 import GorliTestnet from "@/assets/gorli-icon.png"; // Ensure the correct file is used
-
+ 
+ 
 import { env } from "./env";
 
 export { env } from "./env";
@@ -23,14 +24,17 @@ export enum ChainId {
   AVALANCHE_MAINNET = 43114,
   OKEX_MAINNET = 66,
   POLYGON_MAINNET = 137,
-  BASE_MAINNET = 8453
+  BASE_MAINNET = 8453,
+  SEPOLIA = 11155111
 }
 
 export const chainIcons: Record<number, any> = {
   [ChainId.BASE_MAINNET]: BaseIcon,
   [ChainId.BSC_MAINNET]: BnbIcon,
   [ChainId.BSC_TESTNET]: BnbTestnet,
-  [ChainId.GORLI]: GorliTestnet
+  [ChainId.GORLI]:GorliTestnet,
+  [ChainId.SEPOLIA]:"https://sepolia.etherscan.io/images/logo-128.png"
+  
 };
 
 export const streamInfoKeys = {
@@ -343,7 +347,7 @@ const productionTokens = [
     chainId: 56,
     address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", // Update to relevant address if needed
     iconUrl: "https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=024",
-    decimals: 18
+    decimals: 18 
   }
 ];
 export const supportedTokens = isDevMode ? devTokens : productionTokens;
