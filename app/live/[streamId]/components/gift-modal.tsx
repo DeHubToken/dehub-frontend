@@ -10,11 +10,15 @@ import {
   BellRingIcon,
   Clock,
   Crown,
+  Flower2,
   Gift,
   HandCoins,
   Heart,
   PartyPopper,
-  Sparkles
+  ShieldPlus,
+  Sparkles,
+  Star,
+  Trophy
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -64,13 +68,83 @@ type Props = {
 };
 
 export const giftTiers = [
-  { min: 1000000, name: "Magic Ring", icon: BellRing, color: "text-purple-500" },
-  { min: 100000, name: "Crown", icon: Crown, color: "text-yellow-500" },
-  { min: 50000, name: "Bouquet of Flowers", icon: Gift, color: "text-pink-500" },
-  { min: 25000, name: "Box of Chocolate", icon: Gift, color: "text-brown-500" },
-  { min: 10000, name: "Love Heart", icon: Heart, color: "text-red-500" },
-  { min: 1000, name: "Rose", icon: Sparkles, color: "text-rose-500" },
-  { min: 17, name: "Basic Gift", icon: PartyPopper, color: "text-blue-500" }
+  {
+    min: 1000000,
+    name: "Ultimate Celebration",
+    icon: Trophy,
+    color: "text-indigo-500",
+    description: "Includes all celebrations and Emojis! with extra confetti and party music."
+  },
+  {
+    min: 750000,
+    name: "Golden Screen (10s)",
+    icon: Star,
+    color: "text-yellow-500",
+    description: "Screen goes gold and coins drop from sky with sirens (10 seconds)."
+  },
+  {
+    min: 500000,
+    name: "Golden Screen (3s)",
+    icon: Star,
+    color: "text-amber-500",
+    description: "Screen goes gold and coins drop from sky with sirens (3 seconds)."
+  },
+  {
+    min: 300000,
+    name: "Party Celebration",
+    icon: PartyPopper,
+    color: "text-pink-400",
+    description: "Party starts, confetti flies, disco balls spin."
+  },
+  {
+    min: 200000,
+    name: "Spartans Army",
+    icon: ShieldPlus,
+    color: "text-red-700",
+    description: "Spartans Army run on Screen"
+  },
+  {
+    min: 100000,
+    name: "Magic Ring",
+    icon: BellRing,
+    color: "text-purple-500",
+    description: "Magic Ring Emoji pops up on Screen"
+  },
+  {
+    min: 50000,
+    name: "Crown",
+    icon: Crown,
+    color: "text-yellow-500",
+    description: "Crown Emoji pops on Screen"
+  },
+  {
+    min: 25000,
+    name: "Bouquet of Flowers",
+    icon: Flower2,
+    color: "text-rose-400",
+    description: "Bouquet of flowers Emoji Pops up on Screen"
+  },
+  {
+    min: 10000,
+    name: "Box of Chocolate",
+    icon: Gift,
+    color: "text-brown-500",
+    description: "Box of Chocolate Emoji Pops Up on Screen."
+  },
+  {
+    min: 1000,
+    name: "Love Heart",
+    icon: Heart,
+    color: "text-red-500",
+    description: "Love Heart Emoji Pop up on screen."
+  },
+  // {
+  //   min: 1,
+  //   name: "Rose",
+  //   icon: Sparkles,
+  //   color: "text-rose-500",
+  //   description: "Rose Emoji Pop up on screen."
+  // }
 ];
 
 export function GiftModal(props: Props) {
@@ -272,24 +346,34 @@ export function GiftModal(props: Props) {
 
     if (numAmount < minTip) return setSelectedTier(null);
 
-    if (numAmount < 17) {
-      setSelectedTier(null);
-    } else if (numAmount >= 1000000) {
-      setSelectedTier(giftTiers[0]); // Magic Ring
+    if (numAmount >= 1000000) {
+      setSelectedTier(giftTiers[0]); // Ultimate Celebration
+    } else if (numAmount >= 750000) {
+      setSelectedTier(giftTiers[1]); // Golden Screen (10s)
+    } else if (numAmount >= 500000) {
+      setSelectedTier(giftTiers[2]); // Golden Screen (3s)
+    } else if (numAmount >= 300000) {
+      setSelectedTier(giftTiers[3]); // Party Celebration
+    } else if (numAmount >= 200000) {
+      setSelectedTier(giftTiers[4]); // Spartans Army
     } else if (numAmount >= 100000) {
-      setSelectedTier(giftTiers[1]); // Crown
+      setSelectedTier(giftTiers[5]); // Magic Ring
     } else if (numAmount >= 50000) {
-      setSelectedTier(giftTiers[2]); // Bouquet of Flowers
+      setSelectedTier(giftTiers[6]); // Crown
     } else if (numAmount >= 25000) {
-      setSelectedTier(giftTiers[3]); // Box of Chocolate
+      setSelectedTier(giftTiers[7]); // Bouquet of Flowers
     } else if (numAmount >= 10000) {
-      setSelectedTier(giftTiers[4]); // Love Heart
+      setSelectedTier(giftTiers[8]); // Box of Chocolate
     } else if (numAmount >= 1000) {
-      setSelectedTier(giftTiers[5]); // Rose
-    } else if (numAmount >= 17) {
-      setSelectedTier(giftTiers[6]); // Basic Gift
+      setSelectedTier(giftTiers[9]); // Love Heart
+    // } else if (numAmount >= 1) {
+    //   setSelectedTier(giftTiers[10]); // Rose
+    } else {
+      setSelectedTier(null);
     }
   }, [amount]);
+
+  console.log(selectedTier);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -298,7 +382,7 @@ export function GiftModal(props: Props) {
           <HandCoins className="size-5" /> Tip
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="h-auto max-h-screen overflow-auto">
         <DialogHeader>
           <DialogTitle className="font-tanker text-4xl tracking-wider">
             Tip the streamer
@@ -344,22 +428,6 @@ export function GiftModal(props: Props) {
           />
 
           <div className="w-full space-y-4">
-            {/* <div className="flex items-center gap-4">
-              <Clock className="size-5 text-gray-400" />
-              <Select value={delay.toString()} onValueChange={(value) => setDelay(Number(value))}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select delay" />
-                </SelectTrigger>
-                <SelectContent>
-                  {delayOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value.toString()}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div> */}
-
             <Textarea
               placeholder="Add a message (optional)"
               value={message}
@@ -373,18 +441,7 @@ export function GiftModal(props: Props) {
               <p>
                 Selected Gift: <span className="font-semibold">{selectedTier.name}</span>
               </p>
-              {selectedTier.min >= 300000 && (
-                <p className="text-sm text-gray-400">Includes Spartans army celebration!</p>
-              )}
-              {selectedTier.min >= 500000 && (
-                <p className="text-sm text-gray-400">Includes party celebration!</p>
-              )}
-              {selectedTier.min >= 750000 && (
-                <p className="text-sm text-gray-400">Includes golden screen (3 seconds)!</p>
-              )}
-              {selectedTier.min >= 1000000 && (
-                <p className="text-sm text-gray-400">Includes all celebrations!</p>
-              )}
+              <p className="text-sm text-gray-400">{selectedTier.description}</p>
             </div>
           )}
 
