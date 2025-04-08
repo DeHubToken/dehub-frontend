@@ -25,8 +25,8 @@ type Props = React.ComponentProps<typeof Select> & {
   sortBy?: string;
   type?: string;
   categories: string[];
-  base?:string;
-  tab?:string;
+  base?: string;
+  tab?: string;
 };
 
 const defaults = {
@@ -36,7 +36,7 @@ const defaults = {
 };
 
 export function FeedRangeFilterMobile(props: Props) {
-  const { range, sortBy, type: defaultType, categories ,base,tab} = props;
+  const { range, sortBy, type: defaultType, categories, base, tab } = props;
   const { startTransition } = useStreamProvider("FeedRangeFilterMobile");
   const router = useRouter();
   const searchParams = useSearchParams().toString();
@@ -53,15 +53,15 @@ export function FeedRangeFilterMobile(props: Props) {
       q.range = date;
       q.type = type;
       q.sort = sort;
-      q.tab=tab;
+      q.tab = tab;
       if (category) {
         q.category = category;
       } else {
         delete q.category;
       }
       const query = stringify(q);
-      
-      return router.push(`${base??""}/?${query}`);
+
+      return router.push(`${base ?? ""}/?${query}`);
     });
   };
 
@@ -78,7 +78,7 @@ export function FeedRangeFilterMobile(props: Props) {
       delete q.sort;
       delete q.category;
       const query = stringify(q);
-      return router.push(`${base??"/"}?${query}`);
+      return router.push(`${base ?? "/"}?${query}`);
     });
   };
 
@@ -87,7 +87,7 @@ export function FeedRangeFilterMobile(props: Props) {
       <SheetTrigger asChild className="flex">
         <Badge
           variant="default"
-          className="h-8 cursor-pointer gap-1 bg-neutral-800 px-4 py-2 text-[11px] text-theme-neutrals-400 dark:bg-neutral-800 dark:text-theme-neutrals-400"
+          className="h-8 cursor-pointer gap-1 bg-neutral-800 bg-theme-neutrals-800 px-4 py-2 text-[11px] text-theme-neutrals-400"
         >
           <ListFilter className="size-3" /> Sort
         </Badge>

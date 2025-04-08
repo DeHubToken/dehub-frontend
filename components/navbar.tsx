@@ -35,6 +35,7 @@ export function Navbar() {
         <SearchModal />
         <ConnectButton label="Connect" />
         <HambMenu />
+        {/* <ThemeSwitcher /> */}
       </div>
     </nav>
   );

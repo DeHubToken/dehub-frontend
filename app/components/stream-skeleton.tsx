@@ -1,8 +1,8 @@
 export function StreamSkeleton() {
   return (
-    <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-gray-200 border-theme-mine-shaft bg-theme-mine-shaft-dark">
+    <div className="flex w-full flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800">
       <div className="shimmer relative h-0 w-full rounded-2xl bg-gray-300 bg-theme-mine-shaft-dark/50 pt-[56.25%]">
-        <div className="absolute bottom-2 right-2 h-4 w-10 rounded-full bg-gray-500 bg-zinc-900/70" />
+        <div className="absolute bottom-2 right-2 h-4 w-10 rounded-full bg-zinc-900/70" />
       </div>
 
       <div className="flex h-auto w-full flex-col items-start justify-start gap-2 p-4">

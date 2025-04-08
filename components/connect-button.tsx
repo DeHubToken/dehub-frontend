@@ -130,7 +130,7 @@ export function WalletButton(props: RenderProps) {
                 className="h-10 gap-2 px-6"
                 onClick={openConnectModal}
               >
-                <Wallet className="scale-125 text-white" /> Connect
+                <Wallet className="scale-125 text-theme-neutrals-200" /> Connect
               </Button>
             );
           } else {
@@ -138,10 +138,10 @@ export function WalletButton(props: RenderProps) {
               <Button
                 onClick={openConnectModal}
                 size="icon_sm"
-                className="rounded-full"
+                className="rounded-full hover:bg-theme-neutrals-800"
                 variant="ghost"
               >
-                <Wallet className="scale-125 text-gray-400 dark:text-white" />
+                <Wallet className="scale-125 text-theme-neutrals-200" />
               </Button>
             );
           }
@@ -261,7 +261,7 @@ export function WalletButton(props: RenderProps) {
                   className="rounded-full"
                   variant="ghost"
                 >
-                  <Wallet className="scale-125" />
+                  <Wallet className="scale-125 text-theme-neutrals-200" />
                 </Button>
               </>
             )}
