@@ -311,7 +311,7 @@ export function FeedList(props: FeedProps) {
               </FeedReplyDialog>
             </div>
           </TabsContent>
-          <TabsContent value="subscribed">Change your password here.</TabsContent>
+          <TabsContent value="subscribed"></TabsContent>
         </Tabs>
       </div>
     </div>

@@ -2,13 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { th } from "@faker-js/faker";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { BigNumber, ethers } from "ethers";
 import { ImagePlus, Info, Upload } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
 import ReactSelect from "react-select";
 import { toast } from "sonner";
@@ -35,7 +33,6 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -49,7 +46,6 @@ import {
   useStreamControllerContract
 } from "@/hooks/use-web3";
 
-import { getVideoCover } from "@/libs/canvas-preview";
 import { cn, createAvatarName } from "@/libs/utils";
 
 import { minNft } from "@/services/nfts/mint";
@@ -813,7 +809,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-mine-shaft bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-neutrals-700 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
@@ -842,7 +838,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 border-theme-mine-shaft bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 border-theme-neutrals-700 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Network" />
                       </SelectTrigger>
                       <SelectContent>
@@ -911,7 +907,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-mine-shaft bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-neutrals-700 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
@@ -939,7 +935,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 border-theme-mine-shaft bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 border-theme-neutrals-700 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Network" />
                       </SelectTrigger>
                       <SelectContent>
@@ -1000,7 +996,7 @@ export function UploadForm(props: Props) {
                   control={form.control}
                   render={({ field }) => (
                     <Select disabled={!isBounty} value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-mine-shaft bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-neutrals-700 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
@@ -1095,24 +1091,56 @@ export function UploadForm(props: Props) {
                       onChange={(selectedOptions) =>
                         field.onChange(selectedOptions.map((option: any) => option.value))
                       }
+                      unstyled
+                      classNames={{
+                        control: () =>
+                          "group h-8 px-2 min-w-[150px] border-2 border-theme-neutrals-700 rounded-full",
+                        valueContainer: () => "value-container gap-2",
+                        singleValue: () => "single-value",
+                        placeholder: () => "placeholder text-theme-neutrals-500 text-sm",
+                        option: (props) =>
+                          cn(
+                            "option inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium text-white transition-colors h-10 px-4 py-2 cursor-pointer",
+                            props.isFocused && "bg-theme-neutrals-500 text-white",
+                            props.isDisabled && "cursor-not-allowed pointer-events-none"
+                          ),
+                        noOptionsMessage: () => "no-options-message p-7 text-base",
+                        multiValueRemove: () => "multi-value-remove",
+                        multiValueLabel: () => "multi-value-label",
+                        multiValue: () =>
+                          "multi-value rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 dark:bg-theme-neutrals-600 dark:text-white bg-gray-100 text-secondary-foreground border border-gray-200 dark:border-theme-mine-shaft hover:bg-secondary/80 px-4 py-0.5",
+                        menuPortal: () => "menu-portal",
+                        menuList: () => "menu-list",
+                        menu: () => "menu w-full rounded-md bg-theme-neutrals-800 animate-in",
+                        loadingMessage: () => "loading-message",
+                        loadingIndicator: () => "loading-indicator",
+                        input: () => "input",
+                        container: () => "bg-transparent w-full react-select-container",
+                        group: () => "react-select-group",
+                        clearIndicator: () => "clear-indicator",
+                        dropdownIndicator: () => "dropdown-indicator",
+                        indicatorSeparator: () => "indicator-separator",
+                        groupHeading: () => "group-heading",
+                        indicatorsContainer: () => "indicators-container"
+                      }}
                       placeholder="Select Plans"
-                      classNamePrefix="react-select rounded-full"
-                      theme={(base) => ({
-                        ...base,
-                        colors: {
-                          ...base.colors,
-                          primary: "#4f8aef", // Highlight color (matches blue button from the image)
-                          primary25: "#354152", // Hover state
-                          neutral0: "#111", // Background color of the select
-                          neutral5: "#222", // Border color
-                          neutral10: "#333", // Placeholder color
-                          neutral20: "#444" // Option hover color
-                        },
-                        spacing: {
-                          ...base.spacing,
-                          controlHeight: 35 // Adjust the control height
-                        }
-                      })}
+                      //   classNamePrefix="react-select rounded-full"
+                      //   theme={(base) => ({
+                      //     ...base,
+                      //     colors: {
+                      //       ...base.colors,
+                      //       primary: "#4f8aef", // Highlight color (matches blue button from the image)
+                      //       primary25: "#354152", // Hover state
+                      //       neutral0: "#111", // Background color of the select
+                      //       neutral5: "#222", // Border color
+                      //       neutral10: "#333", // Placeholder color
+                      //       neutral20: "#444" // Option hover color
+                      //     },
+                      //     spacing: {
+                      //       ...base.spacing,
+                      //       controlHeight: 35 // Adjust the control height
+                      //     }
+                      //   })}
                     />
                   )}
                 />

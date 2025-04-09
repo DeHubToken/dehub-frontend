@@ -35,7 +35,7 @@ const ImageCover = ({
         <div className="h-auto w-full">
           <div
             className={cn(
-              "relative h-40 max-h-40 w-full overflow-hidden rounded-3xl border border-dashed border-gray-200 border-theme-mine-shaft bg-theme-mine-shaft-dark hover:cursor-pointer",
+              "relative h-40 max-h-40 w-full overflow-hidden rounded-3xl bg-theme-neutrals-800 hover:cursor-pointer",
               isDragAccept ? "border border-green-500" : "",
               isDragReject ? "border border-red-500" : ""
             )}
