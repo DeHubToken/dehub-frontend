@@ -1095,52 +1095,20 @@ export function UploadForm(props: Props) {
                       classNames={{
                         control: () =>
                           "group h-8 px-2 min-w-[150px] border-2 border-theme-neutrals-700 rounded-full",
-                        valueContainer: () => "value-container gap-2",
-                        singleValue: () => "single-value",
                         placeholder: () => "placeholder text-theme-neutrals-500 text-sm",
                         option: (props) =>
                           cn(
                             "option inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium text-white transition-colors h-10 px-4 py-2 cursor-pointer",
-                            props.isFocused && "bg-theme-neutrals-500 text-white",
+                            props.isFocused && "text-white bg-theme-neutrals-700",
                             props.isDisabled && "cursor-not-allowed pointer-events-none"
                           ),
                         noOptionsMessage: () => "no-options-message p-7 text-base",
-                        multiValueRemove: () => "multi-value-remove",
-                        multiValueLabel: () => "multi-value-label",
                         multiValue: () =>
-                          "multi-value rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 dark:bg-theme-neutrals-600 dark:text-white bg-gray-100 text-secondary-foreground border border-gray-200 dark:border-theme-mine-shaft hover:bg-secondary/80 px-4 py-0.5",
-                        menuPortal: () => "menu-portal",
-                        menuList: () => "menu-list",
+                          "px-4 py-0.5 bg-theme-neutrals-700 rounded-full text-white",
                         menu: () => "menu w-full rounded-md bg-theme-neutrals-800 animate-in",
-                        loadingMessage: () => "loading-message",
-                        loadingIndicator: () => "loading-indicator",
-                        input: () => "input",
-                        container: () => "bg-transparent w-full react-select-container",
-                        group: () => "react-select-group",
-                        clearIndicator: () => "clear-indicator",
-                        dropdownIndicator: () => "dropdown-indicator",
-                        indicatorSeparator: () => "indicator-separator",
-                        groupHeading: () => "group-heading",
-                        indicatorsContainer: () => "indicators-container"
+                        container: () => "bg-transparent w-full react-select-container"
                       }}
                       placeholder="Select Plans"
-                      //   classNamePrefix="react-select rounded-full"
-                      //   theme={(base) => ({
-                      //     ...base,
-                      //     colors: {
-                      //       ...base.colors,
-                      //       primary: "#4f8aef", // Highlight color (matches blue button from the image)
-                      //       primary25: "#354152", // Hover state
-                      //       neutral0: "#111", // Background color of the select
-                      //       neutral5: "#222", // Border color
-                      //       neutral10: "#333", // Placeholder color
-                      //       neutral20: "#444" // Option hover color
-                      //     },
-                      //     spacing: {
-                      //       ...base.spacing,
-                      //       controlHeight: 35 // Adjust the control height
-                      //     }
-                      //   })}
                     />
                   )}
                 />
