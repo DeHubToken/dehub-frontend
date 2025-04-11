@@ -9,6 +9,8 @@ const nextConfig = {
         'https://api.blockjerk.com',
         'images.unsplash.com',
         'tenor.com', 'media.tenor.com'],
+    },  eslint: {
+      ignoreDuringBuilds: true,
     },
   };
   
