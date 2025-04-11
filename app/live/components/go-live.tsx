@@ -214,6 +214,14 @@ export default function GoLiveForm({ categories }: Props) {
       if (!account || !user) {
         return toast.error("Please connect your wallet");
       }
+      if (data.settings?.schedule) {
+        if (!data.scheduledFor) {
+          return toast.error("Please select a date and time for scheduled stream");
+        }
+        data.status = StreamStatus.SCHEDULED;
+      } else {
+        delete data.scheduledFor;
+      }
 
       // Step 1: Get tokenId and auth details from backend
       const formData = new FormData();
@@ -306,15 +314,7 @@ export default function GoLiveForm({ categories }: Props) {
 
       // 3. Create live stream with minted token ID
       toast.loading("Creating live stream...", { id: toastId });
-      if (data.settings?.schedule) {
-        if (!data.scheduledFor) {
-          return toast.error("Please select a date and time for scheduled stream");
-        }
-        data.status = StreamStatus.SCHEDULED;
-      } else {
-        delete data.scheduledFor;
-      }
-
+      
       const authObject = await getAuthObject(library, account);
       let { thumbnail, ...payload } = data;
       data = { ...payload, ...authObject };

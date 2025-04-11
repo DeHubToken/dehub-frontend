@@ -138,14 +138,14 @@ export const giftTiers = [
     color: "text-red-500",
     description: "Love Heart Emoji Pop up on screen."
   },
-  // {
-  //   min: 1,
-  //   name: "Rose",
-  //   icon: Sparkles,
-  //   color: "text-rose-500",
-  //   description: "Rose Emoji Pop up on screen."
-  // }
 ];
+// {
+//   min: 1,
+//   name: "Rose",
+//   icon: Sparkles,
+//   color: "text-rose-500",
+//   description: "Rose Emoji Pop up on screen."
+// }
 
 export function GiftModal(props: Props) {
   const { tokenId, to, triggerProps, stream } = props;
