@@ -198,7 +198,7 @@ const productionTokens = [
     customAbbreviation: "usdc",
     chainId: 8453,
     address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-    iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
+    iconUrl: "/icons/tokens/USDC.png",
     decimals: 6,
     isSubscriptionSupported: true
   },
@@ -209,7 +209,7 @@ const productionTokens = [
     customAbbreviation: "weth",
     chainId: 8453,
     address: "0x4200000000000000000000000000000000000006",
-    iconUrl: "https://cryptologos.cc/logos/ethereum-eth-logo.png?v=002",
+    iconUrl: "/icons/tokens/eth.png",
     decimals: 18
   },
 
@@ -220,7 +220,7 @@ const productionTokens = [
     customAbbreviation: "weth",
     chainId: 137,
     address: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
-    iconUrl: "https://cryptologos.cc/logos/ethereum-eth-logo.png?v=002",
+    iconUrl: "/icons/tokens/eth.png",
     decimals: 18
   },
   {
@@ -230,7 +230,7 @@ const productionTokens = [
     customAbbreviation: "usdt",
     chainId: 8453,
     address: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
-    iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=002",
+    iconUrl: "/icons/tokens/USDT.png",
     decimals: 6,
     isSubscriptionSupported: true
   },
@@ -241,7 +241,7 @@ const productionTokens = [
     customAbbreviation: "usdc",
     chainId: 1,
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
+    iconUrl: "/icons/tokens/USDC.png",
     decimals: 6
   },
   {
@@ -251,7 +251,7 @@ const productionTokens = [
     customAbbreviation: "usdc",
     chainId: 56,
     address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
-    iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
+    iconUrl: "/icons/tokens/USDC.png",
     decimals: 18,
     isSubscriptionSupported: true
   },
@@ -262,7 +262,7 @@ const productionTokens = [
     customAbbreviation: "usdc",
     chainId: 137,
     address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-    iconUrl: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024",
+    iconUrl: "/icons/tokens/USDC.png",
     decimals: 6
   },
   {
@@ -272,7 +272,7 @@ const productionTokens = [
     customAbbreviation: "usdt",
     chainId: 1,
     address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-    iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=024",
+    iconUrl: "/icons/tokens/USDT.png",
     decimals: 18
   },
   {
@@ -282,7 +282,7 @@ const productionTokens = [
     customAbbreviation: "usdt",
     chainId: 56,
     address: "0x55d398326f99059ff775485246999027b3197955",
-    iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=024",
+    iconUrl: "/icons/tokens/USDT.png",
     decimals: 18,
     isSubscriptionSupported: true
   },
@@ -293,7 +293,7 @@ const productionTokens = [
     customAbbreviation: "usdt",
     chainId: 137,
     address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
-    iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=024",
+    iconUrl: "/icons/tokens/USDT.png",
     decimals: 18
   },
   {
@@ -303,7 +303,7 @@ const productionTokens = [
     customAbbreviation: "doge",
     chainId: 56,
     address: "0xbA2aE424d960c26247Dd6c32edC70B295c744C43",
-    iconUrl: "https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=024",
+    iconUrl: "/icons/tokens/DOGE.png",
     decimals: 8,
     isSubscriptionSupported: true
   },
@@ -314,7 +314,7 @@ const productionTokens = [
     customAbbreviation: "floki",
     chainId: 1,
     address: "0xcf0c122c6b73ff809c693db761e7baebe62b6a2e",
-    iconUrl: "https://cryptologos.cc/logos/floki-inu-floki-logo.png?v=024",
+    iconUrl: "/icons/tokens/FLOKI.png",
     decimals: 9
   },
   {
@@ -324,7 +324,7 @@ const productionTokens = [
     customAbbreviation: "floki",
     chainId: 56,
     address: "0xfb5b838b6cfeedc2873ab27866079ac55363d37e",
-    iconUrl: "https://cryptologos.cc/logos/floki-inu-floki-logo.png?v=024",
+    iconUrl: "/icons/tokens/FLOKI.png",
     decimals: 9,
     isSubscriptionSupported: true
   },
@@ -336,7 +336,7 @@ const productionTokens = [
     customAbbreviation: "eth",
     chainId: 56,
     address: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8", // Update to relevant address if needed
-    iconUrl: "https://cryptologos.cc/logos/ethereum-eth-logo.png?v=024",
+    iconUrl: "/icons/tokens/eth.png",
     decimals: 18
   },
   {
@@ -346,7 +346,7 @@ const productionTokens = [
     customAbbreviation: "bnb",
     chainId: 56,
     address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", // Update to relevant address if needed
-    iconUrl: "https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=024",
+    iconUrl: "/icons/tokens/BNB.png",
     decimals: 18 
   }
 ];

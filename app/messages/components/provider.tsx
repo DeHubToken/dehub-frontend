@@ -13,6 +13,7 @@ import { exitGroup, fetchContacts, fetchDmMessages } from "@/services/dm";
 import { blockDM, unBlockUser } from "@/services/user-report";
 
 import { messages, SocketEvent, TMessage } from "../utils";
+import { showToast } from "@/libs/toast";
 
 type State = {
   socket: any;
@@ -123,15 +124,12 @@ export function MessageProvider(props: {
       socket.off(SocketEvent.deleteMessage, handleDeletedMessage);
     };
   }, [socket]);
-  const errorHandler = (error: any) => {
-    toast.error(error.msg);
+  const errorHandler = (error: any) => { 
+    showToast("error",error,"top-right")
   };
 
-  const handleTipUpdates = (data: any) => {
-    console.log("handleTipUpdates", data);
-
-    const { dmId, tips } = data; // Extract dmId and messageId from data
-
+  const handleTipUpdates = (data: any) => {  
+    const { dmId, tips } = data; // Extract dmId and messageId from data 
     setMessages((prevState: any) => {
       return prevState.map((state: any) => {
         if (state._id === dmId) {
@@ -148,8 +146,7 @@ export function MessageProvider(props: {
   const handleAddNewChat = ({ msg, data }: any) => {
     if (!data) {
       return;
-    }
-    console.log("handleAddNewChat", { msg, data });
+    } 
     setMessages((prevState: any[]) => {
       const exist = prevState.find((d) => d._id == data._id);
       setSelectedMessageId(data._id);
@@ -157,8 +154,8 @@ export function MessageProvider(props: {
         return prevState;
       }
       return [data, ...prevState];
-    });
-    toast.success(msg);
+    }); 
+    showToast("success",msg,"top-right")
   };
   const newMsgHandler = (data: any) => {
     setMessages((privState: any) => {
@@ -179,10 +176,9 @@ export function MessageProvider(props: {
   };
   const handleUnBlock = async (reportId?: string) => {
     if (!account) {
-      toast.error("Please connect to your wallet.");
+      showToast("error","Please connect to your wallet.","top-right");
       return;
-    }
-    console.log("reportId:", reportId);
+    } 
     try {
       const { success, error, data }: any = await unBlockUser({
         conversationId: message._id,
@@ -191,13 +187,13 @@ export function MessageProvider(props: {
       });
 
       if (!success) {
-        toast.error(error || "Failed to unblock the user or conversation.");
+        showToast("error",error || "Failed to unblock the user or conversation.","top-right");
         return;
       }
 
       if (data.unblocked) {
         // Updated to match the API response
-        toast.success(data.message);
+        showToast("success",data.message,"top-right");
 
         // Update the messages state to reflect the unblocked status
         // setMessages((prevMessages: any[]) =>

@@ -20,6 +20,7 @@ import { SERVER_URL } from "@/contexts/websocket";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
+import { showToast } from "@/libs/toast";
 import { cn } from "@/libs/utils";
 
 import { NoConversation } from "./components/common";
@@ -29,10 +30,8 @@ import { MobileContactList } from "./components/mobile-contact-list";
 import { NewChatModal } from "./components/new-chat-modal";
 import { NewGroupChatModal } from "./components/new-group-chat";
 import { MessageProvider, useMessage } from "./components/provider";
-import { SocketEvent } from "./utils";
 import { UserDMStatusModal } from "./components/user-status-modal";
-
-/* ----------------------------------------------------------------------------------------------- */
+import { SocketEvent } from "./utils";
 
 export default function MessagesScreen({ searchParams }: { searchParams?: { u?: string } }) {
   const { account } = useActiveWeb3React();
@@ -49,7 +48,7 @@ export default function MessagesScreen({ searchParams }: { searchParams?: { u?: 
         socketConnections.current.dm.disconnect();
         socketConnections.current.dm = null;
       }
-      toast.error("Please connect to wallet.");
+
       router.push("/");
     } else {
       // If account is present and no socket connection exists, initialize it
@@ -68,9 +67,9 @@ export default function MessagesScreen({ searchParams }: { searchParams?: { u?: 
       socketConnections.current.dm.on(SocketEvent.connect, () => {});
       // Handle socket connection events (Optional)
       socketConnections.current.dm.on(SocketEvent.reConnect, () => {
-        console.log("re-connecting...");
+        showToast("info", "re-connecting", "top-right");
         socketConnections.current.dm = io(`${SERVER_URL}/dm`, socketOptions);
-        toast.info("connecting...");
+        showToast("info", "connecting...", "top-right");
       });
 
       socketConnections.current.dm.on(SocketEvent.disconnect, () => {
@@ -114,11 +113,10 @@ function Messages() {
 
       <div className="flex flex-1 px-6 pt-2">
         <NoConversation />
-        <UserDMStatusModal/>
+        <UserDMStatusModal />
 
         <ConversationView />
       </div>
-      
     </Fragment>
   );
 }
@@ -163,7 +161,7 @@ const ContactListHeader = () => {
             <Users className="size-5" />
             &nbsp;&nbsp;Group
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={()=>handleToggleUserDMStatusModal()}>
+          <DropdownMenuItem onClick={() => handleToggleUserDMStatusModal()}>
             <CloudMoonIcon className="size-5" />
             &nbsp;&nbsp;DND
           </DropdownMenuItem>

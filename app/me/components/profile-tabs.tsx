@@ -41,7 +41,7 @@ export default function ProfileTabView({
           ))}
         </div>
 
-        <div className=" max-w-[50vh]">
+        <div className=" max-w-[50vh] mt-3">
           {["video", "feed-images", "feed-all", "feed-simple"].some((a) => a === activeTab) && (
             <Categories
               base={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}`}

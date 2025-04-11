@@ -53,6 +53,8 @@ import { useClaimBounty } from "../stream/[id]/hooks/use-claim-bounty";
 import { FeedReportDialog } from "./feed-report-modal";
 import { ReportListModal } from "./report-list-modal";
 import { FeedSkeleton, StreamSkeleton } from "./stream-skeleton";
+import { api } from "@/libs/api";
+import { recordView } from "@/libs/recordView";
 
 type FeedProps = {
   isSearch?: boolean;
@@ -164,13 +166,16 @@ export function FeedList(props: FeedProps) {
       }
     })();
   }, []);
-  const fetchFeed = async () => {
+  const fetchFeed = useCallback(async () => {
     if (!selectedFeed.tokenId) {
       return;
+    } 
+    if(account){ 
+      recordView(selectedFeed.tokenId,library,account)
     }
     const response: any = await getNFT(selectedFeed?.tokenId, account as string);
     if (response.data.result) setFeed(response.data.result);
-  };
+  },[selectedFeed,account]);
   useEffect(() => {
     fetchFeed();
   }, [selectedFeed]);
@@ -381,7 +386,7 @@ export function FeedList(props: FeedProps) {
               </FeedReplyDialog>
             </div>
           </TabsContent>
-          <TabsContent value="subscribed">Change your password here.</TabsContent>
+          <TabsContent value="subscribed">No Data to show</TabsContent>
         </Tabs>
       </div>
     </div>
@@ -394,9 +399,7 @@ const syncSigData = async (setSignData: any, account: `0x${string}`, library: st
     return;
   }
   const result = await getSignInfo(library, account);
-  console.log("signData result", result);
   if (result && result.sig && result.timestamp) {
-    console.log("signData seting sig data");
     setSignData({ sig: result.sig, timestamp: result.timestamp });
   } else {
     setSignData({ sig: "", timestamp: "" });

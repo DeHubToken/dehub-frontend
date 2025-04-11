@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { useMessage } from "./provider";
+import { showToast } from "@/libs/toast";
 
 export function MessageInput() {
   const {
@@ -34,7 +35,7 @@ export function MessageInput() {
 
   const sendHandler = useCallback(() => {
     if (input.trim() === "") {
-      toast.error("Please enter a message!");
+      showToast("error","Please enter a message!","top-right");
       return;
     }
     sendMessage(input);

@@ -166,7 +166,7 @@ export default function Form({ plan, getTiers }: any) {
                 <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
                   <h1 className="text-xl">Tiers Name</h1>
                 </div>
-                <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%]  ">
+                <div className="w-full   max-w-full flex-[0_0_100%] sm:max-w-[70%]  bg-theme-background ">
                   <input
                     placeholder="Basic tier"
                     className=" w-full border-none bg-theme-background px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
@@ -186,7 +186,7 @@ export default function Form({ plan, getTiers }: any) {
                 <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
                   <h1 className="text-xl">Description</h1>
                 </div>
-                <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%]">
+                <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%] bg-theme-background">
                   <textarea
                     placeholder="tier description here"
                     className="  w-full resize-none border-none bg-theme-background px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0"
@@ -257,7 +257,7 @@ export const SetDuration = ({
         const currentDuration = durations.find((d) => d.value === field.value); // Find the duration object by value
 
         return (
-          <div className="flex w-full max-w-full flex-[0_0_100%] items-center justify-between pl-8 sm:max-w-[70%] sm:flex-[0_0_70%]">
+          <div className="flex w-full max-w-full flex-[0_0_100%] items-center justify-between pl-8 sm:max-w-[70%] sm:flex-[0_0_70%] bg-theme-background">
             <p className="text-lg">{currentDuration?.title}</p>
             <div className="flex items-center justify-end gap-1">
               <Button
@@ -309,7 +309,7 @@ export function BenefitList({ control, tierIndex }: any) {
   });
 
   return (
-    <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%]">
+    <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%]  bg-theme-background">
       <div className="ml-3 mt-3 flex flex-wrap gap-5">
         {benefitFields.map((field: { id: string; value: string }, n: number) => (
           <div
@@ -363,14 +363,14 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId, 
   });
 
   return (
-    <div className="flex w-full flex-wrap items-stretch justify-start border-b border-gray-300/25">
+    <div className="flex w-full flex-wrap items-stretch justify-start border-b border-gray-300/25 bg-theme-background">
       {/* Section Header */}
-      <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
+      <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25   bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
         <h1 className="text-xl">Chains</h1>
       </div>
 
       {/* Chain List Section */}
-      <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_60%]">
+      <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_60%] ">
         {tier?.chains?.map((field: any, index: number) => (
           <div
             className="mb-4 mt-5 flex w-full flex-wrap items-center gap-5  pl-5 pr-5"
