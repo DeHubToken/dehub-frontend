@@ -169,7 +169,7 @@ export default function Form({ plan, getTiers }: any) {
                 <div className="w-full   max-w-full flex-[0_0_100%] sm:max-w-[70%]  bg-theme-background ">
                   <input
                     placeholder="Basic tier"
-                    className=" w-full border-none bg-theme-background px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
+                    className=" w-full border-none bg-theme-neutrals-900 px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
                     {...register(`tier.name`, { required: "Tier Name is Required" })}
                   />
                   {errors.tier?.name?.message && (
@@ -189,7 +189,7 @@ export default function Form({ plan, getTiers }: any) {
                 <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%] bg-theme-background">
                   <textarea
                     placeholder="tier description here"
-                    className="  w-full resize-none border-none bg-theme-background px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0"
+                    className="  w-full resize-none border-none bg-theme-neutrals-900 px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0"
                     rows={2}
                     {...register(`tier.description`, {
                       required: "Tier Description Is Required"
@@ -332,7 +332,7 @@ export function BenefitList({ control, tierIndex }: any) {
           onChange={(e) => setBenefit(e.target.value)}
           value={benefit}
           maxLength={100}
-          className="h-full border-none bg-theme-background px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
+          className="h-full border-none bg-theme-neutrals-900 px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
         />
       </div>
 

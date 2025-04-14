@@ -55,7 +55,7 @@ export function LikeButton(
         return;
       }
 
-      const message = vote ? "Vote confirmed" : "Unvote confirmed";
+      const message = "Confirmed";
       setTotal(total + 1);
       setStatus("success");
       toast.success(message);

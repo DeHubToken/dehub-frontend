@@ -386,7 +386,7 @@ export function FeedList(props: FeedProps) {
               </FeedReplyDialog>
             </div>
           </TabsContent>
-          <TabsContent value="subscribed">No Data to show</TabsContent>
+          <TabsContent value="subscribed"></TabsContent>
         </Tabs>
       </div>
     </div>

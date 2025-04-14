@@ -61,7 +61,7 @@ const VideoUploadTab = ({
       <div
         {...getRootProps()}
         className={cn(
-          "relative h-60 w-full rounded-3xl border border-dashed border-gray-200 border-theme-mine-shaft bg-theme-mine-shaft-dark hover:cursor-pointer lg:size-full",
+          "relative h-60 w-full rounded-3xl bg-theme-neutrals-800 hover:cursor-pointer lg:size-full",
           isDragAccept ? "border border-green-500" : "",
           isDragReject ? "border border-red-500" : ""
         )}
