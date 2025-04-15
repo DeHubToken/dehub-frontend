@@ -1,6 +1,6 @@
 import type { NFT } from "@/services/nfts";
 
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
@@ -72,7 +72,7 @@ export async function Feed(props: { tokenId: number }) {
   const userCookie = cookie.get("user_information");
   const user = safeParseCookie<{ address: string }>(userCookie?.value);
   const response = await getNFT(tokenId, user?.address as string);
-
+ 
   if (!response.success) {
     return (
       <div className="absolute left-0 top-0 flex size-full h-screen flex-col items-center justify-center gap-4 text-center">

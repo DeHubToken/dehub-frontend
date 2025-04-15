@@ -1,14 +1,21 @@
+/* eslint-disable */
+
 import React, { useState } from "react";
-import { BigNumber } from "ethers";
-import { useWaitForTransaction } from "wagmi";
 import { useRouter } from "next/navigation";
+import { BigNumber } from "ethers";
+import { toast } from "sonner";
+import { useWaitForTransaction } from "wagmi"; 
 
 import { Button } from "@/components/ui/button";
 
 import { useERC20Contract, useSubscriptionContract } from "@/hooks/use-web3";
+import { useActiveWeb3React } from "@/hooks/web3-connect";
+
+import { webhookPlanCreated } from "@/services/subscription-plans";
+
+import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { SB_ADDRESS } from "@/configs";
-import { toast } from "sonner";
 
 interface PublishOnChainProps {
   chainId: number;
@@ -27,22 +34,41 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
   chainId,
   disabled,
   deployedPlan,
-  field, 
+  field
 }) => {
   const [hash, setHash] = useState<`0x${string}` | undefined>(undefined);
   const subcontract: any = useSubscriptionContract(SB_ADDRESS[chainId]);
   const token: any = useERC20Contract(field.token);
   const router = useRouter();
-
+  const { account, library }: any = useActiveWeb3React();
 
   // Wait for the transaction using useWaitForTransaction
   //@ts-ignore
-  const { data, isLoading, isError, onSuccess } = useWaitForTransaction({
-    hash: hash,  
+  const { data, isLoading, isError, isSuccess } = useWaitForTransaction({
+    hash: hash,
+    onSuccess: async (receipt) => {
+      console.log("Transaction successful,receipt :", receipt);
+      const sig = await getSignInfo(library, account);
+      if (sig.error) {
+        toast.error("Error signing transaction");
+        return;
+      } 
+      const data: any = await webhookPlanCreated({
+        planId: deployedPlan.id,
+        isSuccess: true,
+        chainId: chainId,
+        sig: sig.sig,
+        address: account,
+        token:field.token,
+        timestamp: sig.timestamp,
+        hash: receipt.transactionHash
+      });
+      if (data.error) {
+        toast.error("Error creating plan please try again");
+      }
+      toast.success("Plan created successfully");
+    }
   });
-
-
-
 
   const createPlan = async (
     planId: string,
@@ -54,6 +80,12 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
     amount: number
   ) => {
     try {
+      const sig = await getSignInfo(library, account);
+
+      if (sig.error) {
+        toast.error("Error signing transaction");
+        return;
+      }
       // Fetch token decimals
       const decimals = await token.decimals();
       const dur = duration > 12 ? 0 : duration;
@@ -82,8 +114,9 @@ const PublishOnChain: React.FC<PublishOnChainProps> = ({
   // Transaction success or failure handling
   if (data && !isLoading) {
     console.log("Transaction successful:", data);
-    if (!field.isPublished) { 
-      router.push("/plans")
+
+    if (!field.isPublished) {
+      router.push("/plans");
     }
   }
 

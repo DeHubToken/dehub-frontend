@@ -99,6 +99,15 @@ interface CreateGroupChatData {
   plans: number[];
   address: string;
 }
+export async function updateGroupInfo(data: FormData) {
+  const url = "/dm/group/info";
+  console.log(url)
+  const response = await api<{ error?: boolean; error_msg?: string; status: boolean }>(url, {
+    method: "POST",
+    body: data
+  });
+  return response;
+}
 
 // This function creates a group chat
 export async function createGroupChat(data: CreateGroupChatData) {
@@ -225,7 +234,7 @@ export async function joinGroup(data: JoinGroupData) {
       throw new Error("An unexpected error occurred while joining the group.");
     }
   }
-} 
+}
 
 interface ExitGroupData {
   conversationId: string;
@@ -243,7 +252,7 @@ export async function exitGroup(data: ExitGroupData) {
       body: JSON.stringify(data)
     });
     return res;
-  } catch (error:any) {
+  } catch (error: any) {
     console.error("Error joining group:", error);
 
     // Check for known error formats
@@ -287,5 +296,94 @@ export async function fetchGroupsByPlan(data: { id: string; duration?: string })
     } else {
       throw new Error("An unexpected error occurred while fetching groups by plan.");
     }
+  }
+}
+
+export async function updateUserDmStatus(data: {
+  address: string;
+  status: string;
+  action: string;
+}) {
+  try {
+    const url = `/dm/user-status/${data.address}`;
+
+    // Make the API request
+    const res = await api(url, {
+      method: "POST",
+      body: JSON.stringify({ status: data.status, action: data.action }),
+      headers: { "Content-Type": "application/json" }
+    });
+
+    return res;
+  } catch (error: any) {
+    console.error("Error updating DM user status:", error);
+
+    // Handle known error responses
+    if (error?.response?.status === 400) {
+      throw new Error("Invalid status or action provided.");
+    } else if (error?.response?.status === 404) {
+      throw new Error("User not found.");
+    } else if (error?.response?.status === 500) {
+      throw new Error("Server error. Please try again later.");
+    } else {
+      throw new Error("An unexpected error occurred.");
+    }
+  }
+}
+
+export async function fetchUserDmStatus(address: string) {
+  try {
+    const url = `/dm/user-status/${address}`;
+
+    // Make the API request
+    const res = await api(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" }
+    });
+
+    return res;
+  } catch (error: any) {
+    console.error("Error fetching DM user status:", error);
+
+    // Handle known error responses
+    if (error?.response?.status === 404) {
+      throw new Error("User not found.");
+    } else if (error?.response?.status === 500) {
+      throw new Error("Server error. Please try again later.");
+    } else {
+      throw new Error("An unexpected error occurred.");
+    }
+  }
+}
+
+export async function deleteAllMessages(dmId: string, address: string) {
+  try {
+    const url = `/dm/delete-messages`;
+    const res = await api<{ success: boolean; deletedCount?: number }>(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ dmId, address })
+    });
+
+    return res;
+  } catch (error: any) {
+    console.error("Error deleting messages:", error);
+    if (error?.response) {
+      const { status } = error.response;
+
+      if (status === 400) {
+        throw new Error("Invalid data provided for deleting messages.");
+      } else if (status === 401) {
+        throw new Error("Unauthorized. Please log in to delete messages.");
+      } else if (status === 404) {
+        throw new Error("Messages not found. Please check the DM ID and try again.");
+      } else if (status === 500) {
+        throw new Error("Server error while deleting messages. Please try again later.");
+      }
+    }
+
+    throw new Error("An unexpected error occurred while deleting messages.");
   }
 }

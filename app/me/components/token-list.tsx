@@ -43,7 +43,7 @@ export default function TokensList() {
         <p className="text-lg font-semibold">Holdings</p>
       </div>
 
-      <div className="h-80 w-full overflow-y-scroll rounded-3xl bg-gray-200 dark:bg-theme-mine-shaft">
+      <div className="h-80 w-full overflow-y-scroll rounded-3xl dark:bg-theme-mine-shaft">
         <ul className="h-auto w-full space-y-4 p-4">
           {avaialbleTokens.map((token, index) => {
             if (token.symbol === "DHB") {

@@ -122,12 +122,12 @@ const ActivityHeader = ({ data, type }: { data: any; type: keyof typeof Activity
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-2">
-        <div className="w-[30px]">{activity.icon}</div>
+        <div className="w-[30px]">{activity?.icon}</div>
         <h5>
           <Link href={`/${username}`} className="font-bold hover:underline">
             @{username}
           </Link>{" "}
-          <span>{activity.text}</span>
+          <span>{activity?.text}</span>
         </h5>
       </div>
       <span className="ml-[35px] text-sm font-normal text-[#8B8D90]">{timeAgo}</span>

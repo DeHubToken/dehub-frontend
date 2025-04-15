@@ -13,6 +13,7 @@ import { exitGroup, fetchContacts, fetchDmMessages } from "@/services/dm";
 import { blockDM, unBlockUser } from "@/services/user-report";
 
 import { messages, SocketEvent, TMessage } from "../utils";
+import { showToast } from "@/libs/toast";
 
 type State = {
   socket: any;
@@ -43,6 +44,8 @@ type State = {
   handleUnBlock: () => void;
   handleToggleUserReport: (input: boolean) => void;
   handleToggleConversationMoreOptions: (input: boolean) => void;
+  handleToggleUserDMStatusModal: (input?: boolean) => void;
+  handleToggleDeleteChat:()=>void;
   blockChatHandler: (input: string) => Promise<any>;
   reValidateMessage: (messageId: string, dmId: string) => void;
   handleExitGroup: (userAddress: string) => void;
@@ -55,14 +58,22 @@ type State = {
   toggleTipModal: boolean;
   toggleUserReport: boolean;
   toggleConversationMoreOptions: boolean;
+  toggleUserDMStatusModal: boolean;
+  toggleDeleteChat:boolean;
+  chatWith?: string;
   permissions: {};
   me: any;
 };
 
 const [Provider, useMessage] = createContext<State>("MessagesScreen");
 
-export function MessageProvider(props: { children: React.ReactNode; socketConnections: any }) {
+export function MessageProvider(props: {
+  children: React.ReactNode;
+  socketConnections: any;
+  searchParams: { u?: string };
+}) {
   const { account }: any = useActiveWeb3React();
+  const { searchParams } = props;
   const socket = props?.socketConnections?.current?.dm;
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
   const [status, setStatus] = useState<State["status"]>("idle");
@@ -79,6 +90,8 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const [toggleTipModal, setToggleTipModal] = useState(false);
   const [toggleUserReport, setToggleUserReport] = useState(false);
   const [toggleConversationMoreOptions, setToggleConversationMoreOptions] = useState(false);
+  const [toggleUserDMStatusModal, setToggleUserDMStatusModal] = useState(false);
+  const [toggleDeleteChat, setToggleDeleteChat] = useState(false);
   const [chatStatus, setChatStatus] = useState({
     reportedId: null,
     allow: true,
@@ -111,15 +124,12 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       socket.off(SocketEvent.deleteMessage, handleDeletedMessage);
     };
   }, [socket]);
-  const errorHandler = (error: any) => {
-    toast.error(error.msg);
+  const errorHandler = (error: any) => { 
+    showToast("error",error,"top-right")
   };
 
-  const handleTipUpdates = (data: any) => {
-    console.log("handleTipUpdates", data);
-
-    const { dmId, tips } = data; // Extract dmId and messageId from data
-
+  const handleTipUpdates = (data: any) => {  
+    const { dmId, tips } = data; // Extract dmId and messageId from data 
     setMessages((prevState: any) => {
       return prevState.map((state: any) => {
         if (state._id === dmId) {
@@ -136,14 +146,16 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   const handleAddNewChat = ({ msg, data }: any) => {
     if (!data) {
       return;
-    }
-    console.log("handleAddNewChat", { msg, data });
+    } 
     setMessages((prevState: any[]) => {
       const exist = prevState.find((d) => d._id == data._id);
-      if (exist) return prevState;
+      setSelectedMessageId(data._id);
+      if (exist) {
+        return prevState;
+      }
       return [data, ...prevState];
-    });
-    toast.success(msg);
+    }); 
+    showToast("success",msg,"top-right")
   };
   const newMsgHandler = (data: any) => {
     setMessages((privState: any) => {
@@ -164,10 +176,9 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   };
   const handleUnBlock = async (reportId?: string) => {
     if (!account) {
-      toast.error("Please connect to your wallet.");
+      showToast("error","Please connect to your wallet.","top-right");
       return;
-    }
-    console.log("reportId:", reportId);
+    } 
     try {
       const { success, error, data }: any = await unBlockUser({
         conversationId: message._id,
@@ -176,13 +187,13 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       });
 
       if (!success) {
-        toast.error(error || "Failed to unblock the user or conversation.");
+        showToast("error",error || "Failed to unblock the user or conversation.","top-right");
         return;
       }
 
       if (data.unblocked) {
         // Updated to match the API response
-        toast.success(data.message);
+        showToast("success",data.message,"top-right");
 
         // Update the messages state to reflect the unblocked status
         // setMessages((prevMessages: any[]) =>
@@ -211,7 +222,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     if (!account) {
       toast.error("please connect to wallet.");
       return;
-    } 
+    }
     const { data, error }: any = await blockDM({
       conversationId: message._id,
       reason,
@@ -222,7 +233,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       toast.error(error);
       return;
     }
-    const reportedId = data.reportedId; 
+    const reportedId = data.reportedId;
     if (!userAddress) {
       setChatStatus({
         allow: false,
@@ -267,7 +278,7 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
   };
   const startNewChat = (user: { address: string; username: string; _id?: string }) => {
     socket.emit(SocketEvent.createAndStart, user);
-    toast.success(`please wait starting chat with ${user.username || user.address}`);
+    toast.success(`Please wait starting chat with ${user.username || user.address}`);
   };
   const sendMessage = (content = "", gif = null, type = "msg") => {
     socket.emit(SocketEvent.sendMessage, { content, gif, type, dmId: message?._id });
@@ -416,6 +427,12 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
     setToggleTipModal((b) => !b);
   };
 
+  const handleToggleUserDMStatusModal = () => { 
+    setToggleUserDMStatusModal((b) => !b);
+  };
+  const handleToggleDeleteChat=()=>{
+    setToggleDeleteChat((b) => !b);
+  }
   return (
     <Provider
       chatStatus={chatStatus}
@@ -440,16 +457,21 @@ export function MessageProvider(props: { children: React.ReactNode; socketConnec
       handleToggleUserReport={handleToggleUserReport}
       handleToggleTipModal={handleToggleTipModal}
       handleToggleConversationMoreOptions={handleToggleConversationMoreOptions}
+      handleToggleUserDMStatusModal={handleToggleUserDMStatusModal}
+      handleToggleDeleteChat={handleToggleDeleteChat}
       toggleTipModal={toggleTipModal}
       toggleEmoji={toggleEmoji}
       toggleGif={toggleGif}
       toggleMedia={toggleMedia}
       toggleUserReport={toggleUserReport}
       toggleConversationMoreOptions={toggleConversationMoreOptions}
+      toggleDeleteChat={toggleDeleteChat}
+      toggleUserDMStatusModal={toggleUserDMStatusModal}
       handleUnBlock={handleUnBlock}
       blockChatHandler={blockChatHandler}
       reValidateMessage={reValidateMessage}
       handleExitGroup={handleExitGroup}
+      chatWith={searchParams?.u ?? ""}
       permissions={{}}
       refresh={fetchMyContacts}
     >
