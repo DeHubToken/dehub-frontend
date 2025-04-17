@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FaCheckCircle, FaQuestionCircle, FaSpinner, FaTimesCircle } from "react-icons/fa";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+
 import { getDpayTnx } from "@/services/dpay";
+
+import { chainIcons, supportedTokens } from "@/configs";
 
 type TnxStatus = "pending" | "success" | "failed" | "init" | "Token_verified";
 
@@ -22,7 +26,7 @@ interface TnxData {
   txnHash?: string;
   note?: string;
   type: string;
-  tokenSendStatus: "not_sent" | "sending" | "sent" | "failed";
+  tokenSendStatus: "not_sent" | "sending" | "sent" | "cancelled" | "failed";
   tokenSendRetryCount: number;
   receiverAddress: string;
   tokenSendTxnHash?: string;
@@ -78,7 +82,7 @@ const TnxPage = () => {
     return () => clearInterval(interval);
   }, [sid]);
 
-  const getStatusIcon = () => {
+  const getStatusIcon = useCallback(() => {
     switch (status) {
       case "init":
       case "pending":
@@ -93,42 +97,43 @@ const TnxPage = () => {
       default:
         return <FaQuestionCircle className="mx-auto mb-4 text-4xl text-gray-400" />;
     }
-  };
+  }, [status]);
 
   const getSteps = () => {
     if (!txData) return [];
     return [
       {
         label: "Transaction Created",
-        completed: true,
+        completed: true
       },
-      {
-        label: "Stripe Payment",
-        completed: status !== "init",
-      },
+
       {
         label:
           status === "success"
             ? "Payment Completed"
             : status === "failed"
-            ? "Payment Failed"
-            : "Awaiting Payment",
+              ? "Payment Failed"
+              : "Awaiting Payment",
         completed: status !== "init" && status !== "pending",
-        failed: status === "failed",
+        failed: status === "failed"
       },
       {
         label:
           txData.tokenSendStatus === "not_sent"
             ? "Awaiting Token Initiation"
             : txData.tokenSendStatus === "sending"
-            ? "Token Sending"
-            : txData.tokenSendStatus === "sent"
-            ? "Token Transaction Sent"
-            : "Token Transaction Failed",
+              ? "Token Sending"
+              : txData.tokenSendStatus === "sent"
+                ? "Token Transaction Sent"
+                : txData.tokenSendStatus === "cancelled"
+                  ? "Token Transaction Cancelled"
+                  : "Token Transaction Failed",
         completed:
-          txData.tokenSendStatus === "sent" || txData.tokenSendStatus === "failed",
-        failed: txData.tokenSendStatus === "failed",
-      },
+          txData.tokenSendStatus === "sent" ||
+          txData.tokenSendStatus === "failed" ||
+          txData.tokenSendStatus === "cancelled",
+        failed: txData.tokenSendStatus === "failed" || txData.tokenSendStatus === "cancelled"
+      }
     ];
   };
 
@@ -159,24 +164,51 @@ const TnxPage = () => {
 
     const fields: [string, any][] = [
       ["Transaction ID", txData._id],
-      ["Amount", `${txData.amount} ${txData.tokenSymbol}`],
+      ["Amount", `$${txData.amount}`],
       ["Receiver ID", txData.receiverId],
       ["Receiver Address", txData.receiverAddress],
       ["Type", txData.type],
-      ["Chain ID", txData.chainId],
+      [
+        "Chain ID",
+        <Image src={chainIcons[txData.chainId]} height={30} width={30} alt={`${txData.chainId}`} />
+      ],
+      [
+        "Approx. Tokens To Receive",
+        <span className="flex gap-1">
+          <span> {txData.approxTokensToReceive}</span>
+
+          <Image
+            src={supportedTokens.find((t) => t.symbol == txData.tokenSymbol)?.iconUrl ?? ""}
+            alt="dd"
+            height={15}
+            width={20}
+          />
+        </span>
+      ],
+      [
+        "Approx. Tokens To Send",
+        <span className="flex gap-1">
+          <span> {txData.approxTokensToSent}</span>
+
+          <Image
+            src={supportedTokens.find((t) => t.symbol == txData.tokenSymbol)?.iconUrl ?? ""}
+            alt="dd"
+            height={15}
+            width={20}
+          />
+        </span>
+      ],
       ["Token Address", txData.tokenAddress],
       ["Session ID", txData.sessionId],
       ["Stripe Status", txData.status_stripe],
       ["Token Send Status", txData.tokenSendStatus],
       ["Retry Count", txData.tokenSendRetryCount],
       ["Token Send Txn Hash", txData.tokenSendTxnHash],
-      ["Approx. Tokens To Receive", txData.approxTokensToReceive],
-      ["Approx. Tokens To Send", txData.approxTokensToSent],
       ["Txn Hash", txData.txnHash],
-      ["Note", txData.note],
-      ["Last Tried At", txData.lastTriedAt && new Date(txData.lastTriedAt).toLocaleString()],
-      ["Created At", new Date(txData.createdAt).toLocaleString()],
-      ["Updated At", txData.updatedAt && new Date(txData.updatedAt).toLocaleString()],
+      ["Note", txData.note]
+      // ["Last Tried At", txData.lastTriedAt && new Date(txData.lastTriedAt).toLocaleString()],
+      // ["Created At", new Date(txData.createdAt).toLocaleString()],
+      // ["Updated At", txData.updatedAt && new Date(txData.updatedAt).toLocaleString()],
     ];
 
     return (
