@@ -14,17 +14,19 @@ type FeedProps = {
   title: string;
   category?: string;
   range?: string;
+  sort?: string;
   type: string;
   q?: string;
 };
 
 export async function Stream(props: FeedProps) {
-  const { category, range, type, q } = props;
+  const { category, range, type, q ,sort} = props;
   const cookie = cookies();
   const userCookie = cookie.get("user_information");
   const user = safeParseCookie<{ address: string }>(userCookie?.value);
   const res = await getNFTs({
     sortMode: type,
+    sort,
     unit: q ? 50 : 20,
     category: category === "All" ? null : category,
     range,

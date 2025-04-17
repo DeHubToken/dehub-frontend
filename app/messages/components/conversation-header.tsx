@@ -13,7 +13,7 @@ import { miniAddress } from "@/libs/strings";
 
 export function ConversationHeader() {
   const { selectedMessage: message } = useMessage("MessageListHeader");
-  const { participants, conversationType, groupName = "" }: any = message; 
+  const { participants, conversationType, groupName = "",iconUrl="" }: any = message; 
   const user = participants[0]?.participant;  
   if (!user) return null;
   if (conversationType == "dm") {
@@ -55,7 +55,7 @@ export function ConversationHeader() {
               <AvatarImage
                 className="size-12 object-cover"
                 alt={groupName}
-                src={getGroupAvatarUrl("")}
+                src={getGroupAvatarUrl(iconUrl)}
               />
             </Avatar>
             <span className="text-2xl font-bold">{groupName}</span>

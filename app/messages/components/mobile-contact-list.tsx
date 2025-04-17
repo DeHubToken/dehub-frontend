@@ -2,8 +2,8 @@
 
 import type { TMessage } from "../utils";
 
-import { useState } from "react";
-import { CirclePlus, MessageCircle, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CirclePlus, CloudMoon, CloudMoonIcon, MessageCircle, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,7 @@ import { cn } from "@/libs/utils";
 import { ContactList } from "./contact-list";
 import { NewChatModal } from "./new-chat-modal";
 import { NewGroupChatModal } from "./new-group-chat";
+import { useMessage } from "./provider";
 
 type MobileContactListProps = React.ComponentProps<"div">;
 
@@ -27,12 +28,18 @@ export function MobileContactList(props: MobileContactListProps) {
   const [open, setOpen] = useState(false);
   const [isOpenGroupModal, setIsOpenGroupModal] = useState(false);
   const [isDmModal, setIsDmModal] = useState(false);
+  const { selectedMessageId,handleToggleUserDMStatusModal } = useMessage("MobileContactList");
   const handleDmChatModal = () => {
     setIsDmModal((b) => !b);
   };
   const handleGroupChatModal = () => {
     setIsOpenGroupModal((b) => !b);
   };
+  useEffect(() => {
+    if (selectedMessageId) {
+      setOpen(false);
+    }
+  }, [selectedMessageId]);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -50,6 +57,10 @@ export function MobileContactList(props: MobileContactListProps) {
           <Button onClick={handleGroupChatModal}>
             <Users className="size-5" />
             &nbsp;&nbsp;Group
+          </Button>
+          <Button onClick={()=>handleToggleUserDMStatusModal()}>
+            <CloudMoonIcon className="size-5" />
+            &nbsp;&nbsp;DND
           </Button>
           <SheetDescription className="sr-only">Your inbox</SheetDescription>
         </SheetHeader>

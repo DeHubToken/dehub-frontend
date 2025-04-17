@@ -31,7 +31,7 @@ function Figure(props: { url: string }) {
         />
       )}
       {loading && (
-        <div className="absolute top-0 z-[1] size-full bg-gray-300 dark:bg-theme-mine-shaft-dark">
+        <div className="absolute top-0 z-[1] size-full   dark:bg-theme-mine-shaft-dark">
           <div className="shimmer size-full" />
         </div>
       )}

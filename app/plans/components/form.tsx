@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -36,11 +38,13 @@ import { chains, useActiveWeb3React } from "@/hooks/web3-connect";
 import { createPlan, updatePlan } from "@/services/subscription-plans";
 
 import { supportedNetworks } from "@/web3/configs";
+import { getSignInfo } from "@/web3/utils/web3-actions";
 
-import { chainIcons, durations, SB_ADDRESS, supportedTokens } from "@/configs";
+import { chainIcons, ChainId, durations, SB_ADDRESS, supportedTokens } from "@/configs";
 
 import PublishOnChain from "./publish-on-chain";
 import { SubscriptionModalPreView } from "./subscription-preview";
+import { Input } from "@/components/ui/input";
 
 type FormValues = {
   tier: {
@@ -51,7 +55,7 @@ type FormValues = {
 };
 
 export default function Form({ plan, getTiers }: any) {
-  const { account, chainId } = useActiveWeb3React();
+  const { account, chainId, library }: any = useActiveWeb3React();
   const router = useRouter();
   const planId = plan != undefined ? plan.id : null;
   const [isPending, setIsPending] = useState(false);
@@ -90,6 +94,7 @@ export default function Form({ plan, getTiers }: any) {
 
   const { tier } = watch();
   const onSubmit = async (plan: any) => {
+    const { sig, timestamp }: any = await getSignInfo(library, account);
     // Add your API call logic here
     let { benefits, ...tier } = plan.tier;
     benefits = benefits.map((b: any) => b.value);
@@ -100,22 +105,27 @@ export default function Form({ plan, getTiers }: any) {
     plan = { ...tier, benefits };
     try {
       setIsPending(true);
-      const data: any = planId !== null ? await updatePlan(plan, planId) : await createPlan(plan);
+      const data: any =
+        planId !== null
+          ? await updatePlan(plan, planId, account, sig, timestamp)
+          : await createPlan(plan, account, sig, timestamp);
       if (data?.error) {
         toast.error(data?.error);
+        setIsPending(false);
         return;
       }
       if (planId) {
-        reset();
-        setIsPending(false);
         toast.success("plan Updated");
-        router.push("/plans");
-        return;
+      } else {
+        toast.success("plan created");
       }
-      toast.success("plan created");
+      router.push("/plans");
+
       setIsPending(false);
+      if (getTiers) {
+        await getTiers();
+      }
       reset();
-      await getTiers();
       return;
     } catch (error: any) {
       toast.error(error.message);
@@ -156,7 +166,7 @@ export default function Form({ plan, getTiers }: any) {
                 <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
                   <h1 className="text-xl">Tiers Name</h1>
                 </div>
-                <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%]  ">
+                <div className="w-full   max-w-full flex-[0_0_100%] sm:max-w-[70%]  bg-theme-background ">
                   <input
                     placeholder="Basic tier"
                     className=" w-full border-none bg-theme-neutrals-900 px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
@@ -176,7 +186,7 @@ export default function Form({ plan, getTiers }: any) {
                 <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
                   <h1 className="text-xl">Description</h1>
                 </div>
-                <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%]">
+                <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%] bg-theme-background">
                   <textarea
                     placeholder="tier description here"
                     className="  w-full resize-none border-none bg-theme-neutrals-900 px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0"
@@ -247,7 +257,7 @@ export const SetDuration = ({
         const currentDuration = durations.find((d) => d.value === field.value); // Find the duration object by value
 
         return (
-          <div className="flex w-full max-w-full flex-[0_0_100%] items-center justify-between pl-8 sm:max-w-[70%] sm:flex-[0_0_70%]">
+          <div className="flex w-full max-w-full flex-[0_0_100%] items-center justify-between pl-8 sm:max-w-[70%] sm:flex-[0_0_70%] bg-theme-background">
             <p className="text-lg">{currentDuration?.title}</p>
             <div className="flex items-center justify-end gap-1">
               <Button
@@ -299,7 +309,7 @@ export function BenefitList({ control, tierIndex }: any) {
   });
 
   return (
-    <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%]">
+    <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%]  bg-theme-background">
       <div className="ml-3 mt-3 flex flex-wrap gap-5">
         {benefitFields.map((field: { id: string; value: string }, n: number) => (
           <div
@@ -353,14 +363,14 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId, 
   });
 
   return (
-    <div className="flex w-full flex-wrap items-stretch justify-start border-b border-gray-300/25">
+    <div className="flex w-full flex-wrap items-stretch justify-start border-b border-gray-300/25 bg-theme-background">
       {/* Section Header */}
-      <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
+      <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25   bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
         <h1 className="text-xl">Chains</h1>
       </div>
 
       {/* Chain List Section */}
-      <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_60%]">
+      <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_60%] ">
         {tier?.chains?.map((field: any, index: number) => (
           <div
             className="mb-4 mt-5 flex w-full flex-wrap items-center gap-5  pl-5 pr-5"
@@ -385,7 +395,7 @@ export const ChainSection = ({ deployedPlan, tier, control, onPublish, chainId, 
             <div className="w-auto sm:w-40 md:w-48">
               <div className="flex items-center justify-center gap-5 align-middle">
                 <label> Amount: </label>
-                <input
+                <Input
                   type="number"
                   min={0}
                   style={{ minWidth: 100 }}

@@ -139,7 +139,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
           );
         })}
       </div>
-      <Link href={`plans/${id}`}>
+      <Link href={`/plans/${id}?_=${new Date().getMilliseconds()}`}> 
         <Button className="mt-4 w-full" variant="gradientOne">
           Explore
         </Button>

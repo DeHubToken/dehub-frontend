@@ -14,6 +14,7 @@ import { getContractForChain } from "@/web3/utils/contract";
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { ChainId } from "@/configs";
+import { getBadge } from "@/web3/utils/calc";
 
 export async function getStakingAmount(account: string | undefined) {
   if (!account) return 0;
@@ -35,20 +36,6 @@ export async function getStakingAmount(account: string | undefined) {
 export async function getAccount(usernameOrAddress: string) {
   const url = `/account_info/${usernameOrAddress}`;
   const response = await api<{ result: User }>(url);
-  if (response.success) {
-    // Uncomment when staking contract comes
-    // const stakedDHB = await getStakingAmount(response.data.result.address);
-    return {
-      ...response,
-      data: {
-        ...response.data,
-        result: {
-          ...response.data.result
-          //  stakedDHB, badge: getBadge(stakedDHB)
-        }
-      }
-    };
-  }
   return response;
 }
 

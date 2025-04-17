@@ -19,17 +19,19 @@ async function TabVideoUploads({ isOwner, user, searchParams }: Props) {
   if (!user?.address) {
     return <div>No Uploads</div>;
   }
-
-  const res = await getNFTs({
+  const parms = {
     minter: user.address,
     unit: 40,
     address: user.address,
     postType: "video",
     sortMode: searchParams?.type,
+    sort: searchParams?.sort,
     category: searchParams?.category === "All" ? null : searchParams?.category,
     range: searchParams?.range,
     search: searchParams?.q
-  });
+  };
+  console.log("getNFTs_parms", parms);
+  const res = await getNFTs(parms);
 
   const data = res.success ? res.data.result : [];
   console.log("data[0]", data[0]);
@@ -59,6 +61,7 @@ async function TabFeedsImagesUploads({ isOwner, user, searchParams }: Props) {
         minter={user?.address?.toLowerCase()}
         category={searchParams?.category}
         range={searchParams?.range}
+        sort={searchParams?.sort}
         type={searchParams?.type}
         q={searchParams?.q}
       />
@@ -108,19 +111,21 @@ async function TabUserActivity({ isOwner, user }: Props) {
   }
   const res: any = await getUserActivity(user?.address);
   return (
-    <div className="flex w-full flex-col justify-center gap-3">
-      {res?.data?.map((data: any, key: number) => {
-        const postType = data.nft[0]?.postType ?? "video";
-        const isVideo = data.nft.length > 0 && postType === "video";
-        const isFeed =
-          (data.nft.length > 0 && postType === "feed-simple") || postType === "feed-images";
-        return (
-          <ActivityCard key={key} data={data} type={data.type} isOwner={isOwner}>
-            {isVideo && <StreamItem nft={data.nft[0]} isOwner={isOwner} />}
-            {isFeed && <FeedItem feed={data.nft[0]} />}
-          </ActivityCard>
-        );
-      })}
+    <div className="mx-auto min-w-[calc((600/16)*1rem)] max-w-[calc((600/16)*1rem)]">
+      <div className="flex   flex-col justify-center gap-3">
+        {res?.data?.map((data: any, key: number) => {
+          const postType = data.nft[0]?.postType ?? "video";
+          const isVideo = data.nft.length > 0 && postType === "video";
+          const isFeed =
+            (data.nft.length > 0 && postType === "feed-simple") || postType === "feed-images";
+          return (
+            <ActivityCard key={key} data={data} type={data.type} isOwner={isOwner}>
+              {isVideo && <StreamItem nft={data.nft[0]} isOwner={isOwner} />}
+              {isFeed && <FeedItem feed={data.nft[0]} />}
+            </ActivityCard>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -139,7 +144,7 @@ export default async function ProfileTabViewServer(props: any) {
   const TabComponent = tabComponents[activeTab] || (() => <div>Invalid Tab</div>);
   return (
     <div className="mt-12 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
-      <div className="h-auto w-full">
+      <div className="w- h-auto">
         <TabComponent
           user={props.user}
           isOwner={props.isOwner}

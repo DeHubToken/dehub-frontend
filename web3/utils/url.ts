@@ -48,11 +48,8 @@ export function getAvatarUrl(url: string) {
 }
 
 export function getGroupAvatarUrl(url: string) {
-  if (!url) return "/icons/team.png";
-
-  const fileName = url.split("/").pop();
-
-  return `${env.NEXT_PUBLIC_CDN_BASE_URL}/avatars/${fileName}`;
+  if (!url) return "/images/default-avatar.png";
+  return `${env.NEXT_PUBLIC_CDN_BASE_URL}/${url}`;
 }
 
 export function getCoverUrl(url: string) {

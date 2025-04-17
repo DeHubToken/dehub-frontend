@@ -22,21 +22,22 @@ import { useStreamProvider } from "./stream-provider";
 
 type Props = React.ComponentProps<typeof Select> & {
   range?: string;
-  sortBy?: string;
+  sort?: string;
   type?: string;
   categories: string[];
   base?: string;
   tab?: string;
 };
 
-const defaults = {
-  type: "trends",
-  sort: "",
-  date: ""
-};
-
 export function FeedRangeFilterMobile(props: Props) {
-  const { range, sortBy, type: defaultType, categories, base, tab } = props;
+  const { range, sort: sortBy, type: defaultType, categories, base, tab } = props; 
+  const defaults = {
+    type: defaultType ?? "trends",
+    sort: "",
+    date: ""
+  };
+  
+  
   const { startTransition } = useStreamProvider("FeedRangeFilterMobile");
   const router = useRouter();
   const searchParams = useSearchParams().toString();
@@ -45,6 +46,7 @@ export function FeedRangeFilterMobile(props: Props) {
   const [type, setType] = useState(defaultType);
   const [sort, setSort] = useState(sortBy);
   const [category, setCategory] = useState("");
+  console.log("FeedRangeFilterMobile",props,defaultType);
 
   const onApply = () => {
     setOpen(false);
@@ -61,7 +63,7 @@ export function FeedRangeFilterMobile(props: Props) {
       }
       const query = stringify(q);
 
-      return router.push(`${base ?? ""}/?${query}`);
+      return router.push(`${base ?? ""}/?${query}`, { scroll: tab == "" });
     });
   };
 
@@ -78,7 +80,7 @@ export function FeedRangeFilterMobile(props: Props) {
       delete q.sort;
       delete q.category;
       const query = stringify(q);
-      return router.push(`${base ?? "/"}?${query}`);
+      return router.push(`${base ?? "/"}?${query}`, { scroll: tab == "" });
     });
   };
 
