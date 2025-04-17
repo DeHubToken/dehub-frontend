@@ -1,6 +1,5 @@
 import { api } from "@/libs/api";
 
- 
 export async function dpayCreateOrder(data: any) {
   const url = `/dpay/checkout`; // API endpoint for creating a group chat
   try {
@@ -29,13 +28,13 @@ export async function dpayCreateOrder(data: any) {
       throw new Error("An unexpected error occurred while creating the group chat.");
     }
   }
-}  
+}
 
 export async function getDpayTnx(sid: string) {
   const url = `/dpay/tnxs?sid=${encodeURIComponent(sid)}`;
   try {
     const res = await api<any[]>(url, {
-      method: "GET",
+      method: "GET"
     });
 
     return res;
@@ -50,6 +49,30 @@ export async function getDpayTnx(sid: string) {
       throw new Error("Server error while fetching transaction.");
     } else {
       throw new Error("An unexpected error occurred while fetching the transaction.");
+    }
+  }
+}
+
+export async function getDpayPrice() {
+  const url = `/dpay/price`;
+
+  try {
+    const res = await api<any>(url, {
+      method: "GET"
+    });
+
+    return res; // <- return only the data
+  } catch (error: any) {
+    console.error("Error fetching price:", error);
+
+    if (error?.response?.status === 400) {
+      throw new Error("Invalid request to fetch price.");
+    } else if (error?.response?.status === 404) {
+      throw new Error("Price data not found.");
+    } else if (error?.response?.status === 500) {
+      throw new Error("Server error while fetching price.");
+    } else {
+      throw new Error("An unexpected error occurred while fetching the price.");
     }
   }
 }

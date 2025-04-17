@@ -15,7 +15,7 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { miniAddress } from "@/libs/strings";
 
-import { dpayCreateOrder } from "@/services/dpay";
+import { dpayCreateOrder, getDpayPrice } from "@/services/dpay";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 const POLL_INTERVAL_MS = 10000;
@@ -39,13 +39,19 @@ const OrderPage = () => {
     if (!tokenPrice) return 0;
     return usdAmount / tokenPrice;
   }, [usdAmount, tokenPrice]);
-
   const fetchTokenPrice = useCallback(async () => {
     try {
-      const { data } = await axios.get(
-        "https://api.coingecko.com/api/v3/simple/price?ids=dehub&vs_currencies=usd"
-      );
-      const price = data?.dehub?.usd;
+      const res = await getDpayPrice();
+
+      const { success, data, error } :any= res;
+
+      if (!success || !data) {
+        console.error("Price fetch failed:", error);
+        return;
+      }
+
+      const { price } = data;
+
       if (price) {
         setTokenPrice(price);
       }
@@ -71,7 +77,7 @@ const OrderPage = () => {
         receiverAddress: account,
         amount: usdAmount,
         tokensToReceive,
-        redirect:window.location.origin
+        redirect: window.location.origin
       });
 
       console.log("res", res);
