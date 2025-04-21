@@ -20,12 +20,15 @@ import { useUser } from "@/hooks/use-user";
 import { truncate } from "@/libs/strings";
 import { cn, createAvatarName } from "@/libs/utils";
 
-import { getLiveStream } from "@/services/broadcast/broadcast.service";
+import { getLiveStream, likeLiveStream } from "@/services/broadcast/broadcast.service";
+
+import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { StreamStatus } from "@/configs";
 
 import { LivestreamEvents, StreamActivityType } from "../enums/livestream.enum";
-import TipAnimation, { GiftAnimation } from "./tip-animation";
+import GiftModal from "./gift-modal";
+import TipAnimation from "./tip-animation";
 
 export function LiveChat(props: { streamId: string }) {
   const { streamId } = props;
@@ -36,7 +39,7 @@ export function LiveChat(props: { streamId: string }) {
   const [messages, setMessages] = useState<any[]>([]);
   const [tipAnimations, setTipAnimations] = useState<Array<{ id: string; amount: number }>>([]);
   const { socket } = useWebSockets();
-  const { account } = useUser();
+  const { account, library } = useUser();
 
   //   // Fetch initial stream data and activities
   useEffect(() => {
@@ -49,6 +52,34 @@ export function LiveChat(props: { streamId: string }) {
     };
     fetchStream();
   }, [streamId]);
+  const likeStream = async () => {
+    if (!account) return toast.error("Connect your wallet!");
+    if (!socket || !stream) throw new Error("WebSocket is not connected.");
+    try {
+      const signData = await getSignInfo(library, account);
+      const response = await likeLiveStream(stream._id, {
+        streamId: stream._id,
+        address: account.toLowerCase(),
+        sig: signData.sig,
+        timestamp: signData.timestamp
+      });
+      if (!response.success) {
+        // @ts-expect-error
+        toast.error(response.error || response.message);
+        return;
+      }
+
+      // @ts-expect-error
+      if (response.success && response.error) {
+        // @ts-expect-error
+        toast.error(response.error || response.message);
+        return;
+      }
+      toast.success("Liked stream");
+    } catch (e: any) {
+      toast.error(e.message || "Failed to like stream");
+    }
+  };
 
   //   // Listen for WebSocket events
   useEffect(() => {
@@ -236,7 +267,7 @@ export function LiveChat(props: { streamId: string }) {
       </div>
 
       {tipAnimations.map((tip) => (
-        <GiftAnimation key={tip.id} />
+        <TipAnimation key={tip.id} amount={tip.amount} />
       ))}
 
       {!stream?.settings?.chat?.enabled ? (
@@ -287,15 +318,29 @@ export function LiveChat(props: { streamId: string }) {
             className="h-11 flex-1 rounded-full"
             disabled={stream?.status !== StreamStatus.LIVE}
           />
-          <Button
+          {/* <Button
             className="rounded-full"
             variant="gradientOne"
             disabled={stream?.status !== StreamStatus.LIVE}
           >
             <Gift />
-          </Button>
+          </Button> */}
+          <GiftModal
+            tokenId={0}
+            to={stream?.address}
+            stream={stream}
+            trigger={
+              <Button
+                className="rounded-full"
+                variant="gradientOne"
+                disabled={stream?.status !== StreamStatus.LIVE}
+              >
+                <Gift />
+              </Button>
+            }
+          />
           <Button
-            onClick={handleSendMessage}
+            onClick={likeStream}
             className="rounded-full text-theme-neutrals-400"
             disabled={stream?.status !== StreamStatus.LIVE}
           >

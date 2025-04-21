@@ -114,7 +114,6 @@ export default function BroadcastStream(props: { streamId: string }) {
           ? true
           : false;
       const status = getStreamStatus(stream, user, chainId);
-      console.log("Status", status, stream);
       setIsFreeStream(isFree);
       setExtraDetails(status);
     };
@@ -216,7 +215,6 @@ export default function BroadcastStream(props: { streamId: string }) {
     );
   }
 
-  console.log("isFreeStream", isFreeStream, extraDetails, user);
   if (!isFreeStream) {
     return (
       <ErrorComponent stream={stream}>
