@@ -76,3 +76,27 @@ export async function getDpayPrice() {
     }
   }
 }
+
+export async function getSupply() {
+  const url = "/dpay/available/tokens";
+
+  try {
+    const res = await api<any>(url, {
+      method: "GET"
+    });
+
+    return res;
+  } catch (error: any) {
+    console.error("Error fetching available token supply:", error);
+
+    if (error?.response?.status === 400) {
+      throw new Error("Invalid request to fetch available token supply.");
+    } else if (error?.response?.status === 404) {
+      throw new Error("Token supply data not found.");
+    } else if (error?.response?.status === 500) {
+      throw new Error("Server error while fetching token supply.");
+    } else {
+      throw new Error("An unexpected error occurred while fetching token supply.");
+    }
+  }
+}

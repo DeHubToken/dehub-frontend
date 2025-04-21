@@ -12,7 +12,7 @@ import { getDpayTnx } from "@/services/dpay";
 
 import { chainIcons, supportedTokens } from "@/configs";
 
-type TnxStatus = "pending" | "success" | "failed" | "init" | "Token_verified";
+type TnxStatus = "pending" | "succeeded" | "failed" | "init" | "Token_verified";
 
 interface TnxData {
   _id: string;
@@ -87,7 +87,7 @@ const TnxPage = () => {
       case "init":
       case "pending":
         return <FaSpinner className="mx-auto mb-4 animate-spin text-4xl text-yellow-500" />;
-      case "success":
+      case "succeeded":
         return <FaCheckCircle className="mx-auto mb-4 text-4xl text-green-600" />;
       case "failed":
         return <FaTimesCircle className="mx-auto mb-4 text-4xl text-red-500" />;
@@ -109,7 +109,7 @@ const TnxPage = () => {
 
       {
         label:
-          status === "success"
+          status === "succeeded"
             ? "Payment Completed"
             : status === "failed"
               ? "Payment Failed"
@@ -161,79 +161,121 @@ const TnxPage = () => {
 
   const renderDetailsGrid = () => {
     if (!txData) return null;
-
+  
+    const skeletonText = (
+      <span className="h-4 w-24 animate-pulse rounded bg-gray-300 inline-block" />
+    );
+  
+    const getFieldValue = (label: string, value: any) => {
+      if (value !== null && value !== undefined && value !== "") return value;
+  
+      const pendingLikeStatuses = ["pending", "processing", "initiated"];
+      const failedLikeStatuses = ["failed", "error"];
+  
+      const valueStr = value?.toString()?.toLowerCase();
+  
+      if (pendingLikeStatuses.some((s) => valueStr?.includes(s))) {
+        return <span className="text-yellow-500">Pending</span>;
+      }
+  
+      if (failedLikeStatuses.some((s) => valueStr?.includes(s))) {
+        return <span className="text-red-500">Failed</span>;
+      }
+  
+      return skeletonText;
+    };
+  
     const fields: [string, any][] = [
-      ["Transaction ID", txData._id],
-      ["Amount", `$${txData.amount}`],
-      ["Receiver ID", txData.receiverId],
-      ["Receiver Address", txData.receiverAddress],
-      ["Type", txData.type],
-      [
-        "Chain ID",
-        <Image src={chainIcons[txData.chainId]} height={30} width={30} alt={`${txData.chainId}`} />
-      ],
+      ["Transaction ID", getFieldValue("Transaction ID", txData._id)],
+      ["Amount", getFieldValue("Amount", `$${txData.amount}`)],
+      ["Receiver Wallet Address", getFieldValue("Receiver Wallet Address", txData.receiverAddress)],
+      ["Type", getFieldValue("Type", txData.type)],
       [
         "Approx. Tokens To Receive",
-        <span className="flex gap-1">
-          <span> {txData.approxTokensToReceive}</span>
-
-          <Image
-            src={supportedTokens.find((t) => t.symbol == txData.tokenSymbol)?.iconUrl ?? ""}
-            alt="dd"
-            height={15}
-            width={20}
-          />
+        <span className="flex items-center gap-1">
+          {txData.approxTokensToReceive ? (
+            <>
+              <span className="text-xl">{txData.approxTokensToReceive}</span>
+              <Image
+                src={supportedTokens.find((t) => t.symbol === txData.tokenSymbol)?.iconUrl ?? ""}
+                alt="token"
+                height={30}
+                width={30}
+              />
+              <Image
+                src={chainIcons[txData.chainId]}
+                height={30}
+                width={30}
+                alt={`${txData.chainId}`}
+              />
+            </>
+          ) : (
+            <>
+              <span className="h-6 w-16 animate-pulse rounded-md bg-gray-300" />
+              <span className="h-8 w-8 animate-pulse rounded-full bg-gray-300" />
+              <span className="h-8 w-8 animate-pulse rounded-full bg-gray-300" />
+            </>
+          )}
         </span>
       ],
       [
         "Approx. Tokens To Send",
-        <span className="flex gap-1">
-          <span> {txData.approxTokensToSent}</span>
-
-          <Image
-            src={supportedTokens.find((t) => t.symbol == txData.tokenSymbol)?.iconUrl ?? ""}
-            alt="dd"
-            height={15}
-            width={20}
-          />
+        <span className="flex items-center gap-1">
+          {txData.approxTokensToSent ? (
+            <>
+              <span className="text-xl">{txData.approxTokensToSent}</span>
+              <Image
+                src={supportedTokens.find((t) => t.symbol === txData.tokenSymbol)?.iconUrl ?? ""}
+                alt="token"
+                height={30}
+                width={30}
+              />
+              <Image
+                src={chainIcons[txData.chainId]}
+                height={30}
+                width={30}
+                alt={`${txData.chainId}`}
+              />
+            </>
+          ) : (
+            <>
+              <span className="h-6 w-16 animate-pulse rounded-md bg-gray-300" />
+              <span className="h-8 w-8 animate-pulse rounded-full bg-gray-300" />
+              <span className="h-8 w-8 animate-pulse rounded-full bg-gray-300" />
+            </>
+          )}
         </span>
-      ],
-      ["Token Address", txData.tokenAddress],
-      ["Session ID", txData.sessionId],
-      ["Stripe Status", txData.status_stripe],
-      ["Token Send Status", txData.tokenSendStatus],
-      ["Retry Count", txData.tokenSendRetryCount],
-      ["Token Send Txn Hash", txData.tokenSendTxnHash],
-      ["Txn Hash", txData.txnHash],
-      ["Note", txData.note]
-      // ["Last Tried At", txData.lastTriedAt && new Date(txData.lastTriedAt).toLocaleString()],
-      // ["Created At", new Date(txData.createdAt).toLocaleString()],
-      // ["Updated At", txData.updatedAt && new Date(txData.updatedAt).toLocaleString()],
+      ], 
+      ["Session ID", getFieldValue("Session ID", txData.sessionId)],
+      ["Stripe Status", getFieldValue("Stripe Status", txData.status_stripe)],
+      ["Token Send Status", getFieldValue("Token Send Status", txData.tokenSendStatus)], 
+      ["Token Send Txn Hash", getFieldValue("Token Send Txn Hash", txData.tokenSendTxnHash)]
     ];
-
+  
     return (
       <div className="grid w-full grid-cols-1 gap-4 text-left text-sm sm:grid-cols-2">
-        {fields.map(([label, value]) =>
-          value ? (
-            <div key={label} className="rounded-lg border border-gray-100 bg-gray-50 p-3 shadow-sm">
-              <p className="text-xs font-medium text-gray-500">{label}</p>
-              <p className="overflow-hidden text-ellipsis break-words text-sm font-semibold text-gray-800">
-                {value}
-              </p>
-            </div>
-          ) : null
-        )}
+        {fields.map(([label, value]) => (
+          <div
+            key={label}
+            className="rounded-lg border border-gray-100 bg-gray-50 p-3 shadow-sm"
+          >
+            <p className="text-xs font-medium text-gray-500">{label}</p>
+            <p className="overflow-hidden text-ellipsis break-words text-sm font-semibold text-gray-800">
+              {value}
+            </p>
+          </div>
+        ))}
       </div>
     );
   };
-
+  
   const getDescription = () => {
     switch (status) {
       case "init":
         return "Transaction created. Waiting for Stripe session confirmation.";
       case "pending":
         return "Please wait while your payment is processed.";
-      case "success":
+      case "succeeded":
         return `Payment successful! You’ll receive approximately ${txData?.approxTokensToReceive ?? "N/A"} ${txData?.tokenSymbol}.`;
       case "failed":
         return "Payment failed. Please try again or contact support.";
