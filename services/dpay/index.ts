@@ -100,3 +100,26 @@ export async function getSupply() {
     }
   }
 }
+export async function getSuccessTotal() {
+  const url = "/dpay/total?type=success";
+
+  try {
+    const res = await api<any>(url, {
+      method: "GET"
+    });
+
+    return res;
+  } catch (error: any) {
+    console.error("Error fetching available token supply:", error);
+
+    if (error?.response?.status === 400) {
+      throw new Error("Invalid request to fetch available token total.");
+    } else if (error?.response?.status === 404) {
+      throw new Error("Total data not found.");
+    } else if (error?.response?.status === 500) {
+      throw new Error("Server error while fetching token total;.");
+    } else {
+      throw new Error("An unexpected error occurred while fetching token total.");
+    }
+  }
+}

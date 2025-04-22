@@ -5,7 +5,7 @@ type Props = {};
 
 const TokenInformationPanel = (props: Props) => {
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="flex  items-center justify-center px-4">
       <div className="w-full max-w-md rounded-2xl p-6 shadow-xl">
         <div className="mb-6 text-center">
           <h2 className="text-2xl font-semibold">About DeHub & DPay</h2>
