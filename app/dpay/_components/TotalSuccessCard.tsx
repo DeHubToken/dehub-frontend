@@ -2,8 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
+
 import { getSuccessTotal } from "@/services/dpay";
+
 import { chainIcons, supportedTokens } from "@/configs";
+
+import TokenAndChainIcon from "./TokenAndChainIcon";
 
 type TotalData = {
   chainId: number;
@@ -24,9 +29,9 @@ const TotalSuccessGrid = () => {
           {
             chainId: 8453,
             tokenSymbol: "DHB",
-            total: 0,
+            total: 0
           },
-          ...res.data,
+          ...res.data
         ]);
       }
     } catch (error) {
@@ -44,49 +49,31 @@ const TotalSuccessGrid = () => {
   if (data.length <= 0) return null;
 
   return (
-    <div className="p-6">
-      {/* <h2 className="mb-8 text-3xl font-bold text-gray-800">
-        🚀 Transfers Summary
-      </h2> */}
+    <div className="w-full p-6 hover:bg-gray-50 hover:bg-opacity-10 " >
+      <h2 className="mb-8 text-3xl font-bold  ">
+        Transfers Summary
+      </h2>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2">
         {data.map((item, index) => {
-          const token = supportedTokens.find((t) => t.symbol === item.tokenSymbol);
-          const tokenIcon = token?.iconUrl ?? "";
-          const chainIcon = chainIcons[item.chainId];
-
           return (
             <div
               key={index}
-              className="rounded-2xl bg-white p-5 shadow-lg border border-gray-100 hover:shadow-xl transition-transform hover:-translate-y-1"
+              className="min-w-48 rounded-2xl border p-5 shadow-lg transition-transform hover:-translate-y-1 hover:shadow-xl"
             >
               {/* Header Row */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full overflow-hidden border border-gray-200">
-                    <Image
-                      src={chainIcon}
-                      alt={`Chain ${item.chainId}`}
-                      height={40}
-                      width={40}
-                    />
-                  </div>
-                  
-                </div>
-
-                <div className="h-10 w-10 rounded-full overflow-hidden">
-                  <Image src={tokenIcon} alt={item.tokenSymbol} height={40} width={40} />
+              <div className="mb-4 flex items-center justify-between">
+                <TokenAndChainIcon tokenSymbol={item.tokenSymbol} chainId={item.chainId} />
+                {/* Badge */}
+                <div className="mt-1 inline-block rounded-full px-3 py-1 text-xl font-medium  ">
+                  {item.tokenSymbol}
                 </div>
               </div>
 
-              {/* Total */}
-              <div className="mt-2 text-2xl font-bold text-green-600">
+              {/* Total with Increment Arrow */}
+              <div className="mt-2 flex items-center justify-center gap-2 text-2xl font-bold text-green-600">
                 {item.total.toLocaleString()}
-              </div>
-
-              {/* Badge */}
-              <div className="mt-1 inline-block rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-700">
-                {item.tokenSymbol}
+                <ArrowUpRight className="animate-bounce-slow h-5 w-5 text-green-500" />
               </div>
             </div>
           );

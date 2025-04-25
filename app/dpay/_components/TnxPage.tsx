@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FaCheckCircle, FaQuestionCircle, FaSpinner, FaTimesCircle } from "react-icons/fa";
 import { toast } from "sonner";
 
@@ -12,73 +12,58 @@ import { getDpayTnx } from "@/services/dpay";
 
 import { chainIcons, supportedTokens } from "@/configs";
 
-type TnxStatus = "pending" | "succeeded" | "failed" | "init" | "Token_verified";
+import { TnxData, TnxResponse, TnxStatus } from "../types";
+import TokenAndChainIcon from "./TokenAndChainIcon";
 
-interface TnxData {
-  _id: string;
-  receiverId: string;
-  sessionId: string;
-  amount: number;
-  tokenSymbol: string;
-  tokenAddress?: string;
-  chainId: number;
-  status_stripe: TnxStatus;
-  txnHash?: string;
-  note?: string;
-  type: string;
-  tokenSendStatus: "not_sent" | "sending" | "sent" | "cancelled" | "failed";
-  tokenSendRetryCount: number;
-  receiverAddress: string;
-  tokenSendTxnHash?: string;
-  approxTokensToReceive?: string;
-  approxTokensToSent?: string;
-  lastTriedAt?: string;
-  createdAt: string;
-  updatedAt?: string;
-}
-
-interface TnxResponse {
-  error?: string;
-  success: boolean;
-  data?: TnxData[];
-}
-
-const TnxPage = () => {
+const TnxPage = ({ sid }: { sid: string }) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const sid = searchParams.get("sid");
 
   const [status, setStatus] = useState<TnxStatus | "not_found">("pending");
   const [txData, setTxData] = useState<TnxData | null>(null);
+  const [timeLeft, setTimeLeft] = useState(5);
+  const [loading, setLoading] = useState(false);
+
+  const fetchTnxStatus = async () => {
+    if (!sid) return;
+    setLoading(true);
+    try {
+      const response: TnxResponse = await getDpayTnx({ sid });
+      if (!response.success) {
+        toast.error(response.error || "Failed to fetch transaction");
+        setStatus("not_found");
+        return;
+      }
+      if (!response.data?.tnxs) {
+        setStatus("not_found");
+        return;
+      }
+      const data = response.data?.tnxs[0];
+      
+      setTxData(data);
+      setStatus(data.status_stripe);
+    } catch (error) {
+      console.error("Error fetching transaction status:", error);
+      setStatus("failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!sid) return;
 
-    const fetchTnxStatus = async () => {
-      try {
-        const response: TnxResponse = await getDpayTnx(sid);
-        if (!response.success) {
-          toast.error(response.error || "Failed to fetch transaction");
-          setStatus("not_found");
-          return;
-        }
-
-        const data = response.data?.[0];
-        if (!data) {
-          setStatus("not_found");
-          return;
-        }
-
-        setTxData(data);
-        setStatus(data.status_stripe);
-      } catch (error) {
-        console.error("Error fetching transaction status:", error);
-        setStatus("failed");
-      }
-    };
-
     fetchTnxStatus();
-    const interval = setInterval(fetchTnxStatus, 3000);
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          fetchTnxStatus();
+          return 5;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
     return () => clearInterval(interval);
   }, [sid]);
 
@@ -106,7 +91,6 @@ const TnxPage = () => {
         label: "Transaction Created",
         completed: true
       },
-
       {
         label:
           status === "succeeded"
@@ -137,57 +121,36 @@ const TnxPage = () => {
     ];
   };
 
-  const renderStepProgress = () => {
-    const steps = getSteps();
-    return (
-      <div className="mb-6 flex w-full flex-wrap items-center justify-center gap-4 text-left">
-        {steps.map((step, i) => (
-          <div key={i} className="flex items-center gap-2">
-            {step.completed ? (
-              step.failed ? (
-                <FaTimesCircle className="text-red-500" />
-              ) : (
-                <FaCheckCircle className="text-green-500" />
-              )
-            ) : (
-              <FaSpinner className="animate-spin text-yellow-500" />
-            )}
-            <span className="text-sm">{step.label}</span>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  const shimmer = <span className="inline-block h-4 w-24 animate-pulse rounded bg-gray-300" />;
 
   const renderDetailsGrid = () => {
     if (!txData) return null;
-  
-    const skeletonText = (
-      <span className="h-4 w-24 animate-pulse rounded bg-gray-300 inline-block" />
-    );
-  
+
     const getFieldValue = (label: string, value: any) => {
       if (value !== null && value !== undefined && value !== "") return value;
-  
+
       const pendingLikeStatuses = ["pending", "processing", "initiated"];
       const failedLikeStatuses = ["failed", "error"];
-  
+
       const valueStr = value?.toString()?.toLowerCase();
-  
+
       if (pendingLikeStatuses.some((s) => valueStr?.includes(s))) {
         return <span className="text-yellow-500">Pending</span>;
       }
-  
+
       if (failedLikeStatuses.some((s) => valueStr?.includes(s))) {
         return <span className="text-red-500">Failed</span>;
       }
-  
-      return skeletonText;
+
+      return shimmer;
     };
-  
+
     const fields: [string, any][] = [
       ["Transaction ID", getFieldValue("Transaction ID", txData._id)],
-      ["Amount", getFieldValue("Amount", `$${txData.amount}`)],
+      [
+        "Amount",
+        getFieldValue("Amount", `${txData.amount} ${txData.currency?.toUpperCase() ?? "USD"}`)
+      ],
       ["Receiver Wallet Address", getFieldValue("Receiver Wallet Address", txData.receiverAddress)],
       ["Type", getFieldValue("Type", txData.type)],
       [
@@ -196,18 +159,7 @@ const TnxPage = () => {
           {txData.approxTokensToReceive ? (
             <>
               <span className="text-xl">{txData.approxTokensToReceive}</span>
-              <Image
-                src={supportedTokens.find((t) => t.symbol === txData.tokenSymbol)?.iconUrl ?? ""}
-                alt="token"
-                height={30}
-                width={30}
-              />
-              <Image
-                src={chainIcons[txData.chainId]}
-                height={30}
-                width={30}
-                alt={`${txData.chainId}`}
-              />
+              <TokenAndChainIcon tokenSymbol={txData.tokenSymbol} chainId={txData.chainId} />
             </>
           ) : (
             <>
@@ -224,18 +176,7 @@ const TnxPage = () => {
           {txData.approxTokensToSent ? (
             <>
               <span className="text-xl">{txData.approxTokensToSent}</span>
-              <Image
-                src={supportedTokens.find((t) => t.symbol === txData.tokenSymbol)?.iconUrl ?? ""}
-                alt="token"
-                height={30}
-                width={30}
-              />
-              <Image
-                src={chainIcons[txData.chainId]}
-                height={30}
-                width={30}
-                alt={`${txData.chainId}`}
-              />
+              <TokenAndChainIcon tokenSymbol={txData.tokenSymbol} chainId={txData.chainId} />
             </>
           ) : (
             <>
@@ -245,22 +186,28 @@ const TnxPage = () => {
             </>
           )}
         </span>
-      ], 
+      ],
       ["Session ID", getFieldValue("Session ID", txData.sessionId)],
       ["Stripe Status", getFieldValue("Stripe Status", txData.status_stripe)],
-      ["Token Send Status", getFieldValue("Token Send Status", txData.tokenSendStatus)], 
-      ["Token Send Txn Hash", getFieldValue("Token Send Txn Hash", txData.tokenSendTxnHash)]
+      ["Token Send Status", getFieldValue("Token Send Status", txData.tokenSendStatus)],
+      [
+        "Token Send Txn Hash",
+        getFieldValue(
+          "Token Send Txn Hash",
+          txData.tokenSendStatus === "sent" ? txData.tokenSendTxnHash : txData.tokenSendStatus
+        )
+      ]
     ];
-  
+
     return (
       <div className="grid w-full grid-cols-1 gap-4 text-left text-sm sm:grid-cols-2">
         {fields.map(([label, value]) => (
           <div
             key={label}
-            className="rounded-lg border border-gray-100 bg-gray-50 p-3 shadow-sm"
+            className={`rounded-lg border border-gray-50 p-3 shadow-sm transition duration-500 ease-in-out ${loading ? "animate-pulse bg-gray-50" : ""}`}
           >
-            <p className="text-xs font-medium text-gray-500">{label}</p>
-            <p className="overflow-hidden text-ellipsis break-words text-sm font-semibold text-gray-800">
+            <p className="text-xs font-medium ">{label}</p>
+            <p className="overflow-hidden text-ellipsis break-words text-sm font-semibold ">
               {value}
             </p>
           </div>
@@ -268,7 +215,7 @@ const TnxPage = () => {
       </div>
     );
   };
-  
+
   const getDescription = () => {
     switch (status) {
       case "init":
@@ -288,26 +235,60 @@ const TnxPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4 py-10">
-      <div className="w-full max-w-4xl space-y-6 rounded-2xl bg-white p-6 text-center shadow-lg md:p-10">
+    <div className="flex min-h-screen items-center justify-center px-4 py-10">
+      <div className="w-full max-w-4xl space-y-6 rounded-2xl bg-gray-50 bg-opacity-10 p-6 text-center shadow-lg md:p-10">
         {getStatusIcon()}
         <div>
-          <h2 className="text-xl font-bold text-gray-800">
+          <h2 className="text-xl font-bold">
             {status === "not_found"
               ? "Transaction Not Found"
               : (getSteps()[3]?.label ?? "Checking Status...")}
           </h2>
-          <p className="mt-1 text-sm text-gray-600">{getDescription()}</p>
+          <p className="mt-1 text-sm ">{getDescription()}</p>
         </div>
         {txData && (
           <>
-            <div className="text-left">{renderStepProgress()}</div>
+            <div className="flex flex-wrap justify-center gap-2 text-left align-middle ">
+              {getSteps().length > 0 &&
+                getSteps().map((step, i) => (
+                  <div key={i} className="mb-2 flex items-center gap-2">
+                    {step.completed ? (
+                      step.failed ? (
+                        <FaTimesCircle className="text-red-500" />
+                      ) : (
+                        <FaCheckCircle className="text-green-500" />
+                      )
+                    ) : (
+                      <FaSpinner className="animate-spin text-yellow-500" />
+                    )}
+                    <span className="text-sm">{step.label}</span>
+                  </div>
+                ))}
+            </div>
             {renderDetailsGrid()}
           </>
         )}
-        <Button className="mt-6 w-full" onClick={() => router.push("/")}>
-          Back to Home
-        </Button>
+        <div className="text-sm text-gray-400">Next auto check in: {timeLeft}s</div>
+        <div className="flex flex-col items-center justify-center gap-2 pt-4 sm:flex-row">
+          <Button
+            className="mt-2 w-full max-w-xs sm:w-40"
+            variant="outline"
+            onClick={() => router.push("/dpay")}
+          >
+            Back to Dpay
+          </Button>
+          <Button
+            className="mt-2 w-full max-w-xs sm:w-40"
+            onClick={() => {
+              setTimeLeft(5);
+              fetchTnxStatus();
+            }}
+            variant="gradientOne"
+            disabled={loading}
+          >
+            {loading ? "Checking..." : "Check Now"}
+          </Button>
+        </div>
       </div>
     </div>
   );

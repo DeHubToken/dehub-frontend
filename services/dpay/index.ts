@@ -1,4 +1,5 @@
 import { api } from "@/libs/api";
+import objectToGetParams, { removeUndefined } from "@/libs/utils";
 
 export async function dpayCreateOrder(data: any) {
   const url = `/dpay/checkout`; // API endpoint for creating a group chat
@@ -30,10 +31,11 @@ export async function dpayCreateOrder(data: any) {
   }
 }
 
-export async function getDpayTnx(sid: string) {
-  const url = `/dpay/tnxs?sid=${encodeURIComponent(sid)}`;
+export async function getDpayTnx(filter: any) {
+  const query = objectToGetParams(removeUndefined(filter));
+  const url = `/dpay/tnxs${query}`;
   try {
-    const res = await api<any[]>(url, {
+    const res = await api<{}>(url, {
       method: "GET"
     });
 
@@ -53,8 +55,9 @@ export async function getDpayTnx(sid: string) {
   }
 }
 
-export async function getDpayPrice() {
-  const url = `/dpay/price`;
+export async function getDpayPrice(filter: { currency: string; chainId: number }) {
+  const query = objectToGetParams(removeUndefined(filter));
+  const url = `/dpay/price${query}`;
 
   try {
     const res = await api<any>(url, {

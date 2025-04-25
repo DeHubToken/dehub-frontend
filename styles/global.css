@@ -274,3 +274,9 @@ input:focus, select:focus{ box-shadow: none !important;}
     @apply h-auto min-h-screen w-full max-w-full flex-1 px-6 lg:min-w-[calc(100%-var(--tabpanel-width))] lg:max-w-[calc(100%-var(--tabpanel-width))];
   }
 }
+
+@layer utilities {
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+}

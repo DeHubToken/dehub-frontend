@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input.new";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -28,7 +28,7 @@ import { dpayCreateOrder, getDpayPrice, getSupply } from "@/services/dpay";
 import { supportedNetworks } from "@/web3/configs";
 import { getAuthParams, getSignInfo } from "@/web3/utils/web3-actions";
 
-import { chainIcons, ChainId, isDevMode, supportedTokens } from "@/configs";
+import { chainIcons, ChainId, isDevMode, supportedCurrencies, supportedTokens } from "@/configs";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 const POLL_INTERVAL_MS = 10000;
@@ -45,10 +45,13 @@ type DpayCreateOrderApiResponse = {
 
 const OrderPage = () => {
   const [tokenPrice, setTokenPrice] = useState<number | null>(null);
-  const [usdAmount, setUsdAmount] = useState<number>(10);
+  const [amount, setAmount] = useState<number>(10);
   const [selectedChainId, setSelectedChainId] = useState(
     isDevMode ? ChainId.BSC_TESTNET : ChainId.BASE_MAINNET
   );
+  const [selectedCurrency, setSelectedCurrency] = useState("usd");
+
+  const [tokenSymbol, setTokenSymbol] = useState("DHB");
   // List of allowed chains
   const allowedChainIds = [ChainId.BSC_TESTNET, ChainId.BASE_MAINNET, ChainId.BSC_MAINNET];
 
@@ -74,12 +77,12 @@ const OrderPage = () => {
 
   const tokensToReceive = useMemo(() => {
     if (!tokenPrice) return 0;
-    return usdAmount / tokenPrice;
-  }, [usdAmount, tokenPrice]);
+    return amount / tokenPrice;
+  }, [amount, tokenPrice]);
 
   const fetchTokenPrice = useCallback(async () => {
     try {
-      const res = await getDpayPrice();
+      const res = await getDpayPrice({ currency: selectedCurrency, chainId: selectedChainId }); // pass selectedCurrency to API
       const { success, data, error }: any = res;
 
       if (!success || !data) {
@@ -88,7 +91,6 @@ const OrderPage = () => {
       }
 
       const { price } = data;
-
       if (price) {
         setTokenPrice(price);
       }
@@ -96,7 +98,7 @@ const OrderPage = () => {
       toast.error("Failed to fetch token price");
       console.error("Failed to fetch token price:", err);
     }
-  }, []);
+  }, [selectedCurrency]);
 
   const fetchSupply = useCallback(async () => {
     try {
@@ -128,6 +130,7 @@ const OrderPage = () => {
   }, [fetchTokenPrice, fetchSupply]);
 
   const handleConfirmCheckout = useCallback(async () => {
+    console.log("sending....");
     if (!account) {
       toast.error("Please connect to Wallet");
       return;
@@ -135,7 +138,7 @@ const OrderPage = () => {
     setLoading(true);
     try {
       const sig = await getSignInfo(library, account);
-      const chainSupply = supplyData?.[selectedChainId]?.DHB || 0;
+      // const chainSupply = supplyData?.[selectedChainId]?.DHB || 0;
       // if (chainSupply === 0) {
       //   toast.error( " Purchase unavailable — no DEHUB supply on this chain.");
       //   setLoading(false);
@@ -146,12 +149,18 @@ const OrderPage = () => {
         chainId: selectedChainId,
         address: account,
         receiverAddress: account,
-        amount: usdAmount,
+        amount: amount,
         tokensToReceive,
+        tokenSymbol,
+        currency: selectedCurrency,
         redirect: window.location.origin,
         ...sig
       };
-      const res: any = await dpayCreateOrder(data);
+      const res: any = await dpayCreateOrder(data); 
+      if (!res.success) {
+        toast.error(res.error);
+        return
+      }
       const result = await stripe?.redirectToCheckout({ sessionId: res.data.sessionId });
       if (result?.error) alert(result.error.message);
     } catch (err) {
@@ -161,7 +170,7 @@ const OrderPage = () => {
       setLoading(false);
       setShowModal(false);
     }
-  }, [usdAmount, tokensToReceive, account, chainId]);
+  }, [amount, tokensToReceive, account, chainId, selectedChainId]);
 
   useEffect(() => {
     const fun = async () => {
@@ -178,71 +187,49 @@ const OrderPage = () => {
       toast.error("Please connect to Wallet");
       return;
     }
-    const { sig, timestamp, error } = await getSignInfo(library, account);
 
     setShowModal(true);
   };
   return (
     <div className="flex   items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-2xl p-6 shadow-xl">
+      <div className="w-full max-w-md rounded-2xl p-6   bg-slate-50  bg-opacity-5 shadow-xl">
         {/* DPay Header */}
         <div className="mb-6 text-center">
           <h1 className="text-3xl font-bold">DPay</h1>
           <p className="text-sm">Buy DeHub tokens using DPay</p>
         </div>
-
+        <label className="mb-3 block text-sm font-medium">
+          <div className="mb-1 flex items-center gap-2">Select Currency:</div>
+          <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
+            <SelectTrigger className="h-10 w-full rounded-md bg-transparent">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {supportedCurrencies.map((cur) => (
+                <SelectItem key={cur} value={cur}>
+                  {cur.toUpperCase()}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </label>
         {/* Token Price */}
         <div className="mb-4 flex items-center justify-between text-sm">
           <span>Current DEHUB Price:</span>
           <span className="font-semibold">
-            {tokenPrice ? `$${tokenPrice.toFixed(4)}` : "Loading..."}
+            {tokenPrice
+              ? `${tokenPrice.toFixed(4)} ${selectedCurrency.toUpperCase()}`
+              : "Loading..."}
           </span>
-        </div>
-
-        {/* Supply Monitor */}
-        <div className="mb-4 text-sm">
-          <h2 className="mb-2 text-sm font-semibold">Token Supply Monitor</h2>
-          {Object.keys(supplyData).length === 0 ? (
-            <p>Loading supply data...</p>
-          ) : (
-            <div className="space-y-2 rounded-md border p-3 text-xs shadow-sm">
-              {Object.entries(supplyData).map(([cid, tokens]) => (
-                <div key={cid}>
-                  <div className="mb-1 flex font-semibold">
-                    <span>Chain : </span>{" "}
-                    <Image src={chainIcons[Number(cid)]} height={10} width={15} alt={`${cid}`} />
-                  </div>
-                  <ul className="ml-3 list-disc">
-                    {Object.entries(tokens).map(([symbol, value]) => (
-                      <li key={symbol}>
-                        {symbol}:{" "}
-                        {Number(value) === 0 ? (
-                          <span className="font-medium text-red-500">No Supply</span>
-                        ) : (
-                          <span className="font-medium">
-                            {Number(value).toLocaleString(undefined, {
-                              maximumFractionDigits: 4
-                            })}
-                          </span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* USD Amount Input */}
         <label className="mb-3 block text-sm font-medium">
-          <div className="mb-1 flex items-center gap-2">
-            <FaDollarSign /> USD Amount:
-          </div>
+          <div className="mb-1 flex items-center gap-2">Amount [{selectedCurrency.toUpperCase()}]:</div>
           <Input
             type="number"
-            value={usdAmount}
-            onChange={(e) => setUsdAmount(Number(e.target.value))}
+            value={amount}
+            onChange={(e) => setAmount(Number(e.target.value))}
             className="w-full rounded-lg border focus:outline-none"
             min={1}
           />
@@ -255,7 +242,7 @@ const OrderPage = () => {
           </div>
           <Input
             type="text"
-            value={account || ""}
+            value={miniAddress(account) || ""}
             readOnly
             className="w-full cursor-not-allowed rounded-lg border px-4 py-2"
           />
@@ -264,6 +251,7 @@ const OrderPage = () => {
           <div className="mb-1 flex items-center gap-2">
             <Link className=" size-4 font-bold" /> Select Chain:
           </div>
+
           <Select
             value={`${selectedChainId}`}
             onValueChange={(value) => setSelectedChainId(Number(value))}
@@ -316,11 +304,11 @@ const OrderPage = () => {
 
             <div className="rounded-lg p-4 text-sm shadow-sm">
               <div className="mb-2 flex items-center justify-between">
-                <span>USD Amount</span>
-                <span className="font-medium">${usdAmount.toFixed(2)}</span>
+                <span>{selectedCurrency.toUpperCase()} Amount</span>
+                <span className="font-medium">{amount.toFixed(2)} [{selectedCurrency.toUpperCase()}]</span>
               </div>
               <div className="mb-2 flex items-center justify-between">
-                <span>DEHUB to Receive</span>
+                <span>Approx Receive {tokenSymbol}</span>
                 <span className="font-medium">{tokensToReceive.toFixed(2)}</span>
               </div>
               <div className="flex items-center justify-between">

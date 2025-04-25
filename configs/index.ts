@@ -36,6 +36,7 @@ export const chainIcons: Record<number, any> = {
   [ChainId.SEPOLIA]:"https://sepolia.etherscan.io/images/logo-128.png"
   
 };
+export const supportedCurrencies = ["usd", "eur", "gbp","inr"];
 
 export const streamInfoKeys = {
   isLockContent: "isLockContent",
