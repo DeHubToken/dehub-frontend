@@ -21,6 +21,9 @@ export interface TnxData {
   createdAt: string;
   updatedAt?: string;
   currency?: string;
+  fee?:number;
+  net?:number;
+  exchange_rate?:number; 
 }
 
 export interface TnxResponse {

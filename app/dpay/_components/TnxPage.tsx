@@ -38,7 +38,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
         return;
       }
       const data = response.data?.tnxs[0];
-      
+
       setTxData(data);
       setStatus(data.status_stripe);
     } catch (error) {
@@ -144,12 +144,31 @@ const TnxPage = ({ sid }: { sid: string }) => {
 
       return shimmer;
     };
-
     const fields: [string, any][] = [
       ["Transaction ID", getFieldValue("Transaction ID", txData._id)],
       [
         "Amount",
-        getFieldValue("Amount", `${txData.amount} ${txData.currency?.toUpperCase() ?? "USD"}`)
+        getFieldValue("Amount", `${txData.amount} ${txData.currency?.toUpperCase() ?? "GBP"}`)
+      ],
+      [
+        "Platform Fee",
+        getFieldValue(
+          "Platform Fee",
+          `${txData.fee??0}  GBP`
+        )
+      ],
+      [
+        "Exchange Rate",
+        getFieldValue(
+          "Exchange Rate",
+          `${txData.exchange_rate??0 } GBP`
+        )
+      ],
+      [
+        "Net Amount",
+        getFieldValue(
+          "Net Amount",`${txData.net??0} GBP`
+        )
       ],
       ["Receiver Wallet Address", getFieldValue("Receiver Wallet Address", txData.receiverAddress)],
       ["Type", getFieldValue("Type", txData.type)],
