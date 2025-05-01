@@ -25,7 +25,7 @@ import { miniAddress } from "@/libs/strings";
 
 import { dpayCreateOrder, getDpayPrice, getSupply } from "@/services/dpay";
 
-import { supportedNetworks } from "@/web3/configs";
+import { NETWORK_URLS, supportedNetworks } from "@/web3/configs";
 import { getAuthParams, getSignInfo } from "@/web3/utils/web3-actions";
 
 import { chainIcons, ChainId, isDevMode, supportedCurrencies, supportedTokens } from "@/configs";
@@ -57,7 +57,18 @@ const OrderPage = () => {
 
   // Filter once and memoize (optional for performance)
   const filteredChains = useMemo(
-    () => supportedNetworks.filter((c) => allowedChainIds.includes(c.chainId)),
+    () => supportedNetworks.concat({
+      id: ChainId.BSC_TESTNET,
+      chainId: ChainId.BSC_TESTNET,
+      ticker: "BNB",
+      name: "BNB Testnet",
+      shortName: "BSC Testnet",
+      rpcUrl: NETWORK_URLS[ChainId.BSC_TESTNET],
+      explorerUrl: "https://testnet.bscscan.com/",
+      value: "BNB Testnet",
+      label: "BNB Testnet",
+      customAbbreviation: "bsc_test"
+    }).filter((c) => allowedChainIds.includes(c.chainId)),
     [supportedNetworks]
   );
 
@@ -76,13 +87,15 @@ const OrderPage = () => {
   }>({});
 
   const tokensToReceive = useMemo(() => {
-    if (!tokenPrice) return 0;
-    return amount / tokenPrice;
+    if (!tokenPrice || !amount || tokenPrice <= 0) return 0;
+    const grossTokens = amount / tokenPrice;
+    const fee = grossTokens * 0.10; // 10% fee
+    const netTokens = grossTokens - fee;
+    return netTokens;
   }, [amount, tokenPrice]);
-
   const fetchTokenPrice = useCallback(async () => {
     try {
-      const res = await getDpayPrice({ currency: selectedCurrency, chainId: selectedChainId }); // pass selectedCurrency to API
+      const res = await getDpayPrice({ currency: selectedCurrency,tokenSymbol ,amount,chainId: selectedChainId }); // pass selectedCurrency to API
       const { success, data, error }: any = res;
 
       if (!success || !data) {
@@ -98,7 +111,7 @@ const OrderPage = () => {
       toast.error("Failed to fetch token price");
       console.error("Failed to fetch token price:", err);
     }
-  }, [selectedCurrency]);
+  }, [selectedCurrency,amount,tokenSymbol]);
 
   const fetchSupply = useCallback(async () => {
     try {
@@ -137,7 +150,7 @@ const OrderPage = () => {
     }
     setLoading(true);
     try {
-      const sig = await getSignInfo(library, account);
+      // const sig = await getSignInfo(library, account);
       // const chainSupply = supplyData?.[selectedChainId]?.DHB || 0;
       // if (chainSupply === 0) {
       //   toast.error( " Purchase unavailable — no DEHUB supply on this chain.");
@@ -154,7 +167,7 @@ const OrderPage = () => {
         tokenSymbol,
         currency: selectedCurrency,
         redirect: window.location.origin,
-        ...sig
+        // ...sig
       };
       const res: any = await dpayCreateOrder(data); 
       if (!res.success) {
@@ -205,9 +218,9 @@ const OrderPage = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {supportedCurrencies.map((cur) => (
-                <SelectItem key={cur} value={cur}>
-                  {cur.toUpperCase()}
+              {supportedCurrencies.map(({code ,enabled}) => (
+                <SelectItem key={code} value={code}>
+                  {code.toUpperCase()}
                 </SelectItem>
               ))}
             </SelectContent>

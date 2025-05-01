@@ -107,16 +107,19 @@ const TnxPage = ({ sid }: { sid: string }) => {
             ? "Awaiting Token Initiation"
             : txData.tokenSendStatus === "sending"
               ? "Token Sending"
-              : txData.tokenSendStatus === "sent"
-                ? "Token Transaction Sent"
-                : txData.tokenSendStatus === "cancelled"
-                  ? "Token Transaction Cancelled"
-                  : "Token Transaction Failed",
+              : txData.tokenSendStatus === "processing"
+                ? "Processing Transaction"
+                : txData.tokenSendStatus === "sent"
+                  ? "Token Transaction Sent"
+                  : txData.tokenSendStatus === "cancelled"
+                    ? "Token Transaction Cancelled"
+                    : "Token Transaction Failed",
         completed:
           txData.tokenSendStatus === "sent" ||
           txData.tokenSendStatus === "failed" ||
           txData.tokenSendStatus === "cancelled",
-        failed: txData.tokenSendStatus === "failed" || txData.tokenSendStatus === "cancelled"
+        failed: txData.tokenSendStatus === "failed" || txData.tokenSendStatus === "cancelled",
+        processing: txData.tokenSendStatus === "processing"
       }
     ];
   };
@@ -150,26 +153,9 @@ const TnxPage = ({ sid }: { sid: string }) => {
         "Amount",
         getFieldValue("Amount", `${txData.amount} ${txData.currency?.toUpperCase() ?? "GBP"}`)
       ],
-      [
-        "Platform Fee",
-        getFieldValue(
-          "Platform Fee",
-          `${txData.fee??0}  GBP`
-        )
-      ],
-      [
-        "Exchange Rate",
-        getFieldValue(
-          "Exchange Rate",
-          `${txData.exchange_rate??0 } GBP`
-        )
-      ],
-      [
-        "Net Amount",
-        getFieldValue(
-          "Net Amount",`${txData.net??0} GBP`
-        )
-      ],
+      ["Platform Fee", getFieldValue("Platform Fee", `${txData.fee ?? 0}  GBP`)],
+      ["Exchange Rate", getFieldValue("Exchange Rate", `${txData.exchange_rate ?? 0} GBP`)],
+      ["Net Amount", getFieldValue("Net Amount", `${txData.net ?? 0} GBP`)],
       ["Receiver Wallet Address", getFieldValue("Receiver Wallet Address", txData.receiverAddress)],
       ["Type", getFieldValue("Type", txData.type)],
       [

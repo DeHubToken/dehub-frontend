@@ -11,7 +11,7 @@ export interface TnxData {
   txnHash?: string;
   note?: string;
   type: string;
-  tokenSendStatus: "not_sent" | "sending" | "sent" | "cancelled" | "failed";
+  tokenSendStatus: "not_sent" | "sending" | "sent" | "cancelled" | "failed"|"processing";
   tokenSendRetryCount: number;
   receiverAddress: string;
   tokenSendTxnHash?: string;

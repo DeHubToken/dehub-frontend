@@ -92,18 +92,7 @@ const testNetworks = [
 ];
 
 const mainNetworks = [
-  {
-    id: ChainId.BSC_TESTNET,
-    chainId: ChainId.BSC_TESTNET,
-    ticker: "BNB",
-    name: "BNB Testnet",
-    shortName: "BSC Testnet",
-    rpcUrl: NETWORK_URLS[ChainId.BSC_TESTNET],
-    explorerUrl: "https://testnet.bscscan.com/",
-    value: "BNB Testnet",
-    label: "BNB Testnet",
-    customAbbreviation: "bsc_test"
-  },
+  
   {
     id: ChainId.BSC_MAINNET,
     chainId: ChainId.BSC_MAINNET,

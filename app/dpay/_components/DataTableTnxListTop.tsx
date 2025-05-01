@@ -69,7 +69,7 @@ const DataTableTnxListTop = () => {
       },
       {
         header: "Amount",
-        accessorFn: (row) => row.amount,
+        accessorFn: (row) => row.approxTokensToSent ?? row.approxTokensToReceive,
         sortingFn: "basic",
         cell: ({ row }) => {
           const tx = row.original;

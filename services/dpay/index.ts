@@ -55,7 +55,7 @@ export async function getDpayTnx(filter: any) {
   }
 }
 
-export async function getDpayPrice(filter: { currency: string; chainId: number }) {
+export async function getDpayPrice(filter: { currency: string; amount:number,tokenSymbol:string,chainId: number }) {
   const query = objectToGetParams(removeUndefined(filter));
   const url = `/dpay/price${query}`;
 
