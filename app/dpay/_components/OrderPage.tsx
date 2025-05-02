@@ -57,18 +57,21 @@ const OrderPage = () => {
 
   // Filter once and memoize (optional for performance)
   const filteredChains = useMemo(
-    () => supportedNetworks.concat({
-      id: ChainId.BSC_TESTNET,
-      chainId: ChainId.BSC_TESTNET,
-      ticker: "BNB",
-      name: "BNB Testnet",
-      shortName: "BSC Testnet",
-      rpcUrl: NETWORK_URLS[ChainId.BSC_TESTNET],
-      explorerUrl: "https://testnet.bscscan.com/",
-      value: "BNB Testnet",
-      label: "BNB Testnet",
-      customAbbreviation: "bsc_test"
-    }).filter((c) => allowedChainIds.includes(c.chainId)),
+    () =>
+      supportedNetworks
+        .concat({
+          id: ChainId.BSC_TESTNET,
+          chainId: ChainId.BSC_TESTNET,
+          ticker: "BNB",
+          name: "BNB Testnet",
+          shortName: "BSC Testnet",
+          rpcUrl: NETWORK_URLS[ChainId.BSC_TESTNET],
+          explorerUrl: "https://testnet.bscscan.com/",
+          value: "BNB Testnet",
+          label: "BNB Testnet",
+          customAbbreviation: "bsc_test"
+        })
+        .filter((c) => allowedChainIds.includes(c.chainId)),
     [supportedNetworks]
   );
 
@@ -89,13 +92,18 @@ const OrderPage = () => {
   const tokensToReceive = useMemo(() => {
     if (!tokenPrice || !amount || tokenPrice <= 0) return 0;
     const grossTokens = amount / tokenPrice;
-    const fee = grossTokens * 0.10; // 10% fee
+    const fee = grossTokens * 0.1; // 10% fee
     const netTokens = grossTokens - fee;
     return netTokens;
   }, [amount, tokenPrice]);
   const fetchTokenPrice = useCallback(async () => {
     try {
-      const res = await getDpayPrice({ currency: selectedCurrency,tokenSymbol ,amount,chainId: selectedChainId }); // pass selectedCurrency to API
+      const res = await getDpayPrice({
+        currency: selectedCurrency,
+        tokenSymbol,
+        amount,
+        chainId: selectedChainId
+      }); // pass selectedCurrency to API
       const { success, data, error }: any = res;
 
       if (!success || !data) {
@@ -111,7 +119,7 @@ const OrderPage = () => {
       toast.error("Failed to fetch token price");
       console.error("Failed to fetch token price:", err);
     }
-  }, [selectedCurrency,amount,tokenSymbol]);
+  }, [selectedCurrency, amount, tokenSymbol]);
 
   const fetchSupply = useCallback(async () => {
     try {
@@ -150,13 +158,20 @@ const OrderPage = () => {
     }
     setLoading(true);
     try {
-      // const sig = await getSignInfo(library, account);
-      // const chainSupply = supplyData?.[selectedChainId]?.DHB || 0;
-      // if (chainSupply === 0) {
-      //   toast.error( " Purchase unavailable — no DEHUB supply on this chain.");
-      //   setLoading(false);
-      //   return;
-      // }
+      const sig = await getSignInfo(library, account);
+      const chainSupply = supplyData?.[selectedChainId]?.[tokenSymbol] || 0;
+      if (chainSupply === 0) {
+        toast.error(` Purchase unavailable — no ${tokenSymbol} supply on this chain.`);
+        setLoading(false);
+        return;
+      }
+      if (chainSupply <= tokensToReceive) {
+        toast.error(
+          `Insufficient ${tokenSymbol} supply: only ${chainSupply} available on this chain.`
+        );
+        setLoading(false);
+        return;
+      }
       const stripe = await stripePromise;
       const data = {
         chainId: selectedChainId,
@@ -167,12 +182,12 @@ const OrderPage = () => {
         tokenSymbol,
         currency: selectedCurrency,
         redirect: window.location.origin,
-        // ...sig
+        ...sig
       };
-      const res: any = await dpayCreateOrder(data); 
+      const res: any = await dpayCreateOrder(data);
       if (!res.success) {
         toast.error(res.error);
-        return
+        return;
       }
       const result = await stripe?.redirectToCheckout({ sessionId: res.data.sessionId });
       if (result?.error) alert(result.error.message);
@@ -205,7 +220,7 @@ const OrderPage = () => {
   };
   return (
     <div className="flex   items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-2xl p-6   bg-slate-50  bg-opacity-5 shadow-xl">
+      <div className="w-full max-w-md rounded-2xl bg-slate-50   bg-opacity-5  p-6 shadow-xl">
         {/* DPay Header */}
         <div className="mb-6 text-center">
           <h1 className="text-3xl font-bold">DPay</h1>
@@ -218,7 +233,7 @@ const OrderPage = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {supportedCurrencies.map(({code ,enabled}) => (
+              {supportedCurrencies.map(({ code, enabled }) => (
                 <SelectItem key={code} value={code}>
                   {code.toUpperCase()}
                 </SelectItem>
@@ -238,7 +253,9 @@ const OrderPage = () => {
 
         {/* USD Amount Input */}
         <label className="mb-3 block text-sm font-medium">
-          <div className="mb-1 flex items-center gap-2">Amount [{selectedCurrency.toUpperCase()}]:</div>
+          <div className="mb-1 flex items-center gap-2">
+            Amount [{selectedCurrency.toUpperCase()}]:
+          </div>
           <Input
             type="number"
             value={amount}
@@ -318,7 +335,9 @@ const OrderPage = () => {
             <div className="rounded-lg p-4 text-sm shadow-sm">
               <div className="mb-2 flex items-center justify-between">
                 <span>{selectedCurrency.toUpperCase()} Amount</span>
-                <span className="font-medium">{amount.toFixed(2)} [{selectedCurrency.toUpperCase()}]</span>
+                <span className="font-medium">
+                  {amount.toFixed(2)} [{selectedCurrency.toUpperCase()}]
+                </span>
               </div>
               <div className="mb-2 flex items-center justify-between">
                 <span>Approx Receive {tokenSymbol}</span>
