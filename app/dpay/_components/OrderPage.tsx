@@ -28,9 +28,9 @@ import { dpayCreateOrder, getDpayPrice, getSupply } from "@/services/dpay";
 import { NETWORK_URLS, supportedNetworks } from "@/web3/configs";
 import { getAuthParams, getSignInfo } from "@/web3/utils/web3-actions";
 
-import { chainIcons, ChainId, isDevMode, supportedCurrencies, supportedTokens } from "@/configs";
+import { chainIcons, ChainId, env, isDevMode, supportedCurrencies, supportedTokens } from "@/configs";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 const POLL_INTERVAL_MS = 10000;
 
 type DpayCreateOrderData = {
@@ -151,7 +151,7 @@ const OrderPage = () => {
   }, [fetchTokenPrice, fetchSupply]);
 
   const handleConfirmCheckout = useCallback(async () => {
-    console.log("sending....");
+ 
     if (!account) {
       toast.error("Please connect to Wallet");
       return;
@@ -173,6 +173,10 @@ const OrderPage = () => {
         return;
       }
       const stripe = await stripePromise;
+      if (!stripe) {
+        console.error('Stripe is not initialized');
+        return;
+      }
       const data = {
         chainId: selectedChainId,
         address: account,
@@ -189,10 +193,11 @@ const OrderPage = () => {
         toast.error(res.error);
         return;
       }
+     
       const result = await stripe?.redirectToCheckout({ sessionId: res.data.sessionId });
       if (result?.error) alert(result.error.message);
-    } catch (err) {
-      toast.error("Something went wrong!");
+    } catch (err:any) {
+      toast.error(err.message??"Something went wrong!");
       console.error(err);
     } finally {
       setLoading(false);
