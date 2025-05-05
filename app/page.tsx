@@ -27,7 +27,7 @@ type Props = {
 
 export default async function Page(props: Props) {
   const { category, range, type, q, sort } = props.searchParams;
-console.log("searchParams",props.searchParams);
+  console.log("searchParams", props.searchParams);
 
   if (!type) {
     return redirect(`/?type=trends`);
@@ -80,14 +80,14 @@ console.log("searchParams",props.searchParams);
               />
             )}
             {type === "reports" && (
-             <FeedList
-             title={type.toUpperCase()}
-             category={category}
-             range={range}
-             sort={sort}
-             type={type}
-             q={q}
-           />
+              <FeedList
+                title={type.toUpperCase()}
+                category={category}
+                range={range}
+                sort={sort}
+                type={type}
+                q={q}
+              />
             )}
             {type !== "feed" && type !== "reports" && type !== "liked" && type !== "live" && (
               <Stream
