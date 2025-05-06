@@ -62,7 +62,7 @@ export default function RootLayout({ children }: Props) {
         <NoticeModal />
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
