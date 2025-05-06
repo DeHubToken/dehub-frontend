@@ -58,19 +58,7 @@ const OrderPage = () => {
   // Filter once and memoize (optional for performance)
   const filteredChains = useMemo(
     () =>
-      supportedNetworks
-        .concat({
-          id: ChainId.BSC_TESTNET,
-          chainId: ChainId.BSC_TESTNET,
-          ticker: "BNB",
-          name: "BNB Testnet",
-          shortName: "BSC Testnet",
-          rpcUrl: NETWORK_URLS[ChainId.BSC_TESTNET],
-          explorerUrl: "https://testnet.bscscan.com/",
-          value: "BNB Testnet",
-          label: "BNB Testnet",
-          customAbbreviation: "bsc_test"
-        })
+      supportedNetworks 
         .filter((c) => allowedChainIds.includes(c.chainId)),
     [supportedNetworks]
   );
