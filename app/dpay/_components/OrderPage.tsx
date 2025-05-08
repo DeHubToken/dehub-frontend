@@ -53,7 +53,7 @@ const OrderPage = () => {
 
   const [tokenSymbol, setTokenSymbol] = useState("DHB");
   // List of allowed chains
-  const allowedChainIds = [ChainId.BSC_TESTNET, ChainId.BASE_MAINNET, ChainId.BSC_MAINNET];
+  const allowedChainIds = [ChainId.BSC_TESTNET, ChainId.BASE_MAINNET];
 
   // Filter once and memoize (optional for performance)
   const filteredChains = useMemo(

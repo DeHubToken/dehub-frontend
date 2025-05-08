@@ -26,11 +26,11 @@ const TotalSuccessGrid = () => {
       const res = await getSuccessTotal();
       if (res.success) {
         setData([
-          {
-            chainId: 8453,
-            tokenSymbol: "DHB",
-            total: 0
-          },
+          // {
+          //   chainId: 8453,
+          //   tokenSymbol: "DHB",
+          //   total: 0
+          // },
           ...res.data
         ]);
       }

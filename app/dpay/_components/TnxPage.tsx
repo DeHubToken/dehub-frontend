@@ -228,7 +228,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
       case "pending":
         return "Please wait while your payment is processed.";
       case "succeeded":
-        return `Payment successful! You’ll receive approximately ${txData?.approxTokensToReceive ?? "N/A"} ${txData?.tokenSymbol}.`;
+        return `Payment successful! You’ll receive approximately ${txData?.approxTokensToSent ?? "N/A"} ${txData?.tokenSymbol}.`;
       case "failed":
         return "Payment failed. Please try again or contact support.";
       case "Token_verified":
