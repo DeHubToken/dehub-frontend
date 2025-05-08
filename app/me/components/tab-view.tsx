@@ -143,7 +143,7 @@ export default async function ProfileTabViewServer(props: any) {
   const activeTab = props.activeTab ?? "video"; // Default to "video"
   const TabComponent = tabComponents[activeTab] || (() => <div>Invalid Tab</div>);
   return (
-    <div className="mt-12 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
+    <div className="mt-12  feed_list_parent">
       <div className="w- h-auto">
         <TabComponent
           user={props.user}
