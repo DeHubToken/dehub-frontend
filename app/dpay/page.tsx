@@ -1,6 +1,6 @@
 import React from "react";
 
-import BackToLinks from "./_components/<BackToLinks";
+import BackToLinks from "./_components/BackToLinks";
 import DataTableTnxListTop from "./_components/DataTableTnxListTop";
 import OrderPage from "./_components/OrderPage";
 import SupplyBox from "./_components/SupplyBox";

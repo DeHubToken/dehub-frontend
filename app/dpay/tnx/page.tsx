@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 import DataTableTnxListTop10 from "../_components/DataTableTnxListTop";
-import BackToLinks from "../_components/<BackToLinks";
+import BackToLinks from "../_components/BackToLinks";
 
 type Props = {};
 
