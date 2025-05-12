@@ -38,3 +38,18 @@ export default function objectToGetParams(object: {
 export function removeUndefined<T extends object>(obj: T): T {
   return Object.fromEntries(Object.entries(obj).filter(([, value]) => value !== undefined)) as T;
 }
+
+export const getExplorerUrl = (chainId: number, hash: string) => {
+  const explorers: Record<number, string> = {
+    56: "https://bscscan.com/tx/",
+    97: "https://testnet.bscscan.com/tx/",
+    1: "https://etherscan.io/tx/",
+    5: "https://goerli.etherscan.io/tx/",
+    137: "https://polygonscan.com/tx/",
+    80001: "https://mumbai.polygonscan.com/tx/",
+    // Add more as needed
+  };
+
+  const baseUrl = explorers[chainId] || "https://explorer.unknown/tx/";
+  return `${baseUrl}${hash}`;
+};

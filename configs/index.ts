@@ -36,6 +36,7 @@ export const chainIcons: Record<number, any> = {
   [ChainId.SEPOLIA]:"https://sepolia.etherscan.io/images/logo-128.png"
   
 };
+ 
 
 export const streamInfoKeys = {
   isLockContent: "isLockContent",
@@ -351,6 +352,54 @@ const productionTokens = [
   }
 ];
 export const supportedTokens = isDevMode ? devTokens : productionTokens;
+export const supportedCurrencies = [
+  { code: "usd", enabled: true },
+  { code: "aed", enabled: true },
+  { code: "ars", enabled: true },
+  { code: "aud", enabled: true },
+  { code: "bdt", enabled: true },
+  { code: "bhd", enabled: true },
+  { code: "bmd", enabled: true },
+  { code: "brl", enabled: true },
+  { code: "cad", enabled: true },
+  { code: "chf", enabled: true },
+  { code: "clp", enabled: true },
+  { code: "cny", enabled: true },
+  { code: "czk", enabled: true },
+  { code: "dkk", enabled: true },
+  { code: "eur", enabled: true },
+  { code: "gbp", enabled: true },
+  { code: "gel", enabled: true },
+  { code: "hkd", enabled: true },
+  { code: "huf", enabled: true },
+  { code: "idr", enabled: true },
+  { code: "ils", enabled: true },
+  { code: "inr", enabled: true },
+  { code: "jpy", enabled: true },
+  { code: "krw", enabled: true },
+  { code: "kwd", enabled: true },
+  { code: "lkr", enabled: true },
+  { code: "mmk", enabled: true },
+  { code: "mxn", enabled: true },
+  { code: "myr", enabled: true },
+  { code: "ngn", enabled: true },
+  { code: "nok", enabled: true },
+  { code: "nzd", enabled: true },
+  { code: "php", enabled: true },
+  { code: "pkr", enabled: true },
+  { code: "pln", enabled: true },
+  { code: "rub", enabled: true },
+  { code: "sar", enabled: true },
+  { code: "sek", enabled: true },
+  { code: "sgd", enabled: true },
+  { code: "thb", enabled: true },
+  { code: "try", enabled: true },
+  { code: "twd", enabled: true },
+  { code: "uah", enabled: true },
+  { code: "vef", enabled: true },
+  { code: "vnd", enabled: true },
+  { code: "zar", enabled: true }
+];
 
 export const supportedTokensForLockContent = supportedTokens.filter((e) => e.symbol === "DHB");
 export const supportedTokensForPPV = supportedTokens;
