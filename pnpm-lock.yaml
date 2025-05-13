@@ -19592,6 +19592,17 @@ snapshots:
       has-symbols: 1.1.0
 
   hash-base@3.0.5:
+<<<<<<< HEAD
+=======
+    dependencies:
+      inherits: 2.0.4
+      safe-buffer: 5.2.1
+    dev: false
+=======
+  /hash-base@3.0.5:
+    resolution: {integrity: sha512-vXm0l45VbcHEVlTCzs8M+s0VeYsB2lnlAaThoLKGXr3bE/VWDOelNUnycUPEhKEaXARL2TEFjBOyUiM6+55KBg==}
+    engines: {node: '>= 0.10'}
+>>>>>>> ui-single-feeds-issues-fixed
     dependencies:
       inherits: 2.0.4
       safe-buffer: 5.2.1

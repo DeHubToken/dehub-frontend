@@ -213,11 +213,11 @@ export function FeedList(props: FeedProps) {
   }
 
   return (
-    <div className="flex w-full justify-between">
-      <div className="flex-[0_0_250px]" />
-      <div className="mx-auto min-w-[calc((600/16)*1rem)] max-w-[calc((600/16)*1rem)]">
+    <div className="flex w-full justify-between feed_list">
+      {/* <div className="flex-[0_0_250px]" /> */}
+      <div className="mx-auto min-w-[calc((600/16)*1rem)] max-w-[calc((600/16)*1rem)] feedl_ist">
         <Tabs defaultValue="for-you" className="w-full">
-          <div className="mb-6 flex w-full items-center justify-between">
+          <div className="mb-6 flex w-full items-center justify-between respon_sive_tabs">
             <TabsList className="w-fit">
               {tabs.map((tab) => (
                 <TabsTrigger key={tab.value} value={tab.value}>
