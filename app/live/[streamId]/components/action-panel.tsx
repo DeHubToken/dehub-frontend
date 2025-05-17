@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import dayjs from "dayjs";
-import { ThumbsUp } from "lucide-react";
+import { Copy, CopyCheck, ThumbsUp } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useCopyToClipboard } from "react-use";
 import { toast } from "sonner";
 
 import UserProfileCard from "@/app/components/user-profile-card";
@@ -38,6 +39,8 @@ export default function BroadcastActionPanel(props: { stream: any }) {
   const { socket } = useWebSockets();
   const { theme } = useTheme();
   const { account, chainId, library, user } = useUser();
+  const [state, copyToClipboard] = useCopyToClipboard();
+  const [copied, setCopied] = useState(false);
 
   const likeStream = async () => {
     if (!account) return toast.error("Connect your wallet!");
@@ -66,6 +69,12 @@ export default function BroadcastActionPanel(props: { stream: any }) {
     } catch (e: any) {
       toast.error(e.message || "Failed to like stream");
     }
+  };
+
+  const handleCopy = (key: string) => {
+    copyToClipboard(key);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
   };
 
   useEffect(() => {
@@ -119,6 +128,27 @@ export default function BroadcastActionPanel(props: { stream: any }) {
             {stream.account?.username || stream.account.displayName}
           </Link>
         </div>
+
+        {stream.streamKey && (
+          <div className="flex items-center gap-1">
+            <span className="text-theme-neutrals-400">Stream Key:</span>
+            <button
+              onClick={() => handleCopy(stream.streamKey)}
+              className="flex items-center gap-1 text-theme-neutrals-200 hover:text-theme-neutrals-100"
+            >
+              <span className="cursor-pointer">
+                {copied
+                  ? "Copied!"
+                  : `${stream.streamKey.slice(0, 3)}••••${stream.streamKey.slice(-3)}`}
+              </span>
+              {copied ? (
+                <CopyCheck className="h-4 w-4" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+        )}
 
         {stream.status === StreamStatus.SCHEDULED && (
           <div className="flex items-center gap-1">
