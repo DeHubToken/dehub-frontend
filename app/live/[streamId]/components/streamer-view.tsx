@@ -73,7 +73,6 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
     fetchIngest();
   }, [stream]);
 
-  console.log("StreamerView", stream, ingestUrl, isBroadcastOwner);
 
   useEffect(() => {
     if (!socket) return;
@@ -95,7 +94,6 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
     };
   }, [socket, stream]);
 
-  // console.log("In streamer", account, library, ingestUrl)
 
   return (
     <>
