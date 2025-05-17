@@ -63,6 +63,12 @@ export const getLiveVideos = async () => {
   });
 };
 
+export const getStreamKey = async (streamId: string, authParams: string) => {
+  return api<{ streamKey: string }>(`/live/${streamId}/key${authParams}`, {
+    method: 'GET',
+  });
+};
+
 export const checkIfBroadcastOwner = async (
   address: string | `0x${string}` | undefined,
   stream: any

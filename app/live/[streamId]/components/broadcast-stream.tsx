@@ -19,10 +19,14 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { api } from "@/libs/api";
 
-import { checkIfBroadcastOwner, getLiveStream } from "@/services/broadcast/broadcast.service";
+import {
+  checkIfBroadcastOwner,
+  getLiveStream,
+  getStreamKey
+} from "@/services/broadcast/broadcast.service";
 
 import { getStreamStatus } from "@/web3/utils/validators";
-import { getSignInfo } from "@/web3/utils/web3-actions";
+import { getAuthParams, getSignInfo } from "@/web3/utils/web3-actions";
 
 import { userAtom } from "@/stores";
 
@@ -64,6 +68,7 @@ export default function BroadcastStream(props: { streamId: string }) {
   const [hasJoined, setHasJoined] = useState<any>(false);
   const [isBroadcastOwner, setIsBroadcastOwner] = useState(false);
   const [isPendingWebhook, setIsPendingWebhook] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { socket } = useWebSockets();
   const { account } = useUser();
 
@@ -88,13 +93,24 @@ export default function BroadcastStream(props: { streamId: string }) {
 
   useEffect(() => {
     const fetchStream = async () => {
+      setIsLoading(true);
       const response = await getLiveStream(streamId);
       if (response.success) {
-        setStream(response.data);
         const isOwner: any = await checkIfBroadcastOwner(account?.toLowerCase(), response.data);
-        const payload = response.data;
-        setStream(payload);
         setIsBroadcastOwner(isOwner);
+        setStream(response.data);
+
+        setIsLoading(false);
+        if (isOwner && library && account) {
+          const authParams = await getAuthParams(library, account);
+          const keyResponse = await getStreamKey(streamId, authParams);
+          if (keyResponse.success) {
+            setStream((prev: any) => ({
+              ...prev,
+              streamKey: keyResponse.data.streamKey
+            }));
+          }
+        }
       } else {
         setStream({ error: response.error });
       }
@@ -183,7 +199,9 @@ export default function BroadcastStream(props: { streamId: string }) {
     setIsStartingNw(true);
   };
 
-  if (!stream) {
+  if (isLoading) return <div className="h-auto min-h-screen w-full flex-1 p-6">Loading...</div>;
+
+  if (!stream && !isLoading) {
     return (
       <div className="h-auto min-h-screen w-full flex-1 p-6">
         <p>No stream found</p>
@@ -304,7 +322,6 @@ export default function BroadcastStream(props: { streamId: string }) {
         )}
 
       {stream.status === StreamStatus.ENDED && <ReplayPlayer streamId={streamId} />}
-
       <BroadcastActionPanel stream={stream} />
       <BroadcastStreamInfo stream={stream} />
       <PreviousStreams stream={stream} />
