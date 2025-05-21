@@ -73,6 +73,7 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
     fetchIngest();
   }, [stream]);
 
+
   useEffect(() => {
     if (!socket) return;
 
@@ -93,7 +94,6 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
     };
   }, [socket, stream]);
 
-  // console.log("In streamer", account, library, ingestUrl)
 
   return (
     <>
@@ -101,14 +101,22 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
         className="relative w-full overflow-hidden rounded-2xl bg-black"
         style={{ aspectRatio: "16/9" }}
       >
-        {account && library && ingestUrl ? (
+        {!stream?.streamKey && isBroadcastOwner && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className="flex flex-col items-center gap-4">
+              <LoadingIcon className="h-8 w-8 animate-spin" />
+              <span className="text-sm">Loading stream...</span>
+            </div>
+          </div>)}
+        {account && library && stream?.streamKey ? (
           <Broadcast.Root
             onError={(error) =>
               error?.type === "permissions"
                 ? toast.error("You must accept permissions to broadcast. Please try again.")
                 : null
             }
-            ingestUrl={ingestUrl}
+            // ingestUrl={ingestUrl}
+            ingestUrl={getIngest(stream.streamKey)}
             aspectRatio={16 / 9}
           >
             <Broadcast.Container className="h-full w-full bg-gray-950">
