@@ -257,6 +257,17 @@ body {
 .prof_le{ position:relative !important; width: 20px !important; height: 20px !important;}
 input:focus, select:focus{ box-shadow: none !important;}
 
+.respon_sive_tabs button {
+  padding: 7px 8px !important;
+}
+.feed_list .feedl_ist {
+  width: 100% !important;
+  min-width: 100px !important;
+}
+/* @media (max-width: 1200px) {
+.feed_list { display: grid;}
+} */
+
 @media (max-width: 600px) {
 .input_Row{gap: 5px !important; padding: 0 10px !important; height: 54px !important;}
 
@@ -267,10 +278,24 @@ input:focus, select:focus{ box-shadow: none !important;}
   .input_Row .sub_t{ font-size: 18px; width: 70px;}
   .input_Row  input{ height: 51px !important;}
   .contain_er{ padding:50px 0px !important; margin: 0px !important;}
+  .respon_sive_tabs button {
+    padding: 7px 4px !important; font-size: 12px;
+  }
+  .max_wdth {
+    max-width: 1000px !important;
+    margin: 34px auto 0 auto;
+    width: 100%;
+  }
 }
 
 @layer components {
   .content-container-with-tab-panel {
     @apply h-auto min-h-screen w-full max-w-full flex-1 px-6 lg:min-w-[calc(100%-var(--tabpanel-width))] lg:max-w-[calc(100%-var(--tabpanel-width))];
+  }
+}
+
+@layer utilities {
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
   }
 }

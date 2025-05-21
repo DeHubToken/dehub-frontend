@@ -92,6 +92,7 @@ const testNetworks = [
 ];
 
 const mainNetworks = [
+  
   {
     id: ChainId.BSC_MAINNET,
     chainId: ChainId.BSC_MAINNET,
