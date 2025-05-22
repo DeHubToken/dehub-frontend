@@ -112,6 +112,10 @@ export default function BroadcastActionPanel(props: { stream: any }) {
     };
   }, [socket, stream]);
 
+  useEffect(() => {
+    setStream((prev: any) => ({ ...prev, ...propStream }));
+  }, [propStream]);
+
   return (
     <div className="mb-4 mt-8 flex flex-col items-start justify-start gap-4">
       <h1 className="w-full break-words text-2xl font-medium text-theme-neutrals-200">
@@ -141,11 +145,7 @@ export default function BroadcastActionPanel(props: { stream: any }) {
                   ? "Copied!"
                   : `${stream.streamKey.slice(0, 3)}••••${stream.streamKey.slice(-3)}`}
               </span>
-              {copied ? (
-                <CopyCheck className="h-4 w-4" />
-              ) : (
-                <Copy className="h-4 w-4" />
-              )}
+              {copied ? <CopyCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
           </div>
         )}

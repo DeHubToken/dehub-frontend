@@ -96,9 +96,9 @@ export default function BroadcastStream(props: { streamId: string }) {
       setIsLoading(true);
       const response = await getLiveStream(streamId);
       if (response.success) {
-        setStream(response.data);
         const isOwner: any = await checkIfBroadcastOwner(account?.toLowerCase(), response.data);
         setIsBroadcastOwner(isOwner);
+        setStream(response.data);
 
         setIsLoading(false);
         if (isOwner && library && account) {
@@ -322,7 +322,6 @@ export default function BroadcastStream(props: { streamId: string }) {
         )}
 
       {stream.status === StreamStatus.ENDED && <ReplayPlayer streamId={streamId} />}
-
       <BroadcastActionPanel stream={stream} />
       <BroadcastStreamInfo stream={stream} />
       <PreviousStreams stream={stream} />
