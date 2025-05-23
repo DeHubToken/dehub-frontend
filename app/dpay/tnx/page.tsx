@@ -10,8 +10,8 @@ type Props = {};
 
 const Page = (props: Props) => {
   const links=[
+    { href: "/dpay", label: "Back" },
     { href: "/", label: "Back to Home" },
-    { href: "/dpay", label: "Back to Dpay" },
     { href: "/me", label: "Back to Profile" },
   ]
   return (

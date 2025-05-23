@@ -280,7 +280,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
             variant="outline"
             onClick={() => router.push("/dpay")}
           >
-            Back to Dpay
+            Home
           </Button>
           <Button
             className="mt-2 w-full max-w-xs sm:w-40"
