@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import dayjs from "dayjs";
-import { Copy, CopyCheck, ThumbsUp } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, ChevronUp, Copy, CopyCheck, ExternalLink, ThumbsUp } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useCopyToClipboard } from "react-use";
 import { toast } from "sonner";
@@ -28,7 +29,7 @@ import { likeLiveStream } from "@/services/broadcast/broadcast.service";
 
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
-import { StreamStatus } from "@/configs";
+import { LIVEPEER_RTMP_SERVER, StreamStatus } from "@/configs";
 
 import { LivestreamEvents } from "../enums/livestream.enum";
 import { GiftModal } from "./gift-modal";
@@ -40,7 +41,9 @@ export default function BroadcastActionPanel(props: { stream: any }) {
   const { theme } = useTheme();
   const { account, chainId, library, user } = useUser();
   const [state, copyToClipboard] = useCopyToClipboard();
+  const [showExternal, setShowExternal] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copiedURL, setCopiedURL] = useState(false);
 
   const likeStream = async () => {
     if (!account) return toast.error("Connect your wallet!");
@@ -73,8 +76,13 @@ export default function BroadcastActionPanel(props: { stream: any }) {
 
   const handleCopy = (key: string) => {
     copyToClipboard(key);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    if (key === LIVEPEER_RTMP_SERVER) {
+      setCopiedURL(true);
+      setTimeout(() => setCopiedURL(false), 2000);
+    } else {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   useEffect(() => {
@@ -133,7 +141,7 @@ export default function BroadcastActionPanel(props: { stream: any }) {
           </Link>
         </div>
 
-        {stream.streamKey && (
+        {/* {stream.streamKey && (
           <div className="flex items-center gap-1">
             <span className="text-theme-neutrals-400">Stream Key:</span>
             <button
@@ -148,11 +156,11 @@ export default function BroadcastActionPanel(props: { stream: any }) {
               {copied ? <CopyCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
           </div>
-        )}
+        )} */}
 
         {stream.status === StreamStatus.SCHEDULED && (
           <div className="flex items-center gap-1">
-            <span className="text-theme-neutrals-400">Schedual at:</span>
+            <span className="text-theme-neutrals-400">Schedule at:</span>
             <span className="text-theme-neutrals-200">{formatToUsDate(stream.scheduledFor)}</span>
           </div>
         )}
@@ -174,6 +182,63 @@ export default function BroadcastActionPanel(props: { stream: any }) {
           </div>
         )}
       </div>
+
+      {stream.streamKey && (
+        <div className="w-full">
+          <button
+            onClick={() => setShowExternal((prev) => !prev)}
+            className="flex items-center gap-2 text-theme-neutrals-200 transition-colors hover:text-theme-neutrals-100"
+          >
+            <span>Stream External Setup</span>
+            {showExternal ? (
+              <ChevronUp className="h-4 w-4 transition-transform duration-300" />
+            ) : (
+              <ChevronDown className="h-4 w-4 transition-transform duration-300" />
+            )}
+          </button>
+
+          <AnimatePresence initial={false}>
+            {showExternal && (
+              <motion.div
+                key="external-info"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="border-theme-border mt-2 flex flex-col gap-2 overflow-hidden rounded-md border p-4 text-sm"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="min-w-[90px] text-theme-neutrals-400">Stream Key:</span>
+                  <button
+                    onClick={() => handleCopy(stream.streamKey)}
+                    className="flex items-center gap-1 text-theme-neutrals-200 hover:text-theme-neutrals-100"
+                  >
+                    <span className="cursor-pointer">
+                      {copied
+                        ? "Copied!"
+                        : `${stream.streamKey.slice(0, 3)}••••${stream.streamKey.slice(-3)}`}
+                    </span>
+                    {copied ? <CopyCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="min-w-[90px] text-theme-neutrals-400">Server URL:</span>
+                  <button
+                    onClick={() => handleCopy(LIVEPEER_RTMP_SERVER)}
+                    className="flex items-center gap-1 text-theme-neutrals-200 hover:text-theme-neutrals-100"
+                  >
+                    <span className="cursor-pointer">
+                      {copiedURL ? "Copied!" : LIVEPEER_RTMP_SERVER}
+                    </span>
+                    {copiedURL ? <CopyCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
 
       <div className="mt-3 flex h-auto w-full flex-col items-start justify-start gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
         <div className="relative flex w-full flex-wrap items-center gap-4 pr-20 sm:size-auto sm:pr-0">

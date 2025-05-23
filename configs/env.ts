@@ -8,6 +8,7 @@ import { z } from "zod";
  * @see https://create.t3.gg/en/usage/env-variables
  */
 export const env = createEnv({
+  // TODO: Include stripe stuff
   emptyStringAsUndefined: true,
   server: {
     NODE_ENV: z.enum(["development", "staging", "production"]).default("development"),
