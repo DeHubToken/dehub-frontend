@@ -135,3 +135,6 @@ dist
 app/ui-preview
 
 *storybook.log
+
+# Lock file
+pnpm-lock.yaml
