@@ -1,16 +1,16 @@
 "use client";
 
 import { FC, useEffect, useState } from "react";
+import Image from "next/image";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
-import { ethers } from "ethers"; 
+import { ethers } from "ethers";
+import { toast } from "sonner";
 
 import { useTransferTokens } from "@/hooks/use-web3";
 
 import { usersSearch } from "@/services/user";
 
-import { getAvatarUrl } from "@/web3/utils/url"; 
-import { toast } from "sonner";
-import Image from "next/image";
+import { getAvatarUrl } from "@/web3/utils/url";
 
 interface UserSearchModalProps {
   setIsModalOpen: (isOpen: boolean) => void;
@@ -95,7 +95,7 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
   };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-      <div className="shadow-lg relative w-96 rounded-lg bg-gray-800 p-6">
+      <div className="relative w-96 rounded-lg bg-neutral-800 p-6 shadow-lg">
         {/* Close button */}
         <button
           onClick={() => setIsModalOpen(false)}
@@ -110,7 +110,7 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
           placeholder="Amount to transfer"
           value={transferAmount}
           onChange={(e) => setTransferAmount(e.target.value)}
-          className="mb-4 w-full rounded-lg border border-gray-600 bg-gray-700 p-2 text-white placeholder-gray-400"
+          className="mb-4 w-full rounded-lg border border-neutral-700 bg-neutral-800 p-2 text-white placeholder-gray-400"
         />
 
         <h3 className="mb-4 text-xl font-semibold text-white">Search for a User</h3>
@@ -119,7 +119,7 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
           placeholder="Enter username or email"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="mb-4 w-full rounded-lg border border-gray-600 bg-gray-700 p-2 text-white placeholder-gray-400"
+          className="mb-4 w-full rounded-lg border border-neutral-700 bg-neutral-800 p-2 text-white placeholder-gray-400"
         />
 
         {/* Loading spinner */}
@@ -131,12 +131,17 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
             <li
               key={user.address}
               onClick={() => handleUserSelect(user.address)}
-              className="cursor-pointer rounded-lg bg-gray-900 p-3 text-white transition hover:bg-gray-700"
+              className="cursor-pointer rounded-lg bg-neutral-950 p-3 text-white transition hover:bg-neutral-800"
             >
               <div className="flex gap-2">
                 <div className="w-[20%]">
                   {/* <Avatar name={user?.username || user.displayName || ""}  url={user.avatarImageUrl} /> */}
-                  <Image src={getAvatarUrl(user.avatarImageUrl)} height={300} width={300} alt="avatar" />
+                  <Image
+                    src={getAvatarUrl(user.avatarImageUrl)}
+                    height={300}
+                    width={300}
+                    alt="avatar"
+                  />
                 </div>
                 <div className="w-[80%]">
                   <div>{user?.username}</div>
