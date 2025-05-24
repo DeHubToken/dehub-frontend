@@ -11,7 +11,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-theme-neutrals-800 text-neutral-400 font-medium",
+        default: "bg-theme-neutrals-800 text-neutral-900 font-medium",
         destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
           "border-2 border-gray-200 bg-transparent shadow-sm hover:bg-gray-100 dark:border-theme-mine-shaft dark:hover:bg-theme-mine-shaft-dark",
@@ -20,7 +20,7 @@ const buttonVariants = cva(
         ghost: "text-theme-titan-white hover:bg-theme-mine-shaft-dark hover:text-theme-titan-white",
         link: "text-theme-mine-shaft underline-offset-4 hover:underline",
         gradientOne:
-          "bg-gradient-to-r from-blue-500 to-blue-300 shadow-default hover:from-theme-orange-200 hover:to-theme-orange-500 rounded-full",
+          "bg-gradient-to-r from-blue-500 to-blue-300 shadow-default text-white hover:from-theme-orange-200 hover:to-theme-orange-500 rounded-full",
         noBg: "text-theme-neutrals-600 font-semibold dark:text-theme-neutrals-600"
       },
       size: {
