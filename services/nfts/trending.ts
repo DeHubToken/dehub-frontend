@@ -78,12 +78,15 @@ export async function getNFTs(params?: SearchParams) {
         postType: params.postType
       })
     );
+    const tag = params?.postType
+    ? `nfts-${params.postType}`
+    : 'nfts-all';
     const url = `/search_nfts${query}`;
       console.log("search_nfts_url",url);
       
     const res = await api<{ result: GetNFTsResult[] }>(url, {
       method: "GET",
-      next: { revalidate: 2 * 60, tags: ["nfts"] }
+      next: { revalidate: 2 * 60, tags: [tag] }
     });
 
     return res;
@@ -101,13 +104,17 @@ export async function getNFTs(params?: SearchParams) {
       page: params?.page,
       sortMode: params?.sortMode,
       minter: params?.minter,
-      owner: params?.owner
+      owner: params?.owner,
+      postType: params?.postType
     })
   );
+  const tag = params?.postType
+  ? `nfts-${params.postType}`
+  : 'nfts-all';
   const url = `/search_nfts${query}`;
   const res = await api<{ result: GetNFTsResult[] }>(url, {
     method: "GET",
-    next: { revalidate: 2 * 60, tags: ["nfts"] }
+    next: { revalidate: 2 * 60, tags: [tag] }
   });
   return res;
 }

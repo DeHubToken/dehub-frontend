@@ -1,4 +1,4 @@
-export type TnxStatus = "pending" | "complete"|"succeeded" | "failed" | "init" | "Token_verified";
+export type TnxStatus = "pending" | "complete"|"succeeded" |"expired"| "failed" | "init" | "Token_verified";
 export interface TnxData {
   _id: string;
   receiverId: string;
