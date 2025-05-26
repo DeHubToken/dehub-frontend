@@ -37,7 +37,7 @@ export default function TokensList() {
   }
 
   return (
-    <div className="h-auto w-full max-w-screen-xs space-y-4 rounded-3xl bg-theme-mine-shaft-dark p-6 dark:bg-theme-mine-shaft-dark">
+    <div className="h-auto w-full max-w-screen-xs space-y-4 rounded-3xl bg-theme-neutrals-800 p-6 dark:bg-theme-mine-shaft-dark">
       <div className="flex h-auto w-full items-center justify-between px-4">
         <p className="text-lg font-semibold">Assets</p>
         <p className="text-lg font-semibold">Holdings</p>

@@ -136,5 +136,7 @@ app/ui-preview
 
 *storybook.log
 
-# Lock file
+# Lockfiles
+# package-lock.json
+# yarn.lock
 pnpm-lock.yaml

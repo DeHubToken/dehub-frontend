@@ -75,6 +75,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
       case "succeeded":
         return <FaCheckCircle className="mx-auto mb-4 text-4xl text-green-600" />;
       case "failed":
+      case "expired":
         return <FaTimesCircle className="mx-auto mb-4 text-4xl text-red-500" />;
       case "Token_verified":
         return <FaCheckCircle className="mx-auto mb-4 text-4xl text-blue-500" />;
@@ -97,13 +98,15 @@ const TnxPage = ({ sid }: { sid: string }) => {
             ? "Payment Completed"
             : status === "failed"
               ? "Payment Failed"
-              : "Awaiting Payment",
+              : status === "expired"
+                ? "Payment Expired"
+                : "Awaiting Payment",
         completed: status !== "init" && status !== "pending",
-        failed: status === "failed"
+        failed: status === "failed" || status === "expired"
       },
       {
         label:
-          txData.tokenSendStatus === "not_sent"
+          (txData.tokenSendStatus === "not_sent" &&txData.status_stripe!="expired")
             ? "Awaiting Token Initiation"
             : txData.tokenSendStatus === "sending"
               ? "Token Sending"
@@ -113,12 +116,12 @@ const TnxPage = ({ sid }: { sid: string }) => {
                   ? "Token Transaction Sent"
                   : txData.tokenSendStatus === "cancelled"
                     ? "Token Transaction Cancelled"
-                    : "Token Transaction Failed",
+                    : txData.status_stripe === "expired"
+                      ? "Token Transaction Expired"
+                      : "Token Transaction Failed",
         completed:
-          txData.tokenSendStatus === "sent" ||
-          txData.tokenSendStatus === "failed" ||
-          txData.tokenSendStatus === "cancelled",
-        failed: txData.tokenSendStatus === "failed" || txData.tokenSendStatus === "cancelled",
+          ["sent", "failed", "cancelled", "expired"].includes(txData.tokenSendStatus ?? ""),
+        failed: ["failed", "cancelled", "expired"].includes(txData.tokenSendStatus ?? ""),
         processing: txData.tokenSendStatus === "processing"
       }
     ];
@@ -133,7 +136,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
       if (value !== null && value !== undefined && value !== "") return value;
 
       const pendingLikeStatuses = ["pending", "processing", "initiated"];
-      const failedLikeStatuses = ["failed", "error"];
+      const failedLikeStatuses = ["failed", "error", "expired"];
 
       const valueStr = value?.toString()?.toLowerCase();
 
@@ -147,13 +150,11 @@ const TnxPage = ({ sid }: { sid: string }) => {
 
       return shimmer;
     };
+
     const fields: [string, any][] = [
       ["Transaction ID", getFieldValue("Transaction ID", txData._id)],
-      [
-        "Amount",
-        getFieldValue("Amount", `${txData.amount} ${txData.currency?.toUpperCase() ?? "GBP"}`)
-      ],
-      ["Platform Fee", getFieldValue("Platform Fee", `${txData.fee ?? 0}  GBP`)],
+      ["Amount", getFieldValue("Amount", `${txData.amount} ${txData.currency?.toUpperCase() ?? "GBP"}`)],
+      ["Platform Fee", getFieldValue("Platform Fee", `${txData.fee ?? 0} GBP`)],
       ["Exchange Rate", getFieldValue("Exchange Rate", `${txData.exchange_rate ?? 0} GBP`)],
       ["Net Amount", getFieldValue("Net Amount", `${txData.net ?? 0} GBP`)],
       ["Receiver Wallet Address", getFieldValue("Receiver Wallet Address", txData.receiverAddress)],
@@ -195,13 +196,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
       ["Session ID", getFieldValue("Session ID", txData.sessionId)],
       ["Stripe Status", getFieldValue("Stripe Status", txData.status_stripe)],
       ["Token Send Status", getFieldValue("Token Send Status", txData.tokenSendStatus)],
-      [
-        "Token Send Txn Hash",
-        getFieldValue(
-          "Token Send Txn Hash",
-          txData.tokenSendStatus === "sent" ? txData.tokenSendTxnHash : txData.tokenSendStatus
-        )
-      ]
+      ["Token Send Txn Hash", getFieldValue("Token Send Txn Hash", txData.tokenSendStatus === "sent" ? txData.tokenSendTxnHash : txData.tokenSendStatus)]
     ];
 
     return (
@@ -231,6 +226,8 @@ const TnxPage = ({ sid }: { sid: string }) => {
         return `Payment successful! You’ll receive approximately ${txData?.approxTokensToSent ?? "N/A"} ${txData?.tokenSymbol}.`;
       case "failed":
         return "Payment failed. Please try again or contact support.";
+      case "expired":
+        return "This transaction has expired. Please try again or initiate a new payment session.";
       case "Token_verified":
         return "Token transaction verified. You are all set!";
       case "not_found":
@@ -247,7 +244,9 @@ const TnxPage = ({ sid }: { sid: string }) => {
           <h2 className="text-xl font-bold">
             {status === "not_found"
               ? "Transaction Not Found"
-              : (getSteps()[3]?.label ?? "Checking Status...")}
+              : status === "expired"
+                ? "Transaction Expired"
+                : getSteps().slice(-1)[0]?.label ?? "Checking Status..."}
           </h2>
           <p className="mt-1 text-sm ">{getDescription()}</p>
         </div>

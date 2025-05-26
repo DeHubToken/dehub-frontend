@@ -7,8 +7,7 @@ import { HambMenu } from "@/components/hamb-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { Logo } from "./logo";
-
-// import { ThemeSwitcher } from "./theme-switcher";
+import { ThemeSwitcher } from "./theme-switcher";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -33,9 +32,11 @@ export function Navbar() {
           <SearchBox />
         </div>
         <SearchModal />
-        <ConnectButton label="Connect" />
-        <HambMenu />
-        {/* <ThemeSwitcher /> */}
+        <div className="flex items-center justify-start gap-4">
+          <ConnectButton label="Connect" />
+          <HambMenu />
+          <ThemeSwitcher />
+        </div>
       </div>
     </nav>
   );

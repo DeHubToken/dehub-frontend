@@ -27,8 +27,8 @@ type Props = {
   type?: string;
   q?: string;
   sort?: string;
-  base?:string;
-  tab?:string;
+  base?: string;
+  tab?: string;
 };
 
 export async function Categories(props: Props) {
@@ -44,8 +44,8 @@ export async function Categories(props: Props) {
 
 async function CategoriesLoader(props: Props) {
   const categoriesRes = await getCategories();
-  const { category, type, title, range, sort, base ,tab} = props;
- 
+  const { category, type, title, range, sort, base, tab } = props;
+
   const isActive = (name: string) => category === name;
 
   if (!categoriesRes.success) {
@@ -77,7 +77,7 @@ async function CategoriesLoader(props: Props) {
           <CarouselItem className="basis-auto">
             <CategoryButton
               isActive={isActive("All")}
-              scroll={tab==""}
+              scroll={tab == ""}
               url={`${base ?? ""}/${objectToGetParams({ category: "All", type, title, range, tab })}`}
             >
               All
@@ -86,7 +86,7 @@ async function CategoriesLoader(props: Props) {
           {categories.map((item, index) => (
             <CarouselItem key={index} className="basis-auto">
               <CategoryButton
-                scroll={tab==""}
+                scroll={tab == ""}
                 url={`${base ?? ""}/${objectToGetParams({ category: item, type, title, range, tab })}`}
                 isActive={isActive(item)}
               >
