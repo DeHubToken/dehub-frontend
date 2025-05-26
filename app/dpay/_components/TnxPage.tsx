@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FaCheckCircle, FaQuestionCircle, FaSpinner, FaTimesCircle } from "react-icons/fa";
@@ -49,32 +49,36 @@ const TnxPage = ({ sid }: { sid: string }) => {
     }
   };
 
-  useEffect(() => {
-    if (!sid) return;
   
-    fetchTnxStatus();
-  
-    const shouldPoll =
-      txData?.status_stripe === "init" ||
-      txData?.status_stripe === "pending" ||
-      txData?.tokenSendStatus === "not_sent";
-  
-    if (!shouldPoll) return;
-  
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          fetchTnxStatus();
-          return 5;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  
-    return () => clearInterval(interval);
-  }, [sid, txData]);
-  
+// Memoize the polling condition
+const shouldPoll = useMemo(() => {
+  console.log("status",status,)
+  if(["failed","expired"].includes(status)){
+    return false
+  }
+  return (!["sent"].includes(txData?.tokenSendStatus??"not_sent"));
+}, [status, txData?.tokenSendStatus]);
 
+useEffect(() => {
+  if (!sid) return;
+
+  fetchTnxStatus(); // Initial fetch
+
+  if (!shouldPoll) return;
+
+  const interval = setInterval(() => {
+    setTimeLeft((prev) => {
+      if (prev <= 1) {
+        fetchTnxStatus();
+        return 5;
+      }
+      return prev - 1;
+    });
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [sid, shouldPoll]); // Now depends only on `shouldPoll`, not raw fields
+  
   const getStatusIcon = useCallback(() => {
     switch (status) {
       case "init":
@@ -291,7 +295,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
             {renderDetailsGrid()}
           </>
         )}
-        <div className="text-sm text-gray-400">Next auto check in: {timeLeft}s</div>
+     {shouldPoll&&   <div className="text-sm text-gray-400">Next auto check in: {timeLeft}s</div>}
         <div className="flex flex-col items-center justify-center gap-2 pt-4 sm:flex-row">
           <Button
             className="mt-2 w-full max-w-xs sm:w-40"
@@ -300,7 +304,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
           >
             Home
           </Button>
-          <Button
+          {shouldPoll&&   <Button
             className="mt-2 w-full max-w-xs sm:w-40"
             onClick={() => {
               setTimeLeft(5);
@@ -310,7 +314,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
             disabled={loading}
           >
             {loading ? "Checking..." : "Check Now"}
-          </Button>
+          </Button>}
         </div>
       </div>
     </div>
