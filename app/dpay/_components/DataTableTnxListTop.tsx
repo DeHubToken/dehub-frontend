@@ -69,14 +69,14 @@ const DataTableTnxListTop = () => {
       },
       {
         header: "Amount",
-        accessorFn: (row) => row.approxTokensToSent ?? row.approxTokensToReceive,
+        accessorFn: (row) => row.tokenReceived ?? row.approxTokensToReceive,
         sortingFn: "basic",
         cell: ({ row }) => {
           const tx = row.original;
           return (
             <div className="flex flex-col">
               <span className="text-base font-semibold">
-                {Number(tx.approxTokensToSent ?? tx.approxTokensToReceive).toLocaleString()}
+                {Number(tx.tokenReceived ?? tx.approxTokensToReceive).toLocaleString()}
               </span>
               <span className="text-xs font-medium">
                 ≈ {Number(tx.amount).toFixed(2)} {tx?.currency?.toUpperCase() ?? "USD"}
@@ -98,7 +98,7 @@ const DataTableTnxListTop = () => {
             <div>
               <span
                 className={`rounded-full bg-opacity-5 px-2 py-0.5 text-xs font-medium ${
-                  tx.status_stripe === "succeeded"
+                  tx.status_stripe === "succeeded"   ||tx.status_stripe === "complete"
                     ? "bg-green-100 text-green-700"
                     : "bg-yellow-100 text-yellow-700"
                 }`}
