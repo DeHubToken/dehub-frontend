@@ -93,7 +93,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
       },
       {
         label:
-          status === "succeeded"
+          status === "succeeded" || status === "complete"
             ? "Payment Completed"
             : status === "failed"
               ? "Payment Failed"
@@ -132,7 +132,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
     const getFieldValue = (label: string, value: any) => {
       if (value !== null && value !== undefined && value !== "") return value;
 
-      const pendingLikeStatuses = ["pending", "processing", "initiated"];
+      const pendingLikeStatuses = ["pending", "processing", "init"];
       const failedLikeStatuses = ["failed", "error"];
 
       const valueStr = value?.toString()?.toLowerCase();
@@ -176,11 +176,11 @@ const TnxPage = ({ sid }: { sid: string }) => {
         </span>
       ],
       [
-        "Approx. Tokens To Send",
+        "Token Received",
         <span className="flex items-center gap-1">
-          {txData.approxTokensToSent ? (
+          {txData.tokenReceived ? (
             <>
-              <span className="text-xl">{txData.approxTokensToSent}</span>
+              <span className="text-xl">{txData.tokenReceived}</span>
               <TokenAndChainIcon tokenSymbol={txData.tokenSymbol} chainId={txData.chainId} />
             </>
           ) : (
@@ -228,7 +228,7 @@ const TnxPage = ({ sid }: { sid: string }) => {
       case "pending":
         return "Please wait while your payment is processed.";
       case "succeeded":
-        return `Payment successful! You’ll receive approximately ${txData?.approxTokensToSent ?? "N/A"} ${txData?.tokenSymbol}.`;
+        return `Payment successful! You’ll receive approximately ${txData?.tokenReceived ?? "N/A"} ${txData?.tokenSymbol}.`;
       case "failed":
         return "Payment failed. Please try again or contact support.";
       case "Token_verified":
