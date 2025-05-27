@@ -2,21 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import dayjs from "dayjs";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, ChevronUp, Copy, CopyCheck, ExternalLink, ThumbsUp } from "lucide-react";
+import { ThumbsUp } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useCopyToClipboard } from "react-use";
 import { toast } from "sonner";
 
-import UserProfileCard from "@/app/components/user-profile-card";
 import { ClaimAsCommentor, ClaimAsViewer } from "@/app/stream/[id]/components/claims";
 import { Share } from "@/app/stream/[id]/components/share";
-import { LikeButton } from "@/app/stream/[id]/components/stream-actions";
-import TipModal from "@/app/stream/[id]/components/tip-modal";
 
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 
 import { useWebSockets } from "@/contexts/websocket";
 
@@ -29,7 +23,7 @@ import { likeLiveStream } from "@/services/broadcast/broadcast.service";
 
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
-import { LIVEPEER_RTMP_SERVER, StreamStatus } from "@/configs";
+import {  StreamStatus } from "@/configs";
 
 import { LivestreamEvents } from "../enums/livestream.enum";
 import { GiftModal } from "./gift-modal";
@@ -43,12 +37,7 @@ export default function BroadcastActionPanel(props: {
   const { stream: propStream, isStreamingExternal, setIsStreamingExternal } = props;
   const [stream, setStream] = useState<any>(propStream);
   const { socket } = useWebSockets();
-  const { theme } = useTheme();
   const { account, chainId, library, user } = useUser();
-  const [state, copyToClipboard] = useCopyToClipboard();
-  const [showExternal, setShowExternal] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [copiedURL, setCopiedURL] = useState(false);
 
   const likeStream = async () => {
     if (!account) return toast.error("Connect your wallet!");
@@ -76,17 +65,6 @@ export default function BroadcastActionPanel(props: {
       toast.success("Liked stream");
     } catch (e: any) {
       toast.error(e.message || "Failed to like stream");
-    }
-  };
-
-  const handleCopy = (key: string) => {
-    copyToClipboard(key);
-    if (key === LIVEPEER_RTMP_SERVER) {
-      setCopiedURL(true);
-      setTimeout(() => setCopiedURL(false), 2000);
-    } else {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     }
   };
 
