@@ -56,7 +56,10 @@ const liveStreamSchema = z.object({
   settings: z.object({
     enableChat: z.boolean().default(true),
     schedule: z.boolean().default(false),
-    minTip: z.string().default("1000"),
+    minTip: z
+      .number()
+      .min(1000, { message: "Minimum tip must be at least 1000" })
+      .default(1000),
     tipDelay: z.number().default(0)
   }),
   scheduledFor: z.date().optional(),
@@ -540,14 +543,7 @@ export default function GoLiveForm({ categories }: Props) {
                       placeholder="1000 DHB"
                       min={1000}
                       className="w-auto"
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value, 10);
-                        if (isNaN(value) || value < 1000) {
-                          minTip.onChange(1000);
-                        } else {
-                          minTip.onChange(value);
-                        }
-                      }}
+                      onChange={(e) => minTip.onChange(Number(e.target.value))} // Convert value to number
                     />
                   </FormControl>
                   <FormMessage />

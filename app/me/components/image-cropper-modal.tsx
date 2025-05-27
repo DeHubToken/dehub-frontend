@@ -29,6 +29,7 @@ export function ImageCropperModal() {
             saveCroppedImage({ preview });
             setPreview(null);
           }}
+          variant="gradientOne"
         >
           Save
         </Button>

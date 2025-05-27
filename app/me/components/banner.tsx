@@ -21,7 +21,7 @@ function Figure(props: { url: string }) {
   const [loading, setLoading] = useState(true);
 
   return (
-    <figure className="relative h-0 w-full overflow-hidden rounded-3xl bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark pt-[56.25%] sm:h-[400px] sm:pt-0">
+    <figure className="relative h-0 w-full overflow-hidden rounded-3xl bg-theme-mine-shaft-dark pt-[56.25%] dark:bg-theme-mine-shaft-dark sm:h-[400px] sm:pt-0">
       {url && (
         <LazyImage
           src={url}
@@ -31,7 +31,7 @@ function Figure(props: { url: string }) {
         />
       )}
       {loading && (
-        <div className="absolute top-0 z-[1] size-full   dark:bg-theme-mine-shaft-dark">
+        <div className="absolute top-0 z-[1] size-full bg-theme-neutrals-700 dark:bg-theme-mine-shaft-dark">
           <div className="shimmer size-full" />
         </div>
       )}
@@ -42,7 +42,7 @@ function Figure(props: { url: string }) {
 function FigureWithBackdrop(props: { url: string; children: React.ReactNode }) {
   const { url, children } = props;
   return (
-    <figure className="relative h-0 w-full overflow-hidden rounded-3xl bg-theme-cloud-burst dark:bg-theme-mine-shaft-dark pt-[56.25%] sm:h-[400px] sm:pt-0">
+    <figure className="relative h-0 w-full overflow-hidden rounded-3xl bg-theme-neutrals-400 pt-[56.25%] dark:bg-theme-mine-shaft-dark sm:h-[400px] sm:pt-0">
       {children}
       {url && (
         <>

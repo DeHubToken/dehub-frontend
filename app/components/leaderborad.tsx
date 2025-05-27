@@ -160,7 +160,7 @@ export function LeaderboardSkeleton() {
         {tabs.map((tab) => (
           <div
             key={tab.name}
-            className="bg-color-neutrals-700 inline-flex h-10 items-center justify-center gap-2.5 self-stretch whitespace-nowrap rounded-full rounded-full px-5 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-theme-neutrals-700 data-[state=active]:text-theme-neutrals-400 data-[state=active]:shadow-[0px_0px_20px_0px_rgba(56,58,61,1.00)] data-[state=active]:ring-offset-background"
+            className="bg-color-neutrals-700 inline-flex h-10 items-center justify-center gap-2.5 self-stretch whitespace-nowrap rounded-full px-5 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-theme-neutrals-700 data-[state=active]:text-theme-neutrals-400 data-[state=active]:shadow-[0px_0px_20px_0px_rgba(56,58,61,1.00)] data-[state=active]:ring-offset-background"
           >
             {tab.name}
           </div>

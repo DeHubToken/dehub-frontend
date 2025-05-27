@@ -124,7 +124,7 @@ const OrderPage = () => {
       toast.error("Failed to fetch token supply");
       console.error("Supply fetch error:", err);
     }
-  }, []);
+  }, [showModal]);
 
   useEffect(() => {
     fetchTokenPrice();
@@ -136,7 +136,7 @@ const OrderPage = () => {
     }, POLL_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, [fetchTokenPrice, fetchSupply]);
+  }, [fetchTokenPrice, fetchSupply,showModal]);
 
   const handleConfirmCheckout = useCallback(async () => {
  
@@ -191,7 +191,7 @@ const OrderPage = () => {
       setLoading(false);
       setShowModal(false);
     }
-  }, [amount, tokensToReceive, account, chainId, selectedChainId]);
+  }, [amount, tokensToReceive, account, chainId, selectedChainId,supplyData]);
 
   useEffect(() => {
     const fun = async () => {
