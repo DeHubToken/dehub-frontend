@@ -23,16 +23,17 @@ export const ConnectButton = dynamic(() => import("./connect-button"), {
 export function Navbar() {
   return (
     <nav className="fixed left-0 top-0 z-20 h-[var(--navbar-height)] max-h-[var(--navbar-height)] w-full bg-theme-neutrals-900 shadow-custom dark:bg-theme-neutrals-900">
-      <div className="flex items-center justify-between px-8 py-5">
-        <Link href="/" className="w-32">
+      <div className="flex items-center justify-between px-4 py-5 sm:px-8">
+        <Link href="/" className="w-80 sm:w-32">
           <Logo />
         </Link>
 
-        <div className="w-full max-w-[calc((500/16)*1rem)]">
+        <div className="w-48 lg:max-w-[calc((500/16)*1rem)]">
           <SearchBox />
         </div>
         <SearchModal />
-        <div className="flex items-center justify-start gap-4">
+
+        <div className="flex items-center justify-start gap-1 sm:gap-4">
           <ConnectButton label="Connect" />
           <HambMenu />
           <ThemeSwitcher />

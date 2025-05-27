@@ -7,7 +7,7 @@ import { StakingForm } from "./components/staking-form";
 export default async function Page() {
   return (
     <div className="flex h-auto min-h-screen w-full items-start justify-between">
-      <div className="flex h-auto min-h-screen w-full flex-col items-start justify-start gap-6 px-6 py-28 sm:gap-10">
+      <div className="flex h-auto min-h-screen w-full flex-col items-start justify-start gap-6 px-6 pb-28 sm:gap-10">
         <h1 className="text-4xl font-medium">Staking</h1>
 
         <StakingForm />
