@@ -32,6 +32,7 @@ export function Navbar() {
           <SearchBox />
         </div>
         <SearchModal />
+
         <div className="flex items-center justify-start gap-1 sm:gap-4">
           <ConnectButton label="Connect" />
           <HambMenu />
