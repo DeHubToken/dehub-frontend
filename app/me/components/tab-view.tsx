@@ -16,6 +16,7 @@ interface Props {
 }
 
 async function TabVideoUploads({ isOwner, user, searchParams }: Props) {
+  // console.log("User Video Uploads", user, searchParams);
   if (!user?.address) {
     return <div>No Uploads</div>;
   }
@@ -30,11 +31,11 @@ async function TabVideoUploads({ isOwner, user, searchParams }: Props) {
     range: searchParams?.range,
     search: searchParams?.q
   };
-  console.log("getNFTs_parms", parms);
+  // console.log("getNFTs_parms", parms);
   const res = await getNFTs(parms);
 
   const data = res.success ? res.data.result : [];
-  console.log("data[0]", data[0]);
+  // console.log("data[0]", data[0]);
   return (
     <div className="relative grid h-auto w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 3xl:grid-cols-5">
       {data.length > 0 ? (
