@@ -178,7 +178,7 @@ function ScreenHeight(props: React.ComponentProps<"div">) {
     <div
       {...rest}
       className={cn(
-        "relative mt-[calc((80/16)*1rem)] flex max-h-[calc(100vh-80px-30px)] min-h-[calc(100vh-80px-30px)] w-full gap-2 overflow-hidden",
+        "relative flex max-h-[calc(100vh-80px-30px)] min-h-[calc(100vh-80px-30px)] w-full gap-2 overflow-hidden",
         className
       )}
     />
