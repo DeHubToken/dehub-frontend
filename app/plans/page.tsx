@@ -31,7 +31,7 @@ const page = (props: any) => {
 
   return (
     <div>
-      <div className="min-h-screen w-full px-2 py-32 sm:px-6">
+      <div className="min-h-screen w-full px-2 pb-28 sm:px-6">
         <Form getTiers={getTiers} focus={props.searchParams.focus} />
       </div>
       <div className="min-h-screen w-full px-2 py-32 sm:px-6">
