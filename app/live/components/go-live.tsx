@@ -540,14 +540,6 @@ export default function GoLiveForm({ categories }: Props) {
                       placeholder="1000 DHB"
                       min={1000}
                       className="w-auto"
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value, 10);
-                        if (isNaN(value) || value < 1000) {
-                          minTip.onChange(1000);
-                        } else {
-                          minTip.onChange(value);
-                        }
-                      }}
                     />
                   </FormControl>
                   <FormMessage />
