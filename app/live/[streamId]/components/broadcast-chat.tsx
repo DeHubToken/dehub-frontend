@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import { toast } from "sonner";
 
@@ -82,6 +82,7 @@ const StreamEndComponent = () => {
 export default function BroadcastChatPanel(props: { streamId: string }) {
   const { streamId } = props;
 
+  const chatContainerRef = useRef<HTMLDivElement>(null); // Ref for chat container
   const [stream, setStream] = useState<any>(null);
   const [message, setMessage] = useState("");
   const [activities, setActivities] = useState<any[]>([]);
@@ -259,6 +260,18 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
     };
   }, [socket, stream]);
 
+  // Scroll to the bottom of the chat container
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  // Update activities and scroll to bottom when a new activity is added
+  useEffect(() => {
+    scrollToBottom();
+  }, [activities]);
+
   // Handle sending a message
   const handleSendMessage = () => {
     if (stream?.status !== StreamStatus.LIVE) {
@@ -268,6 +281,7 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
     if (message.trim() && socket) {
       socket.emit(LivestreamEvents.SendMessage, { streamId, content: message });
       setMessage("");
+      scrollToBottom(); // Scroll to bottom after sending a message
     }
   };
 
@@ -289,7 +303,10 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
       ) : stream?.status === StreamStatus.OFFLINE || stream?.status === StreamStatus.SCHEDULED ? (
         <div className="text-center text-2xl font-bold text-white">Stream is Offline</div>
       ) : (
-        <div className="mb-4 max-h-[83%] flex-1 space-y-3 overflow-y-auto">
+        <div
+          ref={chatContainerRef} // Attach ref to chat container
+          className="mb-4 max-h-[83%] flex-1 space-y-3 overflow-y-auto"
+        >
           {activities.map((activity, index) => {
             switch (activity.status) {
               case StreamActivityType.MESSAGE:
