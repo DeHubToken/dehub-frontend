@@ -111,7 +111,7 @@ async function TabUserActivity({ isOwner, user }: Props) {
     return <h2 className="justify-center flex text-[18px]">No Activity</h2>;
   }
   const res: any = await getUserActivity(user?.address);
-  if (res.data.length==0) {
+  if (res.data.length === 0) {
     return <h2  className=" justify-center flex text-[18px]">No Activity</h2>;
   }
   return (
