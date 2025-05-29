@@ -281,7 +281,6 @@ export default function BroadcastChatPanel(props: { streamId: string }) {
     if (message.trim() && socket) {
       socket.emit(LivestreamEvents.SendMessage, { streamId, content: message });
       setMessage("");
-      scrollToBottom(); // Scroll to bottom after sending a message
     }
   };
 
