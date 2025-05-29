@@ -108,11 +108,14 @@ async function TabFeedAllUploads({ isOwner, user, searchParams }: Props) {
 
 async function TabUserActivity({ isOwner, user }: Props) {
   if (!user?.address) {
-    return <div>No Activity</div>;
+    return <h2 className="justify-center flex text-[18px]">No Activity</h2>;
   }
   const res: any = await getUserActivity(user?.address);
+  if (res.data.length === 0) {
+    return <h2  className=" justify-center flex text-[18px]">No Activity</h2>;
+  }
   return (
-    <div className="mx-auto min-w-[calc((600/16)*1rem)] max-w-[calc((600/16)*1rem)]">
+    <div className="mx-auto max-w-[calc((600/16)*1rem)] min-w-xs w-full">
       <div className="flex   flex-col justify-center gap-3">
         {res?.data?.map((data: any, key: number) => {
           const postType = data.nft[0]?.postType ?? "video";
@@ -144,7 +147,7 @@ export default async function ProfileTabViewServer(props: any) {
   const activeTab = props.activeTab ?? "video"; // Default to "video"
   const TabComponent = tabComponents[activeTab] || (() => <div>Invalid Tab</div>);
   return (
-    <div className="mt-12  feed_list_parent">
+    <div className="mt-12  feed_list_parent min-h-[50vh]">
       <div className="w- h-auto">
         <TabComponent
           user={props.user}
