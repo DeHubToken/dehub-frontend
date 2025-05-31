@@ -367,12 +367,12 @@ export function GiftModal(props: Props) {
       setSelectedTier(giftTiers[8]); // Box of Chocolate
     } else if (numAmount >= 1000) {
       setSelectedTier(giftTiers[9]); // Love Heart
-      // } else if (numAmount >= 1) {
-      //   setSelectedTier(giftTiers[10]); // Rose
     } else {
       setSelectedTier(null);
     }
   }, [amount]);
+
+  console.log(selectedTier);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
