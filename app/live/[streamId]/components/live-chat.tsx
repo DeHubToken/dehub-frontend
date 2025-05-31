@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { Hand } from "lucide-react";
 import { toast } from "sonner";
 
@@ -30,6 +32,7 @@ import { LivestreamEvents, StreamActivityType } from "../enums/livestream.enum";
 import GiftModal from "./gift-modal";
 import TipAnimation from "./tip-animation";
 
+dayjs.extend(relativeTime);
 export function LiveChat(props: { streamId: string }) {
   const { streamId } = props;
 
@@ -356,16 +359,6 @@ function UserMessage(props: { activity: any }) {
   const { activity } = props;
   return (
     <div className="flex items-start">
-      {/* <UserProfileCard
-        username={activity.meta?.username}
-        avatarUrl={activity.meta?.avatarImageUrl}
-        address={activity.address}
-        createdAt={activity.meta?.createdAt}
-        staked = {activity.meta?.staked || 0}
-        displayName = {activity.meta?.displayName}
-        aboutMe = {activity.meta?.aboutMe}
-        followers = {activity.meta?.followers || 0}
-      /> */}
       <Avatar>
         <AvatarFallback>
           {createAvatarName(activity.meta.username || activity.address?.[0])}
@@ -377,7 +370,14 @@ function UserMessage(props: { activity: any }) {
           <span className="text-sm font-semibold text-theme-neutrals-200">
             {activity.meta.username || activity.address}
           </span>
-          <span className="text-sm font-normal text-theme-neutrals-500">45 mins ago</span>
+          {activity.createdAt && (
+            <span
+              className="cursor-pointer text-sm font-normal text-theme-neutrals-500"
+              title={dayjs(activity.createdAt).format("MMM D, YYYY, h:mm A")}
+            >
+              {dayjs(activity.createdAt).fromNow()}
+            </span>
+          )}
         </div>
         <p className="font-medium text-theme-neutrals-400">{activity.meta.content}</p>
       </div>

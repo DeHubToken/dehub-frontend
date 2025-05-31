@@ -28,11 +28,11 @@ export default function ProfileTabView({
           {tabs.map(({ key, label }) => (
             <Link
               key={key}
-              scroll={false} 
+              scroll={false}
               href={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}?tab=${key}`}
-              className={` px-6 py-2 rounded-full hover:bg-theme-mine-shaft-dark  hover:pl-7 hover:pr-7 transition-all ${
+              className={` rounded-full px-6 py-2 transition-all hover:bg-theme-neutrals-800  hover:pl-7 hover:pr-7 dark:hover:bg-theme-mine-shaft-dark ${
                 activeTab === key
-                  ? "rounded-full bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft pl-7 pr-7"
+                  ? "rounded-full bg-theme-neutrals-800 pl-7 pr-7 dark:bg-theme-mine-shaft-dark dark:text-white"
                   : "border-transparent text-gray-500"
               }`}
             >
@@ -41,7 +41,7 @@ export default function ProfileTabView({
           ))}
         </div>
 
-        <div className=" max-w-[50vh] mt-3 max_wdth">
+        <div className=" max_wdth mt-3 max-w-[50vh]">
           {["video", "feed-images", "feed-all", "feed-simple"].some((a) => a === activeTab) && (
             <Categories
               base={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}`}

@@ -124,7 +124,7 @@ const OrderPage = () => {
       toast.error("Failed to fetch token supply");
       console.error("Supply fetch error:", err);
     }
-  }, []);
+  }, [showModal]);
 
   useEffect(() => {
     fetchTokenPrice();
@@ -136,7 +136,7 @@ const OrderPage = () => {
     }, POLL_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, [fetchTokenPrice, fetchSupply]);
+  }, [fetchTokenPrice, fetchSupply,showModal]);
 
   const handleConfirmCheckout = useCallback(async () => {
  
@@ -191,7 +191,7 @@ const OrderPage = () => {
       setLoading(false);
       setShowModal(false);
     }
-  }, [amount, tokensToReceive, account, chainId, selectedChainId]);
+  }, [amount, tokensToReceive, account, chainId, selectedChainId,supplyData]);
 
   useEffect(() => {
     const fun = async () => {
@@ -214,10 +214,10 @@ const OrderPage = () => {
   return (
     <div className="flex   items-center justify-center px-4">
       <div className="w-full max-w-md rounded-2xl bg-slate-50   bg-opacity-5  p-6 shadow-xl">
-        {/* DPay Header */}
+        {/* Top Up Header */}
         <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold">DPay</h1>
-          <p className="text-sm">Buy DeHub tokens using DPay</p>
+          <h1 className="text-3xl font-bold">Top Up</h1>
+          <p className="text-sm">Buy $DHB using card and get free gas to use instantly</p>
         </div>
         <label className="mb-3 block text-sm font-medium">
           <div className="mb-1 flex items-center gap-2">Select Currency:</div>
@@ -239,7 +239,7 @@ const OrderPage = () => {
           <span>Current DEHUB Price:</span>
           <span className="font-semibold">
             {tokenPrice
-              ? `${tokenPrice.toFixed(4)} ${selectedCurrency.toUpperCase()}`
+              ? `${tokenPrice.toFixed(7)} ${selectedCurrency.toUpperCase()}`
               : "Loading..."}
           </span>
         </div>
@@ -315,7 +315,7 @@ const OrderPage = () => {
 
         {/* Trigger Modal */}
         <Button onClick={openModal} disabled={loading} className="w-full" variant={"gradientOne"}>
-          {loading ? "Processing..." : "Buy with Dpay"}
+          {loading ? "Processing..." : "Buy now"}
         </Button>
       </div>
 

@@ -8,7 +8,7 @@ const TokenInformationPanel = (props: Props) => {
     <div className="flex justify-center px-4">
       <div className="w-full max-w-md rounded-2xl p-6 hover:bg-gray-50 hover:bg-opacity-10 shadow-xl">
         <div className="mb-6 text-center">
-          <h2 className="text-2xl font-semibold">About DeHub & DPay</h2>
+          <h2 className="text-2xl font-semibold">About DeHub & payments</h2>
           <p className="text-sm">Your gateway to seamless token payments</p>
         </div>
 
@@ -18,7 +18,7 @@ const TokenInformationPanel = (props: Props) => {
             <div>
               <h4 className="font-medium">DeHub Token</h4>
               <p>
-                DeHub is a utility token powering decentralized entertainment, offering value across streaming, gaming, and NFT ecosystems.
+              Tokens are used for subscribing to creators, tipping streamers or unlocking content. The more you hold, the lower your fees are and the more superpowers you unlock like timeline trend boosts and verification badges.
               </p>
             </div>
           </div>
@@ -26,9 +26,9 @@ const TokenInformationPanel = (props: Props) => {
           <div className="flex items-start gap-3">
             <FaBolt className="mt-1 shrink-0" />
             <div>
-              <h4 className="font-medium">Instant Payments with DPay</h4>
+              <h4 className="font-medium">Instant Payments</h4>
               <p>
-                DPay lets users buy DeHub tokens using Stripe with instant checkout and automatic delivery to your connected wallet.
+              Using stripe, you can buy tokens instantly and seamlessly into whatever account you're logged into. DeHub makes tokens simple and for all. If you need more support, just pop up in our 24/7 live community chat and ask for admin support.
               </p>
             </div>
           </div>
@@ -38,7 +38,7 @@ const TokenInformationPanel = (props: Props) => {
             <div>
               <h4 className="font-medium">Secure Gateway</h4>
               <p>
-                Powered by Stripe, all payments are encrypted and processed securely. No card details are stored by DPay.
+              All payment details are encrypted and processed securely by Stripe, we can't access or store your sensitive information or card details giving you ultimate peace of mind.
               </p>
             </div>
           </div>

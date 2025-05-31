@@ -2,20 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import dayjs from "dayjs";
-import { Copy, CopyCheck, ThumbsUp } from "lucide-react";
+import { ThumbsUp } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useCopyToClipboard } from "react-use";
 import { toast } from "sonner";
 
-import UserProfileCard from "@/app/components/user-profile-card";
 import { ClaimAsCommentor, ClaimAsViewer } from "@/app/stream/[id]/components/claims";
 import { Share } from "@/app/stream/[id]/components/share";
-import { LikeButton } from "@/app/stream/[id]/components/stream-actions";
-import TipModal from "@/app/stream/[id]/components/tip-modal";
 
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 
 import { useWebSockets } from "@/contexts/websocket";
 
@@ -28,19 +23,21 @@ import { likeLiveStream } from "@/services/broadcast/broadcast.service";
 
 import { getSignInfo } from "@/web3/utils/web3-actions";
 
-import { StreamStatus } from "@/configs";
+import {  StreamStatus } from "@/configs";
 
 import { LivestreamEvents } from "../enums/livestream.enum";
 import { GiftModal } from "./gift-modal";
+import { StreamExternalSetup } from "./stream-external-setup";
 
-export default function BroadcastActionPanel(props: { stream: any }) {
-  const { stream: propStream } = props;
+export default function BroadcastActionPanel(props: {
+  stream: any;
+  isStreamingExternal?: boolean;
+  setIsStreamingExternal?: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const { stream: propStream, isStreamingExternal, setIsStreamingExternal } = props;
   const [stream, setStream] = useState<any>(propStream);
   const { socket } = useWebSockets();
-  const { theme } = useTheme();
   const { account, chainId, library, user } = useUser();
-  const [state, copyToClipboard] = useCopyToClipboard();
-  const [copied, setCopied] = useState(false);
 
   const likeStream = async () => {
     if (!account) return toast.error("Connect your wallet!");
@@ -69,12 +66,6 @@ export default function BroadcastActionPanel(props: { stream: any }) {
     } catch (e: any) {
       toast.error(e.message || "Failed to like stream");
     }
-  };
-
-  const handleCopy = (key: string) => {
-    copyToClipboard(key);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
   };
 
   useEffect(() => {
@@ -133,26 +124,9 @@ export default function BroadcastActionPanel(props: { stream: any }) {
           </Link>
         </div>
 
-        {stream.streamKey && (
-          <div className="flex items-center gap-1">
-            <span className="text-theme-neutrals-400">Stream Key:</span>
-            <button
-              onClick={() => handleCopy(stream.streamKey)}
-              className="flex items-center gap-1 text-theme-neutrals-200 hover:text-theme-neutrals-100"
-            >
-              <span className="cursor-pointer">
-                {copied
-                  ? "Copied!"
-                  : `${stream.streamKey.slice(0, 3)}••••${stream.streamKey.slice(-3)}`}
-              </span>
-              {copied ? <CopyCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </button>
-          </div>
-        )}
-
         {stream.status === StreamStatus.SCHEDULED && (
           <div className="flex items-center gap-1">
-            <span className="text-theme-neutrals-400">Schedual at:</span>
+            <span className="text-theme-neutrals-400">Schedule at:</span>
             <span className="text-theme-neutrals-200">{formatToUsDate(stream.scheduledFor)}</span>
           </div>
         )}
@@ -174,6 +148,18 @@ export default function BroadcastActionPanel(props: { stream: any }) {
           </div>
         )}
       </div>
+
+      {stream.streamKey &&
+        isStreamingExternal !== undefined &&
+        setIsStreamingExternal &&
+        stream.status !== StreamStatus.ENDED &&
+        stream.status !== StreamStatus.LIVE && (
+          <StreamExternalSetup
+            streamKey={stream?.streamKey}
+            isStreamingExternal={isStreamingExternal}
+            setIsStreamingExternal={setIsStreamingExternal}
+          />
+        )}
 
       <div className="mt-3 flex h-auto w-full flex-col items-start justify-start gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
         <div className="relative flex w-full flex-wrap items-center gap-4 pr-20 sm:size-auto sm:pr-0">

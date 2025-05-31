@@ -29,7 +29,7 @@ export async function Profile(props: Props) {
   });
 
   return (
-    <div className="flex h-auto min-h-screen w-full items-start justify-between overflow-hidden px-4 py-20 sm:px-8 sm:py-28">
+    <div className="flex h-auto min-h-screen w-full items-start justify-between overflow-hidden px-4 pb-20 sm:px-8">
       <div className="h-auto w-full">
         <Banner user={user} />
         <SocialLinks user={user} />

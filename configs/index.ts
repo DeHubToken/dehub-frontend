@@ -547,3 +547,5 @@ export enum StreamStatus {
   ENDED = "ENDED",
   SCHEDULED = "SCHEDULED"
 }
+
+export const LIVEPEER_RTMP_SERVER = "rtmp://rtmp.livepeer.com/live";

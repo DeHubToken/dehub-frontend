@@ -10,9 +10,9 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-transparent shadow dark:bg-theme-mine-shaft bg-theme-mine-shaft-dark",
+        default: "border-transparent shadow dark:bg-theme-mine-shaft text-white",
         secondary:
-          "font-medium border-transparent gap-4 dark:bg-theme-cloud-burst bg-theme-cloud-burst",
+          "font-medium border-transparent gap-4 dark:bg-theme-cloud-burst bg-theme-neutrals-800",
         destructive:
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
         outline: "text-foreground"

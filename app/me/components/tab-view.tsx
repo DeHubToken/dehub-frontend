@@ -16,6 +16,7 @@ interface Props {
 }
 
 async function TabVideoUploads({ isOwner, user, searchParams }: Props) {
+  // console.log("User Video Uploads", user, searchParams);
   if (!user?.address) {
     return <div>No Uploads</div>;
   }
@@ -30,11 +31,11 @@ async function TabVideoUploads({ isOwner, user, searchParams }: Props) {
     range: searchParams?.range,
     search: searchParams?.q
   };
-  console.log("getNFTs_parms", parms);
+  // console.log("getNFTs_parms", parms);
   const res = await getNFTs(parms);
 
   const data = res.success ? res.data.result : [];
-  console.log("data[0]", data[0]);
+  // console.log("data[0]", data[0]);
   return (
     <div className="relative grid h-auto w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 3xl:grid-cols-5">
       {data.length > 0 ? (
@@ -107,11 +108,14 @@ async function TabFeedAllUploads({ isOwner, user, searchParams }: Props) {
 
 async function TabUserActivity({ isOwner, user }: Props) {
   if (!user?.address) {
-    return <div>No Activity</div>;
+    return <h2 className="justify-center flex text-[18px]">No Activity</h2>;
   }
   const res: any = await getUserActivity(user?.address);
+  if (res.data.length === 0) {
+    return <h2  className=" justify-center flex text-[18px]">No Activity</h2>;
+  }
   return (
-    <div className="mx-auto min-w-[calc((600/16)*1rem)] max-w-[calc((600/16)*1rem)]">
+    <div className="mx-auto max-w-[calc((600/16)*1rem)] min-w-xs w-full">
       <div className="flex   flex-col justify-center gap-3">
         {res?.data?.map((data: any, key: number) => {
           const postType = data.nft[0]?.postType ?? "video";
@@ -143,7 +147,7 @@ export default async function ProfileTabViewServer(props: any) {
   const activeTab = props.activeTab ?? "video"; // Default to "video"
   const TabComponent = tabComponents[activeTab] || (() => <div>Invalid Tab</div>);
   return (
-    <div className="mt-12  feed_list_parent">
+    <div className="mt-12  feed_list_parent min-h-[50vh]">
       <div className="w- h-auto">
         <TabComponent
           user={props.user}
