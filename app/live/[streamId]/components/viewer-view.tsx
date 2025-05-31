@@ -42,18 +42,34 @@ export default function ViewerView({ stream }: { stream: any }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isBuffering, setIsBuffering] = useState(false);
   const [src, setSrc] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null); // Added error state
   const { account, chainId, library, user } = useUser();
   const { socket } = useWebSockets();
   const [hasJoined, setHasJoined] = useState(true);
 
   useEffect(() => {
     const fetchSrc = async () => {
-      const url = await getPlaybackSource(stream.playbackId);
-      setSrc(url);
+      try {
+        const url = await getPlaybackSource(stream.playbackId);
+        setSrc(url);
+      } catch (err) {
+        console.error("Failed to fetch playback source:", err);
+        setError("Failed to load stream source. Please try again later."); // Set error message
+      }
     };
 
     fetchSrc();
   }, [stream]);
+
+  if (error) {
+    return (
+      <div className="relative h-auto w-full overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: "16/9" }}>
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/40 text-center backdrop-blur-lg">
+          <div className="text-lg font-bold text-white">{error}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
