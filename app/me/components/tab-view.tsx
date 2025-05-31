@@ -1,4 +1,5 @@
 import { FeedItem, FeedList } from "@/app/components/feed-list";
+import { LiveStreamItem } from "@/app/components/live-stream-item";
 import { StreamItem } from "@/app/components/stream-item";
 
 import { getNFTs } from "@/services/nfts/trending";
@@ -16,23 +17,26 @@ interface Props {
 }
 
 async function TabVideoUploads({ isOwner, user, searchParams }: Props) {
+  // console.log("User Video Uploads", user, searchParams);
   if (!user?.address) {
     return <div>No Uploads</div>;
   }
-
-  const res = await getNFTs({
+  const parms = {
     minter: user.address,
     unit: 40,
     address: user.address,
     postType: "video",
     sortMode: searchParams?.type,
+    sort: searchParams?.sort,
     category: searchParams?.category === "All" ? null : searchParams?.category,
     range: searchParams?.range,
     search: searchParams?.q
-  });
+  };
+  // console.log("getNFTs_parms", parms);
+  const res = await getNFTs(parms);
 
   const data = res.success ? res.data.result : [];
-  console.log("data[0]", data[0]);
+  // console.log("data[0]", data[0]);
   return (
     <div className="relative grid h-auto w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 3xl:grid-cols-5">
       {data.length > 0 ? (
@@ -59,6 +63,7 @@ async function TabFeedsImagesUploads({ isOwner, user, searchParams }: Props) {
         minter={user?.address?.toLowerCase()}
         category={searchParams?.category}
         range={searchParams?.range}
+        sort={searchParams?.sort}
         type={searchParams?.type}
         q={searchParams?.q}
       />
@@ -104,33 +109,73 @@ async function TabFeedAllUploads({ isOwner, user, searchParams }: Props) {
 
 async function TabUserActivity({ isOwner, user }: Props) {
   if (!user?.address) {
-    return <div>No Activity</div>;
+    return <h2 className="flex justify-center text-[18px]">No Activity</h2>;
   }
   const res: any = await getUserActivity(user?.address);
+  if (res.data.length === 0) {
+    return <h2 className=" flex justify-center text-[18px]">No Activity</h2>;
+  }
   return (
-    <div className="flex w-full flex-col justify-center gap-3">
-      {res?.data?.map((data: any, key: number) => {
-        const postType = data.nft[0]?.postType ?? "video";
-        const isVideo = data.nft.length > 0 && postType === "video";
-        const isFeed =
-          (data.nft.length > 0 && postType === "feed-simple") || postType === "feed-images";
-        return (
-          <ActivityCard key={key} data={data} type={data.type} isOwner={isOwner}>
-            {isVideo && <StreamItem nft={data.nft[0]} isOwner={isOwner} />}
-            {isFeed && <FeedItem feed={data.nft[0]} />}
-          </ActivityCard>
-        );
-      })}
+    <div className="min-w-xs mx-auto w-full max-w-[calc((600/16)*1rem)]">
+      <div className="flex   flex-col justify-center gap-3">
+        {res?.data?.map((data: any, key: number) => {
+          const postType = data.nft[0]?.postType ?? "video";
+          const isVideo = data.nft.length > 0 && postType === "video";
+          const isFeed =
+            (data.nft.length > 0 && postType === "feed-simple") || postType === "feed-images";
+          return (
+            <ActivityCard key={key} data={data} type={data.type} isOwner={isOwner}>
+              {isVideo && <StreamItem nft={data.nft[0]} isOwner={isOwner} />}
+              {isFeed && <FeedItem feed={data.nft[0]} />}
+            </ActivityCard>
+          );
+        })}
+      </div>
     </div>
   );
 }
+async function TabLivestreamsUploads({ isOwner, user, searchParams }: Props) {
+  if (!user?.address) {
+    return <div>No Livestreams</div>;
+  }
+  const parms = {
+    minter: user.address,
+    owner: user.address,
+    unit: 40,
+    address: user.address,
+    // postType: "live",
+    sortMode: "live",
+    category: searchParams?.category === "All" ? null : searchParams?.category,
+    range: searchParams?.range,
+    search: searchParams?.q
+  };
+  const res = await getNFTs(parms);
+
+  const data = res.success ? res.data.result : [];
+  return (
+    <div className="relative grid h-auto w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 3xl:grid-cols-5">
+      {data.length > 0 ? (
+        data.map((nft, index) => (
+          <LiveStreamItem stream={nft} key={nft.tokenId + "--" + index} />
+          // <LiveSt nft={nft} key={nft.tokenId + "--" + index} isOwner={isOwner} />
+        ))
+      ) : (
+        <div className="flex h-[300px] w-full flex-col items-center justify-center lg:h-[650px]">
+          <p>No Livestreams</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Mapping Tabs
 const tabComponents: Record<string, React.FC<Props>> = {
   video: TabVideoUploads,
   "feed-images": TabFeedsImagesUploads,
   "feed-all": TabFeedAllUploads,
   "feed-simple": TabFeedSimpleUploads,
-  "user-activity": TabUserActivity
+  "user-activity": TabUserActivity,
+  "user-livestreams": TabLivestreamsUploads // Added livestreams tab
 };
 
 export default async function ProfileTabViewServer(props: any) {
@@ -138,8 +183,8 @@ export default async function ProfileTabViewServer(props: any) {
   const activeTab = props.activeTab ?? "video"; // Default to "video"
   const TabComponent = tabComponents[activeTab] || (() => <div>Invalid Tab</div>);
   return (
-    <div className="mt-12 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
-      <div className="h-auto w-full">
+    <div className="feed_list_parent  mt-12 min-h-[50vh]">
+      <div className="w- h-auto">
         <TabComponent
           user={props.user}
           isOwner={props.isOwner}

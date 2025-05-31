@@ -1,13 +1,18 @@
 import React from "react";
-
 import MessagesScreen from "./main";
 
-type Props = {};
+
+type Props = {
+  params: null;
+  searchParams: {
+    u?: string; 
+  };
+};
 
 const page = (props: Props) => {
   return (
     <div>
-      <MessagesScreen />
+      <MessagesScreen  searchParams={props?.searchParams}/> 
     </div>
   );
 };

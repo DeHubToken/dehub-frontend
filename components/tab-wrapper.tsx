@@ -5,7 +5,7 @@ export function TabContentWrapper(props: React.HTMLAttributes<HTMLDivElement>) {
     <div
       {...props}
       className={cn(
-        "size-full overflow-hidden rounded-3xl border border-neutral-800 p-3",
+        "size-full overflow-hidden rounded-3xl border border-theme-neutrals-800 p-3",
         props.className
       )}
     />

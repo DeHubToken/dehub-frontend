@@ -190,7 +190,7 @@ const CarouselPrevious = React.forwardRef<HTMLButtonElement, React.ComponentProp
         size={size}
         className={cn(
           "relative size-10 rounded-full bg-theme-neutrals-800 disabled:opacity-100 dark:bg-theme-neutrals-800",
-          "shadow-[0px_0px_15px_20px_rgba(1,3,5,1.00)]", // I hate this. Need to move to a config file.
+          "shadow-[0px_0px_15px_20px_rgba(249,251,255,1)] dark:shadow-[0px_0px_15px_20px_rgba(1,3,5,1.00)]", // I hate this. Need to move to a config file.
           className
         )}
         disabled={!canScrollPrev}
@@ -215,7 +215,7 @@ const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<ty
         size={size}
         className={cn(
           "relative size-10 rounded-full bg-theme-neutrals-800 disabled:opacity-100 dark:bg-theme-neutrals-800",
-          "shadow-[0px_0px_15px_20px_rgba(1,3,5,1.00)]", // I hate this. Need to move to a config file.
+          "shadow-[0px_0px_15px_20px_rgba(249,251,255,1)] dark:shadow-[0px_0px_15px_20px_rgba(1,3,5,1.00)]", // I hate this. Need to move to a config file.
           className
         )}
         disabled={!canScrollNext}

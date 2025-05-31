@@ -15,6 +15,7 @@ import { miniAddress } from "@/libs/strings";
 import { getBadgeUrl } from "@/web3/utils/calc";
 
 import TokensList from "./token-list";
+import { maxStacked } from "@/libs/maxStacked";
 
 type Props = { user: User };
 
@@ -22,6 +23,7 @@ export function InformationPanel(props: Props) {
   const { user } = props;
   const { theme } = useTheme();
   const { isUserOnline } = useWebSockets();
+  const maxStaked = maxStacked(user?.balanceData??0) 
   return (
     <div className="mt-8 flex h-auto w-full flex-col items-start justify-between gap-6 md:flex-row md:gap-0">
       <div className="flex size-auto flex-col items-start justify-start gap-8">
@@ -29,9 +31,8 @@ export function InformationPanel(props: Props) {
           <div className="relative flex size-auto items-start justify-start gap-0 sm:items-start sm:gap-2">
             <h1 className="flex gap-2 text-2xl font-semibold sm:w-auto">
               {user.displayName || user?.username || "No name"}{" "}
-              {user.displayName && <span className="text-sm">({user?.username})</span>}{" "}
-              <Image
-                src={getBadgeUrl(user?.badge?.name as string, theme)}
+              {user.displayName && <span className="text-sm">({user?.username})</span>} <Image
+                src={getBadgeUrl(maxStaked, theme)}
                 alt="User Badge"
                 layout="fill"
                 className={`prof_le object-contain ${

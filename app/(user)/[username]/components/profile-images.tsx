@@ -27,7 +27,7 @@ function AvatarImageWithLoader(props: React.ComponentProps<typeof AvatarImage>) 
     <>
       <AvatarImage {...props} onLoad={() => setLoading(false)} />
       {loading && (
-        <div className="absolute inset-0 size-full bg-gray-300 dark:bg-theme-mine-shaft-dark">
+        <div className="absolute inset-0 size-full bg-theme-neutrals-800 dark:bg-theme-mine-shaft-dark">
           <div className="shimmer size-full" />
         </div>
       )}
@@ -46,7 +46,7 @@ export function Banner(props: Props) {
           alt={user?.username}
           className="absolute left-0 top-0 size-full object-cover"
         />
-        <AvatarFallback className="absolute left-0 top-0 size-full rounded-none bg-gradient-to-br from-slate-900 to-zinc-700 text-3xl">
+        <AvatarFallback className="absolute left-0 top-0 size-full rounded-none bg-theme-neutrals-700 text-3xl capitalize dark:bg-gradient-to-br dark:from-slate-900 dark:to-zinc-700">
           {createAvatarName(user?.username || user.displayName || "").toUpperCase()}
         </AvatarFallback>
       </Avatar>
@@ -62,7 +62,7 @@ export function UserAvater(props: Props) {
         src={getAvatarUrl(user.avatarImageUrl || "") || ""}
         alt={user?.username}
       />
-      <AvatarFallback className="border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
+      <AvatarFallback className="border border-gray-200 bg-theme-mine-shaft-dark capitalize dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
         {createAvatarName(user?.username || user.displayName || "")}
       </AvatarFallback>
     </Avatar>

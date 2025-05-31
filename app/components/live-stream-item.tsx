@@ -42,7 +42,7 @@ export function LiveStreamItem({ stream, isOwner, ...rest }: Props) {
   return (
     <div
       {...rest}
-      className="relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-theme-mine-shaft-dark dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
+      className="relative flex flex-col overflow-hidden rounded-2xl bg-theme-neutrals-800"
     >
       <div className="relative h-0 w-full overflow-hidden pt-[56.25%]">
         <Link

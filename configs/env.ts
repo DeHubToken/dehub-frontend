@@ -8,6 +8,7 @@ import { z } from "zod";
  * @see https://create.t3.gg/en/usage/env-variables
  */
 export const env = createEnv({
+  // TODO: Include stripe stuff
   emptyStringAsUndefined: true,
   server: {
     NODE_ENV: z.enum(["development", "staging", "production"]).default("development"),
@@ -38,7 +39,7 @@ export const env = createEnv({
     // Communication Services
     NEXT_PUBLIC_SOCKET_URL: z.string().url(),
     NEXT_PUBLIC_TENOR_API_KEY: z.string(),
-
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:z.string().default(""),
     // SERVER ENVIRONMENT VARIABLES
     NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   },
@@ -73,7 +74,7 @@ export const env = createEnv({
     // Communication Services
     NEXT_PUBLIC_SOCKET_URL: process.env.NEXT_PUBLIC_SOCKET_URL,
     NEXT_PUBLIC_TENOR_API_KEY: process.env.NEXT_PUBLIC_TENOR_API_KEY,
-
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     // Livepeer
     LIVEPEER_API_KEY: process.env.LIVEPEER_API_KEY
   },

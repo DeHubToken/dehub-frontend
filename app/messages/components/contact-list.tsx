@@ -182,7 +182,7 @@ const GroupInfo = ({ group, isPro = false, lastOnline = true, lastMessage }: any
         <AvatarImage
           className="object-cover"
           alt={group?.groupName}
-          src={getGroupAvatarUrl(group?.avatarUrl || "")}
+          src={getGroupAvatarUrl(group?.iconUrl || "")}
         />
       </Avatar>
       <div className="flex flex-col ">

@@ -4,6 +4,10 @@ import { Suspense } from "react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
+import { ActionPanel } from "@/app/stream/[id]/components/action-panel";
+import { CommentsPanel } from "@/app/stream/[id]/components/comments";
+import { StreamInfo } from "@/app/stream/[id]/components/stream";
+
 import { Button } from "@/components/ui/button";
 
 import { safeParseCookie } from "@/libs/cookies";
@@ -14,8 +18,6 @@ import { getTransactionLink } from "@/web3/utils/format";
 
 import { defaultChainId } from "@/configs";
 
-import { ActionPanel } from "./action-panel";
-import { CommentsPanel } from "./comments";
 import ImageCarousel from "./image-carousel";
 
 function FeedInfo(props: { nft: NFT }) {
@@ -87,14 +89,18 @@ export async function Feed(props: { tokenId: number }) {
   const nft = response.data.result;
 
   return (
-    <div className="h-auto min-h-screen w-full px-4 py-20 xl:max-w-[75%] xl:flex-[0_0_75%]">
+    <div className="h-auto min-h-screen w-full flex-1 p-6">
       {nft.postType === "feed-images" && (
         <Suspense fallback={<span>loading...</span>}>
           <ImageCarousel images={nft.imageUrls || []} />
         </Suspense>
       )}
       {nft.postType === "feed-images" && <ActionPanel nft={nft} tokenId={tokenId} />}
-      <FeedInfo nft={nft} />
+      <StreamInfo nft={nft} />
+      <div className="rounded-3xl bg-theme-neutrals-800 p-6">
+        <span className="text-xs text-theme-neutrals-400">Description</span>
+        <p className="mt-4 text-theme-neutrals-200">{nft.description}</p>
+      </div>
       {nft.postType === "feed-simple" && <ActionPanel nft={nft} tokenId={tokenId} />}
       <CommentsPanel nft={nft} tokenId={tokenId} />
     </div>

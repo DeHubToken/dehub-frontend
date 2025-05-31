@@ -29,7 +29,10 @@ import {
   PPV,
   Profile,
   Treading,
-  Upload
+  Upload,
+  BuyCrypto,
+  SwapCrypto,
+  SellCrypto
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 
@@ -219,6 +222,26 @@ const links = [
     icon: <Contact className="size-4" />,
     url: "https://t.me/dehub",
     isLink: true
+  },
+  {
+    id: "buyCrypto",
+    name: "Buy Crypto",
+    icon: <BuyCrypto />,
+    url: () => "/buy-crypto",
+    isLink: true
+  },
+  {
+    id: "sellCrypto",
+    name: "Sell Crypto",
+    icon: <SellCrypto />,
+    url: () => "/sell-crypto",
+    isLink: true
+  },
+  {
+    id: "swap",
+    name: "Swap Crypto",
+    icon: <SwapCrypto />,
+    url: () => "/swap-crypto",
   }
 ] as Link[];
 
@@ -235,8 +258,13 @@ export function HambMenu() {
 
   return (
     <div className="flex size-auto items-center justify-center">
-      <Button size="icon_sm" onClick={toggleMenu} variant="ghost" className="rounded-full">
-        <Menu className="text-gray-400 dark:text-theme-titan-white" />
+      <Button
+        size="icon_sm"
+        onClick={toggleMenu}
+        variant="ghost"
+        className="rounded-full hover:bg-theme-neutrals-800"
+      >
+        <Menu className="text-gray-400 text-theme-neutrals-200" />
       </Button>
 
       <div
@@ -255,9 +283,7 @@ export function HambMenu() {
         <div
           className={
             "relative h-screen w-full max-w-[70%] overflow-hidden transition-all duration-500 ease-in-out " +
-            (isOpen
-              ? "translate-x-0 bg-theme-background dark:bg-theme-mine-shaft-dark"
-              : "translate-x-full")
+            (isOpen ? "translate-x-0 bg-theme-neutrals-900" : "translate-x-full")
           }
         >
           <div className="side_menu mr-2 h-screen w-full overflow-y-auto py-10">
@@ -267,7 +293,7 @@ export function HambMenu() {
                   return (
                     <NotificationMobileModal
                       key={key}
-                      className="w-full justify-start gap-4 rounded-none border-b border-theme-mine-shaft-dark p-8 dark:border-theme-mine-shaft"
+                      className="w-full justify-start gap-4 rounded-none border-b border-theme-neutrals-800 p-8"
                     />
                   );
                 }
@@ -279,7 +305,7 @@ export function HambMenu() {
                     asChild
                     key={key}
                     variant="ghost"
-                    className="w-full justify-start gap-4 rounded-none border-b border-theme-mine-shaft-dark p-8 dark:border-theme-mine-shaft"
+                    className="w-full justify-start gap-4 rounded-none border-b border-theme-neutrals-800 p-8 text-theme-neutrals-200 hover:bg-theme-neutrals-600 dark:hover:bg-theme-neutrals-800"
                     onClick={toggleMenu}
                   >
                     <Link
@@ -300,11 +326,11 @@ export function HambMenu() {
           </div>
 
           <div
-            className="fixed bottom-6 left-0 z-10 grid h-auto w-full place-items-center bg-theme-background/50 py-8 backdrop-blur-sm dark:bg-theme-mine-shaft-dark/50"
+            className="fixed bottom-6 left-0 z-10 grid h-auto w-full place-items-center py-8 backdrop-blur-sm"
             onClick={toggleMenu}
           >
-            <Button variant="ghost" className="size-20 rounded-full">
-              <ArrowRight className="size-10" />
+            <Button variant="ghost" className="size-20 rounded-full hover:bg-theme-neutrals-800">
+              <ArrowRight className="size-10 text-theme-neutrals-200" />
             </Button>
           </div>
         </div>
@@ -334,7 +360,7 @@ function Leaderboard() {
     return (
       <Button
         variant="ghost"
-        className="w-full justify-start gap-4 rounded-none border-b border-theme-mine-shaft-dark p-8 dark:border-theme-mine-shaft"
+        className="w-full justify-start gap-4 rounded-none border-b border-theme-neutrals-800 p-8 text-theme-neutrals-200 hover:bg-theme-neutrals-600 dark:hover:bg-theme-neutrals-800"
       >
         {status === "loading" ? "Leaderboard" : "Error"}
       </Button>
@@ -347,7 +373,7 @@ function Leaderboard() {
       trigger={
         <Button
           variant="ghost"
-          className="w-full justify-start gap-4 rounded-none border-b border-theme-mine-shaft-dark p-8 dark:border-theme-mine-shaft"
+          className="w-full justify-start gap-4 rounded-none border-b border-theme-neutrals-800 p-8 text-theme-neutrals-200 hover:bg-theme-neutrals-600 dark:hover:bg-theme-neutrals-800"
         >
           <LeaderBoardIcon className="size-4" />
           <span className="text-sm">Leaderboard</span>

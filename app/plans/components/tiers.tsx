@@ -1,10 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { toast } from "sonner";
 
 import { ChainIconById } from "@/app/components/ChainIconById";
 
@@ -14,8 +11,6 @@ import { Button } from "@/components/ui/button";
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { cn } from "@/libs/utils";
-
-import { getPlans } from "@/services/subscription-plans";
 
 import { supportedNetworks } from "@/web3/configs";
 
@@ -104,7 +99,6 @@ interface SubscriptionPricingProps extends React.HTMLAttributes<HTMLDivElement> 
 
 export function SubscriptionPricing(props: SubscriptionPricingProps) {
   const { chains, tier, id, ...rest } = props;
-  console.log("object-chains", chains, supportedNetworks);
   return (
     <div {...rest} className={cn(" items-center gap-5 px-5", rest.className)}>
       <div className=" flex max-h-80 w-full flex-col gap-5 overflow-scroll">
@@ -119,7 +113,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
             return (
               <div
                 key={chain.chainId}
-                className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
+                className="flex w-full flex-col items-center gap-2 rounded-lg border p-4 shadow-sm"
               >
                 <ChainIconById chainId={chain.chainId} label={true} />
                 <p className="text-sm text-red-500">Token Not Found</p>
@@ -130,7 +124,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
           return (
             <div
               key={chain.chainId}
-              className="shadow-sm flex w-full flex-col items-center gap-2 rounded-lg border p-4"
+              className="flex w-full flex-col items-center gap-2 rounded-lg border p-4 shadow-sm"
             >
               <ChainIconById chainId={chain.chainId} label={true} />
 
@@ -145,7 +139,7 @@ export function SubscriptionPricing(props: SubscriptionPricingProps) {
           );
         })}
       </div>
-      <Link href={`plans/${id}`}>
+      <Link href={`/plans/${id}?_=${new Date().getMilliseconds()}`}> 
         <Button className="mt-4 w-full" variant="gradientOne">
           Explore
         </Button>

@@ -64,6 +64,7 @@ type Props = {
   tokenId: number;
   to: string;
   triggerProps?: React.ComponentProps<typeof Button>;
+  trigger?: React.ReactNode;
   stream: any;
 };
 
@@ -137,7 +138,7 @@ export const giftTiers = [
     icon: Heart,
     color: "text-red-500",
     description: "Love Heart Emoji Pop up on screen."
-  },
+  }
 ];
 // {
 //   min: 1,
@@ -148,7 +149,7 @@ export const giftTiers = [
 // }
 
 export function GiftModal(props: Props) {
-  const { tokenId, to, triggerProps, stream } = props;
+  const { tokenId, to, triggerProps, trigger, stream } = props;
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState(0);
   // const [delay, setDelay] = useState(0);
@@ -366,8 +367,6 @@ export function GiftModal(props: Props) {
       setSelectedTier(giftTiers[8]); // Box of Chocolate
     } else if (numAmount >= 1000) {
       setSelectedTier(giftTiers[9]); // Love Heart
-    // } else if (numAmount >= 1) {
-    //   setSelectedTier(giftTiers[10]); // Rose
     } else {
       setSelectedTier(null);
     }
@@ -378,9 +377,13 @@ export function GiftModal(props: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2 rounded-full" variant="gradientOne" {...triggerProps}>
-          <HandCoins className="size-5" /> Tip
-        </Button>
+        {trigger ? (
+          trigger
+        ) : (
+          <Button className="gap-2 rounded-full" variant="gradientOne" {...triggerProps}>
+            <HandCoins className="size-5" /> Tip
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="h-auto max-h-screen overflow-auto">
         <DialogHeader>

@@ -59,7 +59,7 @@ const ImageUploadTab = ({ imagePreviews, setImagePreviews }: any) => {
       </div>
       <div
         {...getRootProps()}
-        className="relative h-60 w-full rounded-3xl border border-dashed border-gray-200 border-theme-mine-shaft bg-theme-mine-shaft-dark hover:cursor-pointer lg:size-full"
+        className="relative h-60 w-full rounded-3xl bg-theme-neutrals-800 hover:cursor-pointer lg:size-full"
       >
         {imagePreviews.length === 0 && (
           <div className="absolute left-0 top-0 flex size-full flex-col items-center justify-center gap-2">

@@ -86,14 +86,14 @@ export function MobileOnlyBottomBar() {
   if (!isSmallScreen) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 z-20 h-auto w-full border-t-2 bg-theme-background py-2 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
+    <div className="fixed bottom-0 left-0 z-20 h-auto w-full border-t-2 border-theme-neutrals-800 bg-theme-neutrals-900 py-2 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
       <div className="grid w-full grid-cols-5 items-center">
         {links.map((link) => {
           if (link.name === "Track") {
             return (
               <Button
                 key={link.id}
-                className="h-max flex-col gap-0.5 py-1"
+                className="h-max flex-col gap-0.5 py-1 text-theme-neutrals-200 hover:bg-transparent hover:text-theme-neutrals-200"
                 variant="ghost"
                 onClick={() => handleClick(link)}
               >
@@ -104,7 +104,12 @@ export function MobileOnlyBottomBar() {
           }
 
           return (
-            <Button key={link.id} className="h-max flex-col gap-0.5 py-1" asChild variant="ghost">
+            <Button
+              key={link.id}
+              className="h-max flex-col gap-0.5 py-1 text-theme-neutrals-200 hover:bg-transparent hover:text-theme-neutrals-200"
+              asChild
+              variant="ghost"
+            >
               <Link
                 href={link.url}
                 target={link.external ? "_blank" : "_self"}

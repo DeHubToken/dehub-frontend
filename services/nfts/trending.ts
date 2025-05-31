@@ -7,6 +7,7 @@ type SearchParams = {
   unit?: number;
   page?: number;
   sortMode?: string;
+  sort?:string;
   minter?: string;
   owner?: string;
   search?: string;
@@ -68,6 +69,7 @@ export async function getNFTs(params?: SearchParams) {
       removeUndefined({
         q: params.search,
         search: params.search,
+        sort:params?.sort,
         unit: 50,
         range: params.range,
         category: params.category,
@@ -76,10 +78,15 @@ export async function getNFTs(params?: SearchParams) {
         postType: params.postType
       })
     );
+    const tag = params?.postType
+    ? `nfts-${params.postType}`
+    : 'nfts-all';
     const url = `/search_nfts${query}`;
+      console.log("search_nfts_url",url);
+      
     const res = await api<{ result: GetNFTsResult[] }>(url, {
       method: "GET",
-      next: { revalidate: 2 * 60, tags: ["nfts"] }
+      next: { revalidate: 2 * 60, tags: [tag] }
     });
 
     return res;
@@ -90,30 +97,35 @@ export async function getNFTs(params?: SearchParams) {
       q: params?.search,
       search: params?.search,
       unit: 50,
-      range: params?.range,
+      range: params?.range, 
+      sort:params?.sort,
       category: params?.category,
       address: params?.address,
       page: params?.page,
       sortMode: params?.sortMode,
       minter: params?.minter,
-      owner: params?.owner
+      owner: params?.owner,
+      postType: params?.postType
     })
   );
+  const tag = params?.postType
+  ? `nfts-${params.postType}`
+  : 'nfts-all';
   const url = `/search_nfts${query}`;
   const res = await api<{ result: GetNFTsResult[] }>(url, {
     method: "GET",
-    next: { revalidate: 2 * 60, tags: ["nfts"] }
+    next: { revalidate: 2 * 60, tags: [tag] }
   });
   return res;
 }
 
 export async function getLikedNFTs(
-  params: { page: number; address: string | undefined },
+  params: { page: number; address: string | undefined,sort?:string },
   library: any
 ) {
   const sigData = await getSignInfo(library, params?.address as string);
   const payload = {
-    ...params,
+    ...params, 
     sig: sigData?.sig,
     timestamp: sigData?.timestamp
   };

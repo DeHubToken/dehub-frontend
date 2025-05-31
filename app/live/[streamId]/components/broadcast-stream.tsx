@@ -19,20 +19,25 @@ import { useActiveWeb3React } from "@/hooks/web3-connect";
 
 import { api } from "@/libs/api";
 
-import { checkIfBroadcastOwner, getLiveStream } from "@/services/broadcast/broadcast.service";
+import {
+  checkIfBroadcastOwner,
+  getLiveStream,
+  getStreamKey
+} from "@/services/broadcast/broadcast.service";
 
 import { getStreamStatus } from "@/web3/utils/validators";
-import { getSignInfo } from "@/web3/utils/web3-actions";
+import { getAuthParams, getSignInfo } from "@/web3/utils/web3-actions";
 
 import { userAtom } from "@/stores";
 
-import { env, streamInfoKeys, StreamStatus } from "@/configs";
+import { env, LIVEPEER_RTMP_SERVER, streamInfoKeys, StreamStatus } from "@/configs";
 
 import { LivestreamEvents } from "../enums/livestream.enum";
 import BroadcastActionPanel from "./action-panel";
 import ReplayPlayer from "./live-replay";
 import PreviousStreams from "./previous-streams";
 import StatusBadge from "./status-badge";
+import { StreamExternalSetup } from "./stream-external-setup";
 import BroadcastStreamInfo from "./stream-info";
 import StreamerView from "./streamer-view";
 import ViewerView from "./viewer-view";
@@ -64,6 +69,8 @@ export default function BroadcastStream(props: { streamId: string }) {
   const [hasJoined, setHasJoined] = useState<any>(false);
   const [isBroadcastOwner, setIsBroadcastOwner] = useState(false);
   const [isPendingWebhook, setIsPendingWebhook] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isStreamingExternal, setIsStreamingExternal] = useState(false);
   const { socket } = useWebSockets();
   const { account } = useUser();
 
@@ -88,13 +95,24 @@ export default function BroadcastStream(props: { streamId: string }) {
 
   useEffect(() => {
     const fetchStream = async () => {
+      setIsLoading(true);
       const response = await getLiveStream(streamId);
       if (response.success) {
-        setStream(response.data);
         const isOwner: any = await checkIfBroadcastOwner(account?.toLowerCase(), response.data);
-        const payload = response.data;
-        setStream(payload);
         setIsBroadcastOwner(isOwner);
+        setStream(response.data);
+
+        setIsLoading(false);
+        if (isOwner && library && account) {
+          const authParams = await getAuthParams(library, account);
+          const keyResponse = await getStreamKey(streamId, authParams);
+          if (keyResponse.success) {
+            setStream((prev: any) => ({
+              ...prev,
+              streamKey: keyResponse.data.streamKey
+            }));
+          }
+        }
       } else {
         setStream({ error: response.error });
       }
@@ -114,7 +132,6 @@ export default function BroadcastStream(props: { streamId: string }) {
           ? true
           : false;
       const status = getStreamStatus(stream, user, chainId);
-      console.log("Status", status, stream);
       setIsFreeStream(isFree);
       setExtraDetails(status);
     };
@@ -184,7 +201,9 @@ export default function BroadcastStream(props: { streamId: string }) {
     setIsStartingNw(true);
   };
 
-  if (!stream) {
+  if (isLoading) return <div className="h-auto min-h-screen w-full flex-1 p-6">Loading...</div>;
+
+  if (!stream && !isLoading) {
     return (
       <div className="h-auto min-h-screen w-full flex-1 p-6">
         <p>No stream found</p>
@@ -216,7 +235,6 @@ export default function BroadcastStream(props: { streamId: string }) {
     );
   }
 
-  console.log("isFreeStream", isFreeStream, extraDetails, user);
   if (!isFreeStream) {
     return (
       <ErrorComponent stream={stream}>
@@ -241,73 +259,101 @@ export default function BroadcastStream(props: { streamId: string }) {
 
   return (
     <div className="h-auto w-full flex-1 p-6">
-      {stream.status === StreamStatus.SCHEDULED && !isStartingNw && (
+      {isStreamingExternal && stream.status !== StreamStatus.LIVE && (
         <div
-          className="relative w-full overflow-hidden rounded-2xl bg-black"
+          className="flex flex-col items-center justify-center gap-4"
           style={{ aspectRatio: "16/9" }}
         >
-          <StatusBadge status={stream.status} />
-          <div className="absolute inset-0 bg-black bg-opacity-50" />
-          <img
-            src={`${env.NEXT_PUBLIC_CDN_BASE_URL}/${stream.thumbnail}`}
-            alt="Stream Thumbnail"
-            className="h-auto w-full object-cover"
+          <p>
+            You can't start on the browser if you are streaming externally. Start from your
+            streaming software!
+          </p>
+          <StreamExternalSetup
+            streamKey={stream?.streamKey}
+            isStreamingExternal={isStreamingExternal}
+            setIsStreamingExternal={setIsStreamingExternal}
+            minimal={true}
           />
-          <div className="absolute bottom-4 flex w-full justify-between px-4">
-            {isBroadcastOwner && (
-              <Button
-                onClick={handleGoLive}
-                variant="gradientOne"
-                className="px-6"
-                disabled={isPendingWebhook}
-              >
-                {isPendingWebhook ? "Starting..." : "Go Live Now"}
-              </Button>
-            )}
-          </div>
         </div>
       )}
 
-      {(stream.status === StreamStatus.LIVE ||
-        stream.status === StreamStatus.OFFLINE ||
-        isStartingNw) &&
-        stream.status !== StreamStatus.ENDED && (
-          <>
-            {isBroadcastOwner ? (
-              <StreamerView stream={stream} isBroadcastOwner={isBroadcastOwner} />
-            ) : (
-              <>
-                {hasJoined ? (
-                  <ViewerView stream={stream} />
-                ) : (
-                  <div
-                    className="relative w-full overflow-hidden rounded-2xl bg-black"
-                    style={{ aspectRatio: "16/9" }}
+      {isStreamingExternal && stream.status === StreamStatus.LIVE && <ViewerView stream={stream} />}
+
+      {!isStreamingExternal && (
+        <>
+          {stream.status === StreamStatus.SCHEDULED && !isStartingNw && (
+            <div
+              className="relative w-full overflow-hidden rounded-2xl bg-black"
+              style={{ aspectRatio: "16/9" }}
+            >
+              <StatusBadge status={stream.status} />
+              <div className="absolute inset-0 bg-black bg-opacity-50" />
+              <img
+                src={`${env.NEXT_PUBLIC_CDN_BASE_URL}/${stream.thumbnail}`}
+                alt="Stream Thumbnail"
+                className="h-auto w-full object-cover"
+              />
+              <div className="absolute bottom-4 flex w-full justify-between px-4">
+                {isBroadcastOwner && (
+                  <Button
+                    onClick={handleGoLive}
+                    variant="gradientOne"
+                    className="px-6"
+                    disabled={isPendingWebhook}
                   >
-                    <StatusBadge status={stream.status} />
-                    <div className="absolute inset-0 bg-black bg-opacity-50" />
-                    <img
-                      src={`${env.NEXT_PUBLIC_CDN_BASE_URL}/${stream.thumbnail}`}
-                      alt="Stream Thumbnail"
-                      className="h-auto w-full object-cover"
-                    />
-                    <div className="absolute bottom-4 flex w-full justify-between px-4">
-                      {stream.status !== StreamStatus.OFFLINE && (
-                        <Button onClick={joinStream} variant="gradientOne" className="px-6">
-                          Join Stream
-                        </Button>
-                      )}
-                    </div>
-                  </div>
+                    {isPendingWebhook ? "Starting..." : "Go Live Now"}
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {(stream.status === StreamStatus.LIVE ||
+            stream.status === StreamStatus.OFFLINE ||
+            isStartingNw) &&
+            stream.status !== StreamStatus.ENDED && (
+              <>
+                {isBroadcastOwner ? (
+                  <StreamerView stream={stream} isBroadcastOwner={isBroadcastOwner} />
+                ) : (
+                  <>
+                    {hasJoined ? (
+                      <ViewerView stream={stream} />
+                    ) : (
+                      <div
+                        className="relative w-full overflow-hidden rounded-2xl bg-black"
+                        style={{ aspectRatio: "16/9" }}
+                      >
+                        <StatusBadge status={stream.status} />
+                        <div className="absolute inset-0 bg-black bg-opacity-50" />
+                        <img
+                          src={`${env.NEXT_PUBLIC_CDN_BASE_URL}/${stream.thumbnail}`}
+                          alt="Stream Thumbnail"
+                          className="h-auto w-full object-cover"
+                        />
+                        <div className="absolute bottom-4 flex w-full justify-between px-4">
+                          {stream.status !== StreamStatus.OFFLINE && (
+                            <Button onClick={joinStream} variant="gradientOne" className="px-6">
+                              Join Stream
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </>
             )}
-          </>
-        )}
 
-      {stream.status === StreamStatus.ENDED && <ReplayPlayer streamId={streamId} />}
+          {stream.status === StreamStatus.ENDED && <ReplayPlayer streamId={streamId} />}
+        </>
+      )}
 
-      <BroadcastActionPanel stream={stream} />
+      <BroadcastActionPanel
+        stream={stream}
+        isStreamingExternal={isStreamingExternal}
+        setIsStreamingExternal={setIsStreamingExternal}
+      />
       <BroadcastStreamInfo stream={stream} />
       <PreviousStreams stream={stream} />
     </div>

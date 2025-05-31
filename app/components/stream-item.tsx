@@ -182,7 +182,7 @@ function _StreamItem(props: Props) {
           )}
 
           <div className="absolute bottom-3 right-3">
-            <p className="rounded-full bg-[#010305]/15 p-1 px-4 text-sm backdrop-blur-md">
+            <p className="rounded-full bg-theme-neutrals-300/80 p-1 px-4 text-sm backdrop-blur-md dark:bg-theme-neutrals-900/15">
               {nft?.videoDuration ? secondsToMinutes(nft?.videoDuration) : "00:00"}
             </p>
           </div>
@@ -249,7 +249,7 @@ function _StreamItem(props: Props) {
             {/* <div /> */}
             <div className="flex h-auto items-center justify-end gap-2">
               <LikeButton
-                className="gap-1 rounded-full bg-theme-neutrals-700 px-3 py-[2px] text-theme-neutrals-400 dark:bg-theme-neutrals-700 dark:text-theme-neutrals-400"
+                className="gap-1 rounded-full bg-theme-neutrals-700 px-3 py-[2px] text-theme-neutrals-400"
                 vote
                 tokenId={nft.tokenId}
                 votes={nft.totalVotes?.for || 0}
@@ -259,7 +259,7 @@ function _StreamItem(props: Props) {
               </LikeButton>
               <Button
                 size="sm"
-                className="h-6 gap-1 rounded-full bg-theme-neutrals-700 px-3 text-theme-neutrals-400 dark:bg-theme-neutrals-700 dark:text-theme-neutrals-400"
+                className="h-6 gap-1 rounded-full bg-theme-neutrals-700 px-3 text-theme-neutrals-400"
               >
                 <EyeOpenIcon className="size-3" />
                 {nft.views || 0}

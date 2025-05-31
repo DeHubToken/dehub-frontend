@@ -13,7 +13,8 @@ import {
   //  polygon,
   bsc,
   bscTestnet,
-  goerli
+  goerli,
+  sepolia
 } from "@wagmi/chains";
 import {
   configureChains,
@@ -44,7 +45,8 @@ export const { chains, publicClient, webSocketPublicClient } = isDevMode
         bsc,
         //  mainnet,
         // polygon,
-        base
+        base,
+        // sepolia
       ],
       providers
     );

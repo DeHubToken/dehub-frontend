@@ -20,7 +20,7 @@ import { CommentsPanel } from "./comments";
 import { StreamVideoProvider, StreamVideoSkeleton } from "./stream-video-provider";
 import TranscodingVideo from "./transcode-state";
 
-function StreamInfo(props: { nft: NFT }) {
+export function StreamInfo(props: { nft: NFT }) {
   const { nft } = props;
 
   return (

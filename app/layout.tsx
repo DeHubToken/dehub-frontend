@@ -10,7 +10,7 @@ import "jotai-devtools/styles.css";
 import "@/styles/global.css";
 
 import { Layout } from "@/components/layout";
-import { NoticeModal } from "@/components/modals/notice";
+// import { NoticeModal } from "@/components/modals/notice";
 import { ProgressBar } from "@/components/progress";
 import Providers, { SwitchChainProvider } from "@/components/providers";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
@@ -59,7 +59,7 @@ export default function RootLayout({ children }: Props) {
         <Toaster />
         <Toast />
         <ProgressBar />
-        <NoticeModal />
+        {/* <NoticeModal /> */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

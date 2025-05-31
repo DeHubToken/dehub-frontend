@@ -7,8 +7,9 @@ import ProfileTabViewServer from "./tab-view";
 
 const tabs = [
   { key: "video", label: "Videos" },
-  { key: "feed-all", label: "Feeds" },
-  { key: "user-activity", label: "activity" }
+  { key: "feed-all", label: "Feed" },
+  { key: "user-activity", label: "Activity" },
+  { key: "user-livestreams", label: "Livestreams" }
 ];
 
 export default function ProfileTabView({
@@ -28,10 +29,11 @@ export default function ProfileTabView({
           {tabs.map(({ key, label }) => (
             <Link
               key={key}
+              scroll={false}
               href={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}?tab=${key}`}
-              className={` px-6 py-2 ${
+              className={` rounded-full px-6 py-2 transition-all hover:bg-theme-neutrals-800  hover:pl-7 hover:pr-7 dark:hover:bg-theme-mine-shaft-dark ${
                 activeTab === key
-                  ? "rounded-full bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft"
+                  ? "rounded-full bg-theme-neutrals-800 pl-7 pr-7 dark:bg-theme-mine-shaft-dark dark:text-white"
                   : "border-transparent text-gray-500"
               }`}
             >
@@ -40,7 +42,7 @@ export default function ProfileTabView({
           ))}
         </div>
 
-        <div className=" max-w-[50vh]">
+        <div className=" max_wdth mt-3 max-w-[50vh]">
           {["video", "feed-images", "feed-all", "feed-simple"].some((a) => a === activeTab) && (
             <Categories
               base={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}`}
@@ -50,7 +52,7 @@ export default function ProfileTabView({
               range={searchParams?.range}
               type={searchParams?.type}
               q={searchParams?.q}
-              sortBy={searchParams?.sortBy}
+              sort={searchParams?.sort}
             />
           )}
         </div>

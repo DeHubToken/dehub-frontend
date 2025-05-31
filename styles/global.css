@@ -109,15 +109,15 @@
     --theme-sky-800: 220 59% 28%; /* #1E3A73 */
     --theme-sky-900: 222 70% 17%; /* #0D1F4A */
 
-    --theme-neutrals-100: 220 100% 99%; /* #F9FBFF */
-    --theme-neutrals-200: 210 10% 88%; /* #DDE0E3 */
+    --theme-neutrals-100: 210 67% 1%; /* #010305 */
+    --theme-neutrals-200: 210 6% 12%; /* #1D1F21 */
     --theme-neutrals-300: 216 4% 77%; /* #C2C4C7 */
-    --theme-neutrals-400: 210 3% 66%; /* #A6A9AC */
-    --theme-neutrals-500: 216 2% 55%; /* #8B8D90 */
+    --theme-neutrals-400: 216 2% 45%; /* #6F7174 */
+    --theme-neutrals-500: 216 2% 45%; /* #6F7174 */
     --theme-neutrals-600: 216 2% 45%; /* #6F7174 */
-    --theme-neutrals-700: 216 4% 23%; /* #383A3D */
-    --theme-neutrals-800: 210 6% 12%; /* #1D1F21 */
-    --theme-neutrals-900: 210 67% 1%; /* #010305 */
+    --theme-neutrals-700: 216 4% 77%; /* #C2C4C7 */
+    --theme-neutrals-800: 210 10% 88%; /* #DDE0E3 */
+    --theme-neutrals-900: 220 100% 99%; /* #F9FBFF */
 
     --navbar-height: calc((80 / 16) * 1rem);
     --leaderboard-width: calc((400 / 16) * 1rem);
@@ -253,18 +253,49 @@ body {
   @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent;
 }
 
-.side_menu {
-  height: calc(100vh - 150px);
-}
+.side_menu{ height: calc(100vh - 150px);}
+.prof_le{ position:relative !important; width: 20px !important; height: 20px !important;}
+input:focus, select:focus{ box-shadow: none !important;}
 
-.prof_le {
-  position: relative !important;
-  width: 20px !important;
-  height: 20px !important;
+.respon_sive_tabs button {
+  padding: 7px 8px !important;
+}
+.feed_list .feedl_ist {
+  width: 100% !important;
+  min-width: 100px !important;
+}
+/* @media (max-width: 1200px) {
+.feed_list { display: grid;}
+} */
+
+@media (max-width: 600px) {
+.input_Row{gap: 5px !important; padding: 0 10px !important; height: 54px !important;}
+
+
+.input_Row select{font-size: 16px !important;
+  padding: 0 19px 0px 0 !important;
+  background-position: 111% center !important;}
+  .input_Row .sub_t{ font-size: 18px; width: 70px;}
+  .input_Row  input{ height: 51px !important;}
+  .contain_er{ padding:50px 0px !important; margin: 0px !important;}
+  .respon_sive_tabs button {
+    padding: 7px 4px !important; font-size: 12px;
+  }
+  .max_wdth {
+    max-width: 1000px !important;
+    margin: 34px auto 0 auto;
+    width: 100%;
+  }
 }
 
 @layer components {
   .content-container-with-tab-panel {
     @apply h-auto min-h-screen w-full max-w-full flex-1 px-6 lg:min-w-[calc(100%-var(--tabpanel-width))] lg:max-w-[calc(100%-var(--tabpanel-width))];
+  }
+}
+
+@layer utilities {
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
   }
 }

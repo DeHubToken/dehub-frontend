@@ -30,11 +30,12 @@ export function IncomingMessage(props: {
   const [isUnLocked, setIsUnLocked] = useState(message.isUnLocked);
   useEffect(() => {
     setIsUnLocked(message.isUnLocked);
-  }, [message.isUnLocked]); 
+  }, [message.isUnLocked]);
   return (
-    <div className="flex w-full justify-start">
+    <div className="flex  w-full justify-start">
       <div className="flex max-w-96 flex-col items-end gap-1">
         <span className="pr-4 text-xs text-gray-400">{dayjs(message.createdAt).fromNow()}</span>
+      <div className="text-xs text-gray-500   mr-4">{message?.sender?.username}</div>
         <div className="flex items-end gap-3">
           <Avatar className="size-8">
             <AvatarFallback>{createAvatarName(message?.sender?.username)}</AvatarFallback>
@@ -43,10 +44,8 @@ export function IncomingMessage(props: {
               src={getAvatarUrl(message?.sender?.avatarImageUrl)}
               alt={message?.sender?.username}
             />
-            {/* {message?.sender?.username} */}
           </Avatar>
           <div className="rounded-r-[20px] rounded-tl-[20px] px-4 py-3 dark:bg-theme-mine-shaft-dark">
-         
             <p className="text-sm dark:text-gray-200">{message?.content}</p>
             {message?.msgType !== "msg" && (
               <>
@@ -63,6 +62,7 @@ export function IncomingMessage(props: {
                 )}
               </>
             )}
+           
           </div>
         </div>
       </div>
