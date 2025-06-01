@@ -15,7 +15,7 @@ export async function getIngestUrlForStreamId(streamId: string) {
 }
 
 export async function getIngestUrlByStreamKey(streamKey: string) {
-  console.log(env.LIVEPEER_API_KEY, streamKey, getIngest(streamKey));
+  // console.log(env.LIVEPEER_API_KEY, streamKey, getIngest(streamKey));
   // const stream = await livepeer.stream.get(streamKey);
   return getIngest(streamKey);
 }

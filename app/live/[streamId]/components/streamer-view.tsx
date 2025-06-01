@@ -43,12 +43,10 @@ import { cn } from "@/libs/utils";
 
 import { getIngestUrlByStreamKey } from "@/services/broadcast/get-ingest";
 
-import { getImageUrl } from "@/web3/utils/url";
-
-import { env, StreamStatus } from "@/configs";
 
 import { LivestreamEvents } from "../enums/livestream.enum";
-import StatusBadge from "./status-badge";
+import { getIngest } from "@livepeer/react/external";
+
 
 export default function StreamerView(props: { stream: any; isBroadcastOwner: boolean }) {
   const { stream, isBroadcastOwner } = props;
@@ -86,10 +84,10 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
       }
     }
 
-    fetchIngestUrl();
+    // fetchIngestUrl();
   }, [stream?.streamKey]);
 
-  console.log(ingestUrl, "ingestUrl");
+  // console.log(ingestUrl, "ingestUrl");
   if (error) {
     return (
       <div
@@ -118,7 +116,7 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
           </div>
         </div>
       )}
-      {account && library && stream?.streamKey && ingestUrl ? (
+      {account && library && stream?.streamKey ? (
         <Broadcast.Root
           onError={(error) => {
             if (error?.type === "permissions") {
@@ -127,7 +125,7 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
               console.error("Broadcast error:", error);
             }
           }}
-          ingestUrl={ingestUrl}
+          ingestUrl={getIngest(stream.streamKey)}
           aspectRatio={16 / 9}
         >
           <Broadcast.Container className="h-full w-full bg-gray-950">
