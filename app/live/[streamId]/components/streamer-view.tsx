@@ -131,6 +131,7 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
           <Broadcast.Container className="h-full w-full bg-gray-950">
             <Broadcast.Video
               title={stream.title}
+              autoPlay
               className="h-full w-full"
               style={{ aspectRatio: "16/9" }}
             />
