@@ -39,13 +39,9 @@ import { LivestreamEvents } from "../enums/livestream.enum";
 import StatusBadge from "./status-badge";
 
 export default function ViewerView({ stream }: { stream: any }) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [isBuffering, setIsBuffering] = useState(false);
   const [src, setSrc] = useState<any>(null);
   const [error, setError] = useState<string | null>(null); // Added error state
-  const { account, chainId, library, user } = useUser();
-  const { socket } = useWebSockets();
-  const [hasJoined, setHasJoined] = useState(true);
+  const { account } = useUser();
 
   useEffect(() => {
     const fetchSrc = async () => {
