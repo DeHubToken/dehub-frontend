@@ -134,6 +134,9 @@ dist
 
 app/ui-preview
 
+# ai
+.cursorrules
+
 *storybook.log
 
 # Lockfiles
