@@ -3,7 +3,11 @@ import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { env } from "@/configs";
+
 export async function POST(req: NextRequest) {
+  const isProduction = env.NODE_ENV === "production";
+
   try {
     const { wallet_information, chain_information, user_information, connected } = await req.json();
     const cookie = cookies();
@@ -21,7 +25,7 @@ export async function POST(req: NextRequest) {
         path: "/",
         httpOnly: true,
         sameSite: "strict",
-        secure: process.env.NODE_ENV === "production"
+        secure: isProduction
       });
     }
     if (chain_information) {
@@ -30,7 +34,7 @@ export async function POST(req: NextRequest) {
         path: "/",
         httpOnly: true,
         sameSite: "strict",
-        secure: process.env.NODE_ENV === "production"
+        secure: isProduction
       });
     }
     if (user_information) {
@@ -39,7 +43,7 @@ export async function POST(req: NextRequest) {
         path: "/",
         httpOnly: true,
         sameSite: "strict",
-        secure: process.env.NODE_ENV === "production"
+        secure: isProduction
       });
     }
     return NextResponse.json({ message: "Ok" });

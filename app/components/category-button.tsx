@@ -11,11 +11,11 @@ type Props = {
   url: string;
   isActive: boolean;
   children: React.ReactNode;
+  scroll: boolean;
 };
 
 export function CategoryButton(props: Props) {
-  const { url, isActive, children } = props;
-
+  const { url, isActive, children, scroll } = props; 
   const [isActived, setIsActived] = useOptimistic(isActive);
   const { startTransition } = useStreamProvider("CategoryButton");
   const router = useRouter();
@@ -23,7 +23,7 @@ export function CategoryButton(props: Props) {
   function pushUrl() {
     startTransition(() => {
       setIsActived(true);
-      router.push(url);
+      router.push(url, { scroll });
     });
   }
 
@@ -31,7 +31,7 @@ export function CategoryButton(props: Props) {
     <button onClick={pushUrl}>
       <Badge
         variant={isActived ? "secondary" : "default"}
-        className="border-gray-200 px-4 text-[11px] dark:border-theme-mine-shaft"
+        className="h-8 bg-theme-neutrals-800 px-4 py-2 text-[11px] text-theme-neutrals-400"
       >
         {children}
       </Badge>

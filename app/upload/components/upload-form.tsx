@@ -2,13 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { th } from "@faker-js/faker";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { BigNumber, ethers } from "ethers";
 import { ImagePlus, Info, Upload } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
 import ReactSelect from "react-select";
 import { toast } from "sonner";
@@ -35,7 +33,6 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -49,7 +46,6 @@ import {
   useStreamControllerContract
 } from "@/hooks/use-web3";
 
-import { getVideoCover } from "@/libs/canvas-preview";
 import { cn, createAvatarName } from "@/libs/utils";
 
 import { minNft } from "@/services/nfts/mint";
@@ -59,7 +55,6 @@ import MULTICALL_ABI from "@/web3/abis/multicall.json";
 import { STREAM_CONTROLLER_CONTRACT_ADDRESSES, supportedNetworks } from "@/web3/configs";
 import { getTotalBountyAmount } from "@/web3/utils/calc";
 import { filteredStreamInfo } from "@/web3/utils/format";
-import { getIpfsHashFromFile } from "@/web3/utils/ipfs";
 import { multicallRead } from "@/web3/utils/multicall";
 import { getDistinctTokens, getNetworksForToken } from "@/web3/utils/tokens";
 import {
@@ -221,6 +216,7 @@ export function UploadForm(props: Props) {
       }
       try {
         const sigData = await getSignInfo(library, account);
+        console.log("sigData", sigData);
         const formData = new FormData();
         formData.append("name", data.title);
         formData.append("description", data.description);
@@ -261,10 +257,10 @@ export function UploadForm(props: Props) {
         if (result?.error) {
           setUploading(false);
           throw new Error(result?.error_msg || "NFT mint has failed!");
-        } 
+        }
         if (data.streamInfo?.[streamInfoKeys?.isAddBounty]) {
           try {
-            const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "BJ";
+            const tokenSymbol = data?.streamInfo[streamInfoKeys.addBountyTokenSymbol] || "DHB";
             const bountyToken = supportedTokens.find(
               (e) => e.symbol === tokenSymbol && e.chainId === chainId
             );
@@ -286,24 +282,24 @@ export function UploadForm(props: Props) {
             if (tx?.hash) {
               addTransaction({ hash: tx.hash, description: "Mint With Bounty", confirmations: 3 });
             }
-            await tx.wait(1); 
-            form.reset(); 
+            await tx.wait(1);
+            form.reset();
             // if (!resultFromModal) {
             //   setUploading(false);
             //   throw new Error("NFT mint has failed!");
-            // } 
+            // }
             await invalidateUpload();
             setUploading(false);
             return;
           } catch (err) {
             throw new Error("NFT mint has failed!");
           }
-        } 
+        }
         if (streamCollectionContract) {
-          const estimatedGasPrice = await library.getGasPrice(); 
+          const estimatedGasPrice = await library.getGasPrice();
           const adjustedGasPrice = estimatedGasPrice
             .mul(BigNumber.from(110))
-            .div(BigNumber.from(100)); 
+            .div(BigNumber.from(100));
           // Estimate gas limit
           const estimatedGasLimit = await streamCollectionContract.estimateGas.mint(
             result.createdTokenId,
@@ -314,7 +310,7 @@ export function UploadForm(props: Props) {
             [],
             1000,
             `${result.createdTokenId}.json`
-          ); 
+          );
           const tx = await streamCollectionContract.mint(
             result.createdTokenId,
             result.timestamp,
@@ -323,7 +319,7 @@ export function UploadForm(props: Props) {
             result.s,
             [],
             1000,
-            `${result.createdTokenId}.json`, 
+            `${result.createdTokenId}.json`,
             {
               gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
               gasPrice: adjustedGasPrice
@@ -340,7 +336,7 @@ export function UploadForm(props: Props) {
         if (activeTab == "video") {
           router.push(`/stream/${result.createdTokenId}`);
         } else {
-          router.push(`/?type=feed/${result.createdTokenId}`);
+          router.push(`/?type=feeds/${result.createdTokenId}`);
         }
       } catch (err: any) {
         console.log("err-mint:", err);
@@ -409,7 +405,7 @@ export function UploadForm(props: Props) {
     const description = `Are you sure the details are correct and you wish to proceed? NFT uploads can't be edited and it's on chain forever`;
     setModalDescription(description);
     setShowConfirmationModal(true);
-  }; 
+  };
   const fetchPlans = async () => {
     const obj = {
       address: account?.toLowerCase()
@@ -422,7 +418,7 @@ export function UploadForm(props: Props) {
     if (error) {
       toast.error(error);
     }
-  }; 
+  };
   useEffect(() => {
     fetchPlans();
   }, [account, chainId]);
@@ -662,9 +658,9 @@ export function UploadForm(props: Props) {
   }, [bountyAmount, chainId, firstXComment, firstXViewer, isBounty, supportedTokensForChain]);
 
   return (
-    <main className="h-auto min-h-screen w-full">
+    <div className="h-auto min-h-screen w-full">
       <Form {...form}>
-        <div className="flex h-auto w-full flex-col items-start justify-start gap-6 px-4 py-28 sm:gap-10">
+        <div className="flex h-auto w-full flex-col items-start justify-start gap-6 px-4 pb-28 sm:gap-10">
           <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
           <div className="flex h-auto w-full flex-wrap items-stretch justify-between gap-6 lg:gap-0">
@@ -703,7 +699,7 @@ export function UploadForm(props: Props) {
                     <FormMessage />
                   </FormItem>
                 )}
-              /> 
+              />
               <div className="flex h-auto w-full flex-col items-start justify-start gap-2 sm:flex-row sm:items-center sm:justify-start">
                 <p className="min-w-[20%] text-lg">Category</p>
 
@@ -790,7 +786,7 @@ export function UploadForm(props: Props) {
                         size="icon_sm"
                         className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
                       >
-                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                        <Info className="size-5 text-white/50" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent className="w-80">
@@ -813,7 +809,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-neutrals-700 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
@@ -842,7 +838,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 border-theme-neutrals-700 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Network" />
                       </SelectTrigger>
                       <SelectContent>
@@ -887,7 +883,7 @@ export function UploadForm(props: Props) {
                         size="icon_sm"
                         className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
                       >
-                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                        <Info className="size-5 text-white/50" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent className="w-80">
@@ -911,7 +907,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-neutrals-700 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
@@ -939,7 +935,7 @@ export function UploadForm(props: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[30%] rounded-full border-2 border-theme-neutrals-700 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Network" />
                       </SelectTrigger>
                       <SelectContent>
@@ -980,7 +976,7 @@ export function UploadForm(props: Props) {
                         size="icon_sm"
                         className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
                       >
-                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                        <Info className="size-5 text-white/50" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent className="w-80">
@@ -1000,7 +996,7 @@ export function UploadForm(props: Props) {
                   control={form.control}
                   render={({ field }) => (
                     <Select disabled={!isBounty} value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
+                      <SelectTrigger className="h-8 w-[25%] rounded-full border-2 border-theme-neutrals-700 bg-transparent px-2 text-xs sm:h-10 sm:w-[150px] sm:px-4 sm:text-sm">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
@@ -1066,7 +1062,7 @@ export function UploadForm(props: Props) {
                         size="icon_sm"
                         className="sm:absolute sm:-right-12 sm:top-1/2 sm:z-10 sm:-translate-y-1/2"
                       >
-                        <Info className="size-5 text-gray-500 dark:text-white/50" />
+                        <Info className="size-5 text-white/50" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent className="w-80">
@@ -1095,28 +1091,24 @@ export function UploadForm(props: Props) {
                       onChange={(selectedOptions) =>
                         field.onChange(selectedOptions.map((option: any) => option.value))
                       }
+                      unstyled
+                      classNames={{
+                        control: () =>
+                          "group h-8 px-2 min-w-[150px] border-2 border-theme-neutrals-700 rounded-full",
+                        placeholder: () => "placeholder text-theme-neutrals-500 text-sm",
+                        option: (props) =>
+                          cn(
+                            "option inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium text-white transition-colors h-10 px-4 py-2 cursor-pointer",
+                            props.isFocused && "text-white bg-theme-neutrals-700",
+                            props.isDisabled && "cursor-not-allowed pointer-events-none"
+                          ),
+                        noOptionsMessage: () => "no-options-message p-7 text-base",
+                        multiValue: () =>
+                          "px-4 py-0.5 bg-theme-neutrals-700 rounded-full text-white",
+                        menu: () => "menu w-full rounded-md bg-theme-neutrals-800 animate-in",
+                        container: () => "bg-transparent w-full react-select-container"
+                      }}
                       placeholder="Select Plans"
-                      classNamePrefix="react-select rounded-full"
-                      theme={(base) =>
-                        theme == "light"
-                          ? base
-                          : {
-                              ...base,
-                              colors: {
-                                ...base.colors,
-                                primary: "#4f8aef", // Highlight color (matches blue button from the image)
-                                primary25: "#354152", // Hover state
-                                neutral0: "#111", // Background color of the select
-                                neutral5: "#222", // Border color
-                                neutral10: "#333", // Placeholder color
-                                neutral20: "#444" // Option hover color
-                              },
-                              spacing: {
-                                ...base.spacing,
-                                controlHeight: 35 // Adjust the control height
-                              }
-                            }
-                      }
                     />
                   )}
                 />
@@ -1165,7 +1157,7 @@ export function UploadForm(props: Props) {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog> 
+      </Dialog>
       {/* Bounty upload modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent>
@@ -1197,6 +1189,6 @@ export function UploadForm(props: Props) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </main>
+    </div>
   );
 }

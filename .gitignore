@@ -136,3 +136,10 @@ app/ui-preview
 
 # ai
 .cursorrules
+
+*storybook.log
+
+# Lockfiles
+# package-lock.json
+# yarn.lock
+pnpm-lock.yaml

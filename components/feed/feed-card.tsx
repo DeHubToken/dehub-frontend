@@ -1,6 +1,23 @@
+"use client";
+
 import { cn } from "@/libs/utils";
 
 export function FeedCard(props: React.ComponentProps<"div">) {
+  const { children, ...rest } = props;
+  return (
+    <div
+      {...rest}
+      className={cn(
+        "w-full",
+        "flex flex-col gap-5 rounded-3xl border border-theme-neutrals-800 bg-theme-neutrals-900 p-3.5 sm:p-5",
+        rest.className
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+export function ActivityFeedCard(props: React.ComponentProps<"div">) {
   const { children, ...rest } = props;
   return (
     <div

@@ -1,3 +1,4 @@
+
 import { useRef, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,7 +7,7 @@ import { useFormStatus } from "react-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-
+import dayjs from "@/libs/dayjs";
 import { postComment } from "@/app/feeds/[id]/actions";
 
 import { AvatarStar } from "@/components/icons/avatar-star";
@@ -41,7 +42,7 @@ export function FeedReplyDialog(props: Props) {
   const [parent] = useAutoAnimate();
   return (
     <Dialog {...rest}>
-      <DialogContent className="max-w-2xl p-4">
+      <DialogContent className="max-w-2xl p-4  h-[80vh] overflow-auto">
         <DialogTitle className="sr-only">Reply to feed</DialogTitle>
         <DialogDescription className="sr-only">Reply to feed</DialogDescription>
         <div className="flex flex-col gap-8 rounded-3xl p-5 dark:bg-theme-mine-shaft-dark">
@@ -75,7 +76,7 @@ function Comment(props: TComment) {
             <span className="text-base font-medium">{name}</span>
             <AvatarStar />
           </div>
-          <span className="text-xs text-gray-500">{time}</span>
+          <span className="text-xs text-gray-500">{dayjs(time).fromNow()}</span>
         </div>
         {imageUrl&&<Image src={commentImageUrl(imageUrl)} alt="comment-image" height={200} width={200} quality={100}/>}
         <p className="text-base dark:text-gray-300">{content}</p>

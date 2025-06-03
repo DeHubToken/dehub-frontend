@@ -5,10 +5,12 @@ import { redirect } from "next/navigation";
 
 import { Categories } from "./components/categories";
 import { FeedList } from "./components/feed-list";
-import { Leaderboard, LeaderboardSkeleton } from "./components/leaderborad";
+import { LeaderboardSkeleton } from "./components/leaderborad";
 import { LikedFeed } from "./components/liked";
 import { Stream } from "./components/stream";
 import { StreamLoader } from "./components/stream-skeleton";
+import { TabPanel } from "./components/tab-panel";
+import { LiveFeed } from "./live/components/live";
 
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -19,12 +21,13 @@ type Props = {
     range?: string;
     type: string;
     q?: string;
-    sortBy?: string;
+    sort?: string;
   };
 };
 
 export default async function Page(props: Props) {
-  const { category, range, type, q, sortBy } = props.searchParams;
+  const { category, range, type, q, sort } = props.searchParams;
+  console.log("searchParams", props.searchParams);
 
   if (!type) {
     return redirect(`/?type=trends`);
@@ -33,21 +36,32 @@ export default async function Page(props: Props) {
   const key = category + "-" + range + "-" + type + "-" + q;
 
   return (
-    <main className="flex h-auto min-h-screen w-full items-start justify-between">
-      <div className="h-auto min-h-screen w-full px-6 py-20 md:max-w-[75%] md:flex-[0_0_75%]">
+    <div className="flex h-auto min-h-screen w-full items-start justify-between">
+      <div className="content-container-with-tab-panel">
+        {/* TODO: Based on query, need to show and hide */}
         <Categories
           title={type.toUpperCase()}
           category={category}
           range={range}
           type={type}
           q={q}
-          sortBy={sortBy}
+          sort={sort}
         />
 
         <div className="mt-8 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
           <Suspense key={key} fallback={<StreamLoader />}>
             {type === "feed" && (
               <FeedList
+                title={type.toUpperCase()}
+                category={category}
+                range={range}
+                sort={sort}
+                type={type}
+                q={q}
+              />
+            )}
+            {type === "live" && (
+              <LiveFeed
                 title={type.toUpperCase()}
                 category={category}
                 range={range}
@@ -60,14 +74,26 @@ export default async function Page(props: Props) {
                 title={type.toUpperCase()}
                 category={category}
                 range={range}
+                sort={sort}
                 type={type}
                 q={q}
               />
             )}
-            {type !== "feed" && type !== "liked" && (
+            {type === "reports" && (
+              <FeedList
+                title={type.toUpperCase()}
+                category={category}
+                range={range}
+                sort={sort}
+                type={type}
+                q={q}
+              />
+            )}
+            {type !== "feed" && type !== "reports" && type !== "liked" && type !== "live" && (
               <Stream
                 title={type.toUpperCase()}
                 category={category}
+                sort={sort}
                 range={range}
                 type={type}
                 q={q}
@@ -77,9 +103,10 @@ export default async function Page(props: Props) {
         </div>
       </div>
 
+      {/* TODO: Replace skeleton with generic tab panel skeleton */}
       <Suspense fallback={<LeaderboardSkeleton />}>
-        <Leaderboard />
+        <TabPanel defaultValue="leaderboard" />
       </Suspense>
-    </main>
+    </div>
   );
 }

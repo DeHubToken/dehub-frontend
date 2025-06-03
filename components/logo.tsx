@@ -3,7 +3,7 @@ export function Logo() {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1777.842 419.149"
-      className="text-gray-800 dark:text-white"
+      className="w-full text-theme-neutrals-100 dark:text-white"
     >
       <g fill="currentColor">
         <path

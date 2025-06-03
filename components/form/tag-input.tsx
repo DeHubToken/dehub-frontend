@@ -16,27 +16,24 @@ export interface TOption {
 }
 
 const classNames: ClassNamesConfig<TOption, true> = {
-  control: () =>
-    "group bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark border-2 border-gray-200 dark:border-theme-mine-shaft rounded-full p-3 h-auto react-select-control",
+  control: () => "group bg-theme-neutrals-800 rounded-full p-3 h-auto react-select-control",
   valueContainer: () => "value-container gap-2",
   singleValue: () => "single-value",
-  placeholder: () => "placeholder dark:text-theme-titan-white text-theme-mine-shaft",
+  placeholder: () => "placeholder text-theme-neutrals-500 text-sm",
   option: (props) =>
     cn(
-      "option inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium transition-colors hover:bg-theme-cloud-burst h-10 px-4 py-2 cursor-pointer",
-      props.isFocused && "bg-theme-cloud-burst",
-      props.isDisabled &&
-        "cursor-not-allowed dark:text-theme-titan-white/50 text-theme-mine-shaft/50"
+      "option inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium transition-colors hover:bg-theme-neutrals-500 h-10 px-4 py-2 cursor-pointer",
+      props.isFocused && "bg-theme-neutrals-500 text-theme-background",
+      props.isDisabled && "cursor-not-allowed pointer-events-none"
     ),
   noOptionsMessage: () => "no-options-message p-7 text-base",
   multiValueRemove: () => "multi-value-remove",
   multiValueLabel: () => "multi-value-label",
   multiValue: () =>
-    "multi-value rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 dark:bg-theme-background bg-gray-200 text-secondary-foreground border border-gray-200 dark:border-theme-mine-shaft hover:bg-secondary/80 px-4 py-0.5",
+    "multi-value rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 dark:bg-theme-neutrals-600 dark:text-white bg-gray-100 text-secondary-foreground border border-gray-200 dark:border-theme-mine-shaft hover:bg-secondary/80 px-4 py-0.5",
   menuPortal: () => "menu-portal",
   menuList: () => "menu-list",
-  menu: () =>
-    "menu w-full rounded-md border dark:border-theme-mine-shaft bg-theme-mine-shaft-dark border-gray-200 dark:bg-theme-mine-shaft-dark animate-in",
+  menu: () => "menu w-full rounded-md bg-theme-neutrals-800 animate-in",
   loadingMessage: () => "loading-message",
   loadingIndicator: () => "loading-indicator",
   input: () => "input",

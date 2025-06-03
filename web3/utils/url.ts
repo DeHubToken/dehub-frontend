@@ -4,6 +4,10 @@ import objectToGetParams from "@/libs/utils";
 
 import { env } from "@/configs";
 
+const baseUrl = env.NEXT_PUBLIC_CDN_BASE_URL as string;
+// Remove the last slash
+const baseUrlWithoutSlash = baseUrl.replace(/\/$/, "");
+
 export function getImageUrl(url: string, width?: number, height?: number) {
   if (!url) return "";
 
@@ -17,7 +21,7 @@ export function getImageUrl(url: string, width?: number, height?: number) {
   }
 
   try {
-    return env.cdnBaseUrl + "images/" + fileName + q; // Use the extracted filename
+    return baseUrlWithoutSlash + "/images/" + fileName + q; // Use the extracted filename
   } catch (err) {
     return url + q; // Fallback to the original URL
   }
@@ -29,10 +33,10 @@ export function getImageUrlApi(
   height?: number
 ) {
   const q = width && height ? `&w=${width}&h=${height}` : "";
-  return env.apiBaseUrl + "/nfts/images/" + +tokenId + "?address" + address + q;
+  return env.NEXT_PUBLIC_API_BASE_URL + "/nfts/images/" + +tokenId + "?address" + address + q;
 }
 export function getImageUrlApiSimple(url: string) {
-  return env.apiBaseUrl + "/" + url;
+  return env.NEXT_PUBLIC_API_BASE_URL + "/" + url;
 }
 
 export function getAvatarUrl(url: string) {
@@ -40,22 +44,19 @@ export function getAvatarUrl(url: string) {
 
   const fileName = url.split("/").pop();
 
-  return `${env.cdnBaseUrl}avatars/${fileName}`;
+  return `${env.NEXT_PUBLIC_CDN_BASE_URL}/avatars/${fileName}`;
 }
 
 export function getGroupAvatarUrl(url: string) {
-  if (!url) return "/icons/team.png";
-
-  const fileName = url.split("/").pop();
-
-  return `${env.cdnBaseUrl}avatars/${fileName}`;
+  if (!url) return "/images/default-avatar.png";
+  return `${env.NEXT_PUBLIC_CDN_BASE_URL}/${url}`;
 }
 
 export function getCoverUrl(url: string) {
   if (!url) return "/images/default-banner.png";
   const fileName = url.split("/").pop();
 
-  return `${env.cdnBaseUrl}covers/${fileName}`;
+  return `${env.NEXT_PUBLIC_CDN_BASE_URL}/covers/${fileName}`;
 }
 export function dmMediaUrl(url: string, h?: number, w?: number) {
   const queryParams = new URLSearchParams();
@@ -63,10 +64,10 @@ export function dmMediaUrl(url: string, h?: number, w?: number) {
   if (w) queryParams.append("w", w.toString());
 
   return queryParams.toString()
-    ? `${env.cdnBaseUrl}${url}?${queryParams.toString()}`
-    : `${env.cdnBaseUrl}${url}`;
+    ? `${env.NEXT_PUBLIC_CDN_BASE_URL}/${url}?${queryParams.toString()}`
+    : `${env.NEXT_PUBLIC_CDN_BASE_URL}/${url}`;
 }
 
 export function commentImageUrl(url: string) {
-  return `${env.cdnBaseUrl}${url}`;
+  return `${env.NEXT_PUBLIC_CDN_BASE_URL}/${url}`;
 }

@@ -1,19 +1,21 @@
+"use client";
 
-"use client"
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import { useActiveWeb3React } from "@/hooks/web3-connect";
+
+import { getPlans } from "@/services/subscription-plans";
 
 import Form from "./components/form";
 import Tiers from "./components/tiers";
-import { useActiveWeb3React } from "@/hooks/web3-connect";
-import { toast } from "sonner";
-import { getPlans } from "@/services/subscription-plans";
 
 const page = (props: any) => {
-  const [plans, setPlans] = useState([])
-  const { account, chainId } = useActiveWeb3React()
+  const [plans, setPlans] = useState([]);
+  const { account, chainId } = useActiveWeb3React();
   async function getTiers() {
     if (!account) {
-      return
+      return;
     }
     const data: any = await getPlans({ address: account?.toLowerCase(), chainId });
     if (!data.success) {
@@ -21,16 +23,15 @@ const page = (props: any) => {
       return;
     }
     setPlans(data.data.plans);
-
   }
 
   useEffect(() => {
-    getTiers()
-  }, [])
+    getTiers();
+  }, []);
 
   return (
     <div>
-      <div className="min-h-screen w-full px-2 py-32 sm:px-6">
+      <div className="min-h-screen w-full px-2 pb-28 sm:px-6">
         <Form getTiers={getTiers} focus={props.searchParams.focus} />
       </div>
       <div className="min-h-screen w-full px-2 py-32 sm:px-6">
@@ -43,9 +44,7 @@ const page = (props: any) => {
           </div>
           <div className="w-full items-center justify-center gap-6 sm:flex-nowrap ">
             <div className="  w-full items-stretch justify-center sm:w-auto ">
-
               <Tiers plans={plans} />
-
             </div>
           </div>
         </div>

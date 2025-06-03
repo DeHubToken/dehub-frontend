@@ -26,10 +26,13 @@ type Props = {
   range?: string;
   type?: string;
   q?: string;
-  sortBy?: string;
+  sort?: string;
+  base?: string;
+  tab?: string;
 };
 
 export async function Categories(props: Props) {
+  if (props.type === "feed") return null;
   return (
     <div className="flex h-auto w-full items-center justify-between">
       <Suspense fallback={<CategoriesSkeleton />}>
@@ -41,7 +44,7 @@ export async function Categories(props: Props) {
 
 async function CategoriesLoader(props: Props) {
   const categoriesRes = await getCategories();
-  const { category, type, title, range, sortBy } = props;
+  const { category, type, title, range, sort, base, tab } = props;
 
   const isActive = (name: string) => category === name;
 
@@ -57,22 +60,25 @@ async function CategoriesLoader(props: Props) {
         opts={{
           dragFree: true
         }}
-        className="flex items-center justify-start gap-2"
+        className="relative flex items-center justify-start gap-2"
       >
-        <CarouselPrevious className="scale-75" />
-        <CarouselContent>
-          <CarouselItem className="basis-auto pl-4">
+        <CarouselPrevious className="absolute left-0 top-1/2 z-[2] -translate-y-1/2" />
+        <CarouselContent className="relative z-0 pl-16">
+          <CarouselItem className="basis-auto">
             <FeedRangeFilterMobile
               categories={categories}
               type={type}
               range={range}
-              sortBy={sortBy}
+              sort={sort}
+              base={base}
+              tab={tab}
             />
           </CarouselItem>
           <CarouselItem className="basis-auto">
             <CategoryButton
               isActive={isActive("All")}
-              url={`/${objectToGetParams({ category: "All", type, title, range })}`}
+              scroll={tab == ""}
+              url={`${base ?? ""}/${objectToGetParams({ category: "All", type, title, range, tab })}`}
             >
               All
             </CategoryButton>
@@ -80,7 +86,8 @@ async function CategoriesLoader(props: Props) {
           {categories.map((item, index) => (
             <CarouselItem key={index} className="basis-auto">
               <CategoryButton
-                url={`/${objectToGetParams({ category: item, type, title, range })}`}
+                scroll={tab == ""}
+                url={`${base ?? ""}/${objectToGetParams({ category: item, type, title, range, tab })}`}
                 isActive={isActive(item)}
               >
                 {item}
@@ -88,7 +95,7 @@ async function CategoriesLoader(props: Props) {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselNext className="scale-75" />
+        <CarouselNext className="absolute right-0 top-1/2 z-[2] -translate-y-1/2" />
       </Carousel>
     </div>
   );
@@ -96,11 +103,11 @@ async function CategoriesLoader(props: Props) {
 
 function CategoriesSkeleton() {
   return (
-    <div className="mr-5 flex w-full items-center gap-1">
-      {Array.from({ length: 10 }).map((_, i) => (
+    <div className="mr-5 flex w-full items-center gap-4 overflow-hidden">
+      {Array.from({ length: 20 }).map((_, i) => (
         <div
           key={i}
-          className="shimmer relative h-6 flex-1 rounded-full border border-gray-400 bg-gray-400 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark"
+          className="shimmer relative h-8 min-w-[80px] max-w-[80px] flex-1 rounded-full bg-gray-400 bg-theme-neutrals-800"
         />
       ))}
     </div>

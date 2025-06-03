@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import Link from "next/link";
 
 import { SearchBox, SearchModal } from "@/app/components/search-box";
@@ -12,7 +11,7 @@ import { ThemeSwitcher } from "./theme-switcher";
 
 /* ----------------------------------------------------------------------------------------------- */
 
-const ConnectButton = dynamic(() => import("./connect-button"), {
+export const ConnectButton = dynamic(() => import("./connect-button"), {
   ssr: false,
   loading: () => (
     <div className="flex size-auto items-center justify-center">
@@ -23,15 +22,18 @@ const ConnectButton = dynamic(() => import("./connect-button"), {
 
 export function Navbar() {
   return (
-    <nav className="fixed left-0 top-0 z-20 h-auto w-full bg-theme-background shadow-custom dark:bg-theme-background">
-      <div className="container flex max-w-[90%] items-center justify-between py-5 md:max-w-[95%] md:py-4">
-        <Link href="/" className="w-24 sm:w-32">
+    <nav className="fixed left-0 top-0 z-20 h-[var(--navbar-height)] max-h-[var(--navbar-height)] w-full bg-theme-neutrals-900 shadow-custom dark:bg-theme-neutrals-900">
+      <div className="flex items-center justify-between px-4 py-5 sm:px-8">
+        <Link href="/" className="w-80 sm:w-32">
           <Logo />
         </Link>
 
-        <div className="flex flex-[0_0_60%] items-center justify-end gap-1 md:gap-6">
+        <div className="w-48 lg:max-w-[calc((500/16)*1rem)]">
           <SearchBox />
-          <SearchModal />
+        </div>
+        <SearchModal />
+
+        <div className="flex items-center justify-start gap-1 sm:gap-4">
           <ConnectButton label="Connect" />
           <HambMenu />
           <ThemeSwitcher />

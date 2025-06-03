@@ -23,13 +23,16 @@ import {
   Exclusive,
   Explore,
   Game,
-  LeaderBoard,
+  LeaderBoard as LeaderBoardIcon,
   New,
-  Notification,
+  Notification as NotificationIcon,
   PPV,
   Profile,
   Treading,
-  Upload
+  Upload,
+  BuyCrypto,
+  SwapCrypto,
+  SellCrypto
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 
@@ -37,6 +40,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 
 import { getLeaderborard } from "@/services/nfts/leaderborad";
 
+import { Broadcast } from "./_icons";
 import { NotificationMobileModal } from "./modals/notification-modal";
 
 type LinkBase = {
@@ -55,14 +59,14 @@ const links = [
   {
     id: "profile",
     name: "Profile",
-    icon: <Profile />,
+    icon: <Profile className="size-4" />,
     url: "/me",
     isLink: true
   },
   {
     id: "notifications",
-    name: "Notifications",
-    icon: <Notification />
+    name: "Notifications"
+    // icon: <NotificationIcon />
   },
   {
     id: "messages",
@@ -88,7 +92,7 @@ const links = [
   {
     id: "ppv",
     name: "PPV",
-    icon: <PPV />,
+    icon: <PPV className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "ppv");
@@ -101,7 +105,7 @@ const links = [
   {
     id: "watch2earn",
     name: "Watch2Earn",
-    icon: <Bounty />,
+    icon: <Bounty className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "bounty");
@@ -114,7 +118,7 @@ const links = [
   {
     id: "exclusive",
     name: "Exclusive",
-    icon: <Exclusive />,
+    icon: <Exclusive className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "locked");
@@ -127,7 +131,7 @@ const links = [
   {
     id: "new",
     name: "New",
-    icon: <New />,
+    icon: <New className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "new");
@@ -140,7 +144,7 @@ const links = [
   {
     id: "trending",
     name: "Most Viewed",
-    icon: <Treading />,
+    icon: <Treading className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "trends");
@@ -153,7 +157,7 @@ const links = [
   {
     id: "likedvideos",
     name: "Liked Videos",
-    icon: <Game />,
+    icon: <Game className="size-4" />,
     url: () => {
       const query = new URLSearchParams();
       query.set("type", "liked");
@@ -164,9 +168,22 @@ const links = [
     isLink: true
   },
   {
+    id: "live",
+    name: "Livestreams",
+    icon: <Broadcast className="size-4" />,
+    url: () => {
+      const query = new URLSearchParams();
+      query.set("type", "live");
+      query.delete("q");
+      const qs = query.toString();
+      return `/?${qs}`;
+    },
+    isLink: true
+  },
+  {
     id: "leaderboard",
     name: "Leaderboard",
-    icon: <Notification />,
+    icon: <LeaderBoardIcon className="size-4" />,
     url: null,
     isLink: false,
     component: <Leaderboard />
@@ -174,35 +191,62 @@ const links = [
   {
     id: 7,
     name: "Upload",
-    icon: <Upload />,
+    icon: <Upload className="size-4" />,
     url: "/upload",
+    isLink: true
+  },
+  {
+    id: 11,
+    name: "Go Live",
+    icon: <Broadcast className="size-4" />,
+    url: "/live",
     isLink: true
   },
   {
     id: "explore",
     name: "Explore",
-    icon: <Explore />,
+    icon: <Explore className="size-4" />,
     url: "/",
     isLink: true
   },
   {
     id: "documents",
     name: "Documents",
-    icon: <Documents />,
+    icon: <Documents className="size-4" />,
     url: "https://dehub.gitbook.io",
     isLink: true
   },
   {
     id: "contact",
     name: "Contact",
-    icon: <Contact />,
+    icon: <Contact className="size-4" />,
     url: "https://t.me/dehub",
     isLink: true
+  },
+  {
+    id: "buyCrypto",
+    name: "Buy Crypto",
+    icon: <BuyCrypto />,
+    url: () => "/buy-crypto",
+    isLink: true
+  },
+  {
+    id: "sellCrypto",
+    name: "Sell Crypto",
+    icon: <SellCrypto />,
+    url: () => "/sell-crypto",
+    isLink: true
+  },
+  {
+    id: "swap",
+    name: "Swap Crypto",
+    icon: <SwapCrypto />,
+    url: () => "/swap-crypto",
   }
 ] as Link[];
 
 export function HambMenu() {
-  const isSmallScreen = useMediaQuery("(max-width: 960px)");
+  const isSmallScreen = useMediaQuery("(max-width: 1160px)");
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -214,8 +258,13 @@ export function HambMenu() {
 
   return (
     <div className="flex size-auto items-center justify-center">
-      <Button size="icon_sm" onClick={toggleMenu} variant="ghost" className="rounded-full">
-        <Menu className="text-gray-400 dark:text-theme-titan-white" />
+      <Button
+        size="icon_sm"
+        onClick={toggleMenu}
+        variant="ghost"
+        className="rounded-full hover:bg-theme-neutrals-800"
+      >
+        <Menu className="text-gray-400 text-theme-neutrals-200" />
       </Button>
 
       <div
@@ -234,19 +283,17 @@ export function HambMenu() {
         <div
           className={
             "relative h-screen w-full max-w-[70%] overflow-hidden transition-all duration-500 ease-in-out " +
-            (isOpen
-              ? "translate-x-0 bg-theme-background dark:bg-theme-mine-shaft-dark"
-              : "translate-x-full")
+            (isOpen ? "translate-x-0 bg-theme-neutrals-900" : "translate-x-full")
           }
         >
-          <div className="side_menu h-screen w-full overflow-y-scroll py-10 mr-2">
+          <div className="side_menu mr-2 h-screen w-full overflow-y-auto py-10">
             <div className="flex size-full flex-col items-start justify-start">
-              {links.map((link,key) => {
+              {links.map((link, key) => {
                 if (link.id === "notifications") {
                   return (
                     <NotificationMobileModal
                       key={key}
-                      className="w-full justify-start gap-4 rounded-none border-b border-theme-mine-shaft-dark p-8 dark:border-theme-mine-shaft"
+                      className="w-full justify-start gap-4 rounded-none border-b border-theme-neutrals-800 p-8"
                     />
                   );
                 }
@@ -258,7 +305,7 @@ export function HambMenu() {
                     asChild
                     key={key}
                     variant="ghost"
-                    className="w-full justify-start gap-4 rounded-none border-b border-theme-mine-shaft-dark p-8 dark:border-theme-mine-shaft"
+                    className="w-full justify-start gap-4 rounded-none border-b border-theme-neutrals-800 p-8 text-theme-neutrals-200 hover:bg-theme-neutrals-600 dark:hover:bg-theme-neutrals-800"
                     onClick={toggleMenu}
                   >
                     <Link
@@ -279,11 +326,11 @@ export function HambMenu() {
           </div>
 
           <div
-            className="fixed bottom-6 left-0 z-10 grid h-auto w-full place-items-center bg-theme-background/50 py-8 backdrop-blur-sm dark:bg-theme-mine-shaft-dark/50"
+            className="fixed bottom-6 left-0 z-10 grid h-auto w-full place-items-center py-8 backdrop-blur-sm"
             onClick={toggleMenu}
           >
-            <Button variant="ghost" className="size-20 rounded-full">
-              <ArrowRight className="size-10" />
+            <Button variant="ghost" className="size-20 rounded-full hover:bg-theme-neutrals-800">
+              <ArrowRight className="size-10 text-theme-neutrals-200" />
             </Button>
           </div>
         </div>
@@ -313,7 +360,7 @@ function Leaderboard() {
     return (
       <Button
         variant="ghost"
-        className="w-full justify-start gap-4 rounded-none border-b border-theme-mine-shaft-dark p-8 dark:border-theme-mine-shaft"
+        className="w-full justify-start gap-4 rounded-none border-b border-theme-neutrals-800 p-8 text-theme-neutrals-200 hover:bg-theme-neutrals-600 dark:hover:bg-theme-neutrals-800"
       >
         {status === "loading" ? "Leaderboard" : "Error"}
       </Button>
@@ -326,9 +373,9 @@ function Leaderboard() {
       trigger={
         <Button
           variant="ghost"
-          className="w-full justify-start gap-4 rounded-none border-b border-theme-mine-shaft-dark p-8 dark:border-theme-mine-shaft"
+          className="w-full justify-start gap-4 rounded-none border-b border-theme-neutrals-800 p-8 text-theme-neutrals-200 hover:bg-theme-neutrals-600 dark:hover:bg-theme-neutrals-800"
         >
-          <LeaderBoard />
+          <LeaderBoardIcon className="size-4" />
           <span className="text-sm">Leaderboard</span>
         </Button>
       }

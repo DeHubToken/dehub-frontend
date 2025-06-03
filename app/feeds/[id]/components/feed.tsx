@@ -1,9 +1,12 @@
-
 import type { NFT } from "@/services/nfts";
 
 import { Suspense } from "react";
 import { cookies } from "next/headers";
 import Link from "next/link";
+
+import { ActionPanel } from "@/app/stream/[id]/components/action-panel";
+import { CommentsPanel } from "@/app/stream/[id]/components/comments";
+import { StreamInfo } from "@/app/stream/[id]/components/stream";
 
 import { Button } from "@/components/ui/button";
 
@@ -13,33 +16,29 @@ import { getNFT } from "@/services/nfts";
 
 import { getTransactionLink } from "@/web3/utils/format";
 
-import { defaultChainId, streamInfoKeys } from "@/configs";
+import { defaultChainId } from "@/configs";
 
-import { ActionPanel } from "./action-panel";
-import { CommentsPanel } from "./comments";
-import ImageCarousel from "./image-carousel"; 
-import BlurTextView from "./blur-text-view";
-
+import ImageCarousel from "./image-carousel";
 
 function FeedInfo(props: { nft: NFT }) {
   const { nft } = props;
 
   return (
     <div className="mt-5 h-auto w-full rounded-2xl border border-theme-mine-shaft-dark bg-theme-mine-shaft-dark p-5 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
-      <div className="flex h-auto w-full flex-col items-start justify-start gap-2">
-        <div className="flex h-auto w-full items-center justify-between">
+      <div className="flex h-auto w-full flex-col items-start justify-start gap-4 overflow-hidden">
+        <div className="flex h-auto w-full flex-col items-start justify-between gap-2 sm:flex-row">
           <div className="flex items-center gap-1">
             <p className="text-sm">
               <span className="font-semibold">Views :</span> {nft.views || 0}
             </p>
           </div>
           <p className="text-sm">
-            <span className="font-semibold">Uploaded At :</span>{" "}
+            <span className="font-semibold">Uploaded :</span>{" "}
             {new Date(nft.createdAt).toDateString()}{" "}
             {getTransactionLink(nft.chainId || defaultChainId, nft.mintTxHash) && (
               <a
                 href={getTransactionLink(nft.chainId || defaultChainId, nft.mintTxHash)!}
-                className="text-white"
+                className="whitespace-pre "
                 target="_blank"
                 rel="noreferrer"
               >
@@ -48,25 +47,21 @@ function FeedInfo(props: { nft: NFT }) {
             )}
           </p>
         </div>
-        <h1 className="text-2xl font-medium">{nft.name}</h1>
+        <h1 className="w-full break-words text-2xl font-medium">{nft.name}</h1>
         {/* <p className="text-sm">
           <span className="font-semibold">Duration :</span> {secondToMinute(nft?.videoDuration)}{" "}
           minutes
         </p> */}
         <p className="text-sm">
-          <span className="font-semibold">Description :</span>  
-          <BlurTextView nft={nft}/>
-          {/* <span className={true ? 'blur-sm' : ''}>{nft.description}</span> */}
+          <span className="font-semibold">Description :</span> {nft.description}
         </p>
-        <div className="w-full">
-          <span className="font-semibold">Categories :</span>{" "}
-          <div className="flex flex-wrap items-center gap-1">
-            {nft?.category?.map((i) => (
-              <Link key={i} href={`/?category=${i}&type=trends`} className="mr-1">
-                <span className="cursor-pointer">#{i}</span>
-              </Link>
-            ))}
-          </div>
+        <div className="flex w-full flex-wrap">
+          <span className="mr-1 font-semibold">Categories :</span>
+          {nft?.category?.map((i) => (
+            <Link key={i} href={`/?category=${i}&type=trends`} className="mr-1">
+              <span className="cursor-pointer">#{i}</span>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
@@ -94,14 +89,18 @@ export async function Feed(props: { tokenId: number }) {
   const nft = response.data.result;
 
   return (
-    <div className="h-auto min-h-screen w-full px-4 py-20 xl:max-w-[75%] xl:flex-[0_0_75%]">
+    <div className="h-auto min-h-screen w-full flex-1 p-6">
       {nft.postType === "feed-images" && (
-        <Suspense fallback={<span>loading...</span>}> 
-          <ImageCarousel images={nft.imageUrls||[]}/>
+        <Suspense fallback={<span>loading...</span>}>
+          <ImageCarousel images={nft.imageUrls || []} />
         </Suspense>
-      )} 
+      )}
       {nft.postType === "feed-images" && <ActionPanel nft={nft} tokenId={tokenId} />}
-      <FeedInfo nft={nft} />
+      <StreamInfo nft={nft} />
+      <div className="rounded-3xl bg-theme-neutrals-800 p-6">
+        <span className="text-xs text-theme-neutrals-400">Description</span>
+        <p className="mt-4 text-theme-neutrals-200">{nft.description}</p>
+      </div>
       {nft.postType === "feed-simple" && <ActionPanel nft={nft} tokenId={tokenId} />}
       <CommentsPanel nft={nft} tokenId={tokenId} />
     </div>

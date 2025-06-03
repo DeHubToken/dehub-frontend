@@ -9,10 +9,11 @@ import { getAvatarUrl, getGroupAvatarUrl } from "@/web3/utils/url";
 
 import ConversationOptions from "./conversation-options";
 import { useMessage } from "./provider";
+import { miniAddress } from "@/libs/strings";
 
 export function ConversationHeader() {
   const { selectedMessage: message } = useMessage("MessageListHeader");
-  const { participants, conversationType, groupName = "" }: any = message; 
+  const { participants, conversationType, groupName = "",iconUrl="" }: any = message; 
   const user = participants[0]?.participant;  
   if (!user) return null;
   if (conversationType == "dm") {
@@ -32,14 +33,14 @@ export function ConversationHeader() {
               {" "}
               {user?.displayName ||
                 user?.username ||
-                `${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}
+                   miniAddress(user?.address) }
             </span>
             {!user?.isPro && <AvatarStar />}
             <ConversationOptions type={"dm"} participant={user} />
           </div>
         </div>
         <span className=" ml-12">
-          {`${user?.address?.substring(0, 6)}...${user?.address?.slice(-4)}`}
+              {miniAddress(user?.address) }
         </span>
       </div>
     );
@@ -54,7 +55,7 @@ export function ConversationHeader() {
               <AvatarImage
                 className="size-12 object-cover"
                 alt={groupName}
-                src={getGroupAvatarUrl("")}
+                src={getGroupAvatarUrl(iconUrl)}
               />
             </Avatar>
             <span className="text-2xl font-bold">{groupName}</span>

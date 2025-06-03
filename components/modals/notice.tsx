@@ -23,7 +23,7 @@ export function NoticeModal() {
   return (
     <div className="fixed left-0 top-0 z-[1000] grid size-full place-items-center">
       {/* content */}
-      <div className="relative z-10 flex size-auto max-w-full flex-col items-center justify-center gap-10 rounded-2xl bg-background p-10 text-center sm:max-w-xl">
+      <div className="relative z-10 flex size-auto max-w-full flex-col items-center justify-center gap-10 rounded-2xl bg-white p-10 text-center dark:bg-theme-background sm:max-w-xl">
         <h1 className="text-3xl text-blue-300">Important Notice</h1>
         <h1 className="text-xl leading-10">
           DeHub is in public test beta and constantly shipping updates, so users may experience

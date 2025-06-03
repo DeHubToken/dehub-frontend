@@ -37,13 +37,13 @@ export default function TokensList() {
   }
 
   return (
-    <div className="h-auto w-full max-w-screen-xs space-y-4 rounded-3xl bg-theme-mine-shaft-dark p-6 dark:bg-theme-mine-shaft-dark">
+    <div className="h-auto w-full max-w-screen-xs space-y-4 rounded-3xl bg-theme-neutrals-800 p-6 dark:bg-theme-mine-shaft-dark">
       <div className="flex h-auto w-full items-center justify-between px-4">
         <p className="text-lg font-semibold">Assets</p>
         <p className="text-lg font-semibold">Holdings</p>
       </div>
 
-      <div className="h-80 w-full overflow-y-scroll rounded-3xl bg-gray-200 dark:bg-theme-mine-shaft">
+      <div className="h-80 w-full overflow-y-scroll rounded-3xl dark:bg-theme-mine-shaft">
         <ul className="h-auto w-full space-y-4 p-4">
           {avaialbleTokens.map((token, index) => {
             if (token.symbol === "DHB") {

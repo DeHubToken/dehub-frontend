@@ -21,7 +21,10 @@ import {
   PPV,
   Profile,
   Upload,
-  Wallet
+  Wallet,
+  BuyCrypto,
+  SwapCrypto,
+  SellCrypto
 } from "@/components/icons";
 import {
   Accordion,
@@ -160,6 +163,18 @@ const groups = [
           const qs = query.toString();
           return `/?${qs}`;
         }
+      },
+      {
+        id: "live",
+        name: "Live",
+        icon: <Broadcast />,
+        url: () => {
+          const query = new URLSearchParams();
+          query.set("type", "live");
+          query.delete("q");
+          const qs = query.toString();
+          return `/?${qs}`;
+        }
       }
     ] as Link[]
   },
@@ -176,7 +191,7 @@ const groups = [
         id: "broadcast",
         name: "Broadcast",
         icon: <Broadcast />,
-        url: () => "/"
+        url: () => "/live"
       },
       {
         id: "post",
@@ -204,13 +219,13 @@ const groups = [
       {
         id: "messages",
         name: "Messages",
-        icon: <MessageCircle />,
+        icon: <MessageCircle size={16} />,
         url: () => "/messages"
       },
       {
         id: "plans",
         name: "Plans",
-        icon: <Book />,
+        icon: <Book size={16} />,
         url: () => "/plans"
       },
       {
@@ -232,6 +247,12 @@ const groups = [
         url: () => "?type=feed&saved"
       },
       {
+        id: "my-broadcasts",
+        name: "My Broadcasts",
+        icon: <Broadcast />,
+        url: () => "/"
+      },
+      {
         id: "my-playlists",
         name: "My Playlists",
         icon: <Playlist />,
@@ -248,7 +269,25 @@ const groups = [
         name: "Marked",
         icon: <Marked />,
         url: () => "/"
-      }
+      },
+      // {
+      //   id: "buyCrypto",
+      //   name: "Buy Crypto",
+      //   icon: <BuyCrypto />,
+      //   url: () => "/buy-crypto",
+      // },
+      // {
+      //   id: "sellCrypto",
+      //   name: "Sell Crypto",
+      //   icon: <SellCrypto />,
+      //   url: () => "/sell-crypto",
+      // },
+      // {
+      //   id: "swap",
+      //   name: "Swap Crypto",
+      //   icon: <SwapCrypto />,
+      //   url: () => "/swap-crypto",
+      // },
     ] as Link[]
   },
   {
@@ -278,7 +317,7 @@ const groups = [
         icon: <Contact />,
         url: () => "https://t.me/dehub",
         external: true
-      }
+      },
     ] as Link[]
   }
 ];
@@ -391,7 +430,7 @@ export function Sidebar(props: Props) {
               <Separator className="bg-theme-monochrome-400/25" />
             </DialogHeader>
             {!leaderBoard.success && (
-              <div className="font-tanker text-center text-4xl tracking-wide">
+              <div className="text-center font-tanker text-4xl tracking-wide">
                 Error Fetching Leaderboard
               </div>
             )}

@@ -1,22 +1,20 @@
 import React from "react";
-import { ImagePlus } from "lucide-react"; 
-import { Button } from "@/components/ui/button"; 
-import { cn } from "@/libs/utils";
+import Image from "next/image";
+import { ImagePlus } from "lucide-react";
 import { useDropzone } from "react-dropzone";
-import Image from "next/image"; 
+
+import { Button } from "@/components/ui/button";
+
+import { cn } from "@/libs/utils";
+
 const ImageCover = ({
   form,
   thumbnailFile,
   setThumbnailFile,
-  setThumbnailPreview, 
-  thumbnailPreview, 
-}: any) => { 
-  const {
-    getRootProps,
-    getInputProps,
-    isDragAccept,
-    isDragReject
-  } = useDropzone({
+  setThumbnailPreview,
+  thumbnailPreview
+}: any) => {
+  const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
     accept: { "image/*": [".jpg", ".jpeg", ".png"] },
     maxSize: 20_971_520, // 20MB
     onDrop(acceptedFiles) {
@@ -37,7 +35,7 @@ const ImageCover = ({
         <div className="h-auto w-full">
           <div
             className={cn(
-              "relative h-40 max-h-40 w-full overflow-hidden rounded-3xl border border-dashed border-gray-200 bg-theme-mine-shaft-dark hover:cursor-pointer dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark",
+              "relative h-40 max-h-40 w-full overflow-hidden rounded-3xl bg-theme-neutrals-800 hover:cursor-pointer",
               isDragAccept ? "border border-green-500" : "",
               isDragReject ? "border border-red-500" : ""
             )}
@@ -46,7 +44,7 @@ const ImageCover = ({
             {!thumbnailPreview && (
               <>
                 <div className="absolute left-0 top-0 flex size-full flex-col items-center justify-center gap-2">
-                  <ImagePlus className="size-10 text-gray-300 dark:text-theme-titan-white/60" />
+                  <ImagePlus className="size-10 text-gray-300 text-theme-titan-white/60" />
                   <div className="flex size-auto flex-col items-center justify-center -space-y-1">
                     <p className="text-md">No File Chosen</p>
                     <p className="text-sm">(Recommended size: 1280x720)</p>

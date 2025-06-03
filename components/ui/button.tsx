@@ -11,18 +11,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "text-theme-mine-shaft dark:bg-theme-mine-shaft bg-theme-mine-shaft-dark dark:text-theme-titan-white",
+        default: "bg-theme-neutrals-800 dark:text-white text-neutral-900 font-medium",
         destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
           "border-2 border-gray-200 bg-transparent shadow-sm hover:bg-gray-100 dark:border-theme-mine-shaft dark:hover:bg-theme-mine-shaft-dark",
         secondary:
           "bg-theme-monochrome-700 text-theme-monochrome-400 shadow-sm hover:bg-theme-monochrome-400 hover:text-theme-monochrome-200",
-        ghost:
-          "text-theme-mine-shaft dark:text-theme-titan-white hover:bg-theme-mine-shaft-dark dark:hover:bg-theme-mine-shaft hover:text-theme-titan-white",
+        ghost: "text-theme-titan-white hover:bg-theme-mine-shaft-dark hover:text-theme-titan-white",
         link: "text-theme-mine-shaft underline-offset-4 hover:underline",
         gradientOne:
-          "bg-gradient-to-r from-blue-500 to-blue-300 shadow-default hover:from-theme-orange-200 hover:to-theme-orange-500 rounded-full"
+          "bg-gradient-to-r from-blue-500 to-blue-300 shadow-default text-white hover:from-theme-orange-200 hover:to-theme-orange-500 rounded-full",
+        noBg: "text-theme-neutrals-600 font-semibold dark:text-theme-neutrals-600"
       },
       size: {
         default: "h-10 px-4 py-2",

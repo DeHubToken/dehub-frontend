@@ -6,8 +6,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from "@radix-ui/react-dropdown-menu";
-import { EllipsisVertical, Share2 } from "lucide-react";
+} from "@/ui/dropdown-menu";
+import { AlertTriangle, EllipsisVertical, Share2 } from "lucide-react";
 
 import {
   CopyUrl,
@@ -22,15 +22,19 @@ import { Share } from "@/components/icons/share";
 
 import { cn } from "@/libs/utils";
 
+import { env } from "@/configs";
+
 import { Button } from "../ui/button";
 
-export function FeedButton(props: React.ComponentProps<"button"> & { icon: React.ReactNode,saveCount?: number }) {
-  const { icon, children,saveCount, ...rest } = props;
+export function FeedButton(
+  props: React.ComponentProps<"button"> & { icon: React.ReactNode; saveCount?: number }
+) {
+  const { icon, children, saveCount, ...rest } = props;
   return (
     <button {...rest} className={cn("flex items-center gap-2", rest.className)}>
       {icon}
-      <span className="text-theme-monochrome-300 text-xs">{children}</span> 
-      {saveCount && <span className="text-theme-monochrome-400 text-xs">{saveCount}</span>} 
+      <span className="text-theme-monochrome-300 text-xs">{children}</span>
+      {saveCount && <span className="text-theme-monochrome-400 text-xs">{saveCount}</span>}
     </button>
   );
 }
@@ -52,21 +56,37 @@ export function FeedCommentButton(props: FeedButtonProps) {
 type FeedBookmarkButtonProps = FeedButtonProps & { saveCount?: number };
 
 export function FeedBookmarkButton({ saveCount, ...props }: FeedBookmarkButtonProps) {
-  return <FeedButton {...props} icon={<Bookmark className="size-0" fill="#FF0000"/>} saveCount={saveCount} />;
+  return (
+    <FeedButton
+      {...props}
+      icon={<Bookmark className="size-0" fill="#FF0000" />}
+      saveCount={saveCount}
+    />
+  );
+}
+type FeedReportCountButton = FeedButtonProps & { count?: number };
+export function FeedReportCountButton({ count, ...props }: FeedReportCountButton) {
+  return (
+    <FeedButton
+      {...props}
+      icon={<AlertTriangle className="size-0" fill="#FF0000" />}
+      saveCount={count}
+    />
+  );
 }
 
 export function FeedShareButton(props: FeedButtonProps & { tokenId: number }) {
   const { tokenId } = props;
-  const url = process.env.NEXT_PUBLIC_URL + `/feeds/${tokenId}`;
+  const url = env.NEXT_PUBLIC_URL + `/feeds/${tokenId}`;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" className="rounded-full">
+        <Button size="icon" className="bg-transparent">
           <Share2 className="size-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-32">
-        <DropdownMenuLabel>Share</DropdownMenuLabel>
+      <DropdownMenuContent className="w-32 rounded-md">
+        <DropdownMenuLabel className="text-neutral-400">Share</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="flex flex-col items-start justify-start gap-1">
           <DropdownMenuItem asChild>

@@ -2,12 +2,19 @@
 
 import type { NFT } from "@/services/nfts";
 
+import { useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { useTheme } from "next-themes";
 
+import { SubscriptionModal } from "@/app/(user)/[username]/components/subscription-modal";
+
 import { useWebSockets } from "@/contexts/websocket";
+
+import { useActiveWeb3React } from "@/hooks/web3-connect";
+
+import { recordView } from "@/libs/recordView";
 
 import { getBadgeUrl } from "@/web3/utils/calc";
 
@@ -16,20 +23,28 @@ import { streamInfoKeys } from "@/configs";
 import { ClaimAsCommentor, ClaimAsViewer } from "./claims";
 import { PPVModal } from "./ppv-modal";
 import { Share } from "./share";
-import { LikeButton } from "./stream-actions"; 
+import { LikeButton } from "./stream-actions";
 import { TipModal } from "./tip-modal";
-import {SubscriptionModal} from "@/app/profile/[username]/components/subscription-modal"
+
 export function ActionPanel(props: { nft: NFT; tokenId: number }) {
   const { nft, tokenId } = props;
   const { isUserOnline } = useWebSockets();
   const { theme } = useTheme();
-
+  const { library, account }: any = useActiveWeb3React();
+  const hasRecorded = useRef(false);
+   
+  useEffect(() => {
+    if (account &&library&& !hasRecorded.current) {
+      recordView(tokenId, library, account);
+      hasRecorded.current = true;
+    }
+  }, [account,library]);
   return (
-    <div className="mt-3 h-auto w-full">
-      <p className="text-sm">
+    <div className="mt-3 h-auto ">
+      <p className="flex text-sm">
         Uploaded by{" "}
         <Link
-          href={`/profile/${nft.mintername || nft.minter}`}
+          href={`/${nft.mintername || nft.minter}`}
           className="flex items-center gap-2 text-classic-purple"
         >
           <span>{nft.minterDisplayName || nft.mintername}</span>
@@ -56,8 +71,13 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
             <ThumbsDown className="size-5" />
           </LikeButton>
           <PPVModal nft={nft} />
-          <TipModal tokenId={tokenId} to={nft.minter} /> 
-          <SubscriptionModal plans={nft?.plansDetails} aboutMe={nft?.minterAboutMe} avatarImageUrl={nft?.minterAvatarUrl} displayName={nft.mintername || nft.minter}/>
+          <TipModal tokenId={tokenId} to={nft.minter} />
+          <SubscriptionModal
+            plans={nft?.plansDetails}
+            aboutMe={nft?.minterAboutMe}
+            avatarImageUrl={nft?.minterAvatarUrl}
+            displayName={nft.mintername || nft.minter}
+          />
           <ClaimAsViewer nft={nft} tokenId={tokenId} />
           <ClaimAsCommentor nft={nft} tokenId={tokenId} />
           <div className="absolute right-0 top-0 size-auto sm:hidden">

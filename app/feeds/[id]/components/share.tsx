@@ -19,6 +19,8 @@ import {
 
 import objectToGetParams from "@/libs/utils";
 
+import { env } from "@/configs";
+
 function FacebookShareButton(props: { url: string }) {
   const { url } = props;
   const fb = "https://www.facebook.com/sharer/sharer.php" + objectToGetParams({ u: url });
@@ -80,7 +82,7 @@ function CopyUrl(props: { url: string }) {
 export function Share() {
   const path = usePathname();
 
-  const url = process.env.NEXT_PUBLIC_URL + path;
+  const url = env.NEXT_PUBLIC_URL + path;
 
   return (
     <DropdownMenu>

@@ -8,7 +8,7 @@ import { MessageSquareText, Plus } from "lucide-react";
 import { leaderboardColumns } from "@/app/components/leaderboard-modal";
 
 import { Home, LeaderBoard, Profile } from "@/components/icons";
-import { Sidebar } from "@/components/sidebar";
+import { Sidebar } from "@/components/sidebar.new";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -31,13 +31,13 @@ const links: {
     id: 1,
     name: "Home",
     url: "/",
-    icon: <Home />
+    icon: <Home className="size-4" />
   },
   {
     id: 2,
     name: "Track",
     url: "/",
-    icon: <LeaderBoard />
+    icon: <LeaderBoard className="size-4" />
   },
   {
     id: 3,
@@ -55,7 +55,7 @@ const links: {
     id: 5,
     name: "Profile",
     url: "/me",
-    icon: <Profile />
+    icon: <Profile className="size-4" />
   }
 ];
 
@@ -63,7 +63,7 @@ export function MobileOnlyBottomBar() {
   const { account, library } = useActiveWeb3React();
   const [leaderBoard, setLeaderBoard] = useState<any>([]);
   const [openLeaderBoard, setOpenLeaderBoard] = useState(false);
-  const isSmallScreen = useMediaQuery("(max-width: 960px)");
+  const isSmallScreen = useMediaQuery("(max-width: 1160px)");
 
   function handleClick(link: {
     id: number;
@@ -86,14 +86,14 @@ export function MobileOnlyBottomBar() {
   if (!isSmallScreen) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 z-20 h-auto w-full border-t-2 bg-theme-background py-2 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
+    <div className="fixed bottom-0 left-0 z-20 h-auto w-full border-t-2 border-theme-neutrals-800 bg-theme-neutrals-900 py-2 dark:border-theme-mine-shaft dark:bg-theme-mine-shaft-dark">
       <div className="grid w-full grid-cols-5 items-center">
         {links.map((link) => {
           if (link.name === "Track") {
             return (
               <Button
                 key={link.id}
-                className="h-max flex-col gap-0.5 py-1"
+                className="h-max flex-col gap-0.5 py-1 text-theme-neutrals-200 hover:bg-transparent hover:text-theme-neutrals-200"
                 variant="ghost"
                 onClick={() => handleClick(link)}
               >
@@ -104,7 +104,12 @@ export function MobileOnlyBottomBar() {
           }
 
           return (
-            <Button key={link.id} className="h-max flex-col gap-0.5 py-1" asChild variant="ghost">
+            <Button
+              key={link.id}
+              className="h-max flex-col gap-0.5 py-1 text-theme-neutrals-200 hover:bg-transparent hover:text-theme-neutrals-200"
+              asChild
+              variant="ghost"
+            >
               <Link
                 href={link.url}
                 target={link.external ? "_blank" : "_self"}
@@ -120,13 +125,13 @@ export function MobileOnlyBottomBar() {
 
       <Suspense fallback={<div>Loading...</div>}>
         <Dialog open={openLeaderBoard} onOpenChange={setOpenLeaderBoard}>
-          <DialogContent className="h-[calc(100vh-200px)] sm:max-w-[425px] 2xl:max-w-[800px]">
+          <DialogContent className="h-[calc(100vh-200px)] max-w-full sm:max-w-[90%] 2xl:max-w-[800px]">
             <DialogHeader className="gap-2">
               <DialogTitle className="font-tanker text-4xl tracking-wide">Leaderboard</DialogTitle>
               <Separator className="bg-theme-monochrome-400/25" />
             </DialogHeader>
             {!leaderBoard.success && (
-              <div className="font-tanker text-center text-4xl tracking-wide">
+              <div className="text-center font-tanker text-4xl tracking-wide">
                 Error Fetching Leaderboard
               </div>
             )}
@@ -148,7 +153,7 @@ export function MobileOnlyBottomBar() {
 }
 
 export function DesktopSidebar() {
-  const isSmallScreen = useMediaQuery("(max-width: 960px)");
+  const isSmallScreen = useMediaQuery("(max-width: 1160px)");
   if (isSmallScreen) return null;
-  return <Sidebar className="md:max-w-[7%] md:flex-[0_0_7%] lg:max-w-[13%] lg:flex-[0_0_13%]" />;
+  return <Sidebar />;
 }

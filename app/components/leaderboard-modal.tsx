@@ -56,7 +56,7 @@ export const leaderboardColumns: ColumnDef<LeaderboradResponse["result"]["byWall
               </AvatarFallback>
               <AvatarImage src={getAvatarUrl(user.avatarUrl || "")} />
             </Avatar>
-            <Link href={`/profile/${user?.username || user.account}`}>
+            <Link href={`/${user?.username || user.account}`}>
               {truncate(user?.username || user.userDisplayName || user.account, 14)}
             </Link>
           </div>
@@ -266,7 +266,7 @@ export function LeaderBoardModal(props: Props) {
       <DialogContent className="h-[calc(100vh-200px)] sm:max-w-[425px] 2xl:max-w-[800px]">
         <DialogHeader className="gap-2">
           <DialogTitle className="text-4xl tracking-wide">Leaderboard</DialogTitle>
-          <Separator className="dark:bg-theme-mine-shaft bg-theme-mine-shaft-dark" />
+          <Separator className="" />
         </DialogHeader>
         <div className="size-full overflow-y-scroll">
           <div className="h-auto min-h-screen w-full">

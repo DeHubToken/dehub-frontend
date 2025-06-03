@@ -297,14 +297,14 @@ export function StakingForm() {
             <BeatLoader color="white" loading={true} />
           </h1>
         </div>
-        <div className="w-full rounded-3xl bg-theme-cloud-burst p-8 dark:bg-theme-mine-shaft">
+        <div className="w-full rounded-3xl bg-theme-neutrals-800 p-8">
           <h1 className="text-theme-monochrome-300 text-xl">TVL</h1>
           <h1 className="text-theme-monochrome-200 mt-4 w-full text-end text-3xl font-medium">
             {/* {TVL !== null ? `$ ${TVL}` : <BeatLoader color="white" loading={true} />} */}
             <BeatLoader color="white" loading={true} />
           </h1>
         </div>
-        <div className="w-full rounded-3xl bg-theme-cloud-burst p-8 dark:bg-theme-mine-shaft">
+        <div className="w-full rounded-3xl bg-theme-neutrals-800 p-8">
           <h1 className="text-theme-monochrome-300 text-xl">Stakers</h1>
           <h1 className="text-theme-monochrome-200 mt-4 w-full text-end text-3xl font-medium">
             {/* {totalStakersCount !== null ? (
@@ -318,7 +318,7 @@ export function StakingForm() {
       </div>
 
       {/* staking content */}
-      <div className="grid w-full grid-cols-1 gap-4 rounded-2xl bg-theme-mine-shaft-dark p-6 dark:bg-theme-mine-shaft sm:grid-cols-2 sm:gap-8 sm:p-10">
+      <div className="grid w-full grid-cols-1 gap-4 rounded-2xl bg-theme-mine-shaft-dark p-6 sm:grid-cols-2 sm:gap-8 sm:p-10">
         <Box title="My Staked">
           {/* {totalStaked !== null ? `${totalStaked} BJ` : <BeatLoader color="white" loading={true} />} */}
           <BeatLoader color="white" loading={true} />
@@ -448,7 +448,7 @@ type BoxProps = {
 
 function Box({ children, title }: BoxProps) {
   return (
-    <div className="w-full rounded-2xl bg-theme-cloud-burst p-8 dark:bg-theme-mine-shaft-dark">
+    <div className="w-full rounded-2xl bg-theme-neutrals-800 p-8">
       <h1 className="text-theme-monochrome-300 text-lg sm:text-xl">{title}</h1>
       <h1 className="text-theme-monochrome-200 mt-4 w-full text-end text-3xl font-medium">
         {children}

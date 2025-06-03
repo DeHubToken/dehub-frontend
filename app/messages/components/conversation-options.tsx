@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger
 } from "@radix-ui/react-dropdown-menu";
 import { ExitIcon } from "@radix-ui/react-icons";
-import { CircleAlert, CircleEllipsis, CircleX, EllipsisVertical, User } from "lucide-react";
+import { CircleAlert, CircleEllipsis, CircleX, EllipsisVertical, Trash, User } from "lucide-react";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
@@ -27,24 +27,25 @@ const ConversationOptions = ({ type, participant }: Props) => {
     setSelectedMessageId,
     me,
     handleToggleUserReport,
+    handleToggleDeleteChat,
     handleExitGroup,
     handleToggleConversationMoreOptions
   }: any & { handleToggleUserReport: () => void } = useMessage("ConversationOptions");
-  const { account } = useActiveWeb3React(); 
+  const { account } = useActiveWeb3React();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <EllipsisVertical className="size-6 " />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="flex flex-col gap-2 bg-gray-100  rounded-md border border-solid dark:border-theme-mine-shaft-dark dark:bg-theme-background">
+      <DropdownMenuContent className="z-10 flex flex-col gap-2 rounded-md  border border-solid bg-gray-100 dark:border-theme-mine-shaft-dark dark:bg-theme-background">
         {type == "dm" && (
           <DropdownMenuItem
             className="flex gap-1 p-2 "
             onClick={() => {
-              router.push(`/profile/${participant.username || participant.address}`);
+              router.push(`/${participant.username || participant.address}`);
             }}
           >
-            <User className="size-5" /> <span> Profile</span>
+            <User className="size-5" /> <> Profile</>
           </DropdownMenuItem>
         )}
         <DropdownMenuItem
@@ -53,34 +54,35 @@ const ConversationOptions = ({ type, participant }: Props) => {
             setSelectedMessageId(null);
           }}
         >
-          <CircleX className="size-5" /> <span> Close chat</span>
+          <CircleX className="size-5" /> <> Close chat</>
         </DropdownMenuItem>
 
         {type == "dm" && (
-          <DropdownMenuItem
-            className="flex gap-1    p-2  "
-            onClick={handleToggleUserReport}
-          >
+          <DropdownMenuItem className="flex gap-1    p-2  " onClick={handleToggleUserReport}>
             <CircleAlert className="size-5" />
-            <span> Block </span>
+            <> Block </>
           </DropdownMenuItem>
-        )}
+        )} 
+          <DropdownMenuItem className="flex gap-1    p-2  " onClick={handleToggleDeleteChat}>
+            <Trash className="size-5" />
+            <> Delete All Chat </>
+          </DropdownMenuItem>
+       
         {type == "group" && me?.role != "admin" && (
           <DropdownMenuItem
             className="flex gap-1    p-2  "
             onClick={() => handleExitGroup(account?.toLocaleLowerCase())}
           >
             <ExitIcon className="size-5" />
-            <span> Exist Group </span>
+            <> Exist Group </>
           </DropdownMenuItem>
         )}
 
         <DropdownMenuItem
           className="flex gap-1    p-2 "
           onClick={handleToggleConversationMoreOptions}
-        >
-          <CircleEllipsis />
-          <span> more </span>
+        > 
+          <> More </>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
