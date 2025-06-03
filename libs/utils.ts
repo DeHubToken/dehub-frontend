@@ -47,7 +47,9 @@ export const getExplorerUrl = (chainId: number, hash: string) => {
     5: "https://goerli.etherscan.io/tx/",
     137: "https://polygonscan.com/tx/",
     80001: "https://mumbai.polygonscan.com/tx/",
+    8553:"https://basescan.org/tx/",
     // Add more as needed
+
   };
 
   const baseUrl = explorers[chainId] || "https://explorer.unknown/tx/";
