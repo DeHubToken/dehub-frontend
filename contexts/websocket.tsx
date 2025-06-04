@@ -13,6 +13,7 @@ class StreamingClient {
   private heartbeatInterval: NodeJS.Timeout | null = null;
   private isMounted = true;
   private onlineUsersCallback: ((users: string[]) => void) | null = null;
+  private connectionCheckTimeout: NodeJS.Timeout | null = null;
 
   constructor(
     private url: string, 
@@ -23,27 +24,82 @@ class StreamingClient {
   }
 
   public async connect(address: string | null | undefined) {
-    if (this.socket) {
-      this.cleanup();
+    try {
+      if (this.socket) {
+        this.cleanup();
+      }
+
+      const socketOptions = {
+        query: { address },
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        reconnectionAttempts: this.maxReconnectAttempts,
+        transports: ['polling', 'websocket'],
+        upgrade: true,
+        timeout: 20000,
+        path: '/socket.io/',
+        forceNew: true,
+        autoConnect: false
+      };
+
+      const authObject = address ? await this.getAuthParams() : {};
+      
+      console.log("Connecting to socket server with options:", {
+        url: this.url,
+        auth: authObject,
+        ...socketOptions
+      });
+
+      this.socket = io(this.url, {
+        auth: authObject,
+        ...socketOptions
+      });
+
+      // Set up connection timeout
+      this.connectionCheckTimeout = setTimeout(() => {
+        if (this.socket && !this.socket.connected) {
+          console.log("Connection timeout - attempting fallback to polling");
+          this.socket.io.opts.transports = ['polling'];
+          this.socket.connect();
+        }
+      }, 5000);
+
+      this.setupEventHandlers();
+      this.startHeartbeat();
+
+      // Manually initiate connection
+      this.socket.connect();
+
+    } catch (error) {
+      console.error("Error in connect:", error);
+      this.handleConnectionError(error);
     }
+  }
 
-    const socketOptions = {
-      query: { address },
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      reconnectionAttempts: this.maxReconnectAttempts,
-    };
-
-    const authObject = address ? await this.getAuthParams() : {};
-    
-    this.socket = io(this.url, {
-      auth: authObject,
-      ...socketOptions
+  private handleConnectionError(error: any) {
+    console.error("Connection error details:", {
+      error,
+      attempts: this.reconnectAttempts,
+      maxAttempts: this.maxReconnectAttempts
     });
 
-    this.setupEventHandlers();
-    this.startHeartbeat();
+    this.reconnectAttempts++;
+    
+    if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+      console.error('Max reconnection attempts reached');
+      this.cleanup();
+      return;
+    }
+
+    // Try to reconnect with polling if websocket fails
+    if (this.socket) {
+      console.log("Attempting fallback to polling transport");
+      this.socket.io.opts.transports = ['polling'];
+      setTimeout(() => {
+        this.socket?.connect();
+      }, 1000 * this.reconnectAttempts); // Exponential backoff
+    }
   }
 
   private setupEventHandlers() {
@@ -52,24 +108,24 @@ class StreamingClient {
     this.socket.on('connect', () => {
       console.log('Connected to streaming server');
       this.reconnectAttempts = 0;
+      if (this.connectionCheckTimeout) {
+        clearTimeout(this.connectionCheckTimeout);
+      }
     });
 
     this.socket.on('disconnect', (reason) => {
       console.log('Disconnected:', reason);
-      if (reason === 'io server disconnect') {
-        // Server initiated disconnect, try to reconnect
-        this.socket?.connect();
+      if (reason === 'io server disconnect' || reason === 'transport close') {
+        // Server initiated disconnect or transport closed, try to reconnect
+        setTimeout(() => {
+          this.socket?.connect();
+        }, 1000);
       }
     });
 
     this.socket.on('connect_error', (error) => {
       console.error('Connection error:', error);
-      this.reconnectAttempts++;
-      
-      if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-        console.error('Max reconnection attempts reached');
-        this.cleanup();
-      }
+      this.handleConnectionError(error);
     });
 
     this.socket.on("update-online-users", (users: string[]) => {
@@ -77,9 +133,19 @@ class StreamingClient {
         this.onlineUsersCallback(users);
       }
     });
+
+    // Add transport error handler
+    this.socket.io.on("error", (error: any) => {
+      console.error("Transport error:", error);
+      this.handleConnectionError(error);
+    });
   }
 
   private startHeartbeat() {
+    if (this.heartbeatInterval) {
+      clearInterval(this.heartbeatInterval);
+    }
+
     this.heartbeatInterval = setInterval(() => {
       if (this.socket?.connected) {
         this.socket.emit('heartbeat');
@@ -93,7 +159,12 @@ class StreamingClient {
       clearInterval(this.heartbeatInterval);
       this.heartbeatInterval = null;
     }
+    if (this.connectionCheckTimeout) {
+      clearTimeout(this.connectionCheckTimeout);
+      this.connectionCheckTimeout = null;
+    }
     if (this.socket) {
+      this.socket.removeAllListeners();
       this.socket.disconnect();
       this.socket = null;
     }
@@ -136,7 +207,6 @@ export const WebsocketProvider = ({ children }: { children: React.ReactNode }) =
       const currentSocket = streamingClientRef.current?.getSocket();
       if (currentSocket?.connected) {
         setSocket(currentSocket);
-        clearInterval(socketCheck);
       }
     }, 100);
 
