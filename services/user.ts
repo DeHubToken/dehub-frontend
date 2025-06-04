@@ -187,21 +187,72 @@ export type TLeaderboard = {
   __v: number;
 };
 
+// Cache for notifications
+let notificationCache: {
+  data: TLeaderboard[] | null;
+  timestamp: number;
+  account: string;
+} = {
+  data: null,
+  timestamp: 0,
+  account: ""
+};
+
+const NOTIFICATION_CACHE_DURATION = 30000; // 30 seconds
+
 export async function getNotifications(params: {
   account: `0x${string}` | undefined | string;
   library: LibraryType;
 }): Promise<ApiResponse<{ result: TLeaderboard[] }>> {
   const { account, library } = params;
-  if (!account || !library) return { success: false, error: "Please connect your wallet." };
-  const sigData = await getSignInfo(library, account);
-  const p = objectToGetParams({
-    address: account?.toLowerCase(),
-    sig: sigData.sig,
-    timestamp: sigData.timestamp
-  });
-  const url = `/notification${p}`;
-  const res = await api<{ result: TLeaderboard[] }>(url);
-  return res;
+  if (!account || !library) {
+    return { success: false, error: "Please connect your wallet." };
+  }
+
+  try {
+    // Check if we have valid cached data for this account
+    const now = Date.now();
+    if (
+      notificationCache.data &&
+      notificationCache.account === account.toLowerCase() &&
+      now - notificationCache.timestamp < NOTIFICATION_CACHE_DURATION
+    ) {
+      return { success: true, data: { result: notificationCache.data } };
+    }
+
+    // Get signature for authentication
+    const sigData = await getSignInfo(library, account);
+    if (!sigData) {
+      return { success: false, error: "Failed to get signature." };
+    }
+
+    const p = objectToGetParams({
+      address: account?.toLowerCase(),
+      sig: sigData.sig,
+      timestamp: sigData.timestamp
+    });
+
+    const url = `/notification${p}`;
+    const res = await api<{ result: TLeaderboard[] }>(url);
+
+    // Update cache if request was successful
+    if (res.success) {
+      notificationCache = {
+        data: res.data.result,
+        timestamp: now,
+        account: account.toLowerCase()
+      };
+    }
+
+    return res;
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    // If we have stale cache data for this account, return it as fallback
+    if (notificationCache.data && notificationCache.account === account.toLowerCase()) {
+      return { success: true, data: { result: notificationCache.data } };
+    }
+    return { success: false, error: "Failed to fetch notifications." };
+  }
 }
 
 export async function requestMarkAsRead(params: {
@@ -210,20 +261,39 @@ export async function requestMarkAsRead(params: {
   id: number | string;
 }): Promise<ApiResponse<{ result: unknown }>> {
   const { account, library, id } = params;
-  if (!account || !library) return { success: false, error: "Please connect your wallet." };
-  const sigData = await getSignInfo(library, account);
-  const p = objectToGetParams({
-    address: account?.toLowerCase(),
-    sig: sigData.sig,
-    timestamp: sigData.timestamp
-  });
-  const url = `/notification/${id}${p}`;
+  if (!account || !library) {
+    return { success: false, error: "Please connect your wallet." };
+  }
+
   try {
+    const sigData = await getSignInfo(library, account);
+    if (!sigData) {
+      return { success: false, error: "Failed to get signature." };
+    }
+
+    const p = objectToGetParams({
+      address: account?.toLowerCase(),
+      sig: sigData.sig,
+      timestamp: sigData.timestamp
+    });
+
+    const url = `/notification/${id}${p}`;
     const res = await api<{ result: unknown }>(url, {
       method: "PATCH"
     });
+
+    // Clear notification cache after successful update
+    if (res.success) {
+      notificationCache = {
+        data: null,
+        timestamp: 0,
+        account: ""
+      };
+    }
+
     return res;
   } catch (err) {
+    console.error("Error marking notification as read:", err);
     return { success: false, error: "Failed to update notifications." };
   }
 }

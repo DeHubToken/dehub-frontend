@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { TLeaderboard } from "@/services/user";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { Bell, MessageCircleMore, ThumbsDown, ThumbsUp, X } from "lucide-react";
 
@@ -24,6 +24,7 @@ import { cn } from "@/libs/utils";
 import { getNotifications, requestMarkAsRead } from "@/services/user";
 
 import { formatNotificationDate } from "@/web3/utils/format";
+import { getSignInfo } from "@/web3/utils/web3-actions";
 
 import { Notification } from "../_icons";
 import { NotificationCount } from "../notification-count";
@@ -42,7 +43,11 @@ const NotificationModal = (props: { className?: string }) => {
   const { className } = props;
   const [notifications, setNotifications] = useState<TLeaderboard[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { account, library } = useActiveWeb3React();
+  const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastFetchRef = useRef<number>(0);
+  const MIN_FETCH_INTERVAL = 30000; // 30 seconds
 
   const getUrl = (type: any, tokenId?: number | string | undefined) => {
     if (type === "like" || type === "dislike" || type === "comment") {
@@ -54,25 +59,66 @@ const NotificationModal = (props: { className?: string }) => {
     }
   };
 
-  const markAsRead = async (id: number | string) => {
-    await requestMarkAsRead({ account, library, id });
-    const payload = notifications.filter((e: any) => e?._id !== id);
-    setNotifications(payload);
-  };
+  const markAsRead = useCallback(async (id: number | string) => {
+    if (!account || !library) return;
+    try {
+      const signData = await getSignInfo(library, account);
+      if (!signData) return;
+      
+      await requestMarkAsRead({ account, library, id });
+      setNotifications(prev => prev.filter((e: any) => e?._id !== id));
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  }, [account, library]);
 
-  useEffect(() => {
-    async function fetchNotifications() {
+  const fetchNotifications = useCallback(async () => {
+    if (!account || !library || isLoading) return;
+    
+    const now = Date.now();
+    if (now - lastFetchRef.current < MIN_FETCH_INTERVAL) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const signData = await getSignInfo(library, account);
+      if (!signData) return;
+
       const notificationsResponse = await getNotifications({ account, library });
       if (notificationsResponse.success) {
         setNotifications(notificationsResponse.data.result);
+        setError(null);
       } else {
         setError(notificationsResponse.error);
       }
+      lastFetchRef.current = now;
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      setError("Failed to fetch notifications");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [account, library, isLoading]);
+
+  useEffect(() => {
+    if (!account || !library) {
+      setNotifications([]);
+      setError(null);
+      return;
     }
 
-    if (!account) return;
     fetchNotifications();
-  }, [account, library]);
+
+    // Set up periodic refresh
+    fetchTimeoutRef.current = setInterval(fetchNotifications, MIN_FETCH_INTERVAL);
+
+    return () => {
+      if (fetchTimeoutRef.current) {
+        clearInterval(fetchTimeoutRef.current);
+      }
+    };
+  }, [account, library, fetchNotifications]);
 
   if (!account) return null;
 
@@ -110,10 +156,15 @@ const NotificationModal = (props: { className?: string }) => {
         </DialogHeader>
         {error && (
           <div className="text-center font-tanker text-4xl tracking-wide">
-            Error Fetching Notifications
+            {error}
           </div>
         )}
-        {notifications && (
+        {isLoading && (
+          <div className="text-center">
+            Loading notifications...
+          </div>
+        )}
+        {!isLoading && notifications && (
           <div className="flex flex-col items-start justify-start gap-6 rounded-lg p-4 shadow-lg">
             {!notifications || notifications?.length === 0 ? (
               <div className="w-full text-center text-gray-500">No notifications found</div>

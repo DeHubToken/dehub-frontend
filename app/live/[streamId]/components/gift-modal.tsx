@@ -372,8 +372,6 @@ export function GiftModal(props: Props) {
     }
   }, [amount]);
 
-  console.log(selectedTier);
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
