@@ -119,7 +119,7 @@ export default function GoLiveForm({ categories }: Props) {
       description: "",
       thumbnail: "",
       categories: [],
-      settings: { enableChat: true, schedule: false, minTip: "1000", tipDelay: 0 },
+      settings: { enableChat: true, schedule: false, minTip: 1000, tipDelay: 0 },
       streamInfo: {}
     }
   });
