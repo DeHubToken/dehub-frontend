@@ -17,7 +17,6 @@ import {
   StopScreenshareIcon
 } from "@livepeer/react/assets";
 import * as Broadcast from "@livepeer/react/broadcast";
-import { getIngest } from "@livepeer/react/external";
 import { CheckIcon } from "@radix-ui/react-icons";
 import * as RadixPopover from "@radix-ui/react-popover";
 import { ChevronDownIcon, XIcon } from "lucide-react";
@@ -42,28 +41,20 @@ import { useUser } from "@/hooks/use-user";
 
 import { cn } from "@/libs/utils";
 
-import { getIngestUrlForStreamId } from "@/services/broadcast/get-ingest";
+import { getIngestUrlByStreamKey } from "@/services/broadcast/get-ingest";
 
-import { getImageUrl } from "@/web3/utils/url";
-
-import { env, StreamStatus } from "@/configs";
 
 import { LivestreamEvents } from "../enums/livestream.enum";
-import StatusBadge from "./status-badge";
+import { getIngest } from "@livepeer/react/external";
+
 
 export default function StreamerView(props: { stream: any; isBroadcastOwner: boolean }) {
   const { stream, isBroadcastOwner } = props;
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const recorderRef = useRef<MediaRecorder | null>(null);
-  const mediaStreamRef = useRef<MediaStream | null>(null);
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [error, setError] = useState<string | null>(null); // Added error state
-  const [isVideoEnabled, setIsVideoEnabled] = useState(true);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isWaitingForWebhook, setIsWaitingForWebhook] = useState(false);
+  const [ingestUrl, setIngestUrl] = useState<string | null>(null);
   const { account, library } = useUser();
   const { socket } = useWebSockets();
-
 
   useEffect(() => {
     if (!socket) return;
@@ -85,9 +76,24 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
     };
   }, [socket, stream]);
 
+  useEffect(() => {
+    async function fetchIngestUrl() {
+      if (stream?.streamKey) {
+        const url = await getIngestUrlByStreamKey(stream.streamKey);
+        setIngestUrl(url);
+      }
+    }
+
+    // fetchIngestUrl();
+  }, [stream?.streamKey]);
+
+  // console.log(ingestUrl, "ingestUrl");
   if (error) {
     return (
-      <div className="relative w-full overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: "16/9" }}>
+      <div
+        className="relative w-full overflow-hidden rounded-2xl bg-black"
+        style={{ aspectRatio: "16/9" }}
+      >
         <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="flex flex-col items-center gap-4">
             <span className="text-lg font-bold text-white">{error}</span>
@@ -112,17 +118,20 @@ export default function StreamerView(props: { stream: any; isBroadcastOwner: boo
       )}
       {account && library && stream?.streamKey ? (
         <Broadcast.Root
-          onError={(error) =>
-            error?.type === "permissions"
-              ? toast.error("You must accept permissions to broadcast. Please try again.")
-              : null
-          }
-          ingestUrl={getIngest(stream.streamKey)} // Using stream.streamKey directly
+          onError={(error) => {
+            if (error?.type === "permissions") {
+              toast.error("You must accept permissions to broadcast. Please try again.");
+            } else {
+              console.error("Broadcast error:", error);
+            }
+          }}
+          ingestUrl={getIngest(stream.streamKey)}
           aspectRatio={16 / 9}
         >
           <Broadcast.Container className="h-full w-full bg-gray-950">
             <Broadcast.Video
               title={stream.title}
+              autoPlay
               className="h-full w-full"
               style={{ aspectRatio: "16/9" }}
             />
