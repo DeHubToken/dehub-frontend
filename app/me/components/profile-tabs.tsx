@@ -8,7 +8,8 @@ import ProfileTabViewServer from "./tab-view";
 const tabs = [
   { key: "video", label: "Videos" },
   { key: "feed-all", label: "Feed" },
-  { key: "user-activity", label: "Activity" }
+  { key: "user-activity", label: "Activity" },
+  { key: "user-livestreams", label: "Livestreams" }
 ];
 
 export default function ProfileTabView({
