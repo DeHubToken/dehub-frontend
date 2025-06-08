@@ -5,6 +5,7 @@ import type { UseEmblaCarouselType } from "embla-carousel-react";
 import * as React from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import useEmblaCarousel from "embla-carousel-react";
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 
 import { Button } from "@/components/ui/button";
 
@@ -52,7 +53,7 @@ const Carousel = React.forwardRef<
       ...opts,
       axis: orientation === "horizontal" ? "x" : "y"
     },
-    plugins
+    [WheelGesturesPlugin(), ...(plugins || [])]
   );
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
