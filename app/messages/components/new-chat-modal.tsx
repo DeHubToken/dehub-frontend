@@ -61,7 +61,10 @@ export const NewChatModal = ({ open, setOpen ,}: { open: boolean; setOpen: (d:bo
   const [error, setError] = useState<string>("");
   // State for dialog open/close
   const handleSearch = async () => {
-    if (!searchTerm.trim()) return;
+    if (!searchTerm.trim()) {
+      setSearchResults([]); 
+      return
+    };
     setIsLoading(true);
     setError("");
 
@@ -84,10 +87,15 @@ export const NewChatModal = ({ open, setOpen ,}: { open: boolean; setOpen: (d:bo
     setOpen(false);
   };
   useEffect(() => {
+    
     const delayDebounce = setTimeout(() => {
       if (searchTerm.trim().length > 2) {
         handleSearch();
       }
+      if (!searchTerm.trim()) {
+        setSearchResults([]); 
+        return
+      };
     }, 300); // 300ms delay
   
     return () => clearTimeout(delayDebounce); // Cleanup timeout

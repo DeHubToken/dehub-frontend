@@ -74,7 +74,10 @@ export const NewGroupChatModal = ({
   const { handleAddNewChat } = useMessage("NewGroupChatModal");
 
   const handleSearch = async () => {
-    if (!searchTerm.trim()) return;
+    if (!searchTerm.trim()) {
+      setSearchResults([]);
+      return;
+    }
     setIsLoading(true);
     setError("");
     try {
@@ -167,6 +170,10 @@ export const NewGroupChatModal = ({
       if (searchTerm.trim().length > 2) {
         handleSearch();
       }
+      if (!searchTerm.trim()) {
+        setSearchResults([]);
+        return;
+      }
     }, 300); // 300ms delay
 
     return () => clearTimeout(delayDebounce); // Cleanup timeout
@@ -182,7 +189,7 @@ export const NewGroupChatModal = ({
           <CirclePlus className="size-5" /> New Group Chat
         </Button> */}
       </DialogTrigger>
-      <DialogContent className="max-w-[1400px] sm:rounded-3xl max-h-[80vh] overflow-auto w-[96%] rounded-xl">
+      <DialogContent className="max-h-[80vh] w-[96%] max-w-[1400px] overflow-auto rounded-xl sm:rounded-3xl">
         <DialogTitle className="sr-only">New Group Chat</DialogTitle>
         <DialogDescription className="sr-only">Start a group chat</DialogDescription>
         <DialogHeader className="flex flex-row gap-4">
@@ -239,7 +246,7 @@ export const NewGroupChatModal = ({
           </div>
           {/* Selected Users */}
           {selectedUsers.length > 0 && (
-            <div className="shadow mt-4 rounded">
+            <div className="mt-4 rounded shadow">
               <h4 className="mb-2 font-semibold">Selected Users:</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedUsers.map((user) => (
@@ -280,7 +287,7 @@ export const NewGroupChatModal = ({
           </div>
 
           {selectedPlansIds.length > 0 && (
-            <div className="shadow mt-6 rounded  p-4">
+            <div className="mt-6 rounded p-4  shadow">
               <h6 className="mb-2 font-semibold ">Selected Tiers:</h6>
               <div className="flex flex-wrap gap-2">
                 {plans

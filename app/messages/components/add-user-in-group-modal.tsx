@@ -67,7 +67,9 @@ export const AddUserInChatModal = () => {
   const { refresh, selectedMessage: message } = useMessage("AddUserInChatModal");
   const { _id: dmId }: any = message;
   const handleSearch = async () => {
-    if (!searchTerm.trim()) return;
+    if (!searchTerm.trim()) {
+      setSearchResults([]); 
+      return};
     setIsLoading(true);
     setError("");
 
@@ -105,6 +107,10 @@ export const AddUserInChatModal = () => {
       if (searchTerm.trim().length > 2) {
         handleSearch();
       }
+      if (!searchTerm.trim()) {
+        setSearchResults([]); 
+        return
+      };
     }, 300); // 300ms delay
   
     return () => clearTimeout(delayDebounce); // Cleanup timeout
