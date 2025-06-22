@@ -7,6 +7,12 @@ import { ChevronDown } from "lucide-react";
 
 import UserSearchModal from "@/app/components/UserSearchModal";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -23,6 +29,8 @@ import { cn } from "@/libs/utils";
 
 import { supportedTokens } from "@/configs";
 
+const formatter = new Intl.NumberFormat("en", { notation: "compact" });
+
 export default function TokensList() {
   const { chainId } = useActiveWeb3React();
 
@@ -36,6 +44,9 @@ export default function TokensList() {
     return null;
   }
 
+  const dhb = avaialbleTokens.find((token) => token.symbol === "DHB");
+  const otherTokens = avaialbleTokens.filter((token) => token.symbol !== "DHB");
+
   return (
     <div className="h-auto w-full max-w-screen-xs space-y-4 rounded-3xl bg-theme-neutrals-800 p-6 dark:bg-theme-mine-shaft-dark">
       <div className="flex h-auto w-full items-center justify-between px-4">
@@ -43,39 +54,47 @@ export default function TokensList() {
         <p className="text-lg font-semibold">Holdings</p>
       </div>
 
-      <div className="h-80 w-full overflow-y-scroll rounded-3xl dark:bg-theme-mine-shaft">
+      <div className="w-full overflow-y-scroll rounded-3xl dark:bg-theme-mine-shaft">
         <ul className="h-auto w-full space-y-4 p-4">
-          {avaialbleTokens.map((token, index) => {
-            if (token.symbol === "DHB") {
-              return (
-                <BJ
-                  key={token.chainId + "-" + index}
-                  iconUrl={token.iconUrl}
-                  label={token.label}
-                  tokenBalance={tokenBalance?.tokenBalances?.[token.address] || 0}
-                />
-              );
-            }
+          {dhb && (
+            <BJ
+              iconUrl={"/dhb-gold.svg"}
+              label={dhb.label}
+              tokenBalance={tokenBalance?.tokenBalances?.[dhb.address] || 0}
+            />
+          )}
 
-            return (
-              <li
-                key={token.chainId + "-" + index}
-                className="flex h-auto w-full items-center justify-between py-1"
-              >
-                <div className="flex size-auto items-center justify-start gap-2">
-                  <img
-                    src={token.iconUrl}
-                    alt={token.label}
-                    width={200}
-                    height={200}
-                    className="size-8 object-cover"
-                  />
-                  <p className="text-sm">{token.label}</p>
-                </div>
-                <p className="text-sm">{tokenBalance?.tokenBalances?.[token.address] || 0}</p>
-              </li>
-            );
-          })}
+          <Accordion type="single" collapsible>
+            <AccordionItem value="other-assets" className="border-none">
+              <AccordionTrigger className="flex items-center justify-between">
+                <span className="text-sm font-semibold">See Other Assets</span>
+              </AccordionTrigger>
+              <AccordionContent className="p-0">
+                {otherTokens.map((token, index) => {
+                  return (
+                    <li
+                      key={token.chainId + "-" + index}
+                      className="flex h-auto w-full items-center justify-between py-1"
+                    >
+                      <div className="flex size-auto items-center justify-start gap-2">
+                        <img
+                          src={token.iconUrl}
+                          alt={token.label}
+                          width={200}
+                          height={200}
+                          className="size-8 object-cover"
+                        />
+                        <p className="text-sm">{token.label}</p>
+                      </div>
+                      <p className="text-sm">
+                        {formatter.format(tokenBalance?.tokenBalances?.[token.address] || 0)}
+                      </p>
+                    </li>
+                  );
+                })}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </ul>
       </div>
     </div>
@@ -104,9 +123,9 @@ function BJ(props: { iconUrl: string; label: string; tokenBalance: number }) {
       <div className="flex h-auto w-full items-center justify-between">
         <div className="flex size-auto items-center justify-start gap-2">
           <img src={iconUrl} alt={label} width={200} height={200} className="size-8 object-cover" />
-          <p className="text-sm">{label}</p>
+          <p className="text-sm">Tokens</p>
         </div>
-        <p className={cn("text-sm")}>{tokenBalance || 0}</p>
+        <p className={cn("text-sm")}>{formatter.format(tokenBalance || 0)}</p>
       </div>
 
       <motion.button
