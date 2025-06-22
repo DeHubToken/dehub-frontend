@@ -28,7 +28,14 @@ import { dpayCreateOrder, getDpayPrice, getSupply } from "@/services/dpay";
 import { NETWORK_URLS, supportedNetworks } from "@/web3/configs";
 import { getAuthParams, getSignInfo } from "@/web3/utils/web3-actions";
 
-import { chainIcons, ChainId, env, isDevMode, supportedCurrencies, supportedTokens } from "@/configs";
+import {
+  chainIcons,
+  ChainId,
+  env,
+  isDevMode,
+  supportedCurrencies,
+  supportedTokens
+} from "@/configs";
 
 const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 const POLL_INTERVAL_MS = 10000;
@@ -50,6 +57,7 @@ const OrderPage = () => {
     isDevMode ? ChainId.BSC_TESTNET : ChainId.BASE_MAINNET
   );
   const [selectedCurrency, setSelectedCurrency] = useState("usd");
+  const [termsAndServicesAccepted, setTermsAndServicesAccepted] = useState(false);
 
   const [tokenSymbol, setTokenSymbol] = useState("DHB");
   // List of allowed chains
@@ -57,9 +65,7 @@ const OrderPage = () => {
 
   // Filter once and memoize (optional for performance)
   const filteredChains = useMemo(
-    () =>
-      supportedNetworks 
-        .filter((c) => allowedChainIds.includes(c.chainId)),
+    () => supportedNetworks.filter((c) => allowedChainIds.includes(c.chainId)),
     [supportedNetworks]
   );
 
@@ -136,12 +142,15 @@ const OrderPage = () => {
     }, POLL_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, [fetchTokenPrice, fetchSupply,showModal]);
+  }, [fetchTokenPrice, fetchSupply, showModal]);
 
   const handleConfirmCheckout = useCallback(async () => {
- 
     if (!account) {
       toast.error("Please connect to Wallet");
+      return;
+    }
+    if (termsAndServicesAccepted != true) {
+      toast.error("Please accept the Terms and Service");
       return;
     }
     setLoading(true);
@@ -162,7 +171,7 @@ const OrderPage = () => {
       }
       const stripe = await stripePromise;
       if (!stripe) {
-        console.error('Stripe is not initialized');
+        console.error("Stripe is not initialized");
         return;
       }
       const data = {
@@ -174,6 +183,7 @@ const OrderPage = () => {
         tokenSymbol,
         currency: selectedCurrency,
         redirect: window.location.origin,
+        termsAndServicesAccepted,
         ...sig
       };
       const res: any = await dpayCreateOrder(data);
@@ -181,17 +191,17 @@ const OrderPage = () => {
         toast.error(res.error);
         return;
       }
-     
+
       const result = await stripe?.redirectToCheckout({ sessionId: res.data.sessionId });
       if (result?.error) alert(result.error.message);
-    } catch (err:any) {
-      toast.error(err.message??"Something went wrong!");
+    } catch (err: any) {
+      toast.error(err.message ?? "Something went wrong!");
       console.error(err);
     } finally {
       setLoading(false);
       setShowModal(false);
     }
-  }, [amount, tokensToReceive, account, chainId, selectedChainId,supplyData]);
+  }, [amount, tokensToReceive, account, chainId, selectedChainId, supplyData,termsAndServicesAccepted]);
 
   useEffect(() => {
     const fun = async () => {
@@ -343,7 +353,27 @@ const OrderPage = () => {
                 </span>
               </div>
             </div>
-
+            <div>
+              <div className="mb-3 flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={termsAndServicesAccepted}
+                  onChange={(e) => setTermsAndServicesAccepted(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <span className="text-sm">
+                  I accept the{" "}
+                  <a
+                    href="https://docs.dhb.gg/docs/terms-of-service"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 hover:underline"
+                  >
+                    Terms and Service
+                  </a>
+                </span>
+              </div>
+            </div>
             <DialogFooter className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setShowModal(false)} disabled={loading}>
                 Cancel

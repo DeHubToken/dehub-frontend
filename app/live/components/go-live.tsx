@@ -56,10 +56,7 @@ const liveStreamSchema = z.object({
   settings: z.object({
     enableChat: z.boolean().default(true),
     schedule: z.boolean().default(false),
-    minTip: z
-      .number()
-      .min(1000, { message: "Minimum tip must be at least 1000" })
-      .default(1000),
+    minTip: z.number().min(1000, { message: "Minimum tip must be at least 1000" }).default(1000),
     tipDelay: z.number().default(0)
   }),
   scheduledFor: z.date().optional(),
@@ -317,7 +314,7 @@ export default function GoLiveForm({ categories }: Props) {
 
       // 3. Create live stream with minted token ID
       toast.loading("Creating live stream...", { id: toastId });
-      
+
       const authObject = await getAuthObject(library, account);
       let { thumbnail, ...payload } = data;
       data = { ...payload, ...authObject };
@@ -395,7 +392,7 @@ export default function GoLiveForm({ categories }: Props) {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea placeholder="Description" {...field} />
+                    <Textarea placeholder="Description" className="rounded-lg" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -462,7 +459,7 @@ export default function GoLiveForm({ categories }: Props) {
             control={form.control}
             name="settings.enableChat"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full sm:w-auto">
                 <FormControl>
                   <div className="flex w-full items-center justify-between space-x-4">
                     <label htmlFor="enableChat" className="block w-32">
@@ -482,9 +479,9 @@ export default function GoLiveForm({ categories }: Props) {
             control={form.control}
             name="settings.schedule"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full sm:w-auto">
                 <FormControl>
-                  <div className="flex w-full items-center justify-between space-x-4">
+                  <div className="flex w-full flex-wrap items-center justify-between gap-y-4 space-x-4">
                     <label htmlFor="schedule" className="block w-32">
                       Schedule
                     </label>
@@ -500,7 +497,7 @@ export default function GoLiveForm({ categories }: Props) {
                         control={form.control}
                         name="scheduledFor"
                         render={({ field: scheduleField }) => (
-                          <FormItem>
+                          <FormItem className="w-full sm:w-auto">
                             <FormControl>
                               <Input
                                 type="datetime-local"
@@ -510,7 +507,7 @@ export default function GoLiveForm({ categories }: Props) {
                                     ? formatDateToInputValue(new Date(scheduleField.value))
                                     : ""
                                 }
-                                className="w-auto"
+                                className="w-full sm:w-auto"
                                 onChange={(e) => {
                                   const date = e.target.value ? new Date(e.target.value) : null;
                                   scheduleField.onChange(date);
@@ -542,7 +539,7 @@ export default function GoLiveForm({ categories }: Props) {
                       type="number"
                       placeholder="1000 DHB"
                       min={1000}
-                      className="w-auto"
+                      className="w-full sm:w-auto"
                       onChange={(e) => minTip.onChange(Number(e.target.value))} // Convert value to number
                     />
                   </FormControl>
@@ -581,9 +578,9 @@ export default function GoLiveForm({ categories }: Props) {
           </div> */}
         </div>
 
-        <div className="flex w-full flex-col gap-8 rounded-2xl border border-gray-300/25 p-10">
+        <div className="flex w-full flex-col gap-8 rounded-2xl border border-gray-300/25 px-4 py-6 sm:p-10">
           {/* Lock Content Section */}
-          <div className="flex items-center justify-start gap-4">
+          <div className="flex flex-wrap items-center justify-start gap-4">
             <div className="flex items-center gap-4">
               <label htmlFor="lockContent" className="block w-32">
                 Lock Content
@@ -606,7 +603,7 @@ export default function GoLiveForm({ categories }: Props) {
               </TooltipProvider>
             </div>
             {isLockedContent && (
-              <div className="flex gap-4">
+              <div className="flex flex-wrap gap-4">
                 <FormField
                   name="lockToken"
                   control={form.control}
@@ -667,7 +664,7 @@ export default function GoLiveForm({ categories }: Props) {
           </div>
 
           {/* Pay Per View Section */}
-          <div className="flex items-center justify-start gap-4">
+          <div className="flex flex-wrap items-center justify-start gap-4">
             <div className="flex items-center gap-4">
               {/* <span className="text-lg">Pay Per View</span> */}
               <label htmlFor="payPerView" className="block w-32">
@@ -691,7 +688,7 @@ export default function GoLiveForm({ categories }: Props) {
               </TooltipProvider>
             </div>
             {isPayPerView && (
-              <div className="flex gap-4">
+              <div className="flex flex-wrap gap-4">
                 <FormField
                   name="ppvToken"
                   control={form.control}
@@ -752,7 +749,7 @@ export default function GoLiveForm({ categories }: Props) {
           </div>
 
           {/* Bounty Section */}
-          <div className="flex items-center justify-start gap-4">
+          <div className="flex flex-wrap items-center justify-start gap-4">
             <div className="flex items-center gap-4">
               <label htmlFor="bounty" className="block w-32">
                 Bounty
@@ -775,7 +772,7 @@ export default function GoLiveForm({ categories }: Props) {
               </TooltipProvider>
             </div>
             {isBounty && (
-              <div className="flex gap-4">
+              <div className="flex flex-wrap gap-2 sm:gap-4">
                 <FormField
                   name="bountyToken"
                   control={form.control}
@@ -786,7 +783,7 @@ export default function GoLiveForm({ categories }: Props) {
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <SelectTrigger className="h-9 w-32">
+                      <SelectTrigger className="h-9 w-full sm:w-32">
                         <SelectValue placeholder="Token" />
                       </SelectTrigger>
                       <SelectContent>
@@ -806,19 +803,19 @@ export default function GoLiveForm({ categories }: Props) {
                   {...form.register("bountyFirstViewers")}
                   disabled={!isBounty}
                   placeholder="First X Viewers"
-                  className="w-36"
+                  className="w-full sm:w-36"
                 />
                 <Input
                   {...form.register("bountyFirstComments")}
                   disabled={!isBounty}
                   placeholder="First X Comments"
-                  className="w-36"
+                  className="w-full sm:w-36"
                 />
                 <Input
                   {...form.register("bountyAmount")}
                   disabled={!isBounty}
                   placeholder="Amount"
-                  className="w-32"
+                  className="w-full sm:w-32"
                 />
               </div>
             )}

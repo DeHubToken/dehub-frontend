@@ -200,7 +200,7 @@ const groups = [
         id: "post",
         name: "Post",
         icon: <Post className="size-6" />,
-        url: () => "/"
+        url: () => "/subscriptions"
       }
     ] as Link[]
   },

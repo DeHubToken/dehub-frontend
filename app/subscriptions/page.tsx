@@ -21,7 +21,7 @@ export default function Page() {
   return (
     <div className="flex h-auto min-h-screen w-full items-start justify-between">
       <div className="content-container-with-tab-panel px-6">
-        <div className="flex items-center px-2 py-6">
+        <div className="flex items-center px-2 pb-6">
           <h1 className="justify-start text-3xl font-normal leading-loose text-theme-neutrals-100">
             Subscriptions
           </h1>
