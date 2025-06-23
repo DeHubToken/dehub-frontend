@@ -527,6 +527,7 @@ export const durations = [
 ];
 
 export const ActivityActionType = {
+  CREATE_LIVE:"CREATE_LIVE",
   UPLOAD_FEED_SIMPLE: "upload-feed-simple",
   UPLOAD_FEED_IMAGES: "upload-feed-images",
   UPLOAD_VIDEO: "upload_video",

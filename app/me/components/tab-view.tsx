@@ -2,6 +2,7 @@ import { FeedItem, FeedList } from "@/app/components/feed-list";
 import { LiveStreamItem } from "@/app/components/live-stream-item";
 import { StreamItem } from "@/app/components/stream-item";
 
+import { NFT } from "@/services/nfts";
 import { getNFTs } from "@/services/nfts/trending";
 import { getUserActivity } from "@/services/user";
 
@@ -127,6 +128,7 @@ async function TabUserActivity({ isOwner, user }: Props) {
             <ActivityCard key={key} data={data} type={data.type} isOwner={isOwner}>
               {isVideo && <StreamItem nft={data.nft[0]} isOwner={isOwner} />}
               {isFeed && <FeedItem feed={data.nft[0]} />}
+              {postType === "live" && <LiveStreamCard nft={data.nft[0]} />}
             </ActivityCard>
           );
         })}
@@ -195,3 +197,7 @@ export default async function ProfileTabViewServer(props: any) {
     </div>
   );
 }
+
+const LiveStreamCard = ({ nft }: { nft: NFT }) => {
+  return <div style={{   fontWeight: "bold", marginTop: "10px" }}>{nft.name}</div>;
+};
