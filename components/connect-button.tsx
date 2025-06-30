@@ -167,6 +167,7 @@ export function WalletButton(props: RenderProps) {
           );
         }
 
+      
         return (
           <div className="flex items-center justify-end gap-0 md:gap-4">
             {!isSmallScreen || fixed ? (

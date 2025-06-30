@@ -1,7 +1,7 @@
 "use client";
 
 import type { HttpTransport } from "viem";
-import type { PublicClient, WalletClient } from "wagmi";
+// import type { PublicClient, WalletClient } from "wagmi";
 
 import { useMemo } from "react";
 import { ethers } from "ethers";
@@ -9,7 +9,7 @@ import { usePublicClient, useWalletClient } from "wagmi";
 
 /* ================================================================================================= */
 
-export function publicClientToProvider(publicClient: PublicClient) {
+export function publicClientToProvider(publicClient: any) {
   const { chain, transport } = publicClient;
 
   const network = {
@@ -35,7 +35,7 @@ export function useEthersProvider({ chainId }: { chainId?: number } = {}) {
   return useMemo(() => publicClientToProvider(publicClient), [publicClient]);
 }
 
-export function walletClientToSigner(walletClient: WalletClient) {
+export function walletClientToSigner(walletClient: any) {
   const { account, chain, transport } = walletClient;
   const network = {
     chainId: chain.id,

@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-// import { getDefaultWallets } from "@rainbow-me/rainbowkit";
 import { connectorsForWallets, getDefaultConfig, getDefaultWallets } from "@rainbow-me/rainbowkit";
 import {
   coinbaseWallet,
@@ -8,21 +7,15 @@ import {
   trustWallet,
   walletConnectWallet
 } from "@rainbow-me/rainbowkit/wallets";
-import { metaMask } from 'wagmi/connectors'
 import { base, bsc, bscTestnet, goerli, mainnet, sepolia } from "@wagmi/chains";
-// import { base, bsc, bscTestnet, goerli, mainnet, sepolia } from "viem/chains";
-import { createClient, createPublicClient, http } from "viem";
+import { createPublicClient, http } from "viem";
 import {
-  createConfig,
   useAccount,
   useChainId,
   useConnect,
   useDisconnect,
   useWalletClient
 } from "wagmi";
-
-import { web3AuthConnector } from "@/web3/connectors/rainbow-web3-auth-connector";
-import { web3AuthWallet } from "@/web3/connectors/web3auth-connector";
 
 import { env, isDevMode } from "@/configs";
 
@@ -40,39 +33,22 @@ export const publicClient = createPublicClient({
 const projectId = env.NEXT_PUBLIC_PROJECT_ID;
 const appName = env.NEXT_PUBLIC_PROJECT_NAME;
 
-const { wallets: defaultWallets } = getDefaultWallets({
-  appName: env.NEXT_PUBLIC_PROJECT_NAME,
-  projectId,
-  chains
-});
-
-const rainbowKitWallets = [
-  // ...defaultWallets
-  metaMaskWallet,
-  walletConnectWallet,
-  trustWallet,
-  rainbowWallet,
-  coinbaseWallet,
-  // web3AuthWallet({provider: "google", chains}),
-  // web3AuthWallet("twitter")({chains})
-  // web3AuthConnector({ chains })
-  // rainbowWeb3AuthConnector({ chains, chainId: chainId ?? chains[0].id }) as any,
-  // rainbowWeb3AuthTwitterConnector({ chains, chainId: chainId ?? chains[0].id })
-];
-
-console.log("Rainbowww", rainbowKitWallets)
 const connectors = connectorsForWallets(
-  [
-    {
-      groupName: "Recommended",
-      wallets: rainbowKitWallets,
-    }
-  ],
-  { appName, projectId }
-);
+    [
+      {
+        groupName: "Recommended",
+        wallets: [
+          metaMaskWallet,
+          walletConnectWallet,
+          trustWallet,
+          rainbowWallet,
+          coinbaseWallet,
+        ]
+      }
+    ],
+    { appName, projectId }
+  );
 
-
-console.log("Conectorrrs", connectors)
 export const wagmiConfig = () => {
   return getDefaultConfig({
     appName: "Dehub.io",
@@ -82,32 +58,12 @@ export const wagmiConfig = () => {
   });
 };
 
-// export const wagmiConfig = () => {
-//   return createConfig({
-//     connectors,
-//     chains,
-//     ssr: true,
-//     client({ chain }) {
-//       return createClient({
-//         chain,
-//         transport: http(),
-//       });
-//     },
-//     // transports: {
-//     //   [mainnet.id]: http()
-//     //   // [base.id]: http(), 
-//     //   // [bscTestnet.id]: http(),
-//     // },
-//   })
-// };
-
 export function useActiveWeb3React() {
   const { address: account } = useAccount();
   const { error } = useWalletClient();
   const signer = useEthersSigner();
   const chainId = useChainId();
-  const provider = useEthersProvider({ chainId });
-  // const provider = {}
+  const provider = useEthersProvider({chainId});
 
   const { connect: activate, isSuccess: active } = useConnect();
   const { disconnect: deactivate } = useDisconnect();

@@ -58,11 +58,11 @@ export function AvatarWalletProvider(props: Props) {
   const [data, setData] = useState<string | null>(null);
   const { selectedChain } = useSwitchChain();
 
-  const config = wagmiConfig(selectedChain);
+  const config = wagmiConfig();
   return (
     <Provider data={data} setData={setData}>
       <WagmiConfig config={config}>
-        <RainbowKitProvider chains={chains} showRecentTransactions avatar={Avatar} theme={theme}>
+        <RainbowKitProvider theme={theme}>
           {props.children}
           <UserNameModal />
         </RainbowKitProvider>
