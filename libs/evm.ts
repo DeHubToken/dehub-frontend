@@ -48,7 +48,7 @@ const ethersWeb3Provider = (provider: IProvider | null): any => {
       const signer = await ethersProvider.getSigner();
 
       // Get user's Ethereum public address
-      const address = signer.getAddress();
+      const address = await signer.getAddress();
 
       // Get user's balance in ether
       const res = ethers.utils.formatEther(
