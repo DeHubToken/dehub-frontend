@@ -92,15 +92,17 @@ export function ContactList(props: ContactListProps) {
       {status === "success" &&
         filteredChats.map((message: any) => {
           const { participants, messages, conversationType } = message;
-          const lastMessage =
-            messages?.length > 0
-              ? messages
-                  ?.slice()
-                  .sort(
-                    (a: any, b: any) =>
-                      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-                  )[messages?.length - 1]
-              : {};
+          const lastMessage = useMemo(() => {
+            if (messages?.length > 0) {
+              return messages
+                ?.slice()
+                .sort(
+                  (a: any, b: any) =>
+                    new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                )[messages?.length - 1];
+            }
+            return {};
+          }, [messages]);
           return (
             <div
               key={message._id}

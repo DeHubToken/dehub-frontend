@@ -108,17 +108,12 @@ export function ConversationView() {
 
       <ChatContainer parent={parent}>
         <StartNewConversation />
-        {message?.messages
-          ?.slice() // To avoid mutating the original array
-          .sort(
-            (a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          )
-          .map((message: any) => (
-            <div key={message?.id} className="mb-4">
-              {message?.author === "me" && <OutgoingMessage message={message} />}
-              {message?.author !== "me" && <IncomingMessage message={message} />}
-            </div>
-          ))}
+        {sortedMessages.map((message: any) => (
+          <div key={message?.id} className="mb-4">
+            {message?.author === "me" && <OutgoingMessage message={message} />}
+            {message?.author !== "me" && <IncomingMessage message={message} />}
+          </div>
+        ))}
       </ChatContainer>
       <ExtraInputsAndNotice />
       <MessageInput />
