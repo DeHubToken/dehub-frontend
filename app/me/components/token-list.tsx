@@ -58,6 +58,7 @@ export default function TokensList() {
         <ul className="h-auto w-full space-y-4 p-4">
           {dhb && (
             <BJ
+              key={dhb.address}
               iconUrl={"/dhb-gold.svg"}
               label={dhb.label}
               tokenBalance={tokenBalance?.tokenBalances?.[dhb.address] || 0}
