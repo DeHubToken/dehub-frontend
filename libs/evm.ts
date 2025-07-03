@@ -127,10 +127,8 @@ const ethersWeb3Provider = (provider: IProvider | null): any => {
       const contract = await factory.deploy(initValue);
       console.log("Contract:", contract);
       console.log(`Deploying Contract at Target: ${contract.target}, waiting for confirmation...`);
-
-      const receipt = await contract.waitForDeployment();
-      console.log("Contract Deployed. Receipt:", receipt);
-
+      const receipt = await contract.deployed();
+      console.log("Contract Deployed. Address:", receipt.address);
       return receipt;
     } catch (error: any) {
       console.log(error);
