@@ -46,7 +46,7 @@ export function FeedRangeFilterMobile(props: Props) {
   const [type, setType] = useState(defaultType);
   const [sort, setSort] = useState(sortBy);
   const [category, setCategory] = useState("");
-  console.log("FeedRangeFilterMobile",props,defaultType);
+  // console.log("FeedRangeFilterMobile",props,defaultType);
 
   const onApply = () => {
     setOpen(false);

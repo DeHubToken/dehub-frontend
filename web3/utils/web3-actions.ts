@@ -1,95 +1,92 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-
 import { getCookie, setCookie } from "@/libs/cookie";
-
 import { env, expireSignTime, isDevMode } from "@/configs";
-
 import { performPersonalSign } from "./sign";
 import { ethers } from "ethers";
 
-export const getSignInfo = async (library: any, account: string) => {
-  const cookieKey = isDevMode ? "data_dev" : "data_v2";
-  const curTime = Math.floor(Date.now() / 1000);
+const COOKIE_KEY = isDevMode ? "data_dev" : "data_v2";
 
-  // Helper to safely parse JSON
-  const safeParseJSON = (str: string | null) => {
-    try {
-      return str ? JSON.parse(str) : undefined;
-    } catch {
-      return undefined;
-    }
-  };
+interface SignRecord {
+  timestamp: number;
+  sig: string;
+  isActive: boolean;
+}
 
-  // Retrieve and parse existing cookie data
-  let data = safeParseJSON(getCookie(cookieKey));
-  let timestamp = data?.[account]?.timestamp;
-  let sig = data?.[account]?.sig;
+interface CookieData {
+  [address: string]: SignRecord;
+}
 
-  const isValidSignature = (address: string, timestamp: number, sig: string): boolean => {
-    if (!sig || !address || !timestamp) {
-      return false;
-    }
-    const displayedDate = new Date(timestamp * 1000).toUTCString();
-    const signMessage = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for ${
-        expireSignTime / 3600
-      } hours.\nYour wallet address is ${address.toLowerCase()}.\nIt is ${displayedDate}.`;
-
-    try {
-      const signedAddress = ethers.utils.verifyMessage(signMessage, sig).toLowerCase();
-      const nowTime = Math.floor(Date.now() / 1000);
-      if (nowTime - expireSignTime > timestamp || signedAddress !== address.toLowerCase()) {
-        return false;
-      }
-      return true;
-    } catch (e) {
-      console.error('Error verifying account:', e);
-      return false;
-    }
-  };
-
-  if (!timestamp || timestamp <= curTime - expireSignTime || !isValidSignature(account, timestamp, sig)) {
-    try {
-      // Update timestamp and create the sign message
-      timestamp = curTime;
-      const displayedDate = new Date(timestamp * 1000).toUTCString();
-      const signMessage = `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for ${
-        expireSignTime / 3600
-      } hours.\nYour wallet address is ${account.toLowerCase()}.\nIt is ${displayedDate}.`;
-
-      // Perform personal sign
-      sig = await performPersonalSign(library, account, signMessage);
-
-      // Ensure data is initialized as an object
-      data = data || {};
-      Object.keys(data).forEach((key) => {
-        if (data[key]) {
-          data[key].isActive = false; // Mark all other accounts as inactive
-        }
-      });
-
-      // Update or create entry for the current account
-      data[account] = { timestamp, sig, isActive: true };
-
-      // Store updated data in the cookie
-      setCookie(cookieKey, JSON.stringify(data), 1); // Expire in 1 day
-    } catch (error) {
-      console.error("Error during signing process:", error.message);
-      return { error: true, message: error.message };
-    }
+/**
+ * Parse JSON cookie data, or return empty object.
+ */
+export function readSignatureCookie(): CookieData {
+  try {
+    const raw = getCookie(COOKIE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
   }
+}
 
-  return { error: false, sig, timestamp };
+/**
+ * Write cookie data with 1-day expiry.
+ */
+function writeCookie(data: CookieData) {
+  setCookie(COOKIE_KEY, JSON.stringify(data), 1);
+}
+
+/**
+ * Check if existing signature record is still valid.
+ */
+export function isSignatureValid(record: SignRecord, address: string): boolean {
+  const { timestamp, sig } = record;
+  if (!timestamp || !sig) return false;
+  // Reconstruct message
+  const displayedDate = new Date(timestamp * 1000).toUTCString();
+  const msg =  `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for ${
+    expireSignTime / 3600
+  } hours.\nYour wallet address is ${address.toLowerCase()}.\nIt is ${displayedDate}.`;
+  try {
+    const recovered = ethers.utils.verifyMessage(msg, sig).toLowerCase();
+    const now = Math.floor(Date.now() / 1000);
+    if (recovered !== address.toLowerCase()) return false;
+    if (now - timestamp > expireSignTime) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Ensure user has an active, valid signature. Returns {sig,timestamp} or throws.
+ */
+export async function getSignInfo(library: any, account: string): Promise<{ sig: string; timestamp: number }> {
+  const data = readSignatureCookie();
+  const existing = data[account];
+  if (existing && existing.isActive && isSignatureValid(existing, account)) {
+    return { sig: existing.sig, timestamp: existing.timestamp };
+  }
+  // Need to re-sign
+  const timestamp = Math.floor(Date.now() / 1000);
+  const displayedDate = new Date(timestamp * 1000).toUTCString();
+  const msg =  `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for ${
+    expireSignTime / 3600
+  } hours.\nYour wallet address is ${account.toLowerCase()}.\nIt is ${displayedDate}.`;
+  const sig = await performPersonalSign(library, account, msg);
+  // Mark all records inactive
+  Object.values(data).forEach((rec) => (rec.isActive = false));
+  data[account] = { timestamp, sig, isActive: true };
+  writeCookie(data);
+  return { sig, timestamp };
+}
+
+export const getAuthParams = async (library: any, account: string): Promise<string> => {
+  const { sig, timestamp } = await getSignInfo(library, account);
+  return `?address=${account.toLowerCase()}&sig=${encodeURIComponent(sig)}&timestamp=${timestamp}`;
 };
 
-export const getAuthParams = async (Library: any, account: string) =>{
-  const sigData = await getSignInfo(Library, account)
-  const { sig, timestamp } = sigData
-  return `?address=${account?.toLowerCase()}&sig=${sig}&timestamp=${timestamp}`
-}
-
-export const getAuthObject = async (Library: any, account: string) =>{
-  const sigData = await getSignInfo(Library, account)
-  const { error, ...data } = sigData
-  return { address: account.toLocaleLowerCase(), ...data}
-}
+export const getAuthObject = async (library: any, account: string): Promise<{ address: string; sig: string; timestamp: number }> => {
+  const { sig, timestamp } = await getSignInfo(library, account);
+  return { address: account.toLowerCase(), sig, timestamp };
+};

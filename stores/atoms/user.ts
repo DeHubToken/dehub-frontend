@@ -42,3 +42,5 @@ export const saveUserAtom = atom(null, (get, set, user: User) => {
 });
 
 export const isUsernameSetAtom = atom(true);
+
+export const isSignedAtom = atom(true);

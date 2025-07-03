@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { Info } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
@@ -98,7 +97,7 @@ export default function GoLiveForm({ categories }: Props) {
 
   const streamCollectionContract = useStreamCollectionContract();
   const streamController = useStreamControllerContract();
-  const addTransaction = useAddRecentTransaction();
+  // const addTransaction = useAddRecentTransaction();
   const tokenBalances = useTokenBalance(false);
   const streamControllerContractAddress = useMemo(
     // @ts-expect-error no index with type number on STREAM_CONTROLLER_CONTRACT_ADDRESSES

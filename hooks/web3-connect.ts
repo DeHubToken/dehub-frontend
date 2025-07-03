@@ -1,126 +1,101 @@
+import type { Web3AuthContextConfig } from "@web3auth/modal/react";
 import { useMemo } from "react";
-// import { getDefaultWallets } from "@rainbow-me/rainbowkit";
-import { connectorsForWallets, getDefaultConfig, getDefaultWallets } from "@rainbow-me/rainbowkit";
-import {
-  coinbaseWallet,
-  metaMaskWallet,
-  rainbowWallet,
-  trustWallet,
-  walletConnectWallet
-} from "@rainbow-me/rainbowkit/wallets";
-import { metaMask } from 'wagmi/connectors'
 import { base, bsc, bscTestnet, goerli, mainnet, sepolia } from "@wagmi/chains";
-// import { base, bsc, bscTestnet, goerli, mainnet, sepolia } from "viem/chains";
+import {
+  useWeb3Auth,
+  useWeb3AuthConnect,
+  useWeb3AuthDisconnect,
+  useWeb3AuthUser,
+  Web3AuthProvider
+} from "@web3auth/modal/react";
+import { WEB3AUTH_NETWORK } from "@web3auth/no-modal";
 import { createClient, createPublicClient, http } from "viem";
 import {
   createConfig,
-  useAccount,
-  useChainId,
-  useConnect,
-  useDisconnect,
-  useWalletClient
+  useAccount
 } from "wagmi";
+import { metaMask } from "wagmi/connectors";
 
-import { web3AuthConnector } from "@/web3/connectors/rainbow-web3-auth-connector";
 import { web3AuthWallet } from "@/web3/connectors/web3auth-connector";
-
 import { env, isDevMode } from "@/configs";
-
-import { useEthersProvider, useEthersSigner } from "./wagmi-ethers";
+import {
+  useWeb3AuthSigner,
+  useWeb3AuthChainId
+} from "./wagmi-ethers";
 
 // Define chains based on environment
 export const chains = isDevMode ? ([bscTestnet, goerli] as const) : ([bsc, base] as const);
 
-// Create public client
-export const publicClient = createPublicClient({
-  chain: chains[0],
-  transport: http()
-});
-
-const projectId = env.NEXT_PUBLIC_PROJECT_ID;
-const appName = env.NEXT_PUBLIC_PROJECT_NAME;
-
-const { wallets: defaultWallets } = getDefaultWallets({
-  appName: env.NEXT_PUBLIC_PROJECT_NAME,
-  projectId,
-  chains
-});
-
-const rainbowKitWallets = [
-  // ...defaultWallets
-  metaMaskWallet,
-  walletConnectWallet,
-  trustWallet,
-  rainbowWallet,
-  coinbaseWallet,
-  // web3AuthWallet({provider: "google", chains}),
-  // web3AuthWallet("twitter")({chains})
-  // web3AuthConnector({ chains })
-  // rainbowWeb3AuthConnector({ chains, chainId: chainId ?? chains[0].id }) as any,
-  // rainbowWeb3AuthTwitterConnector({ chains, chainId: chainId ?? chains[0].id })
-];
-
-console.log("Rainbowww", rainbowKitWallets)
-const connectors = connectorsForWallets(
-  [
-    {
-      groupName: "Recommended",
-      wallets: rainbowKitWallets,
-    }
-  ],
-  { appName, projectId }
-);
-
-
-console.log("Conectorrrs", connectors)
-export const wagmiConfig = () => {
-  return getDefaultConfig({
-    appName: "Dehub.io",
-    projectId,
-    chains,
-    connectors
-  });
+export const web3AuthContextConfig: Web3AuthContextConfig = {
+  web3AuthOptions: {
+    clientId: env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
+    web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+    ssr: true
+  }
 };
 
-// export const wagmiConfig = () => {
-//   return createConfig({
-//     connectors,
-//     chains,
-//     ssr: true,
-//     client({ chain }) {
-//       return createClient({
-//         chain,
-//         transport: http(),
-//       });
-//     },
-//     // transports: {
-//     //   [mainnet.id]: http()
-//     //   // [base.id]: http(), 
-//     //   // [bscTestnet.id]: http(),
-//     // },
-//   })
-// };
-
 export function useActiveWeb3React() {
-  const { address: account } = useAccount();
-  const { error } = useWalletClient();
-  const signer = useEthersSigner();
-  const chainId = useChainId();
-  const provider = useEthersProvider({ chainId });
-  // const provider = {}
+  // Web3Auth connectors
+  const {
+    connect: activate,
+    isConnected: authConnected,
+    loading: authConnecting,
+    error: authConnectError
+  } = useWeb3AuthConnect();
 
-  const { connect: activate, isSuccess: active } = useConnect();
-  const { disconnect: deactivate } = useDisconnect();
+  const {
+    disconnect: deactivate,
+    loading: disconnectLoading,
+    error: authDisconnectError
+  } = useWeb3AuthDisconnect();
 
-  return useMemo(() => {
-    return {
+  const { userInfo } = useWeb3AuthUser();
+  const { web3Auth, provider, isInitializing, initError } = useWeb3Auth();
+
+  // Wagmi account
+  const { address: account, connector, isConnected: wagmiConnected } = useAccount();
+
+  // Ethers signer & chain
+  const signer = useWeb3AuthSigner();
+  const chainId = useWeb3AuthChainId();
+
+  // aggregate state
+  const active = wagmiConnected || authConnected;
+  const connectLoading = isInitializing || authConnecting;
+  const error = initError || authConnectError || authDisconnectError;
+
+  return useMemo(
+    () => ({
       account,
       library: signer ?? provider,
       chainId,
       activate,
       active,
       deactivate,
-      error: error as any
-    };
-  }, [account, activate, active, chainId, deactivate, error, provider, signer]);
+      error,
+      // Extras
+      userInfo,
+      connector,
+      web3Auth,
+      isInitializing,
+      connectLoading,
+      disconnectLoading
+    }),
+    [
+      account,
+      signer,
+      provider,
+      chainId,
+      activate,
+      active,
+      deactivate,
+      error,
+      userInfo,
+      connector,
+      web3Auth,
+      isInitializing,
+      connectLoading,
+      disconnectLoading
+    ]
+  );
 }

@@ -3,7 +3,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { ethers } from "ethers";
 import { HandCoins } from "lucide-react";
 import { toast } from "sonner";
@@ -52,7 +51,7 @@ export function TipModal(props: Props) {
 
   const tokenContract = useERC20Contract(token?.address);
   const streamController = useStreamControllerContract();
-  const addTransaction = useAddRecentTransaction();
+  // const addTransaction = useAddRecentTransaction();
   const streamControllerContractAddress = useMemo(
     // @ts-expect-error fix types later
     () => STREAM_CONTROLLER_CONTRACT_ADDRESSES[chainId],
@@ -113,7 +112,7 @@ export function TipModal(props: Props) {
     setIsRunningTx(true);
     const txHash = await approveToken(tokenContract, library, streamControllerContractAddress);
     // @ts-expect-error fix types later
-    if (txHash) addTransaction({ hash: txHash, description: "Approve", confirmations: 3 });
+    // if (txHash) addTransaction({ hash: txHash, description: "Approve", confirmations: 3 });
     setIsRunningTx(false);
     setTimeout(() => setIsUpdate(!isUpdate), 100);
   };
@@ -127,7 +126,7 @@ export function TipModal(props: Props) {
     try {
       setIsRunningTx(true);
       const txHash = await sendTipWithToken(streamController, library, amount, token, tokenId, to);
-      if (txHash) addTransaction({ hash: txHash, description: "Tip", confirmations: 3 });
+      // if (txHash) addTransaction({ hash: txHash, description: "Tip", confirmations: 3 });
       setIsRunningTx(false);
     } catch (e) {
       setIsRunningTx(false);

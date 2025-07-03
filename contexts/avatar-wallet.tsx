@@ -4,22 +4,9 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { AvatarFallback, AvatarImage, Avatar as AvatarRoot } from "@/ui/avatar";
-import { useAccount, WagmiConfig } from "wagmi";
-
-import { useSwitchChain } from "@/components/providers";
-
-import { chains, useActiveWeb3React, wagmiConfig } from "@/hooks/web3-connect";
 
 import { createContext } from "@/libs/context";
-
-import { supportedNetworks } from "@/web3/configs";
-
-import theme from "@/themes/rainbow-theme";
-
-const RainbowKitProvider = dynamic(
-  () => import("@rainbow-me/rainbowkit").then((m) => m.RainbowKitProvider),
-  { ssr: false }
-);
+import { SignGuardModal } from "@/components/modals/sign-guard-modal";
 
 const UserNameModal = dynamic(
   () => import("../components/modals/username-modal").then((m) => m.UserNameModal),
@@ -56,19 +43,13 @@ function Avatar(props: AvatarComponentProps) {
 
 export function AvatarWalletProvider(props: Props) {
   const [data, setData] = useState<string | null>(null);
-  const { selectedChain } = useSwitchChain();
 
-  const config = wagmiConfig();
   return (
     <Provider data={data} setData={setData}>
-      <WagmiConfig config={config}>
-        <RainbowKitProvider theme={theme}>
-          {props.children}
-          <UserNameModal />
-        </RainbowKitProvider>
-      </WagmiConfig>
+      {props.children}
+      <SignGuardModal />
+      <UserNameModal />
     </Provider>
   );
 }
-
 export { useAvatarWallerProvider };
