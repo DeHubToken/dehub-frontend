@@ -189,6 +189,7 @@ export const WebsocketProvider = ({ children }: { children: React.ReactNode }) =
 
   useEffect(() => {
     const getAuth = async () => {
+      if(!account) return null
       return await getAuthObject(library, account as string);
     };
 

@@ -14,6 +14,8 @@ import { chainIcons, supportedTokens } from "@/configs";
 
 import { TnxData, TnxResponse, TnxStatus } from "../types";
 import TokenAndChainIcon from "./TokenAndChainIcon";
+import { getExplorerUrl } from "@/libs/utils";
+import { miniAddress } from "@/libs/strings";
 
 const TnxPage = ({ sid }: { sid: string }) => {
   const router = useRouter();
@@ -217,7 +219,18 @@ useEffect(() => {
         "Token Send Txn Hash",
         getFieldValue(
           "Token Send Txn Hash",
-          txData.tokenSendStatus === "sent" ? txData.tokenSendTxnHash : txData.tokenSendStatus
+          txData?.tokenSendStatus === "sent" ? (
+            <a
+              href={getExplorerUrl(txData.chainId, txData?.tokenSendTxnHash ?? "")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              {miniAddress(txData.tokenSendTxnHash)}
+            </a>
+          ) : (
+            txData.tokenSendStatus
+          )
         )
       ]
     ];

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { BigNumber, ethers } from "ethers";
 import { ImagePlus, Info, Upload } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -143,7 +142,6 @@ export function UploadForm(props: Props) {
     .sort((a, b) => a.tier - b.tier);
   const streamCollectionContract = useStreamCollectionContract();
   const streamController = useStreamControllerContract();
-  const addTransaction = useAddRecentTransaction();
   const tokenBalances = useTokenBalance(false);
   const { account, chainId, library, user } = useUser();
 
@@ -199,7 +197,6 @@ export function UploadForm(props: Props) {
       streamControllerContractAddress
     );
     if (txHash) {
-      addTransaction({ hash: txHash as string, description: "Approve", confirmations: 3 });
       setIsApproved(true);
     }
     setUploading(false);
@@ -280,7 +277,6 @@ export function UploadForm(props: Props) {
               firstXComment
             );
             if (tx?.hash) {
-              addTransaction({ hash: tx.hash, description: "Mint With Bounty", confirmations: 3 });
             }
             await tx.wait(1);
             form.reset();
@@ -327,7 +323,6 @@ export function UploadForm(props: Props) {
           );
           console.log("here though 2", tx);
           if (tx?.hash) {
-            addTransaction({ hash: tx.hash, description: "Mint NFT", confirmations: 3 });
           }
           await tx.wait(1);
           form.reset();
