@@ -5,7 +5,6 @@ import type { NFT } from "@/services/nfts";
 
 import { useEffect, useMemo, useState } from "react";
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { ethers } from "ethers";
 import { useAtomValue } from "jotai";
 import { LockKeyholeOpen } from "lucide-react";
@@ -68,7 +67,6 @@ export function PPVModal(props: Props) {
   const [isApproved, setIsApproved] = useState(false);
   const [isRunningTx, setIsRunningTx] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
-  const addTransaction = useAddRecentTransaction();
 
   const ppvAmount = nft?.streamInfo?.[streamInfoKeys.payPerViewAmount];
 
@@ -89,7 +87,6 @@ export function PPVModal(props: Props) {
     setIsRunningTx(true);
     const txHash = await approveToken(tokenContract, library, streamControllerContractAddress);
     if (txHash) {
-      addTransaction({ hash: txHash as string, description: "Approve", confirmations: 3 });
       setIsApproved(true);
     }
     setIsRunningTx(false);
@@ -118,7 +115,7 @@ export function PPVModal(props: Props) {
 
       if (tx?.hash) {
         // const confirmTx = toast.loading("Confirming transaction.");
-        addTransaction({ hash: tx.hash, description: "Send PPV", confirmations: 3 });
+        // addTransaction({ hash: tx.hash, description: "Send PPV", confirmations: 3 });
         await tx.wait(1);
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

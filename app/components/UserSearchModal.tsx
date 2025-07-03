@@ -2,7 +2,7 @@
 
 import { FC, useEffect, useState } from "react";
 import Image from "next/image";
-import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
+// Removed Rainbow Kit dependency
 import { ethers } from "ethers";
 import { toast } from "sonner";
 
@@ -35,7 +35,7 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
   const [txHash, setTxHash] = useState<string | null>(null);
   const [transfering, setTransfering] = useState<boolean>(false);
   const { transferDHBTokens } = useTransferTokens();
-  const addTransaction = useAddRecentTransaction();
+  // Removed Rainbow Kit transaction tracking
 
   // Function to handle user search
   const handleSearch = async (query: string) => {
@@ -75,7 +75,7 @@ const UserSearchModal: FC<UserSearchModalProps> = ({ setIsModalOpen }) => {
           ethers.utils.parseUnits(transferAmount, 18)
         );
 
-        if (tx) addTransaction({ hash: tx, description: "Transfer", confirmations: 3 });
+        // Transaction tracking removed - was using Rainbow Kit
         setTransfering(false);
         setIsModalOpen(false);
         setSearchQuery("");

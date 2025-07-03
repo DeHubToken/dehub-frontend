@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Exo_2 } from "next/font/google";
 import localFont from "next/font/local";
 
-import "@rainbow-me/rainbowkit/styles.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import "react-image-crop/dist/ReactCrop.css";
 import "jotai-devtools/styles.css";
@@ -12,7 +11,7 @@ import "@/styles/global.css";
 import { Layout } from "@/components/layout";
 // import { NoticeModal } from "@/components/modals/notice";
 import { ProgressBar } from "@/components/progress";
-import Providers, { SwitchChainProvider } from "@/components/providers";
+import Providers from "@/components/providers";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -21,9 +20,12 @@ import { Toaster as Toast } from "@/components/ui/toaster";
 import { AvatarWalletProvider } from "@/contexts/avatar-wallet";
 import { WebsocketProvider } from "@/contexts/websocket";
 
+
 import { env } from "@/configs";
 
 import { StreamProvider } from "./components/stream-provider";
+import { cookieToWeb3AuthState } from "@web3auth/modal";
+import { headers } from "next/headers";
 
 /**
  * Next.js font optimization
@@ -52,7 +54,11 @@ const fontVariables = `${exo_2.variable} ${tanker.variable}`;
 
 type Props = { children: React.ReactNode };
 
-export default function RootLayout({ children }: Props) {
+export default async function RootLayout({ children }: Props) {
+
+  const headersList = await headers();
+  const web3authInitialState = cookieToWeb3AuthState(headersList.get('cookie'));
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-nunito overflow-x-hidden bg-theme-neutrals-900 text-theme-neutrals-200 dark:bg-theme-neutrals-900 dark:text-theme-neutrals-200">
@@ -66,8 +72,7 @@ export default function RootLayout({ children }: Props) {
           enableSystem
           disableTransitionOnChange
         >
-          <Providers>
-            <SwitchChainProvider>
+          <Providers web3authInitialState={web3authInitialState}>
               <AvatarWalletProvider>
                 <WebsocketProvider>
                   <StreamProvider>
@@ -76,7 +81,6 @@ export default function RootLayout({ children }: Props) {
                   </StreamProvider>
                 </WebsocketProvider>
               </AvatarWalletProvider>
-            </SwitchChainProvider>
           </Providers>
         </ThemeProvider>
         <TailwindIndicator />

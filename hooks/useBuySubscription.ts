@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { BigNumber } from "ethers";
 import { toast } from "sonner";
-import { useWaitForTransaction } from "wagmi";
+import { useWaitForTransactionReceipt } from "wagmi";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
@@ -57,7 +57,7 @@ export const useBuySubscription = (
     isLoading: isTransactionPending,
     isSuccess: isTransactionSuccess,
     isError: isTransactionError
-  } = useWaitForTransaction({
+  } = useWaitForTransactionReceipt({
     hash
   });
 
