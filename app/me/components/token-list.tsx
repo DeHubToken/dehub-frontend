@@ -123,7 +123,7 @@ function BJ(props: { iconUrl: string; label: string; tokenBalance: number }) {
       <div className="flex h-auto w-full items-center justify-between">
         <div className="flex size-auto items-center justify-start gap-2">
           <img src={iconUrl} alt={label} width={200} height={200} className="size-8 object-cover" />
-          <p className="text-sm">Tokens</p>
+          <p className="text-sm">{label}</p>
         </div>
         <p className={cn("text-sm")}>{formatter.format(tokenBalance || 0)}</p>
       </div>
