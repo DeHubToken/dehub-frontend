@@ -128,7 +128,7 @@ async function TabUserActivity({ isOwner, user }: Props) {
             <ActivityCard key={key} data={data} type={data.type} isOwner={isOwner}>
               {isVideo && <StreamItem nft={data.nft[0]} isOwner={isOwner} />}
               {isFeed && <FeedItem feed={data.nft[0]} />}
-              {postType === "live" && <LiveStreamCard nft={data.nft[0]} />}
+              {postType === "live" && <LiveStreamItem nft={data.nft[0]} />}
             </ActivityCard>
           );
         })}
