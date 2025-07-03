@@ -2,7 +2,7 @@
 
 import type { TMessage } from "../utils";
 
-import { useState } from "react";
+import { useState,useMemo } from "react";
 import { Coins, Images } from "lucide-react";
 
 import { AvatarStar } from "@/components/icons/avatar-star";
