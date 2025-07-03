@@ -9,7 +9,7 @@ import {
   Web3AuthProvider
 } from "@web3auth/modal/react";
 import { WEB3AUTH_NETWORK } from "@web3auth/no-modal";
-import { createClient, createPublicClient, http } from "viem";
+// Removed unused imports from "viem"
 import {
   createConfig,
   useAccount
