@@ -28,7 +28,7 @@ export function MobileContactList(props: MobileContactListProps) {
   const [open, setOpen] = useState(false);
   const [isOpenGroupModal, setIsOpenGroupModal] = useState(false);
   const [isDmModal, setIsDmModal] = useState(false);
-  const { selectedMessageId,handleToggleUserDMStatusModal } = useMessage("MobileContactList");
+  const { selectedMessageId, handleToggleUserDMStatusModal } = useMessage("MobileContactList");
   const handleDmChatModal = () => {
     setIsDmModal((b) => !b);
   };
@@ -47,9 +47,9 @@ export function MobileContactList(props: MobileContactListProps) {
           <MessageCircle className="size-5 text-gray-400" />
         </button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-full">
+      <SheetContent side="left" className="w-full bg-white">
         <SheetHeader className="mb-4">
-          <SheetTitle>Messages</SheetTitle>
+          <SheetTitle className="dark:text-white">Messages</SheetTitle>
           <Button onClick={handleDmChatModal}>
             <CirclePlus className="size-5" />
             &nbsp;&nbsp;Dm
@@ -58,7 +58,7 @@ export function MobileContactList(props: MobileContactListProps) {
             <Users className="size-5" />
             &nbsp;&nbsp;Group
           </Button>
-          <Button onClick={()=>handleToggleUserDMStatusModal()}>
+          <Button onClick={() => handleToggleUserDMStatusModal()}>
             <CloudMoonIcon className="size-5" />
             &nbsp;&nbsp;DND
           </Button>
