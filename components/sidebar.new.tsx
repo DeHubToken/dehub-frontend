@@ -338,7 +338,7 @@ export function Sidebar(props: Props) {
             {group.links.map((link) => {
               const isActive = type?.toLowerCase() === link.id.toLowerCase();
 
-              if (link.component) return link.component;
+              if (link.component) return <div key={link.id}>{link.component}</div>;
 
               if (link.url) {
                 if (link.id === "profile" || link.id === "messages") {

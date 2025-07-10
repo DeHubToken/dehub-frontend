@@ -61,7 +61,7 @@ function UnfollowButton(props: UnfollowButtonProps) {
   );
 }
 
-export async function ProfileAction(props: Props) {
+export function ProfileAction(props: Props) {
   const { user } = props;
   const { account } = useActiveWeb3React();
   const isFollowing = user.followers?.includes(account?.toLowerCase() || "");
