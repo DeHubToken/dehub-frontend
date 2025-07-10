@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Hand } from "lucide-react";
 import { toast } from "sonner";
@@ -32,7 +31,8 @@ import { LivestreamEvents, StreamActivityType } from "../enums/livestream.enum";
 import GiftModal from "./gift-modal";
 import TipAnimation from "./tip-animation";
 
-dayjs.extend(relativeTime);
+import dayjs from "@/libs/dayjs";
+
 export function LiveChat(props: { streamId: string }) {
   const { streamId } = props;
 

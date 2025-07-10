@@ -11,7 +11,8 @@ import { useAccount } from "wagmi";
 import { web3AuthContextConfig } from "@/hooks/web3-connect";
 
 import { supportedNetworks } from "@/web3/configs";
-import { IWeb3AuthState } from "@web3auth/no-modal";
+import { WEB3AUTH_NETWORK, type Web3AuthOptions } from "@web3auth/modal";
+// import { IWeb3AuthState } from "@web3auth/no-modal";
 
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -47,7 +48,7 @@ function getQueryClient() {
 
 const queryClient = new QueryClient();
 
-export default function Providers({ children, web3authInitialState }: { children: React.ReactNode; web3authInitialState: IWeb3AuthState | undefined }) {
+export default function Providers({ children, web3authInitialState }: { children: React.ReactNode; web3authInitialState: any }) {
   // NOTE: Avoid useState when initializing the query client if you don't
   // have a suspense boundary between this and the code that may
   // suspend because React will throw away the client on the initial

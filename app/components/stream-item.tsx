@@ -5,7 +5,7 @@ import { memo, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { EyeOpenIcon, HeartFilledIcon } from "@radix-ui/react-icons";
-import dayjs from "dayjs";
+import dayjs from "@/libs/dayjs";
 import { AnimatePresence, m as motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { CiMenuKebab } from "react-icons/ci";
