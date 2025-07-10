@@ -63,7 +63,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({
           
           <div className="flex items-start gap-1">
             <Link
-              href={`/profile/${username || address}`}
+              href={`/${username || address}`}
               className="text-[10px] text-neutral-400"
               onClick={(e) => e.stopPropagation()} 
             >
@@ -86,7 +86,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({
       {showTooltip && (
         <div className="absolute z-10 mt-2 w-64 bg-white rounded-lg shadow-lg p-4 border border-gray-100">
           <div className="flex items-start gap-3">
-            <Link href={`/profile/${username || address}`} onClick={(e) => e.stopPropagation()}>
+            <Link href={`/${username || address}`} onClick={(e) => e.stopPropagation()}>
               <Avatar className="h-16 w-16">
                 <AvatarFallback>
                   {createAvatarName(displayName || username || address)}
@@ -97,7 +97,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({
             
             <div className="flex flex-col">
               <Link 
-                href={`/profile/${username || address}`} 
+                href={`/${username || address}`} 
                 className="text-sm font-bold text-theme-neutrals-200 hover:underline"
                 onClick={(e) => e.stopPropagation()}
               >
