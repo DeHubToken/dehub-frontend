@@ -3,12 +3,16 @@
 // import dynamic from "next/dynamic";
 import { createContext, useContext, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Web3AuthProvider } from "@web3auth/modal/react";
+import { WagmiProvider } from "@web3auth/modal/react/wagmi";
 import { domAnimation, LazyMotion } from "framer-motion";
 import { useAccount } from "wagmi";
 
-import { wagmiConfig } from "@/hooks/web3-connect";
+import { web3AuthContextConfig } from "@/hooks/web3-connect";
 
 import { supportedNetworks } from "@/web3/configs";
+import { WEB3AUTH_NETWORK, type Web3AuthOptions } from "@web3auth/modal";
+// import { IWeb3AuthState } from "@web3auth/no-modal";
 
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -42,66 +46,26 @@ function getQueryClient() {
   }
 }
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+const queryClient = new QueryClient();
+
+export default function Providers({ children, web3authInitialState }: { children: React.ReactNode; web3authInitialState: any }) {
   // NOTE: Avoid useState when initializing the query client if you don't
   // have a suspense boundary between this and the code that may
   // suspend because React will throw away the client on the initial
   // render if it suspends and there is no boundary
-  const queryClient = getQueryClient();
+  // const queryClient = getQueryClient();
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <LazyMotion features={domAnimation}>{children}</LazyMotion>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-      </QueryClientProvider>
+      <Web3AuthProvider config={web3AuthContextConfig} initialState={web3authInitialState}>
+        <QueryClientProvider client={queryClient}>
+          <WagmiProvider>
+            <LazyMotion features={domAnimation}>{children}</LazyMotion>
+          </WagmiProvider>
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        </QueryClientProvider>
+      </Web3AuthProvider>
       {/* <DevTools /> */}
     </>
   );
 }
-
-const SwitchChainProviderContext = createContext<any>({});
-export const useSwitchChain = () => useContext(SwitchChainProviderContext);
-
-export const SwitchChainProvider = ({ children }: any) => {
-  // Ensure we only access localStorage on the client-side
-  const [selectedChain, setSelectedChain] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Check localStorage only if it's the client-side
-      const storedChain = localStorage.getItem("selectedChain");
-      if (storedChain) {
-        setSelectedChain(Number(storedChain));
-      } else {
-        // If no selectedChain in localStorage, use default
-        setSelectedChain(supportedNetworks[0].chainId);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (selectedChain !== null && typeof window !== "undefined") {
-      // Update localStorage when selectedChain changes
-      localStorage.setItem("selectedChain", String(selectedChain));
-    }
-  }, [selectedChain]);
-
-  const switchChain = (chainId: number) => {
-    setSelectedChain(chainId);
-  };
-
-  console.log("selectedChain", selectedChain);
-
-  const contextValue = {
-    switchChain,
-    setSelectedChain,
-    selectedChain
-  };
-
-  return (
-    <SwitchChainProviderContext.Provider value={contextValue}>
-      {children}
-    </SwitchChainProviderContext.Provider>
-  );
-};

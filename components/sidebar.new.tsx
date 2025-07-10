@@ -65,7 +65,7 @@ function SidebarLinkButton({
   return (
     <TooltipProvider>
       <Tooltip delayDuration={0}>
-        <TooltipTrigger className="w-full">
+        <TooltipTrigger className="w-full" asChild>
           <Button
             asChild
             {...props}

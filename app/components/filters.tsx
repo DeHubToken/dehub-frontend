@@ -30,14 +30,13 @@ type Props = React.ComponentProps<typeof Select> & {
 };
 
 export function FeedRangeFilterMobile(props: Props) {
-  const { range, sort: sortBy, type: defaultType, categories, base, tab } = props; 
+  const { range, sort: sortBy, type: defaultType, categories, base, tab } = props;
   const defaults = {
     type: defaultType ?? "trends",
     sort: "",
     date: ""
   };
-  
-  
+
   const { startTransition } = useStreamProvider("FeedRangeFilterMobile");
   const router = useRouter();
   const searchParams = useSearchParams().toString();
@@ -46,7 +45,7 @@ export function FeedRangeFilterMobile(props: Props) {
   const [type, setType] = useState(defaultType);
   const [sort, setSort] = useState(sortBy);
   const [category, setCategory] = useState("");
-  console.log("FeedRangeFilterMobile",props,defaultType);
+  // console.log("FeedRangeFilterMobile",props,defaultType);
 
   const onApply = () => {
     setOpen(false);
@@ -86,13 +85,15 @@ export function FeedRangeFilterMobile(props: Props) {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild className="flex">
-        <Badge
-          variant="default"
-          className="h-8 cursor-pointer gap-1 bg-neutral-800 bg-theme-neutrals-800 px-4 py-2 text-[11px] text-theme-neutrals-400"
-        >
-          <ListFilter className="size-3" /> Sort
-        </Badge>
+      <SheetTrigger asChild>
+        <button className="flex cursor-pointer border-none bg-transparent p-0">
+          <Badge
+            variant="default"
+            className="h-8 cursor-pointer gap-1 bg-neutral-800 bg-theme-neutrals-800 px-4 py-2 text-[11px] text-theme-neutrals-400"
+          >
+            <ListFilter className="size-3" /> Sort
+          </Badge>
+        </button>
       </SheetTrigger>
       <SheetContent
         side="bottom"

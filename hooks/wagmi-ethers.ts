@@ -1,15 +1,16 @@
 "use client";
 
 import type { HttpTransport } from "viem";
-import type { PublicClient, WalletClient } from "wagmi";
+// import type { PublicClient, WalletClient } from "wagmi";
 
 import { useMemo } from "react";
 import { ethers } from "ethers";
 import { usePublicClient, useWalletClient } from "wagmi";
+import { useWeb3Auth } from "@web3auth/modal/react";
 
 /* ================================================================================================= */
 
-export function publicClientToProvider(publicClient: PublicClient) {
+export function publicClientToProvider(publicClient: any) {
   const { chain, transport } = publicClient;
 
   const network = {
@@ -35,7 +36,7 @@ export function useEthersProvider({ chainId }: { chainId?: number } = {}) {
   return useMemo(() => publicClientToProvider(publicClient), [publicClient]);
 }
 
-export function walletClientToSigner(walletClient: WalletClient) {
+export function walletClientToSigner(walletClient: any) {
   const { account, chain, transport } = walletClient;
   const network = {
     chainId: chain.id,
@@ -55,3 +56,36 @@ export function useEthersSigner({ chainId }: { chainId?: number } = {}) {
     [walletClient]
   );
 }
+
+export function useWeb3AuthSigner() {
+  const { provider: web3AuthProvider, isConnected } = useWeb3Auth();
+  
+  return useMemo(() => {
+    if (!isConnected || !web3AuthProvider) return undefined;
+    
+    try {
+      const ethersProvider = new ethers.providers.Web3Provider(web3AuthProvider);
+      return ethersProvider.getSigner();
+    } catch (error) {
+      console.warn("Failed to create Web3Auth signer:", error);
+      return undefined;
+    }
+  }, [web3AuthProvider, isConnected]);
+}
+
+export function useWeb3AuthChainId() {
+  const { web3Auth, isConnected } = useWeb3Auth();
+  
+  return useMemo(() => {
+    if (!isConnected || !web3Auth) return undefined;
+    
+    try {
+      const chainId = web3Auth.currentChainId;
+      return Number(chainId);
+    } catch (error) {
+      console.warn("Failed to get Web3Auth chainId:", error);
+      return undefined;
+    }
+  }, [web3Auth, isConnected]);
+}
+

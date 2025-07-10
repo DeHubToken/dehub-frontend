@@ -3,7 +3,6 @@
 import type { ClaimBounty, NFT } from "@/services/nfts";
 
 import { useEffect, useState } from "react";
-import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { ethers } from "ethers";
 import { toast } from "sonner";
 
@@ -24,7 +23,7 @@ export function useClaimBounty(nft: NFT, tokenId: number, bountyType: number) {
   const [txStatus, setTxStatus] = useState<"pending" | "success" | "failed" | "idle">("idle");
   const [isSupportedNetwork, setIsSupportedNetwork] = useState(false);
   const streamController = useStreamControllerContract();
-  const addTransaction = useAddRecentTransaction();
+  // const addTransaction = useAddRecentTransaction();
 
   async function cliamBounty() {
     setTxStatus("pending");
@@ -51,7 +50,7 @@ export function useClaimBounty(nft: NFT, tokenId: number, bountyType: number) {
         gasLimit
       });
       if (tx?.hash) {
-        addTransaction({ hash: tx.hash, description: "Claim Bounty", confirmations: 3 });
+        // addTransaction({ hash: tx.hash, description: "Claim Bounty", confirmations: 3 });
       }
       await tx.wait(1);
       await claimBounty(tokenId);
@@ -74,7 +73,7 @@ export function useClaimBounty(nft: NFT, tokenId: number, bountyType: number) {
         gasLimit
       });
       if (tx?.hash) {
-        addTransaction({ hash: tx.hash, description: "Claim Bounty", confirmations: 3 });
+        // addTransaction({ hash: tx.hash, description: "Claim Bounty", confirmations: 3 });
       }
       await tx.wait(1);
       toast.success("Bounty claimed");

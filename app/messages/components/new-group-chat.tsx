@@ -170,7 +170,7 @@ export const NewGroupChatModal = ({
       if (searchTerm.trim().length > 2) {
         handleSearch();
       }
-      if (!searchTerm.trim()) {
+      if (searchTerm.trim().length <= 2) {
         setSearchResults([]);
         return;
       }
