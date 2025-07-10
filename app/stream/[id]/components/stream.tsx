@@ -33,7 +33,7 @@ export function StreamInfo(props: { nft: NFT }) {
         <div className="flex items-center gap-1">
           <span className="text-theme-neutrals-400">Uploaded by:</span>
           <Link
-            href={`/profile/${nft.mintername || nft.minter}`}
+            href={`/${nft.mintername || nft.minter}`}
             className="font-bold text-theme-neutrals-200"
           >
             {nft.minterDisplayName || nft.mintername}

@@ -116,7 +116,7 @@ export async function Leaderboard() {
                   >
                     <div className="flex size-auto items-center justify-start gap-4">
                       <p className="w-4 text-sm font-medium text-theme-neutrals-400">{index + 1}</p>
-                      <Link href={`/profile/${user?.username || user.account}`}>
+                      <Link href={`/${user?.username || user.account}`}>
                         <div className="flex cursor-pointer items-center gap-2">
                           <Avatar className="size-8 rounded-full object-cover">
                             <AvatarFallback className="bg-gray-800">
