@@ -107,10 +107,10 @@ export const AddUserInChatModal = () => {
       if (searchTerm.trim().length > 2) {
         handleSearch();
       }
-      if (!searchTerm.trim()) {
-        setSearchResults([]); 
-        return
-      };
+      if (searchTerm.trim().length <= 2) {
+        setSearchResults([]);
+        return;
+      }
     }, 300); // 300ms delay
   
     return () => clearTimeout(delayDebounce); // Cleanup timeout

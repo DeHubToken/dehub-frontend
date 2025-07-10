@@ -170,7 +170,7 @@ const NotificationModal = (props: { className?: string }) => {
               <div className="w-full text-center text-gray-500">No notifications found</div>
             ) : (
               notifications?.map((e: any, i: number) => (
-                <div className="mb-2 flex w-full flex-col border-b border-gray-200 p-2" key={i}>
+                <div className="mb-2 flex w-full flex-col border-b border-gray-200 p-2" key={e._id}>
                   <div className="flex items-center justify-between">
                     <Link href={getUrl(e?.type, e?.tokenId)}>
                       <div
@@ -278,7 +278,7 @@ export const NotificationMobileModal = (props: { className?: string }) => {
               <div className="w-full text-center text-gray-500">No notifications found</div>
             ) : (
               notifications.map((e: any, i: number) => (
-                <div className="mb-2 flex w-full flex-col border-b border-gray-200 p-2" key={i}>
+                <div className="mb-2 flex w-full flex-col border-b border-gray-200 p-2" key={e._id}>
                   <div className="flex items-center justify-between">
                     <Link href={getUrl(e?.type, e?.tokenId)}>
                       <div

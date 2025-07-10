@@ -53,6 +53,10 @@ const ActivityHeader = ({ data, type }: { data: any; type: keyof typeof Activity
           icon: <Rss className="w-[30px]" />,
           text: "Dropped a new post! 🚀"
         },
+        [ActivityActionType.CREATE_LIVE]: {
+          icon: <Rss className="w-[30px]" />,
+          text: "Dropped a new live! 🚀"
+        },
         [ActivityActionType.UPLOAD_FEED_IMAGES]: {
           icon: <GalleryHorizontal className="w-[30px]" />,
           text: "Shared some amazing visuals! 📸"
