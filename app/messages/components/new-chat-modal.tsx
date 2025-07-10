@@ -94,6 +94,10 @@ export const NewChatModal = ({ open, setOpen ,}: { open: boolean; setOpen: (d:bo
       } else {
         setSearchResults([]); // Clear results for inputs of length <= 2
       }
+      if (!searchTerm.trim()) {
+        setSearchResults([]); 
+        return
+      };
     }, 300); // 300ms delay
   
     return () => clearTimeout(delayDebounce); // Cleanup timeout
