@@ -149,7 +149,7 @@ const OrderPage = () => {
       toast.error("Please connect to Wallet");
       return;
     }
-    if (termsAndServicesAccepted != true) {
+    if (!termsAndServicesAccepted) {
       toast.error("Please accept the Terms and Service");
       return;
     }
