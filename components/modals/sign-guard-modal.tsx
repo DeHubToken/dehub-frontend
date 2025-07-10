@@ -35,39 +35,18 @@ type TSchema = z.infer<typeof schema>;
  */
 export function SignGuardModal() {
   const { library, account } = useActiveWeb3React();
-  const isSigned = useAtomValue(isSignedAtom); // reuse atom to track sign status
+  const isSigned = useAtomValue(isSignedAtom);
   const setIsSigned = useSetAtom(isSignedAtom);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
 
-  const form = useForm<TSchema>({
-    resolver: zodResolver(schema),
-    defaultValues: { placeholder: true }
-  });
-
-  //   useEffect(() => {
-  //     console.log("Account")
-  //     if (!account) return;
-  //     (async () => {
-  //       try {
-  //         setStatus("loading");
-  //         await getSignInfo(library, account);
-  //         setIsSigned(true);
-  //       } catch (e: any) {
-  //         setError(e.message || "Signing failed");
-  //         setStatus("error");
-  //       }
-  //     })();
-  //   }, [account, library, setIsSigned]);
-
+  // Only show modal and run logic if connected
   useEffect(() => {
-    if (!account) return;
-
+    if (!account || !library) return;
     try {
       setStatus("loading");
       const data = readSignatureCookie();
       const existing = data[account];
-
       if (existing && existing.isActive && isSignatureValid(existing, account)) {
         setIsSigned(true);
         setStatus("idle");
@@ -80,17 +59,18 @@ export function SignGuardModal() {
       setStatus("error");
       setIsSigned(false);
     }
-  }, [account, setIsSigned]);
+  }, [account, library, setIsSigned]);
 
+  // If not connected, do not show modal or check signature
+  if (!account || !library) return null;
   if (isSigned) return null;
 
-  const onSubmit = async () => {
-    if (!account) return;
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
       setStatus("loading");
       const data = readSignatureCookie();
       const existing = data[account];
-
       if (existing && existing.isActive && isSignatureValid(existing, account)) {
         setIsSigned(true);
       } else {
@@ -112,7 +92,7 @@ export function SignGuardModal() {
             You must sign our authentication message to use this site. Click below to sign.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4">
+        <form onSubmit={onSubmit} className="flex flex-col gap-4 p-4">
           {error && <p className="text-center text-red-500">{error}</p>}
           <Button
             type="submit"
