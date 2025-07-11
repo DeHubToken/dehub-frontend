@@ -65,9 +65,7 @@ export function FeedsPanel() {
             </FeedHeader>
             <Link href={`/feeds/${feed?.tokenId}`}>
               <FeedContent name={feed.name} description={feed.description} feed={feed} />
-              <FeedImageGallary
-                images={[{ url: "https://placehold.co/160x90", alt: "placeholder" }]}
-              />
+              <FeedImageGallary images={[{ url: "/images/demo.jpg", alt: "placeholder" }]} />
             </Link>
             <FeedFooter className="text-neutral-500">
               <LikeButton

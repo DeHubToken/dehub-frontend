@@ -13,7 +13,7 @@ const data = [
     title: "Video 1",
     description: "Description 1",
     date: "2025-02-04",
-    thumbnail: "https://placehold.co/160x90",
+    thumbnail: "/images/demo.jpg",
     views: 0,
     likes: 0,
     status: "Draft",
@@ -24,7 +24,7 @@ const data = [
     title: "Video 2",
     description: "Description 2",
     date: "2025-02-05",
-    thumbnail: "https://placehold.co/160x90",
+    thumbnail: "/images/demo.jpg",
     views: 0,
     likes: 0,
     status: "Draft",
@@ -34,7 +34,7 @@ const data = [
     id: 3,
     title: "Video 3",
     description: "Description 3",
-    thumbnail: "https://placehold.co/160x90",
+    thumbnail: "/images/demo.jpg",
     date: "2025-02-06",
     views: 0,
     likes: 0,
@@ -45,7 +45,7 @@ const data = [
     id: 4,
     title: "Video 4",
     description: "Description 4",
-    thumbnail: "https://placehold.co/160x90",
+    thumbnail: "/images/demo.jpg",
     date: "2025-02-07",
     views: 0,
     likes: 0,
@@ -126,7 +126,7 @@ function VideosPanel(props: VideosPanelProps) {
               <div className="flex flex-col items-start justify-start gap-6 self-stretch overflow-hidden py-2 sm:flex-[30%] sm:flex-row">
                 <div className="relative h-24 w-40 overflow-hidden rounded-lg bg-theme-neutrals-700">
                   <LazyImage
-                    className="size-full object-cover"
+                    className="size-full object-cover object-center"
                     src={video.thumbnail}
                     alt={video.title}
                   />
