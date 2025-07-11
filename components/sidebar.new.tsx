@@ -46,6 +46,7 @@ import {
   W2E,
   XA
 } from "./_icons";
+import ComingSoonModal from "./modals/coming-soon";
 import NotificationModal from "./modals/notification-modal";
 
 type Props = React.HTMLAttributes<HTMLDivElement>;
@@ -56,6 +57,7 @@ type Link = {
   url?: (q: string) => string;
   external?: boolean;
   component?: React.ReactNode;
+  soon?: boolean;
 };
 
 function SidebarLinkButton({
@@ -100,7 +102,8 @@ const groups = [
         id: "scroll",
         name: "Scroll",
         icon: <Scroll className="size-6" />,
-        url: () => "/"
+        url: () => "/",
+        soon: true
       },
       {
         id: "feed",
@@ -124,7 +127,8 @@ const groups = [
         id: "followed",
         name: "Followed",
         icon: <Followed className="size-6" />,
-        url: () => "/"
+        url: () => "/",
+        soon: true
       }
     ] as Link[]
   },
@@ -237,7 +241,8 @@ const groups = [
         id: "wallet",
         name: "Wallet",
         icon: <Wallet className="size-6" />,
-        url: () => "/"
+        url: () => "/",
+        soon: true
       },
       {
         id: "my-uploads",
@@ -289,7 +294,7 @@ const groups = [
         id: "documents",
         name: "Documents",
         icon: <Documents className="size-6" />,
-        url: () => "https://dehub.gitbook.io",
+        url: () => "https://docs.dhb.gg",
         external: true
       },
       {
@@ -360,6 +365,10 @@ export function Sidebar(props: Props) {
                       </Link>
                     </SidebarLinkButton>
                   );
+                }
+
+                if (link.soon) {
+                  return <ComingSoonModal icon={link.icon} name={link.id} />;
                 }
 
                 return (
