@@ -60,7 +60,7 @@ export default function TokensList() {
             <BJ
               key={dhb.address}
               iconUrl={"/dhb-gold.svg"}
-              label={dhb.label}
+              label="Tokens"
               tokenBalance={tokenBalance?.tokenBalances?.[dhb.address] || 0}
             />
           )}

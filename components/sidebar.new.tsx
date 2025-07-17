@@ -77,10 +77,7 @@ function SidebarLinkButton({
             )}
           />
         </TooltipTrigger>
-        <TooltipContent
-          className="font-tanker text-sm capitalize"
-          side={name === "home" ? "right" : "top"}
-        >
+        <TooltipContent className="font-tanker text-sm" side={name === "home" ? "right" : "top"}>
           {name}
         </TooltipContent>
       </Tooltip>
@@ -241,8 +238,7 @@ const groups = [
         id: "wallet",
         name: "Wallet",
         icon: <Wallet className="size-6" />,
-        url: () => "/",
-        soon: true
+        url: () => "/me"
       },
       {
         id: "my-uploads",
@@ -353,7 +349,7 @@ export function Sidebar(props: Props) {
                       key={link.id}
                       variant={isActive ? "default" : "ghost"}
                       onClick={() => handleClick(link)}
-                      name={link.id}
+                      name={link.name}
                     >
                       <Link
                         key={link.id}
@@ -376,7 +372,7 @@ export function Sidebar(props: Props) {
                     key={link.id}
                     variant={isActive ? "default" : "ghost"}
                     onClick={() => handleClick(link)}
-                    name={link.id}
+                    name={link.name}
                   >
                     <Link
                       key={link.id}
@@ -397,7 +393,7 @@ export function Sidebar(props: Props) {
                   variant={isActive ? "default" : "ghost"}
                   onClick={() => handleClick(link)}
                   className="relative"
-                  name={link.id}
+                  name={link.name}
                 >
                   {link.icon}
                 </SidebarLinkButton>
