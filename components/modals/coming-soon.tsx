@@ -32,7 +32,7 @@ export default function ComingSoonModal({ icon, name }: { icon: React.ReactNode;
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="gap-4">
-          <DialogTitle className="text-3xl">Coming Soon !</DialogTitle>
+          <DialogTitle className="text-3xl">Coming Soon!</DialogTitle>
           <DialogDescription className="dark:text-white">
             Something awesome is coming your way! We’re putting the final touches on a brand new
             feature you’re going to love. Hang tight — it’ll be worth the wait!

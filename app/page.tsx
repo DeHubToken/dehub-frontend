@@ -27,7 +27,6 @@ type Props = {
 
 export default async function Page(props: Props) {
   const { category, range, type, q, sort } = props.searchParams;
-  console.log("searchParams", props.searchParams);
 
   if (!type) {
     return redirect(`/?type=trends`);

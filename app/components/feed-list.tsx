@@ -209,15 +209,14 @@ export function FeedList(props: FeedProps) {
     // @ts-ignore
     setFeeds([...feeds, ...filteredData]);
     setPage(page + 1);
-    console.log("feeds-appendend");
   }
 
   return (
-    <div className="flex w-full justify-between feed_list">
+    <div className="feed_list flex w-full justify-between">
       {/* <div className="flex-[0_0_250px]" /> */}
-      <div className="mx-auto min-w-[calc((600/16)*1rem)] max-w-[calc((600/16)*1rem)] feedl_ist">
+      <div className="feedl_ist mx-auto min-w-[calc((600/16)*1rem)] max-w-[calc((600/16)*1rem)]">
         <Tabs defaultValue="for-you" className="w-full">
-          <div className="mb-6 flex w-full items-center justify-between respon_sive_tabs">
+          <div className="respon_sive_tabs mb-6 flex w-full items-center justify-between">
             <TabsList className="w-fit">
               {tabs.map((tab) => (
                 <TabsTrigger key={tab.value} value={tab.value}>
