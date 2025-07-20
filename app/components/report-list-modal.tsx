@@ -39,14 +39,12 @@ export const ReportListModal = ({ tokenId }: { tokenId: number | null }) => {
     try {
       const res = await getReportsByTokenId(tokenId);
       if (!res.success) {
-        console.log("Failed to get reports", res.error);
         setLoading(false);
         return;
       }
       setReports(res.data.reports);
       setLoading(false);
     } catch (error) {
-      console.log("Error fetching reports:", error);
       setLoading(false);
     }
   };
@@ -56,9 +54,12 @@ export const ReportListModal = ({ tokenId }: { tokenId: number | null }) => {
       <DialogTrigger asChild>
         <AlertTriangle className="cursor-pointer" />
       </DialogTrigger>
-      <DialogContent className="shadow-lg max-w-lg rounded-lg p-6">
+      <DialogContent className="max-w-lg rounded-lg p-6 shadow-lg">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold flex"> <AlertTriangle   />  &nbsp;<span> Users Report #{tokenId}</span></DialogTitle>
+          <DialogTitle className="flex text-xl font-semibold">
+            {" "}
+            <AlertTriangle /> &nbsp;<span> Users Report #{tokenId}</span>
+          </DialogTitle>
         </DialogHeader>
 
         {loading ? (
@@ -68,18 +69,13 @@ export const ReportListModal = ({ tokenId }: { tokenId: number | null }) => {
         ) : (
           <div className="max-h-[80vh] space-y-4 overflow-scroll">
             {reports.map((data, index) => (
-              <div
-                key={index}
-                className=" shadow-sm rounded-lg p-4 space-y-2"
-              >
+              <div key={index} className=" space-y-2 rounded-lg p-4 shadow-sm">
                 <div className="flex items-center gap-2">
                   <Avatar className="size-10 rounded-full object-cover">
                     <AvatarFallback>
                       {createAvatarName(data.userDetails?.username || "User")}
                     </AvatarFallback>
-                    <AvatarImage
-                      src={getAvatarUrl(data?.userDetails?.avatarImageUrl || "")}
-                    />
+                    <AvatarImage src={getAvatarUrl(data?.userDetails?.avatarImageUrl || "")} />
                   </Avatar>
                   <Link
                     href={`/${data?.userDetails?.username || data?.userDetails?.address}`}
@@ -89,9 +85,7 @@ export const ReportListModal = ({ tokenId }: { tokenId: number | null }) => {
                   </Link>
                 </div>
                 <p className="text-sm">{data?.description ?? "No Description provided"}</p>
-                <p className="text-xs text-muted-foreground">
-                  {dayjs(data.createdAt).fromNow()}
-                </p>
+                <p className="text-xs text-muted-foreground">{dayjs(data.createdAt).fromNow()}</p>
               </div>
             ))}
           </div>

@@ -24,8 +24,8 @@ export default function ProfileTabView({
   const activeTab = searchParams?.tab ?? "video";
   return (
     <div className="mt-5">
-      <div className="flex flex-wrap justify-between align-middle">
-        <div className="bg-theme-monochrome-600 flex flex-wrap rounded-full border dark:border-theme-mine-shaft">
+      <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-center lg:gap-0">
+        <div className="bg-theme-monochrome-600 flex w-fit overflow-x-auto rounded-full border dark:border-theme-mine-shaft">
           {tabs.map(({ key, label }) => (
             <Link
               key={key}
@@ -42,7 +42,7 @@ export default function ProfileTabView({
           ))}
         </div>
 
-        <div className=" max_wdth mt-3 max-w-[50vh]">
+        <div className="max_wdth w-full lg:max-w-[50vh]">
           {["video", "feed-images", "feed-all", "feed-simple"].some((a) => a === activeTab) && (
             <Categories
               base={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}`}
