@@ -61,7 +61,7 @@ function SavedPosts() {
           </FeedHeader>
           <Link href={`/feeds/${feed?.tokenId}`}>
             <FeedContent name={feed.name} description={feed.description} feed={feed} />
-            <FeedImageGallary images={[{ alt: "", url: "https://placehold.co/160x90" }]} />
+            <FeedImageGallary images={[{ alt: "", url: "/images/demo.jpg" }]} />
           </Link>
         </FeedCard>
       ))}
@@ -86,7 +86,7 @@ function LikedPosts() {
           </FeedHeader>
           <Link href={`/feeds/${feed?.tokenId}`}>
             <FeedContent name={feed.name} description={feed.description} feed={feed} />
-            <FeedImageGallary images={[{ alt: "", url: "https://placehold.co/160x90" }]} />
+            <FeedImageGallary images={[{ alt: "", url: "/images/demo.jpg" }]} />
           </Link>
         </FeedCard>
       ))}

@@ -1,10 +1,12 @@
 import "server-only";
 
 import type { Metadata } from "next";
+
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getAccount } from "@/services/user";
+
 import { getAvatarUrl } from "@/web3/utils/url";
 
 import { Profile } from "./components/profile";
@@ -13,7 +15,7 @@ import { Profile } from "./components/profile";
 
 type Props = {
   params: { username: string };
-  searchParams:any
+  searchParams: any;
 };
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -26,19 +28,19 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     openGraph: {
       title: "User Profile - Dehub",
       description: "View user details and their collections on Dehub.",
-      url: "https://dehub.io/profile",
+      url: `https://dehub.io/${username}`,
       siteName: "Dehub",
       images: [
         {
-          url: "https://dehub.io/default-avatar.png",
+          url: "https://dehub.io/images/default-avatar.png",
           width: 800,
           height: 600,
-          alt: "Dehub User Profile",
-        },
+          alt: "Dehub User Profile"
+        }
       ],
       locale: "en_US",
-      type: "website",
-    },
+      type: "website"
+    }
   };
 
   // Fetch account data based on the username
@@ -53,7 +55,17 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   // Update metadata based on the fetched user data
   metadata = {
     title: `${userData?.username || userData.displayName} - Profile on Dehub.io`,
-    description: userData.aboutMe || `Explore the profile of ${userData?.username || userData.displayName} on Dehub.io.`,
+    description:
+      userData.aboutMe ||
+      `Explore the profile of ${userData?.username || userData.displayName} on Dehub.io.`,
+    twitter: {
+      card: "summary_large_image",
+      title: `${userData?.username || userData.displayName} - Profile on Dehub`,
+      description:
+        userData.aboutMe ||
+        `Explore the profile of ${userData?.username || userData.displayName} on Dehub.io.`,
+      images: [imageSrc]
+    },
     openGraph: {
       title: `${userData?.username || userData.displayName} - Profile on Dehub`,
       description: `View ${userData?.username || userData.displayName}'s profile and collections on Dehub.`,
@@ -64,21 +76,20 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
           url: imageSrc,
           width: 800,
           height: 600,
-          alt: `${userData?.username || userData.displayName}'s Avatar`,
-        },
+          alt: `${userData?.username || userData.displayName}'s Avatar`
+        }
       ],
       locale: "en_US",
-      type: "profile",
-    },
+      type: "profile"
+    }
   };
 
   return metadata;
 }
 
 export default async function Page(props: Props) {
-  console.log("props",props)
   const { username } = props.params;
-  const {searchParams}=props;
+  const { searchParams } = props;
   const res = await getAccount(username);
 
   if (!res.success) {

@@ -46,6 +46,7 @@ import {
   W2E,
   XA
 } from "./_icons";
+import ComingSoonModal from "./modals/coming-soon";
 import NotificationModal from "./modals/notification-modal";
 
 type Props = React.HTMLAttributes<HTMLDivElement>;
@@ -56,6 +57,7 @@ type Link = {
   url?: (q: string) => string;
   external?: boolean;
   component?: React.ReactNode;
+  soon?: boolean;
 };
 
 function SidebarLinkButton({
@@ -75,10 +77,7 @@ function SidebarLinkButton({
             )}
           />
         </TooltipTrigger>
-        <TooltipContent
-          className="font-tanker text-sm capitalize"
-          side={name === "home" ? "right" : "top"}
-        >
+        <TooltipContent className="font-tanker text-sm" side={name === "home" ? "right" : "top"}>
           {name}
         </TooltipContent>
       </Tooltip>
@@ -100,7 +99,8 @@ const groups = [
         id: "scroll",
         name: "Scroll",
         icon: <Scroll className="size-6" />,
-        url: () => "/"
+        url: () => "/",
+        soon: true
       },
       {
         id: "feed",
@@ -124,7 +124,8 @@ const groups = [
         id: "followed",
         name: "Followed",
         icon: <Followed className="size-6" />,
-        url: () => "/"
+        url: () => "/",
+        soon: true
       }
     ] as Link[]
   },
@@ -237,7 +238,7 @@ const groups = [
         id: "wallet",
         name: "Wallet",
         icon: <Wallet className="size-6" />,
-        url: () => "/"
+        url: () => "/me"
       },
       {
         id: "my-uploads",
@@ -289,7 +290,7 @@ const groups = [
         id: "documents",
         name: "Documents",
         icon: <Documents className="size-6" />,
-        url: () => "https://dehub.gitbook.io",
+        url: () => "https://docs.dhb.gg",
         external: true
       },
       {
@@ -348,7 +349,7 @@ export function Sidebar(props: Props) {
                       key={link.id}
                       variant={isActive ? "default" : "ghost"}
                       onClick={() => handleClick(link)}
-                      name={link.id}
+                      name={link.name}
                     >
                       <Link
                         key={link.id}
@@ -362,12 +363,16 @@ export function Sidebar(props: Props) {
                   );
                 }
 
+                if (link.soon) {
+                  return <ComingSoonModal icon={link.icon} name={link.id} />;
+                }
+
                 return (
                   <SidebarLinkButton
                     key={link.id}
                     variant={isActive ? "default" : "ghost"}
                     onClick={() => handleClick(link)}
-                    name={link.id}
+                    name={link.name}
                   >
                     <Link
                       key={link.id}
@@ -388,7 +393,7 @@ export function Sidebar(props: Props) {
                   variant={isActive ? "default" : "ghost"}
                   onClick={() => handleClick(link)}
                   className="relative"
-                  name={link.id}
+                  name={link.name}
                 >
                   {link.icon}
                 </SidebarLinkButton>

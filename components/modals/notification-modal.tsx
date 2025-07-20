@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { TLeaderboard } from "@/services/user";
 
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Bell, MessageCircleMore, ThumbsDown, ThumbsUp, X } from "lucide-react";
 
@@ -59,22 +59,25 @@ const NotificationModal = (props: { className?: string }) => {
     }
   };
 
-  const markAsRead = useCallback(async (id: number | string) => {
-    if (!account || !library) return;
-    try {
-      const signData = await getSignInfo(library, account);
-      if (!signData) return;
-      
-      await requestMarkAsRead({ account, library, id });
-      setNotifications(prev => prev.filter((e: any) => e?._id !== id));
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
-    }
-  }, [account, library]);
+  const markAsRead = useCallback(
+    async (id: number | string) => {
+      if (!account || !library) return;
+      try {
+        const signData = await getSignInfo(library, account);
+        if (!signData) return;
+
+        await requestMarkAsRead({ account, library, id });
+        setNotifications((prev) => prev.filter((e: any) => e?._id !== id));
+      } catch (error) {
+        console.error("Error marking notification as read:", error);
+      }
+    },
+    [account, library]
+  );
 
   const fetchNotifications = useCallback(async () => {
     if (!account || !library || isLoading) return;
-    
+
     const now = Date.now();
     if (now - lastFetchRef.current < MIN_FETCH_INTERVAL) {
       return;
@@ -131,7 +134,7 @@ const NotificationModal = (props: { className?: string }) => {
               <Button
                 variant="ghost"
                 className={cn(
-                  "relative w-auto cursor-pointer justify-start gap-2 p-2 lg:w-full lg:px-0.5 xl:px-2 2xl:px-4",
+                  "relative w-auto cursor-pointer justify-start gap-2 p-2 text-theme-neutrals-200 hover:text-theme-neutrals-200 lg:w-full lg:px-0.5 xl:px-2 2xl:px-4",
                   className
                 )}
               >
@@ -154,16 +157,8 @@ const NotificationModal = (props: { className?: string }) => {
           <DialogTitle className="font-tanker text-4xl tracking-wide">Notifications</DialogTitle>
           <Separator className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark" />
         </DialogHeader>
-        {error && (
-          <div className="text-center font-tanker text-4xl tracking-wide">
-            {error}
-          </div>
-        )}
-        {isLoading && (
-          <div className="text-center">
-            Loading notifications...
-          </div>
-        )}
+        {error && <div className="text-center font-tanker text-4xl tracking-wide">{error}</div>}
+        {isLoading && <div className="text-center">Loading notifications...</div>}
         {!isLoading && notifications && (
           <div className="flex flex-col items-start justify-start gap-6 rounded-lg p-4 shadow-lg">
             {!notifications || notifications?.length === 0 ? (
