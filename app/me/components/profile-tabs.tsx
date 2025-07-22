@@ -25,21 +25,23 @@ export default function ProfileTabView({
   return (
     <div className="mt-5">
       <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-center lg:gap-0">
-        <div className="bg-theme-monochrome-600 flex w-fit overflow-x-auto rounded-full border dark:border-theme-mine-shaft">
-          {tabs.map(({ key, label }) => (
-            <Link
-              key={key}
-              scroll={false}
-              href={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}?tab=${key}`}
-              className={` rounded-full px-6 py-2 transition-all hover:bg-theme-neutrals-800  hover:pl-7 hover:pr-7 dark:hover:bg-theme-mine-shaft-dark ${
-                activeTab === key
-                  ? "rounded-full bg-theme-neutrals-800 pl-7 pr-7 dark:bg-theme-mine-shaft-dark dark:text-white"
-                  : "border-transparent text-gray-500"
-              }`}
-            >
-              {label}
-            </Link>
-          ))}
+        <div className="w-full overflow-x-scroll">
+          <div className="bg-theme-monochrome-600 flex w-fit rounded-full border dark:border-theme-mine-shaft">
+            {tabs.map(({ key, label }) => (
+              <Link
+                key={key}
+                scroll={false}
+                href={`/${isOwner ? "me" : (user?.username ?? user?.address ?? "")}?tab=${key}`}
+                className={`rounded-full px-3 py-2 text-sm transition-all hover:bg-theme-neutrals-800 hover:pl-7 hover:pr-7 dark:hover:bg-theme-mine-shaft-dark sm:px-6 sm:text-base ${
+                  activeTab === key
+                    ? "rounded-full bg-theme-neutrals-800 pl-7 pr-7 dark:bg-theme-mine-shaft-dark dark:text-white"
+                    : "border-transparent text-gray-500"
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
         </div>
 
         <div className="max_wdth w-full lg:max-w-[50vh]">
