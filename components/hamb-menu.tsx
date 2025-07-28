@@ -18,6 +18,7 @@ import { LeaderBoardModal } from "@/app/components/leaderboard-modal";
 
 import {
   Bounty,
+  BuyCrypto,
   Contact,
   Documents,
   Exclusive,
@@ -28,11 +29,10 @@ import {
   Notification as NotificationIcon,
   PPV,
   Profile,
-  Treading,
-  Upload,
-  BuyCrypto,
+  SellCrypto,
   SwapCrypto,
-  SellCrypto
+  Treading,
+  Upload
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 
@@ -224,24 +224,10 @@ const links = [
     isLink: true
   },
   {
-    id: "buyCrypto",
-    name: "Buy Crypto",
-    icon: <BuyCrypto />,
-    url: () => "/buy-crypto",
-    isLink: true
-  },
-  {
-    id: "sellCrypto",
-    name: "Sell Crypto",
-    icon: <SellCrypto />,
-    url: () => "/sell-crypto",
-    isLink: true
-  },
-  {
     id: "swap",
     name: "Swap Crypto",
     icon: <SwapCrypto />,
-    url: () => "/swap-crypto",
+    url: () => "/swap-crypto"
   }
 ] as Link[];
 
