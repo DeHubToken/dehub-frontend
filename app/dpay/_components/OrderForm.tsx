@@ -3,14 +3,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { loadStripe } from "@stripe/stripe-js";
-import axios from "axios";
 import { Link } from "lucide-react";
-import { FaCoins, FaDollarSign, FaWallet } from "react-icons/fa";
+import { FaCoins, FaWallet } from "react-icons/fa";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -28,14 +28,7 @@ import { dpayCreateOrder, getDpayPrice, getSupply } from "@/services/dpay";
 import { NETWORK_URLS, supportedNetworks } from "@/web3/configs";
 import { getAuthParams, getSignInfo } from "@/web3/utils/web3-actions";
 
-import {
-  chainIcons,
-  ChainId,
-  env,
-  isDevMode,
-  supportedCurrencies,
-  supportedTokens
-} from "@/configs";
+import { chainIcons, ChainId, env, isDevMode, supportedCurrencies } from "@/configs";
 
 const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 const POLL_INTERVAL_MS = 10000;
@@ -50,7 +43,7 @@ type DpayCreateOrderApiResponse = {
   error?: string;
 };
 
-const OrderPage = () => {
+const OrderForm = () => {
   const [tokenPrice, setTokenPrice] = useState<number | null>(null);
   const [amount, setAmount] = useState<number>(10);
   const [selectedChainId, setSelectedChainId] = useState(
@@ -201,7 +194,15 @@ const OrderPage = () => {
       setLoading(false);
       setShowModal(false);
     }
-  }, [amount, tokensToReceive, account, chainId, selectedChainId, supplyData,termsAndServicesAccepted]);
+  }, [
+    amount,
+    tokensToReceive,
+    account,
+    chainId,
+    selectedChainId,
+    supplyData,
+    termsAndServicesAccepted
+  ]);
 
   useEffect(() => {
     const fun = async () => {
@@ -221,172 +222,191 @@ const OrderPage = () => {
 
     setShowModal(true);
   };
+
   return (
-    <div className="flex   items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-2xl bg-slate-50   bg-opacity-5  p-6 shadow-xl">
-        {/* Top Up Header */}
-        <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold">Top Up</h1>
-          <p className="text-sm">Buy $DHB using card and get free gas to use instantly</p>
-        </div>
-        <label className="mb-3 block text-sm font-medium">
-          <div className="mb-1 flex items-center gap-2">Select Currency:</div>
-          <Select value={selectedCurrency} onValueChange={setSelectedCurrency}>
-            <SelectTrigger className="h-10 w-full rounded-md bg-transparent">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {supportedCurrencies.map(({ code, enabled }) => (
-                <SelectItem key={code} value={code}>
-                  {code.toUpperCase()}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </label>
-        {/* Token Price */}
-        <div className="mb-4 flex items-center justify-between text-sm">
-          <span>Current DEHUB Price:</span>
-          <span className="font-semibold">
+    <div className="w-full space-y-5 rounded-2xl border border-theme-neutrals-700 bg-theme-neutrals-900 p-8 sm:p-12">
+      <div className="w-full space-y-2 text-center">
+        <h1 className="text-4xl font-semibold">Top Up</h1>
+        <p className="text-sm sm:text-base">
+          Buy $DHB using card and get free gas to use instantly
+        </p>
+      </div>
+
+      {/* Currency */}
+      <div className="w-full space-y-2">
+        <Label htmlFor="currency">Select Currency:</Label>
+        <Select name="currency" value={selectedCurrency} onValueChange={setSelectedCurrency}>
+          <SelectTrigger className="h-auto rounded-full bg-theme-neutrals-800 px-4 text-base">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {supportedCurrencies.map(({ code, enabled }) => (
+              <SelectItem key={code} value={code}>
+                {code.toUpperCase()}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <div className="flex w-full items-center justify-between">
+          <p className="text-sm">Current DHB Price:</p>
+          <p className="text-sm">
             {tokenPrice
               ? `${tokenPrice.toFixed(7)} ${selectedCurrency.toUpperCase()}`
               : "Loading..."}
-          </span>
+          </p>
         </div>
-
-        {/* USD Amount Input */}
-        <label className="mb-3 block text-sm font-medium">
-          <div className="mb-1 flex items-center gap-2">
-            Amount [{selectedCurrency.toUpperCase()}]:
-          </div>
-          <Input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(Number(e.target.value))}
-            className="w-full rounded-lg border focus:outline-none"
-            min={1}
-          />
-        </label>
-
-        {/* Wallet Address */}
-        <label className="mb-3 block text-sm font-medium">
-          <div className="mb-1 flex items-center gap-2">
-            <FaWallet /> Wallet Address:
-          </div>
-          <Input
-            type="text"
-            value={miniAddress(account) || ""}
-            readOnly
-            className="w-full cursor-not-allowed rounded-lg border px-4 py-2"
-          />
-        </label>
-        <label className="mb-3 block text-sm font-medium">
-          <div className="mb-1 flex items-center gap-2">
-            <Link className=" size-4 font-bold" /> Select Chain:
-          </div>
-
-          <Select
-            value={`${selectedChainId}`}
-            onValueChange={(value) => setSelectedChainId(Number(value))}
-          >
-            <SelectTrigger className="h-10 min-w-32 rounded-md bg-transparent dark:bg-transparent">
-              <SelectValue>
-                {" "}
-                <span className="flex gap-1">
-                  <Image
-                    src={chainIcons[selectedChainId]}
-                    alt={`${selectedChainLabel} Icon`}
-                    width={25}
-                    height={25}
-                  />
-                  <span>{selectedChainLabel}</span>{" "}
-                </span>
-              </SelectValue>
-            </SelectTrigger>
-
-            <SelectContent>
-              {filteredChains.map(({ chainId, label }) => (
-                <SelectItem key={chainId} value={`${chainId}`}>
-                  <div className="flex items-center gap-4">
-                    <Image src={chainIcons[chainId]} alt={`${label} Icon`} width={25} height={25} />
-                    <span className="text-lg">{label}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </label>
-        {/* Token Estimate */}
-        <div className="mb-5 text-center text-sm">
-          <FaCoins className="mx-auto mb-1" />
-          You’ll receive approximately{" "}
-          <span className="font-semibold text-indigo-600">{tokensToReceive.toFixed(2)} DEHUB</span>
-        </div>
-
-        {/* Trigger Modal */}
-        <Button onClick={openModal} disabled={loading} className="w-full" variant={"gradientOne"}>
-          {loading ? "Processing..." : "Buy now"}
-        </Button>
       </div>
 
-      {/* Confirmation Modal */}
-      <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="rounded-xl p-6">
-          <div className="space-y-4">
-            <h2 className="text-center text-xl font-semibold">Confirm Purchase</h2>
+      {/* Amount */}
+      <div className="w-full space-y-2">
+        <Label htmlFor="amount">Amount [USD]:</Label>
+        <Input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(Number(e.target.value))}
+          min={1}
+          name="amount"
+          className="h-auto rounded-full bg-theme-neutrals-800 px-4 py-2 text-base"
+        />
+      </div>
 
-            <div className="rounded-lg p-4 text-sm shadow-sm">
-              <div className="mb-2 flex items-center justify-between">
-                <span>{selectedCurrency.toUpperCase()} Amount</span>
-                <span className="font-medium">
-                  {amount.toFixed(2)} [{selectedCurrency.toUpperCase()}]
-                </span>
-              </div>
-              <div className="mb-2 flex items-center justify-between">
-                <span>Approx Receive {tokenSymbol}</span>
-                <span className="font-medium">{tokensToReceive.toFixed(2)}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Wallet Address</span>
-                <span className="max-w-[160px] truncate text-right text-xs font-medium">
-                  {miniAddress(account)}
-                </span>
-              </div>
-            </div>
-            <div>
-              <div className="mb-3 flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={termsAndServicesAccepted}
-                  onChange={(e) => setTermsAndServicesAccepted(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+      {/* Wallet Address */}
+      <div className="w-full space-y-2">
+        <Label htmlFor="wallet" className="flex items-center gap-2">
+          <FaWallet /> Wallet Address:
+        </Label>
+        <Input
+          type="text"
+          value={miniAddress(account) || ""}
+          readOnly
+          name="wallet"
+          className="h-auto cursor-not-allowed rounded-full bg-theme-neutrals-800 px-4 py-2 text-base"
+        />
+      </div>
+
+      {/* Chain Selection */}
+      <div className="w-full space-y-2">
+        <Label htmlFor="chain" className="flex items-center gap-2">
+          <Link className="size-4" />
+          Select Chain:
+        </Label>
+        <Select
+          name="chain"
+          value={`${selectedChainId}`}
+          onValueChange={(value) => setSelectedChainId(Number(value))}
+        >
+          <SelectTrigger className="h-auto rounded-full bg-theme-neutrals-800 px-4 text-base">
+            <SelectValue>
+              {" "}
+              <span className="flex gap-2">
+                <Image
+                  src={chainIcons[selectedChainId]}
+                  alt={`${selectedChainLabel} Icon`}
+                  width={25}
+                  height={25}
+                  className="size-6"
                 />
-                <span className="text-sm">
-                  I accept the{" "}
-                  <a
-                    href="https://docs.dhb.gg/docs/terms-of-service"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-indigo-600 hover:underline"
-                  >
-                    Terms and Service
-                  </a>
-                </span>
-              </div>
+                <span>{selectedChainLabel}</span>{" "}
+              </span>
+            </SelectValue>
+          </SelectTrigger>
+
+          <SelectContent>
+            {filteredChains.map(({ chainId, label }) => (
+              <SelectItem key={chainId} value={`${chainId}`}>
+                <div className="flex items-center gap-4">
+                  <Image src={chainIcons[chainId]} alt={`${label} Icon`} width={25} height={25} />
+                  <span className="text-lg">{label}</span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Token Estimate */}
+      <div className="flex flex-wrap items-center justify-center gap-2 text-center">
+        <FaCoins />
+        <p className="text-sm">
+          You’ll receive approximately{" "}
+          <span className="font-semibold text-indigo-600">{tokensToReceive.toFixed(2)} DEHUB</span>
+        </p>
+      </div>
+
+      {/* Trigger Modal */}
+      <Button
+        onClick={openModal}
+        disabled={loading}
+        className="w-full text-base"
+        variant={"gradientOne"}
+      >
+        {loading ? "Processing..." : "Buy now"}
+      </Button>
+
+      {/* Modal */}
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="space-y-4 rounded-2xl p-8">
+          <h1 className="text-center text-3xl font-semibold">Confirm Purchase</h1>
+
+          <div className="w-full">
+            <div className="flex w-full items-center justify-between border-b border-theme-neutrals-700 py-4">
+              <p className="text-base">{selectedCurrency.toUpperCase()} Amount :</p>
+              <p className="text-base font-semibold">
+                {amount.toFixed(2)} [{selectedCurrency.toUpperCase()}]
+              </p>
             </div>
-            <DialogFooter className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowModal(false)} disabled={loading}>
-                Cancel
-              </Button>
-              <Button onClick={handleConfirmCheckout} disabled={loading}>
-                {loading ? "Processing..." : "Confirm & Pay"}
-              </Button>
-            </DialogFooter>
+            <div className="flex w-full items-center justify-between border-b border-theme-neutrals-700 py-4">
+              <p className="text-base">Approx Receive {tokenSymbol} :</p>
+              <p className="text-base font-semibold">{tokensToReceive.toFixed(2)}</p>
+            </div>
+            <div className="flex w-full items-center justify-between border-b border-theme-neutrals-700 py-4">
+              <p className="text-base">Wallet Address :</p>
+              <p className="text-base font-semibold">{miniAddress(account)}</p>
+            </div>
+            <div className="mt-6 flex items-center justify-start gap-2">
+              <Input
+                type="checkbox"
+                checked={termsAndServicesAccepted}
+                onChange={(e) => setTermsAndServicesAccepted(e.target.checked)}
+                className="h-5 w-5 bg-theme-neutrals-900 p-1"
+                name="terms"
+              />
+              <Label className="text-sm" htmlFor="terms">
+                I accept the{" "}
+                <a
+                  href="https://docs.dhb.gg/docs/terms-of-service"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-600 hover:underline"
+                >
+                  Terms and Service
+                </a>
+              </Label>
+            </div>
           </div>
+
+          <DialogFooter className="gap-4">
+            <Button
+              variant="outline"
+              onClick={() => setShowModal(false)}
+              disabled={loading}
+              className="w-full rounded-full border-theme-neutrals-700"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmCheckout}
+              disabled={loading}
+              variant="gradientOne"
+              className="w-full"
+            >
+              {loading ? "Processing..." : "Confirm & Pay"}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
   );
 };
 
-export default OrderPage;
+export default OrderForm;
