@@ -1,16 +1,13 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
 import { toast } from "sonner";
 
 import { getSupply } from "@/services/dpay";
 
-import { chainIcons, supportedTokens } from "@/configs";
-
 import TokenAndChainIcon from "./TokenAndChainIcon";
 
-const SupplyBox = () => {
+const SupplyMonitor = () => {
   const [supplyData, setSupplyData] = useState<{
     [chainId: string]: {
       [token: string]: number;
@@ -39,33 +36,35 @@ const SupplyBox = () => {
   }, [fetchSupply]);
 
   return (
-    <div className="rounded-xl  p-4 shadow-md  hover:bg-gray-50 hover:bg-opacity-5">
-      <h2 className="mb-3 text-sm font-semibold  ">📦 Token Supply Monitor</h2>
+    <div className="w-full space-y-6">
+      <h1 className="text-2xl font-medium">📦 Token Supply Monitor</h1>
 
       {Object.keys(supplyData).length === 0 ? (
         <p className="text-xs  ">Loading supply data...</p>
       ) : (
-        <div className="  flex  flex-wrap  items-start justify-center gap-3 ">
+        <div className="w-full space-y-6">
           {Object.entries(supplyData).map(([cid, tokens]) => (
-            <div key={cid} className="flex items-start gap-4">
+            <div key={cid} className="space-y-4">
               {/* Tokens inline */}
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="space-y-4">
                 {Object.entries(tokens).map(([symbol, value]) => (
                   <div
                     key={symbol}
-                    className="flex items-center gap-2 rounded bg-gray-50 bg-opacity-10  px-2 py-1 text-xs shadow-sm"
+                    className="flex w-max items-center justify-start gap-6 rounded-lg border border-theme-neutrals-700 p-6"
                   >
                     <TokenAndChainIcon chainId={Number(cid)} tokenSymbol={symbol} />
-                    <span className="font-medium  ">{symbol}</span>
-                    <span className="ml-2  ">
-                      {Number(value) === 0 ? (
-                        <span className="text-red-500">No Supply</span>
-                      ) : (
-                        Number(value).toLocaleString(undefined, {
-                          maximumFractionDigits: 4
-                        })
-                      )}
-                    </span>
+                    <p className="text-base">
+                      {symbol} :{" "}
+                      <span className="font-medium">
+                        {Number(value) === 0 ? (
+                          <span className="text-red-500">No Supply</span>
+                        ) : (
+                          Number(value).toLocaleString(undefined, {
+                            maximumFractionDigits: 4
+                          })
+                        )}
+                      </span>
+                    </p>
                   </div>
                 ))}
               </div>
@@ -77,4 +76,4 @@ const SupplyBox = () => {
   );
 };
 
-export default SupplyBox;
+export default SupplyMonitor;

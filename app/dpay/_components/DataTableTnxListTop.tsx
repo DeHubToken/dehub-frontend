@@ -14,6 +14,17 @@ import {
 } from "@tanstack/react-table";
 import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input.new";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
+
 import dayjs from "@/libs/dayjs";
 import { miniAddress } from "@/libs/strings";
 import { getExplorerUrl } from "@/libs/utils";
@@ -22,7 +33,6 @@ import { getDpayTnx } from "@/services/dpay";
 
 import { TnxData, TnxResponse } from "../types";
 import TokenAndChainIcon from "./TokenAndChainIcon";
-import { Input } from "@/components/ui/input.new";
 
 const PAGE_SIZE = 10;
 
@@ -78,7 +88,7 @@ const DataTableTnxListTop = () => {
               <span className="text-base font-semibold">
                 {Number(tx.tokenReceived ?? tx.approxTokensToReceive).toLocaleString()}
               </span>
-              <span className="text-xs font-medium">
+              <span className="text-xs font-medium text-muted-foreground">
                 ≈ {Number(tx.amount).toFixed(2)} {tx?.currency?.toUpperCase() ?? "USD"}
               </span>
             </div>
@@ -95,12 +105,12 @@ const DataTableTnxListTop = () => {
         cell: ({ row }) => {
           const tx = row.original;
           return (
-            <div>
+            <div className="flex flex-wrap gap-1">
               <span
-                className={`rounded-full bg-opacity-5 px-2 py-0.5 text-xs font-medium ${
-                  tx.status_stripe === "succeeded"   ||tx.status_stripe === "complete"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-yellow-100 text-yellow-700"
+                className={`rounded-full bg-opacity-50 px-2 py-0.5 text-xs font-medium ${
+                  tx.status_stripe === "succeeded" || tx.status_stripe === "complete"
+                    ? "bg-green-700 text-white"
+                    : "bg-yellow-700 text-yellow-100"
                 }`}
               >
                 {tx.status_stripe}
@@ -108,8 +118,8 @@ const DataTableTnxListTop = () => {
               <span
                 className={`rounded-full bg-opacity-25 px-2 py-0.5 text-xs font-medium ${
                   tx.tokenSendStatus === "sent"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-yellow-100 text-yellow-700"
+                    ? "bg-green-700 text-green-100"
+                    : "bg-yellow-700 text-yellow-100"
                 }`}
               >
                 {tx.tokenSendStatus}
@@ -184,80 +194,78 @@ const DataTableTnxListTop = () => {
   });
 
   return (
-    <div className="rounded-2xl bg-gray-50 bg-opacity-5 p-6 shadow-xl">
-      <h2 className="mb-4 text-xl font-semibold">🔄 Latest Transactions</h2>
-
+    <div className="space-y-6 rounded-2xl border border-theme-neutrals-700 p-10">
       <Input
         type="text"
         placeholder="Search by address..."
         value={globalFilter ?? ""}
         onChange={(e) => setGlobalFilter(e.target.value)}
-        className="mb-4 w-full rounded-md border border-gray-30 px-3 py-2 text-sm shadow-sm"
+        className="mb-4 w-full max-w-md"
       />
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full table-auto border-collapse text-sm">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="border-b text-left">
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="cursor-pointer py-2 pr-4"
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                    {{
-                      asc: " 🔼",
-                      desc: " 🔽"
-                    }[header.column.getIsSorted() as string] ?? null}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {loading
-              ? Array.from({ length: PAGE_SIZE }).map((_, rowIdx) => (
-                  <tr key={rowIdx} className="animate-pulse">
-                    {Array.from({ length: columns.length }).map((__, colIdx) => (
-                      <td key={colIdx} className="py-2 pr-4">
-                        <div className="h-4 w-full max-w-[100px] rounded bg-gray-300"></div>
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              : table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} className="hover:bg-gray-50 hover:bg-opacity-25">
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="py-2 pr-4">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-          </tbody>
-        </table>
-      </div>
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHead
+                  key={header.id}
+                  onClick={header.column.getToggleSortingHandler()}
+                  className="cursor-pointer select-none"
+                >
+                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  {{
+                    asc: " 🔼",
+                    desc: " 🔽"
+                  }[header.column.getIsSorted() as string] ?? null}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {loading
+            ? Array.from({ length: PAGE_SIZE }).map((_, rowIdx) => (
+                <TableRow key={rowIdx} className="animate-pulse">
+                  {Array.from({ length: columns.length }).map((__, colIdx) => (
+                    <TableCell key={colIdx}>
+                      <div className="h-10 w-full max-w-[100px] animate-pulse rounded bg-theme-neutrals-700">
+                        <p className="text-sm opacity-0">Loading</p>
+                      </div>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            : table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} className="hover:bg-muted/20">
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+        </TableBody>
+      </Table>
 
-      <div className="mt-6 flex items-center justify-between">
-        <button
+      <div className="flex items-center justify-between">
+        <Button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="rounded px-4 py-1 text-sm font-medium text-gray-500 disabled:opacity-50"
+          variant="gradientOne"
         >
           ← Prev
-        </button>
+        </Button>
         <span className="text-sm text-gray-400">
           Page {pageIndex + 1} of {table.getPageCount()}
         </span>
-        <button
+        <Button
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className="rounded px-4 py-1 text-sm font-medium text-gray-500 disabled:opacity-50"
+          variant="gradientOne"
         >
           Next →
-        </button>
+        </Button>
       </div>
     </div>
   );
