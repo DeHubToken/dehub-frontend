@@ -102,7 +102,7 @@ function WalletButton({ fixed = false }: Props) {
   const isAccountLoading = connected && !account;
 
   // if (connectLoading) {
-  //   return null; 
+  //   return null;
   // }
 
   if (!connected || !accountData || !chainData) {
@@ -112,36 +112,44 @@ function WalletButton({ fixed = false }: Props) {
         variant={isSmall && !fixed ? "ghost" : "gradientOne"}
         size={isSmall && !fixed ? "icon_sm" : "lg"}
         className={isSmall && !fixed ? "rounded-full" : "h-10 gap-2 px-6"}
-        disabled={connectLoading || isAccountLoading}
+        disabled={isAccountLoading}
       >
         <Wallet className="scale-125 text-theme-neutrals-200" />
-        {!isSmall || fixed ? (connectLoading || isAccountLoading ? "Connecting..." : "Connect") : null}
+        {!isSmall || fixed
+          ? connectLoading || isAccountLoading
+            ? "Connecting..."
+            : "Connect"
+          : null}
       </Button>
     );
   }
 
   return (
-    <div className="flex items-center gap-4">
-      <Button onClick={openChain} size="lg" className="flex items-center gap-2 rounded-full">
+    <div className="flex items-center gap-2 sm:gap-4">
+      <Button
+        onClick={openChain}
+        size="lg"
+        className="flex h-auto items-center gap-2 rounded-full px-0 sm:h-12 sm:px-12"
+      >
         {chainData.iconUrl && (
-          <div className="size-5 rounded-full" style={{ background: chainData.iconBackground }}>
+          <div className="size-6 rounded-full" style={{ background: chainData.iconBackground }}>
             <Image src={chainData.iconUrl} alt={chainData.name} width={20} height={20} />
           </div>
         )}
-        <span>
+        <span className="hidden sm:inline-block">
           {chainData.name.length > 10 ? `${chainData.name.slice(0, 10)}...` : chainData.name}
         </span>
-        <ChevronDown className="size-4" />
+        <ChevronDown className="hidden size-4 sm:block" />
       </Button>
 
       <Button
         onClick={openAccount}
         variant="gradientOne"
         size="lg"
-        className="flex items-center gap-2"
+        className="flex h-auto items-center gap-2 px-0 sm:h-12 sm:px-8"
       >
-        <div className="bg-theme-orange-500 grid place-items-center px-4">
-          {accountData.displayBalance}
+        <div className="bg-theme-orange-500 hidden place-items-center px-4 sm:grid">
+          {accountData?.displayBalance}
         </div>
         <Image
           src={
@@ -152,9 +160,11 @@ function WalletButton({ fixed = false }: Props) {
           alt="avatar"
           width={32}
           height={32}
-          className="rounded-full"
+          className="block size-6 rounded-full sm:size-8"
         />
-        <span>{user?.result.username || accountData.displayName}</span>
+        <span className="hidden sm:inline-block">
+          {user?.result.username || accountData.displayName}
+        </span>
       </Button>
 
       <Dialog open={isAccountOpen} onOpenChange={setAccountOpen}>
@@ -186,7 +196,12 @@ function WalletButton({ fixed = false }: Props) {
             <div className="text-center text-2xl font-bold text-white">
               {accountData.displayBalance}
             </div>
-            <Button onClick={onDisconnect} variant="outline" className="w-full" disabled={disconnectLoading}>
+            <Button
+              onClick={onDisconnect}
+              variant="outline"
+              className="w-full"
+              disabled={disconnectLoading}
+            >
               Disconnect
             </Button>
           </div>

@@ -11,7 +11,7 @@ import { ThemeSwitcher } from "./theme-switcher";
 
 /* ----------------------------------------------------------------------------------------------- */
 
-export const ConnectButton = dynamic(() => import("./connect-button"), {
+const ConnectButton = dynamic(() => import("./connect-button"), {
   ssr: false,
   loading: () => (
     <div className="flex size-auto items-center justify-center">
@@ -24,19 +24,19 @@ export function Navbar() {
   return (
     <nav className="fixed left-0 top-0 z-20 h-[var(--navbar-height)] max-h-[var(--navbar-height)] w-full bg-theme-neutrals-900 shadow-custom dark:bg-theme-neutrals-900">
       <div className="flex items-center justify-between px-4 py-5 sm:px-8">
-        <Link href="/" className="w-80 sm:w-32">
+        <Link href="/" className="w-40 sm:w-32">
           <Logo />
         </Link>
 
-        <div className="w-48 lg:max-w-[calc((500/16)*1rem)]">
+        <div className="hidden md:w-48 lg:max-w-[calc((500/16)*1rem)]">
           <SearchBox />
         </div>
-        <SearchModal />
 
         <div className="flex items-center justify-start gap-1 sm:gap-4">
+          <SearchModal />
           <ConnectButton label="Connect" />
           <HambMenu />
-          <ThemeSwitcher />
+          {/* <ThemeSwitcher /> */}
         </div>
       </div>
     </nav>

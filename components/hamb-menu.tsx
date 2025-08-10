@@ -348,7 +348,8 @@ function Leaderboard() {
         variant="ghost"
         className="w-full justify-start gap-4 rounded-none border-b border-theme-neutrals-800 p-8 text-theme-neutrals-200 hover:bg-theme-neutrals-600 dark:hover:bg-theme-neutrals-800"
       >
-        {status === "loading" ? "Leaderboard" : "Error"}
+        <LeaderBoardIcon className="size-4" />
+        <span className="text-sm">{status === "loading" ? "Leaderboard" : "Error"}</span>
       </Button>
     );
   }
