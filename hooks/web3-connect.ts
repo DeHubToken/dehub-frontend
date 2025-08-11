@@ -1,6 +1,8 @@
 import type { Web3AuthContextConfig } from "@web3auth/modal/react";
+
 import { useMemo } from "react";
 import { base, bsc, bscTestnet, goerli, mainnet, sepolia } from "@wagmi/chains";
+import { WEB3AUTH_NETWORK } from "@web3auth/modal";
 import {
   useWeb3Auth,
   useWeb3AuthConnect,
@@ -8,18 +10,12 @@ import {
   useWeb3AuthUser,
   Web3AuthProvider
 } from "@web3auth/modal/react";
-import {
-  createConfig,
-  useAccount
-} from "wagmi";
+import { createConfig, useAccount } from "wagmi";
 import { metaMask } from "wagmi/connectors";
 
 import { env, isDevMode } from "@/configs";
-import {
-  useWeb3AuthSigner,
-  useWeb3AuthChainId
-} from "./wagmi-ethers";
-import { WEB3AUTH_NETWORK } from "@web3auth/modal";
+
+import { useWeb3AuthChainId, useWeb3AuthSigner } from "./wagmi-ethers";
 
 // Define chains based on environment
 export const chains = isDevMode ? ([bscTestnet, goerli] as const) : ([bsc, base] as const);
@@ -27,7 +23,7 @@ export const chains = isDevMode ? ([bscTestnet, goerli] as const) : ([bsc, base]
 export const web3AuthContextConfig: Web3AuthContextConfig = {
   web3AuthOptions: {
     clientId: env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID,
-    web3AuthNetwork:  WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+    web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
     ssr: true
   }
 };
