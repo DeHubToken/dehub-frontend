@@ -12,6 +12,8 @@ import { safeParseCookie } from "@/libs/cookies";
 
 import { getNFT } from "@/services/nfts";
 
+import { getImageUrl } from "@/web3/utils/url";
+
 import { Feed } from "./components/feed";
 
 type Props = {
@@ -40,7 +42,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     response.data.result.description || `Explore the feed of NFT #${_id} on Dehub.`;
   const images: string[] = [];
   response.data.result.imageUrls?.forEach((image) => {
-    if (image) images.push(image);
+    if (image) images.push(getImageUrl(image));
   });
 
   if (images.length === 0) {

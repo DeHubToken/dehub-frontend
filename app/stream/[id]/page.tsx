@@ -10,7 +10,7 @@ import { safeParseCookie } from "@/libs/cookies";
 
 import { getNFT } from "@/services/nfts";
 
-import { getAvatarUrl } from "@/web3/utils/url";
+import { getAvatarUrl, getImageUrl } from "@/web3/utils/url";
 
 import { RecentStreams } from "./components/recent";
 import { Stream } from "./components/stream";
@@ -42,7 +42,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const minterAvatarUrl = getAvatarUrl(
     response.data.result.minterAvatarUrl || "/images/default-avatar.png"
   );
-  const streamPoster = response.data.result.imageUrl;
+  const streamPoster = getImageUrl(response.data.result.imageUrl);
 
   return {
     title: response.data.result.name || `Dehub Stream #${_id}`,
