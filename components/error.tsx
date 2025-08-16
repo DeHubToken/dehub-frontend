@@ -24,7 +24,7 @@ export function Error({ error, resetErrorBoundary, title }: ErrorBoundryProps & 
             <h3 className="font-medium text-red-600">{title || "Error loading resources"}</h3>
             <div className="mt-2 text-sm text-slate-400">
               <p>
-                This resource doesn&apos;t exist or you don&apos;t have the neccessary rights to
+                This resource doesn&apos;t exist or you don&apos;t have the necessary rights to
                 access it.
               </p>
 

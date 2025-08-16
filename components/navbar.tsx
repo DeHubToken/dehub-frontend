@@ -28,7 +28,7 @@ export function Navbar() {
           <Logo />
         </Link>
 
-        <div className="hidden md:w-48 lg:max-w-[calc((500/16)*1rem)]">
+        <div className="hidden md:w-[70%] lg:block lg:max-w-[calc((500/16)*1rem)]">
           <SearchBox />
         </div>
 

@@ -1,5 +1,3 @@
-import { cookies } from "next/headers";
-
 import { Error } from "@/components/error";
 import { ErrorBoundary } from "@/components/error-boundry";
 
@@ -12,8 +10,6 @@ type Props = {
 
 export default async function Page(props: Props) {
   const { streamId } = props.params;
-  const cookie = cookies();
-  const userCookie = cookie.get("user_information");
 
   return (
     <div className="container mx-auto flex h-auto min-h-screen w-full flex-col items-start justify-start xl:flex xl:flex-row xl:justify-between">
