@@ -303,7 +303,7 @@ const groups = [
         id: "contact",
         name: "Contact",
         icon: <Contact className="size-6" />,
-        url: () => "https://t.me/dehubportal",
+        url: () => "https://t.me/dehub_dhb",
         external: true
       }
     ] as Link[]

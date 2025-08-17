@@ -24,6 +24,7 @@ import { CheckCircle } from "@/components/icons/check-circle";
 import CrossCircled from "@/components/icons/cross-circled";
 import { Pound } from "@/components/icons/pound";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -44,7 +45,6 @@ import { chainIcons, ChainId, durations, SB_ADDRESS, supportedTokens } from "@/c
 
 import PublishOnChain from "./publish-on-chain";
 import { SubscriptionModalPreView } from "./subscription-preview";
-import { Input } from "@/components/ui/input";
 
 type FormValues = {
   tier: {
@@ -166,10 +166,10 @@ export default function Form({ plan, getTiers }: any) {
                 <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
                   <h1 className="text-xl">Tiers Name</h1>
                 </div>
-                <div className="w-full   max-w-full flex-[0_0_100%] sm:max-w-[70%]  bg-theme-background ">
+                <div className="w-full   max-w-full flex-[0_0_100%] bg-theme-background  sm:max-w-[70%] ">
                   <input
                     placeholder="Basic tier"
-                    className=" w-full border-none bg-theme-neutrals-900 px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
+                    className=" w-full border-none bg-transparent px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
                     {...register(`tier.name`, { required: "Tier Name is Required" })}
                   />
                   {errors.tier?.name?.message && (
@@ -186,10 +186,10 @@ export default function Form({ plan, getTiers }: any) {
                 <div className="w-full max-w-full flex-[0_0_100%] border-r border-gray-300/25 bg-gray-400/10 p-6 sm:max-w-[30%] sm:flex-[0_0_30%]">
                   <h1 className="text-xl">Description</h1>
                 </div>
-                <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%] bg-theme-background">
+                <div className="w-full max-w-full flex-[0_0_100%] bg-theme-background sm:max-w-[70%] sm:flex-[0_0_70%]">
                   <textarea
                     placeholder="tier description here"
-                    className="  w-full resize-none border-none bg-theme-neutrals-900 px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0"
+                    className="  w-full resize-none border-none bg-transparent px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0"
                     rows={2}
                     {...register(`tier.description`, {
                       required: "Tier Description Is Required"
@@ -257,7 +257,7 @@ export const SetDuration = ({
         const currentDuration = durations.find((d) => d.value === field.value); // Find the duration object by value
 
         return (
-          <div className="flex w-full max-w-full flex-[0_0_100%] items-center justify-between pl-8 sm:max-w-[70%] sm:flex-[0_0_70%] bg-theme-background">
+          <div className="flex w-full max-w-full flex-[0_0_100%] items-center justify-between bg-theme-background pl-8 sm:max-w-[70%] sm:flex-[0_0_70%]">
             <p className="text-lg">{currentDuration?.title}</p>
             <div className="flex items-center justify-end gap-1">
               <Button
@@ -309,18 +309,18 @@ export function BenefitList({ control, tierIndex }: any) {
   });
 
   return (
-    <div className="w-full max-w-full flex-[0_0_100%] sm:max-w-[70%] sm:flex-[0_0_70%]  bg-theme-background">
+    <div className="w-full max-w-full flex-[0_0_100%] bg-theme-background sm:max-w-[70%]  sm:flex-[0_0_70%]">
       <div className="ml-3 mt-3 flex flex-wrap gap-5">
         {benefitFields.map((field: { id: string; value: string }, n: number) => (
           <div
             key={field.id}
-            className="relative flex select-none justify-center gap-1 rounded-lg bg-theme-background px-8 py-6  text-lg text-gray-500 outline-none sm:py-2"
+            className="relative flex select-none items-center justify-center gap-1 rounded-lg bg-neutral-950 px-8 py-6 text-lg text-gray-500 outline-none sm:py-2"
           >
             <CheckCircle className=" absolute left-1" />
             {field.value}
             <span
               onClick={() => removeBenefit(n)}
-              className="absolute -top-2 right-1 cursor-pointer text-red-600"
+              className="absolute -right-1 -top-1 cursor-pointer text-red-600"
             >
               <CrossCircled />
             </span>
@@ -332,7 +332,7 @@ export function BenefitList({ control, tierIndex }: any) {
           onChange={(e) => setBenefit(e.target.value)}
           value={benefit}
           maxLength={100}
-          className="h-full border-none bg-theme-neutrals-900 px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
+          className="h-full border-none bg-transparent px-8 py-6 text-lg outline-none placeholder:text-gray-500 focus:ring-0 sm:py-2"
         />
       </div>
 
