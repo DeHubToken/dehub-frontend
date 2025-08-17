@@ -22,9 +22,9 @@ export function NotLinkedAccount() {
   };
 
   return (
-    <div className="flex h-auto min-h-screen w-full items-center justify-center px-8 py-28">
+    <div className="flex h-[calc(100vh-7rem)] w-full items-center justify-center px-8 py-28">
       <div className="flex h-auto w-full flex-col items-center justify-center gap-6 text-center">
-        <h1 className="font-tanker text-6xl">PROFILE NOT LINKED</h1>
+        <h1 className="font-exo_2 text-6xl">Profile not linked</h1>
         <ConnectButton />
         <button className="hidden" onClick={handleAuth}>
           <p className="text-lg">Skip for now</p>
