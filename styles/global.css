@@ -1,9 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300..900&family=Exo:ital,wght@0,100..900;1,100..900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    --font-exo: "Exo", sans-serif;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -253,9 +257,18 @@ body {
   @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent;
 }
 
-.side_menu{ height: calc(100vh - 150px);}
-.prof_le{ position:relative !important; width: 20px !important; height: 20px !important;}
-input:focus, select:focus{ box-shadow: none !important;}
+.side_menu {
+  height: calc(100vh - 150px);
+}
+.prof_le {
+  position: relative !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+input:focus,
+select:focus {
+  box-shadow: none !important;
+}
 
 .respon_sive_tabs button {
   padding: 7px 8px !important;
@@ -269,17 +282,31 @@ input:focus, select:focus{ box-shadow: none !important;}
 } */
 
 @media (max-width: 600px) {
-.input_Row{gap: 5px !important; padding: 0 10px !important; height: 54px !important;}
+  .input_Row {
+    gap: 5px !important;
+    padding: 0 10px !important;
+    height: 54px !important;
+  }
 
-
-.input_Row select{font-size: 16px !important;
-  padding: 0 19px 0px 0 !important;
-  background-position: 111% center !important;}
-  .input_Row .sub_t{ font-size: 18px; width: 70px;}
-  .input_Row  input{ height: 51px !important;}
-  .contain_er{ padding:50px 0px !important; margin: 0px !important;}
+  .input_Row select {
+    font-size: 16px !important;
+    padding: 0 19px 0px 0 !important;
+    background-position: 111% center !important;
+  }
+  .input_Row .sub_t {
+    font-size: 18px;
+    width: 70px;
+  }
+  .input_Row input {
+    height: 51px !important;
+  }
+  .contain_er {
+    padding: 50px 0px !important;
+    margin: 0px !important;
+  }
   .respon_sive_tabs button {
-    padding: 7px 4px !important; font-size: 12px;
+    padding: 7px 4px !important;
+    font-size: 12px;
   }
   .max_wdth {
     max-width: 1000px !important;

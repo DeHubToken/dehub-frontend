@@ -118,7 +118,7 @@ const groups = [
         id: "subs",
         name: "Subs",
         icon: <Subs className="size-6" />,
-        url: () => "/plans"
+        url: () => "/subscriptions"
       },
       {
         id: "followed",
@@ -201,7 +201,13 @@ const groups = [
         id: "post",
         name: "Post",
         icon: <Post className="size-6" />,
-        url: () => "/subscriptions"
+        url: () => {
+          const query = new URLSearchParams();
+          query.set("type", "feed");
+          query.delete("q");
+          const qs = query.toString();
+          return `/?${qs}`;
+        }
       }
     ] as Link[]
   },
@@ -246,24 +252,24 @@ const groups = [
         icon: <MyUploads className="size-6" />,
         url: () => "/me/my-uploads"
       },
-      {
-        id: "my-saved",
-        name: "Saved Feeds",
-        icon: <MyUploads className="size-6" />,
-        url: () => "?type=feed&saved"
-      },
+      //   {
+      //     id: "my-saved",
+      //     name: "Saved Feeds",
+      //     icon: <MyUploads className="size-6" />,
+      //     url: () => "?type=feed&saved"
+      //   },
       {
         id: "my-playlists",
         name: "My Playlists",
         icon: <Playlist className="size-6" />,
         url: () => "/me/playlist"
       },
-      {
-        id: "liked",
-        name: "Liked",
-        icon: <Liked className="size-6" />,
-        url: () => "/me/collections"
-      },
+      //   {
+      //     id: "liked",
+      //     name: "Liked",
+      //     icon: <Liked className="size-6" />,
+      //     url: () => "/me/collections"
+      //   },
       {
         id: "marked",
         name: "Marked",
@@ -277,7 +283,7 @@ const groups = [
     links: [
       {
         id: "xa",
-        name: "XA",
+        name: "Stake",
         icon: <XA className="size-6" />,
         url: () => "/staking"
       },
