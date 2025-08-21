@@ -341,7 +341,7 @@ export function Sidebar(props: Props) {
     >
       <div className="flex w-full flex-col pb-40">
         {groups.map((group, index) => (
-          <div key={group.label} className={cn(index !== 0 ? "py-5" : "")}>
+          <div key={index} className={cn(index !== 0 ? "py-5" : "")}>
             {group.links.map((link) => {
               const isActive = type?.toLowerCase() === link.id.toLowerCase();
 

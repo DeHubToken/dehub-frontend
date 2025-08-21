@@ -184,6 +184,7 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
                 "border-red-600 focus-within:border-red-600 focus-within:shadow-none focus:border-red-600 focus:shadow-none"
             )}
             placeholder="Type.."
+            {...commentForm.register("comment")}
           />
           <Button type="button" className="h-10 rounded-full">
             <VideoChat />
