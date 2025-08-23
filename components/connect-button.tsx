@@ -199,7 +199,7 @@ function WalletButton({ fixed = false }: Props) {
             </div>
             <Button
               onClick={onDisconnect}
-              variant="outline"
+              variant="gradientOne"
               className="w-full"
               disabled={disconnectLoading}
             >
