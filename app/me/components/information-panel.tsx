@@ -30,19 +30,19 @@ export function InformationPanel(props: Props) {
         <div className="size-auto space-y-2">
           <div className="relative flex size-auto items-start justify-start gap-0 sm:items-start sm:gap-2">
             <h1 className="flex gap-2 text-2xl font-semibold sm:w-auto">
-              {user.displayName || user?.username || "No name"}{" "}
+              {user.displayName || user?.username || "No name"} <br />
               {user.displayName && <span className="text-sm">({user?.username})</span>}{" "}
-              <Image
-                src={getBadgeUrl(maxStaked, theme)}
-                alt="User Badge"
-                layout="fill"
-                className={`prof_le object-contain ${
-                  isUserOnline(user.address)
-                    ? "" // TODO: Add glow effect for when they are online
-                    : ""
-                }`}
-              />
             </h1>
+            <Image
+              src={getBadgeUrl(maxStaked, theme)}
+              alt="User Badge"
+              layout="fill"
+              className={`size-6 rounded-full bg-white object-contain p-1 ${
+                isUserOnline(user.address)
+                  ? "" // TODO: Add glow effect for when they are online
+                  : ""
+              }`}
+            />
           </div>
 
           <p className="text-sm">{miniAddress(user?.address)}</p>

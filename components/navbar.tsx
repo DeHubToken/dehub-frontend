@@ -36,7 +36,7 @@ export function Navbar() {
           <SearchModal />
           <ConnectButton label="Connect" />
           <HambMenu />
-          {/* <ThemeSwitcher /> */}
+          <ThemeSwitcher />
         </div>
       </div>
     </nav>
