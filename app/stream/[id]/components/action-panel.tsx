@@ -2,15 +2,18 @@
 
 import type { NFT } from "@/services/nfts";
 
-import { useTheme } from "next-themes";
+import Link from "next/link";
+import { Info } from "lucide-react";
 
 import { SubscriptionModal } from "@/app/(user)/[username]/components/subscription-modal";
 
 import { ThumbsDown, ThumbsUp } from "@/components/icons/thumbs-up";
+import { Button } from "@/components/ui/button";
 
 import { useWebSockets } from "@/contexts/websocket";
 
 import { getBadgeUrl } from "@/web3/utils/calc";
+import { getTransactionLink } from "@/web3/utils/format";
 
 import { streamInfoKeys } from "@/configs";
 
@@ -43,7 +46,16 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
         <TipModal tokenId={tokenId} to={nft.minter} />
         <ClaimAsViewer nft={nft} tokenId={tokenId} />
         <ClaimAsCommentor nft={nft} tokenId={tokenId} />
-        <div className="absolute right-0 top-0 size-auto sm:hidden">
+        <div className="absolute right-0 top-0 flex size-auto items-center gap-2 sm:hidden">
+          <Button size="icon" className="rounded-full" asChild>
+            <Link
+              href={`${getTransactionLink(nft.chainId, nft.mintTxHash)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Info className="size-4" />
+            </Link>
+          </Button>
           <Share />
         </div>
       </div>
@@ -61,7 +73,16 @@ export function ActionPanel(props: { nft: NFT; tokenId: number }) {
           </p>
         )}
 
-        <div className="hidden size-auto sm:block">
+        <div className="hidden size-auto items-center gap-2 sm:flex">
+          <Button size="icon" className="rounded-full" asChild>
+            <Link
+              href={`${getTransactionLink(nft.chainId, nft.mintTxHash)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Info className="size-4" />
+            </Link>
+          </Button>
           <Share />
         </div>
       </div>
