@@ -29,15 +29,14 @@ export function InformationPanel(props: Props) {
       <div className="flex size-auto flex-col items-start justify-start gap-8">
         <div className="size-auto space-y-2">
           <div className="relative flex size-auto items-start justify-start gap-0 sm:items-start sm:gap-2">
-            <h1 className="flex gap-2 text-2xl font-semibold sm:w-auto">
+            <h1 className="flex flex-col gap-2 text-2xl font-semibold sm:w-auto">
               {user.displayName || user?.username || "No name"} <br />
               {user.displayName && <span className="text-sm">({user?.username})</span>}{" "}
             </h1>
             <Image
               src={getBadgeUrl(maxStaked, theme)}
               alt="User Badge"
-              layout="fill"
-              className={`size-6 rounded-full bg-white object-contain p-1 ${
+              className={`size-6 object-contain ${
                 isUserOnline(user.address)
                   ? "" // TODO: Add glow effect for when they are online
                   : ""

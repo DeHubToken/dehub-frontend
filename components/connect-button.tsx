@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useSwitchChain, useWeb3AuthUser } from "@web3auth/modal/react";
 import { useSetAtom } from "jotai";
@@ -114,7 +115,7 @@ function WalletButton({ fixed = false }: Props) {
         className={isSmall && !fixed ? "rounded-full" : "h-10 gap-2 px-6"}
         disabled={isAccountLoading}
       >
-        <Wallet className="scale-125 text-theme-neutrals-200" />
+        <Wallet className="scale-125 text-white" />
         {!isSmall || fixed
           ? connectLoading || isAccountLoading
             ? "Connecting..."
@@ -168,13 +169,13 @@ function WalletButton({ fixed = false }: Props) {
       </Button>
 
       <Dialog open={isAccountOpen} onOpenChange={setAccountOpen}>
-        <DialogContent className="w-[480px] rounded-2xl border bg-[#1a1b1f]">
+        <DialogContent className="w-[480px] rounded-2xl bg-[#1a1b1f] text-white">
           <DialogClose className="absolute right-4 top-4">
             <Cross2Icon />
           </DialogClose>
           <DialogHeader>Account</DialogHeader>
           <div className="space-y-4 p-4">
-            <div className="flex items-center gap-3">
+            <Link href="/me" className="flex items-center gap-3">
               <Image
                 src={
                   user?.result.avatarImageUrl
@@ -192,7 +193,7 @@ function WalletButton({ fixed = false }: Props) {
                 </div>
                 <div className="text-sm text-gray-400">{accountData.address}</div>
               </div>
-            </div>
+            </Link>
             <div className="text-center text-2xl font-bold text-white">
               {accountData.displayBalance}
             </div>
@@ -209,7 +210,7 @@ function WalletButton({ fixed = false }: Props) {
       </Dialog>
 
       <Dialog open={isChainOpen} onOpenChange={setChainOpen}>
-        <DialogContent className="max-w-xs rounded-xl border bg-[#1a1b1f]">
+        <DialogContent className="max-w-xs rounded-xl bg-[#1a1b1f] text-white">
           <DialogClose className="absolute right-4 top-4">
             <Cross2Icon />
           </DialogClose>
