@@ -207,7 +207,7 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
         </div>
         <div className="mt-4 flex flex-col gap-6">
           {nft.comments.map((comment) => (
-            <div key={comment.id} className="flex w-full flex-col items-end justify-start gap-4">
+            <div key={comment.id} className="flex w-full flex-col items-end justify-start gap-2">
               <div className="flex h-auto w-full items-start justify-start gap-4 sm:p-5">
                 <Link
                   href={`/${comment.writor?.username || comment.address}`}
@@ -248,14 +248,14 @@ export function CommentsPanel(props: { nft: NFT; tokenId: number }) {
                   return (
                     <div
                       key={reply.id}
-                      className="flex h-auto w-full items-start justify-start gap-4 rounded-xl bg-theme-mine-shaft-dark p-3 dark:bg-theme-mine-shaft-dark sm:w-[calc(100%-5rem)]"
+                      className="flex h-auto w-full items-start justify-start gap-4 rounded-xl bg-theme-neutrals-800 p-3 dark:bg-theme-neutrals-800/50 sm:w-[calc(100%-4rem)]"
                     >
                       <Link
                         href={`/${reply.writor?.username || reply.address}`}
-                        className="size-12 overflow-hidden rounded-full"
+                        className="size-8 overflow-hidden rounded-full"
                       >
-                        <Avatar>
-                          <AvatarFallback className="bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark">
+                        <Avatar className="size-full">
+                          <AvatarFallback className="size-full bg-theme-mine-shaft-dark dark:bg-theme-mine-shaft-dark">
                             {createAvatarName(comment.writor?.username).toUpperCase()}
                           </AvatarFallback>
                           <AvatarImage

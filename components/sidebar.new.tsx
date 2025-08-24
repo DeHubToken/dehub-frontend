@@ -75,7 +75,9 @@ function SidebarLinkButton({
               "w-full cursor-pointer justify-center gap-2 px-8 py-6 text-base text-theme-neutrals-200 hover:bg-transparent hover:text-theme-neutrals-200 lg:justify-start",
               props.className
             )}
-          />
+          >
+            {props.children}
+          </Button>
         </TooltipTrigger>
         <TooltipContent className="font-tanker text-sm" side={name === "home" ? "right" : "top"}>
           {name}

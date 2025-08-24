@@ -100,7 +100,7 @@ export function FeedRangeFilterMobile(props: Props) {
         className="text-theme-monochrome-300 flex flex-col items-start gap-5 rounded-t-2xl border-none bg-background px-0 pb-0 pt-14"
       >
         {/* hidden parts */}
-        <div className="absolute -top-1 left-1/2 h-2 w-20 -translate-x-1/2 rounded-md bg-theme-mine-shaft dark:bg-theme-mine-shaft" />
+        <div className="absolute -top-1 left-1/2 h-2 w-20 -translate-x-1/2 rounded-md bg-theme-neutrals-700" />
         <SheetHeader className="hidden">
           <SheetDescription className="hidden" />
         </SheetHeader>
@@ -110,7 +110,7 @@ export function FeedRangeFilterMobile(props: Props) {
           <h1 className="text-theme-monochrome-300 text-2xl font-medium">Sort by</h1>
 
           <select
-            className="w-full rounded-full border-none bg-theme-mine-shaft-dark py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
+            className="w-full rounded-full border-none bg-theme-neutrals-800 py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
             value={sort}
             onChange={(e) => setSort(e.target.value)}
           >
@@ -124,7 +124,7 @@ export function FeedRangeFilterMobile(props: Props) {
           <h1 className="text-theme-monochrome-300 text-2xl font-medium">Date</h1>
 
           <select
-            className="w-full rounded-full border-none bg-theme-mine-shaft-dark py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
+            className="w-full rounded-full border-none bg-theme-neutrals-800 py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           >
@@ -140,7 +140,7 @@ export function FeedRangeFilterMobile(props: Props) {
           <h1 className="text-theme-monochrome-300 text-2xl font-medium">Type</h1>
 
           <select
-            className="w-full rounded-full border-none bg-theme-mine-shaft-dark py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
+            className="w-full rounded-full border-none bg-theme-neutrals-800 py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
@@ -157,7 +157,7 @@ export function FeedRangeFilterMobile(props: Props) {
           <h1 className="text-theme-monochrome-300 text-2xl font-medium">Category</h1>
 
           <select
-            className="w-full rounded-full border-none bg-theme-mine-shaft-dark py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
+            className="w-full rounded-full border-none bg-theme-neutrals-800 py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -174,7 +174,7 @@ export function FeedRangeFilterMobile(props: Props) {
           <h1 className="text-theme-monochrome-300 text-2xl font-medium">Format</h1>
 
           <select
-            className="w-full rounded-full border-none bg-theme-mine-shaft-dark py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
+            className="w-full rounded-full border-none bg-theme-neutrals-800 py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
             value="All"
           >
             <option value="All">All</option>
@@ -188,7 +188,7 @@ export function FeedRangeFilterMobile(props: Props) {
           <h1 className="text-theme-monochrome-300 text-2xl font-medium">Quality</h1>
 
           <select
-            className="w-full rounded-full border-none bg-theme-mine-shaft-dark py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
+            className="w-full rounded-full border-none bg-theme-neutrals-800 py-2 pl-5 text-lg placeholder:text-muted-foreground dark:bg-theme-mine-shaft"
             value="All"
           >
             <option value="All">All</option>
@@ -218,7 +218,7 @@ export function FeedRangeFilterMobile(props: Props) {
         </SheetFooter>
 
         {/* hider */}
-        <div className="absolute right-3 top-3 z-[2] size-6 bg-theme-mine-shaft-dark" />
+        <div className="absolute right-3 top-3 z-[2] size-6 bg-background dark:bg-theme-mine-shaft-dark" />
       </SheetContent>
     </Sheet>
   );

@@ -15,10 +15,10 @@ import { Button } from "../ui/button";
 export default function ComingSoonModal({ icon, name }: { icon: React.ReactNode; name: string }) {
   return (
     <Dialog>
-      <DialogTrigger>
-        <TooltipProvider>
-          <Tooltip delayDuration={0}>
-            <TooltipTrigger className="w-full">
+      <TooltipProvider>
+        <Tooltip delayDuration={0}>
+          <DialogTrigger asChild>
+            <TooltipTrigger className="w-full" asChild>
               <Button
                 asChild
                 variant="ghost"
@@ -27,10 +27,10 @@ export default function ComingSoonModal({ icon, name }: { icon: React.ReactNode;
                 {icon}
               </Button>
             </TooltipTrigger>
-            <TooltipContent className="font-tanker text-sm capitalize">{name}</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </DialogTrigger>
+          </DialogTrigger>
+          <TooltipContent className="font-tanker text-sm capitalize">{name}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <DialogContent>
         <DialogHeader className="gap-4">
           <DialogTitle className="text-3xl">Coming Soon!</DialogTitle>
