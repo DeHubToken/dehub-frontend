@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
 
-import { Exo_2 } from "next/font/google";
-import localFont from "next/font/local";
-
 import "react-loading-skeleton/dist/skeleton.css";
 import "react-image-crop/dist/ReactCrop.css";
 import "jotai-devtools/styles.css";
 import "@/styles/global.css";
 
+import { headers } from "next/headers";
+import { cookieToWeb3AuthState } from "@web3auth/modal";
+
 import { Layout } from "@/components/layout";
-// import { NoticeModal } from "@/components/modals/notice";
 import { ProgressBar } from "@/components/progress";
 import Providers from "@/components/providers";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
@@ -20,44 +19,17 @@ import { Toaster as Toast } from "@/components/ui/toaster";
 import { AvatarWalletProvider } from "@/contexts/avatar-wallet";
 import { WebsocketProvider } from "@/contexts/websocket";
 
-
 import { env } from "@/configs";
 
 import { StreamProvider } from "./components/stream-provider";
-import { cookieToWeb3AuthState } from "@web3auth/modal";
-import { headers } from "next/headers";
-
-/**
- * Next.js font optimization
- * Docs: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts#with-tailwind-css
- **/
-
-/** Exo 2 google font: https://fonts.google.com/specimen/Exo+2?vfquery=exo+2 */
-const exo_2 = Exo_2({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  display: "swap",
-  variable: "--font-exo2"
-});
-
-/** Tanker local font: https://www.fontshare.com/?q=Tanker */
-const tanker = localFont({
-  src: "../public/fonts/tanker.woff2",
-  display: "swap",
-  variable: "--font-tanker"
-});
-
-const fontVariables = `${exo_2.variable} ${tanker.variable}`;
 
 /* ------------------------------------------------------------------------------------------ */
 
 type Props = { children: React.ReactNode };
 
-export default async function RootLayout({ children }: Props) {
-
-  const headersList = await headers();
-  const web3authInitialState = cookieToWeb3AuthState(headersList.get('cookie'));
+export default function RootLayout({ children }: Props) {
+  const headersList = headers();
+  const web3authInitialState = cookieToWeb3AuthState(headersList.get("cookie"));
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -65,7 +37,6 @@ export default async function RootLayout({ children }: Props) {
         <Toaster />
         <Toast />
         <ProgressBar />
-        {/* <NoticeModal /> */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -73,14 +44,14 @@ export default async function RootLayout({ children }: Props) {
           disableTransitionOnChange
         >
           <Providers web3authInitialState={web3authInitialState}>
-              <AvatarWalletProvider>
-                <WebsocketProvider>
-                  <StreamProvider>
-                    <TailwindIndicator />
-                    <Layout>{children}</Layout>
-                  </StreamProvider>
-                </WebsocketProvider>
-              </AvatarWalletProvider>
+            <AvatarWalletProvider>
+              <WebsocketProvider>
+                <StreamProvider>
+                  <TailwindIndicator />
+                  <Layout>{children}</Layout>
+                </StreamProvider>
+              </WebsocketProvider>
+            </AvatarWalletProvider>
           </Providers>
         </ThemeProvider>
         <TailwindIndicator />

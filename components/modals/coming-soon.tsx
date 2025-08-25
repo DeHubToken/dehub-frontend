@@ -20,7 +20,6 @@ export default function ComingSoonModal({ icon, name }: { icon: React.ReactNode;
           <DialogTrigger asChild>
             <TooltipTrigger className="w-full" asChild>
               <Button
-                asChild
                 variant="ghost"
                 className="w-full cursor-pointer justify-center gap-2 px-8 py-6 text-base text-theme-neutrals-200 hover:bg-transparent hover:text-theme-neutrals-200 lg:justify-start"
               >
