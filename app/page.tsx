@@ -29,7 +29,7 @@ export default async function Page(props: Props) {
   const { category, range, type, q, sort } = props.searchParams;
 
   if (!type) {
-    return redirect(`/?type=letast`);
+    return redirect(`/?type=latest`);
   }
 
   const key = category + "-" + range + "-" + type + "-" + q;
