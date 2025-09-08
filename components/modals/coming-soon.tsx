@@ -12,7 +12,15 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 
 import { Button } from "../ui/button";
 
-export default function ComingSoonModal({ icon, name }: { icon: React.ReactNode; name: string }) {
+export default function ComingSoonModal({
+  icon,
+  name,
+  children
+}: {
+  icon: React.ReactNode;
+  name: string;
+  children?: React.ReactNode;
+}) {
   return (
     <Dialog>
       <TooltipProvider>
@@ -24,6 +32,7 @@ export default function ComingSoonModal({ icon, name }: { icon: React.ReactNode;
                 className="w-full cursor-pointer justify-center gap-2 px-8 py-6 text-base text-theme-neutrals-200 hover:bg-transparent hover:text-theme-neutrals-200 lg:justify-start"
               >
                 {icon}
+                {children}
               </Button>
             </TooltipTrigger>
           </DialogTrigger>
