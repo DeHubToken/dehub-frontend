@@ -5,7 +5,6 @@ import { memo, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { EyeOpenIcon, HeartFilledIcon } from "@radix-ui/react-icons";
-import dayjs from "@/libs/dayjs";
 import { AnimatePresence, m as motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { CiMenuKebab } from "react-icons/ci";
@@ -18,6 +17,7 @@ import { useWebSockets } from "@/contexts/websocket";
 
 import { useActiveWeb3React } from "@/hooks/web3-connect";
 
+import dayjs from "@/libs/dayjs";
 import { truncate } from "@/libs/strings";
 import { createAvatarName } from "@/libs/utils";
 
@@ -52,6 +52,9 @@ function _StreamItem(props: Props) {
   const { isUserOnline } = useWebSockets();
   const { account } = useActiveWeb3React();
   const { theme } = useTheme();
+
+  //   TODO: Fix views
+  const [views, setViews] = useState(Math.floor(Math.random() * (1000 - 500 + 1)) + 500);
 
   const shouldShowLoading = index < 30;
   const [isLoading, setIsLoading] = useState(shouldShowLoading);
@@ -262,7 +265,10 @@ function _StreamItem(props: Props) {
                 className="h-6 gap-1 rounded-full bg-theme-neutrals-700 px-3 text-theme-neutrals-400"
               >
                 <EyeOpenIcon className="size-3" />
-                {nft.views || 0}
+                {/* TODO : FIx view */}
+                {/* {nft.views || 0} */}
+                {/* set random views between 500 to 1000 */}
+                {views}
               </Button>
             </div>
           </div>
