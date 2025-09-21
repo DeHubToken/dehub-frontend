@@ -340,11 +340,11 @@ export function Sidebar(props: Props) {
       data-collapsible={state === "collapsed" ? "offcanvas" : ""}
       data-side="left"
       className={cn(
-        "group sticky left-0 top-[calc(var(--navbar-height)+24px)] h-screen w-auto overflow-hidden overflow-y-scroll",
-        "flex flex-col transition-[width] duration-200 ease-linear",
+        "group fixed bottom-0 left-0 top-[calc(var(--navbar-height))] h-screen w-auto overflow-hidden overflow-y-scroll",
+        "z-50 flex flex-col bg-theme-neutrals-900 transition-[width] duration-200 ease-linear",
         !open
           ? "min-w-[calc((88/16)*1rem)] max-w-[calc((88/16)*1rem)]"
-          : "min-w-[calc((200/16)*1rem)] max-w-[calc((200/16)*1rem)]",
+          : "min-w-[calc((200/16)*1rem)] max-w-[calc((200/16)*1rem)] shadow-lg",
         props.className
       )}
     >
