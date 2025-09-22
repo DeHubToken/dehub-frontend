@@ -54,7 +54,23 @@ function _StreamItem(props: Props) {
   const { theme } = useTheme();
 
   //   TODO: Fix views
-  const [views, setViews] = useState(Math.floor(Math.random() * (1000 - 500 + 1)) + 500);
+  let views = nft.views ?? 0;
+  if (views > 1500) {
+    const additionalViews = Math.floor(views * (Math.random() * (0.05 - 0.02) + 0.02));
+    views += additionalViews;
+  } else if (views > 1000) {
+    const additionalViews = Math.floor(views * (Math.random() * (0.1 - 0.05) + 0.05));
+    views += additionalViews;
+  } else if (views > 500) {
+    const additionalViews = Math.floor(views * (Math.random() * (0.2 - 0.1) + 0.1));
+    views += additionalViews;
+  } else if (views > 100) {
+    const additionalViews = Math.floor(views * (Math.random() * (0.5 - 0.2) + 0.2));
+    views += additionalViews;
+  } else if (views > 10) {
+    const additionalViews = Math.floor(views * (Math.random() * (1 - 0.5) + 0.5));
+    views += additionalViews;
+  }
 
   const shouldShowLoading = index < 30;
   const [isLoading, setIsLoading] = useState(shouldShowLoading);
