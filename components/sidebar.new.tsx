@@ -318,6 +318,8 @@ export function Sidebar(props: Props) {
   const { account, library } = useActiveWeb3React();
   const [leaderBoard, setLeaderBoard] = useState<any>([]);
   const [openLeaderBoard, setOpenLeaderBoard] = useState(false);
+  const [open, setOpen] = useState(false);
+  const state = open ? "expanded" : "collapsed";
 
   function handleClick(link: Link) {
     if (link.name === "Track") setOpenLeaderBoard(true);
@@ -334,13 +336,32 @@ export function Sidebar(props: Props) {
   return (
     <div
       {...props}
+      data-state={state}
+      data-collapsible={state === "collapsed" ? "offcanvas" : ""}
+      data-side="left"
       className={cn(
-        "sticky left-0 top-[calc(var(--navbar-height)+24px)] h-screen w-auto overflow-hidden overflow-y-scroll",
-        "min-w-[calc((88/16)*1rem)] max-w-[calc((88/16)*1rem)]",
-        "flex flex-col",
+        "group fixed bottom-0 left-0 top-[calc(var(--navbar-height))] h-screen w-auto overflow-hidden overflow-y-scroll",
+        "z-50 flex flex-col bg-theme-neutrals-900 transition-[width] duration-200 ease-linear",
+        !open
+          ? "min-w-[calc((88/16)*1rem)] max-w-[calc((88/16)*1rem)]"
+          : "min-w-[calc((200/16)*1rem)] max-w-[calc((200/16)*1rem)] shadow-lg",
         props.className
       )}
     >
+      <button
+        data-sidebar="rail"
+        data-slot="sidebar-rail"
+        aria-label="Toggle Sidebar"
+        tabIndex={-1}
+        title="Toggle Sidebar"
+        onClick={() => setOpen(!open)}
+        className={cn(
+          "in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize",
+          "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
+          "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-theme-mine-shaft-dark group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex",
+          "bg-theme-neutrals-900 hover:bg-theme-neutrals-800 dark:bg-theme-neutrals-900 dark:hover:bg-theme-neutrals-800"
+        )}
+      />
       <div className="flex w-full flex-col pb-40">
         {groups.map((group, index) => (
           <div key={index} className={cn(index !== 0 ? "py-5" : "")}>
@@ -366,13 +387,18 @@ export function Sidebar(props: Props) {
                         className="relative"
                       >
                         {link.icon}
+                        {open && link.name}
                       </Link>
                     </SidebarLinkButton>
                   );
                 }
 
                 if (link.soon) {
-                  return <ComingSoonModal icon={link.icon} name={link.id} />;
+                  return (
+                    <ComingSoonModal icon={link.icon} name={link.id}>
+                      {open && link.name}
+                    </ComingSoonModal>
+                  );
                 }
 
                 return (
@@ -389,6 +415,7 @@ export function Sidebar(props: Props) {
                       className="relative"
                     >
                       {link.icon}
+                      {open && link.name}
                     </Link>
                   </SidebarLinkButton>
                 );
@@ -404,6 +431,7 @@ export function Sidebar(props: Props) {
                   name={link.name}
                 >
                   {link.icon}
+                  {open && link.name}
                 </SidebarLinkButton>
               );
             })}

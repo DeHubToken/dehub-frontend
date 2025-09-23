@@ -35,7 +35,7 @@ export async function TabPanel(props: Props) {
   }
 
   return (
-    <div className="sticky right-0 top-[calc(var(--navbar-height)+24px)] hidden w-full max-w-[var(--leaderboard-width)] items-start justify-start pr-3 lg:flex lg:flex-col lg:gap-3">
+    <div className="sticky right-0 top-[calc(var(--navbar-height)+24px)] hidden w-full max-w-[var(--leaderboard-width)] items-start justify-start bg-theme-neutrals-900 pr-3 lg:flex lg:flex-col lg:gap-3">
       <Tabs defaultValue={defaultValue} className="w-full">
         <TabsList className="w-full justify-between">
           {tabs.map((tab) => (
