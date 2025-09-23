@@ -189,7 +189,7 @@ function Topup() {
       <DropdownMenuContent className="w-32">
         <DropdownMenuItem asChild>
           <a
-            href="https://app.camelot.exchange/?outputCurrency=0x9caae40dcf950afea443119e51e821d6fe2437ca"
+            href="https://app.uniswap.org/swap?outputCurrency=0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c&chain=base"
             className="text-sm"
             target="_blank"
             rel="noreferrer"
@@ -197,7 +197,14 @@ function Topup() {
             Buy from DEX
           </a>
         </DropdownMenuItem>
-        <DropdownMenuLabel>Buy with Card (coming soon)</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          <a
+            href="/dpay"
+            className="text-sm"
+          >
+            Buy with Card
+          </a>
+        </DropdownMenuLabel>
       </DropdownMenuContent>
     </DropdownMenu>
   );
