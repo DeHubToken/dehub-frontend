@@ -54,7 +54,7 @@ function _StreamItem(props: Props) {
   const { theme } = useTheme();
 
   //   TODO: Fix views
-  const [views, setViews] = useState(Math.floor(Math.random() * (1000 - 500 + 1)) + 500);
+  const [views, setViews] = useState(Math.floor(Math.random() * 100));
 
   const shouldShowLoading = index < 30;
   const [isLoading, setIsLoading] = useState(shouldShowLoading);
@@ -268,7 +268,11 @@ function _StreamItem(props: Props) {
                 {/* TODO : FIx view */}
                 {/* {nft.views || 0} */}
                 {/* set random views between 500 to 1000 */}
-                {views}
+                {
+                  // set views and add half of that again as live views
+                  //   (nft.views || 0) + Math.floor(nft.views / 2)
+                  nft.views ? nft.views * 2 : views
+                }
               </Button>
             </div>
           </div>
