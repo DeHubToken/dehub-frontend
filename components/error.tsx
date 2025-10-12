@@ -3,6 +3,7 @@
 import type { ErrorBoundryProps } from "@/types";
 
 import { XCircleIcon } from "lucide-react";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { Button } from "@/components/ui/button";
 
@@ -54,4 +55,8 @@ export function Error({ error, resetErrorBoundary, title }: ErrorBoundryProps & 
       </div>
     </div>
   );
+}
+
+export function ErrorRenderer() {
+  return <ErrorBoundary FallbackComponent={Error} />;
 }

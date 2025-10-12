@@ -2,6 +2,9 @@ import "server-only";
 
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import { ErrorBoundary } from "react-error-boundary";
+
+import { ErrorRenderer } from "@/components/error";
 
 import { Categories } from "./components/categories";
 import { FeedList } from "./components/feed-list";
@@ -48,57 +51,59 @@ export default async function Page(props: Props) {
         />
 
         <div className="mt-8 flex h-auto w-full flex-col items-start justify-start gap-14 pb-14">
-          <Suspense key={key} fallback={<StreamLoader />}>
-            {type === "feed" && (
-              <FeedList
-                title={type.toUpperCase()}
-                category={category}
-                range={range}
-                sort={sort}
-                type={type}
-                q={q}
-              />
-            )}
-            {type === "live" && (
-              <LiveFeed
-                title={type.toUpperCase()}
-                category={category}
-                range={range}
-                type={type}
-                q={q}
-              />
-            )}
-            {type === "liked" && (
-              <LikedFeed
-                title={type.toUpperCase()}
-                category={category}
-                range={range}
-                sort={sort}
-                type={type}
-                q={q}
-              />
-            )}
-            {type === "reports" && (
-              <FeedList
-                title={type.toUpperCase()}
-                category={category}
-                range={range}
-                sort={sort}
-                type={type}
-                q={q}
-              />
-            )}
-            {type !== "feed" && type !== "reports" && type !== "liked" && type !== "live" && (
-              <Stream
-                title={type.toUpperCase()}
-                category={category}
-                sort={sort}
-                range={range}
-                type={type}
-                q={q}
-              />
-            )}
-          </Suspense>
+          <ErrorBoundary fallback={<ErrorRenderer />}>
+            <Suspense key={key} fallback={<StreamLoader />}>
+              {type === "feed" && (
+                <FeedList
+                  title={type.toUpperCase()}
+                  category={category}
+                  range={range}
+                  sort={sort}
+                  type={type}
+                  q={q}
+                />
+              )}
+              {type === "live" && (
+                <LiveFeed
+                  title={type.toUpperCase()}
+                  category={category}
+                  range={range}
+                  type={type}
+                  q={q}
+                />
+              )}
+              {type === "liked" && (
+                <LikedFeed
+                  title={type.toUpperCase()}
+                  category={category}
+                  range={range}
+                  sort={sort}
+                  type={type}
+                  q={q}
+                />
+              )}
+              {type === "reports" && (
+                <FeedList
+                  title={type.toUpperCase()}
+                  category={category}
+                  range={range}
+                  sort={sort}
+                  type={type}
+                  q={q}
+                />
+              )}
+              {type !== "feed" && type !== "reports" && type !== "liked" && type !== "live" && (
+                <Stream
+                  title={type.toUpperCase()}
+                  category={category}
+                  sort={sort}
+                  range={range}
+                  type={type}
+                  q={q}
+                />
+              )}
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </div>
 
