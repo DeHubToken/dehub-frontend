@@ -80,7 +80,6 @@ export async function getNFTs(params?: SearchParams) {
     );
     const tag = params?.postType ? `nfts-${params.postType}` : "nfts-all";
     const url = `/search_nfts${query}`;
-    console.log("search_nfts_url", url);
 
     const res = await api<{ result: GetNFTsResult[] }>(url, {
       method: "GET",

@@ -125,7 +125,7 @@ export function SearchItemsContainer(props: Omit<Props, "isSearch"> & { accounts
   const { isPending } = useStreamProvider("FeedsList");
 
   const { infiniteScrollRef } = useInfiniteScroll({
-    fetchMore,
+    fetchMore: () => {},
     canFetchMore
   });
 
