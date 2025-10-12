@@ -7,7 +7,7 @@ type SearchParams = {
   unit?: number;
   page?: number;
   sortMode?: string;
-  sort?:string;
+  sort?: string;
   minter?: string;
   owner?: string;
   search?: string;
@@ -69,7 +69,7 @@ export async function getNFTs(params?: SearchParams) {
       removeUndefined({
         q: params.search,
         search: params.search,
-        sort:params?.sort,
+        sort: params?.sort,
         unit: 50,
         range: params.range,
         category: params.category,
@@ -78,16 +78,16 @@ export async function getNFTs(params?: SearchParams) {
         postType: params.postType
       })
     );
-    const tag = params?.postType
-    ? `nfts-${params.postType}`
-    : 'nfts-all';
+    const tag = params?.postType ? `nfts-${params.postType}` : "nfts-all";
     const url = `/search_nfts${query}`;
-      console.log("search_nfts_url",url);
-      
+    console.log("search_nfts_url", url);
+
     const res = await api<{ result: GetNFTsResult[] }>(url, {
       method: "GET",
       next: { revalidate: 2 * 60, tags: [tag] }
     });
+
+    console.log("search_nfts_res", res);
 
     return res;
   }
@@ -97,8 +97,8 @@ export async function getNFTs(params?: SearchParams) {
       q: params?.search,
       search: params?.search,
       unit: 50,
-      range: params?.range, 
-      sort:params?.sort,
+      range: params?.range,
+      sort: params?.sort,
       category: params?.category,
       address: params?.address,
       page: params?.page,
@@ -108,9 +108,7 @@ export async function getNFTs(params?: SearchParams) {
       postType: params?.postType
     })
   );
-  const tag = params?.postType
-  ? `nfts-${params.postType}`
-  : 'nfts-all';
+  const tag = params?.postType ? `nfts-${params.postType}` : "nfts-all";
   const url = `/search_nfts${query}`;
   const res = await api<{ result: GetNFTsResult[] }>(url, {
     method: "GET",
@@ -120,12 +118,12 @@ export async function getNFTs(params?: SearchParams) {
 }
 
 export async function getLikedNFTs(
-  params: { page: number; address: string | undefined,sort?:string },
+  params: { page: number; address: string | undefined; sort?: string },
   library: any
 ) {
   const sigData = await getSignInfo(library, params?.address as string);
   const payload = {
-    ...params, 
+    ...params,
     sig: sigData?.sig,
     timestamp: sigData?.timestamp
   };

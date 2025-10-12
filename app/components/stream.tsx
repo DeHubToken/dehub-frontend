@@ -20,7 +20,7 @@ type FeedProps = {
 };
 
 export async function Stream(props: FeedProps) {
-  const { category, range, type, q ,sort} = props;
+  const { category, range, type, q, sort } = props;
   const cookie = cookies();
   const userCookie = cookie.get("user_information");
   const user = safeParseCookie<{ address: string }>(userCookie?.value);
@@ -33,6 +33,8 @@ export async function Stream(props: FeedProps) {
     search: q,
     address: user?.address
   });
+
+  console.log("STREAM-RES", res);
 
   const isSearched = q ? true : false;
 
