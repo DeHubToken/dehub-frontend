@@ -17,6 +17,8 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { useMediaQuery } from "@/hooks/use-media-query";
 
+import objectToGetParams from "@/libs/utils";
+
 import { search } from "./action";
 import { useStreamProvider } from "./stream-provider";
 
@@ -26,13 +28,11 @@ export function SearchBox(props: { category?: string; type?: string; range?: str
   const { category, type = "search", range, q } = props;
 
   const [text, setText] = useState(q || "");
-  const { startTransition, isPending } = useStreamProvider("SearchBox");
+  const { isPending } = useStreamProvider("SearchBox");
 
   const action: () => void = () => {
     if (text.length > 0) {
-      startTransition(() => {
-        search({ category, type, range, q: text });
-      });
+      window.location.href = `/${objectToGetParams({ category, type, range, q: text })}`;
     }
   };
 
